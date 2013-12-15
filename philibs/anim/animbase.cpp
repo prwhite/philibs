@@ -1,0 +1,147 @@
+/////////////////////////////////////////////////////////////////////
+//
+//    file: animbase.cpp
+//
+/////////////////////////////////////////////////////////////////////
+
+#include "animbase.h"
+#include "animgroup.h"
+#include "animmanager.h"
+#include "animeventobserver.h"
+
+/////////////////////////////////////////////////////////////////////
+
+namespace anim {
+  
+/////////////////////////////////////////////////////////////////////
+
+base::base() :
+  mParent ( 0 ),
+  mObserver ( 0 ),
+  mExponent ( 1.0f ),
+  mLoopDuration ( -1.0f ),
+  mBoundsOverride ( false ),
+  mDoGc ( true )
+{
+  
+}
+
+base::~base()
+{
+
+}
+
+// base::base(base const& rhs) :
+//   mStart ( rhs.mStart),
+//   mDuration ( rhs.mDuration ),
+//   mExponent ( rhs.mExponent )
+// {
+//   
+// }
+
+// base& base::operator=(base const& rhs)
+// {
+//   mStart = rhs.mStart;
+//   mDuration = rhs.mDuration;
+//   mExponent = rhs.mExponent;
+//   
+//   return *this;
+// }
+// 
+// bool base::operator==(base const& rhs) const
+// {
+//   
+//   return false;
+// }
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+
+void base::setXform ( xform const& val )
+{
+  setDirty ();
+  mXform = val;
+}
+
+/////////////////////////////////////////////////////////////////////
+
+void base::setDirty ( bool val ) const
+{
+  if ( val == true && mParent )
+  {
+    base* pBase = mParent;
+    pBase->setDirty ( true );
+  }
+}
+
+void base::updateBounds () const
+{
+  // Since we are setting this equal to the xform, it's already
+  // in the "parent" coordinate frame.  So we don't need to mult
+  // it by the xform.  This is true only for leaf nodes.
+  if ( ! mBoundsOverride )
+    mBounds.set ( mXform );
+    
+  setDirty ( false );
+}
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+
+void base::update ( manager* pManager, TimeType curTime )
+{
+  xform txform ( mXform );
+
+  if ( mLoopDuration > 0.0f )
+  {
+    txform.mDuration = mLoopDuration;
+    curTime = txform.mStart + fmodf ( curTime - txform.mStart, mLoopDuration );
+  }
+  
+  txform.invert ();
+  
+  curTime = txform.transform ( curTime );
+  
+  internalUpdate ( pManager, curTime );
+}
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+
+  // [0,.5] =POWER(tval*2),exponent)/2
+  // (.5,1] =1-POWER(ABS(tval*2-2),exponent)/2
+float base::useExponent ( manager* pManager, float val )
+{
+ if ( val < 0.5f )
+  return pManager->pow ( val * 2.0f ) / 2.0f;
+ else
+  return 1.0f - pManager->pow ( 2.0f - val * 2.0f ) / 2.0f;
+}
+    
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+
+void base::onDoDbg ()
+{
+  //std::ostream* pStr = pni::pstd::dbgRefCount::getStr ();
+  
+  //*pStr << "   mName = " << mName;
+}
+
+void base::collectRefs ( pni::pstd::refCount::Refs& refs )
+{
+  
+}
+
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+
+
+} // end of namespace anim 
+
+

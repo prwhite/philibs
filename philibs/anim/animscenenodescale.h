@@ -1,0 +1,49 @@
+/////////////////////////////////////////////////////////////////////
+//
+//    class: sceneNodeScale
+//
+/////////////////////////////////////////////////////////////////////
+
+#ifndef animanimscenenodescale_h
+#define animanimscenenodescale_h
+
+/////////////////////////////////////////////////////////////////////
+
+#include "animbase.h"
+
+/////////////////////////////////////////////////////////////////////
+
+namespace anim {
+  
+/////////////////////////////////////////////////////////////////////
+
+class sceneNodeScale :
+  public base
+{
+  public:
+    sceneNodeScale();
+    virtual ~sceneNodeScale();
+    sceneNodeScale(sceneNodeScale const& rhs);
+    sceneNodeScale& operator=(sceneNodeScale const& rhs);
+    bool operator==(sceneNodeScale const& rhs) const;
+    
+  protected:
+    
+  private:
+    
+
+  // interface from base
+  public:
+    
+  protected:
+    
+
+};
+
+/////////////////////////////////////////////////////////////////////
+
+} // end of namespace anim 
+
+#endif // animanimscenenodescale_h
+
+
