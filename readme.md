@@ -1,7 +1,7 @@
 
 # PHILIBS
 
-**A C++, OpenGL ES scene graph library for iOS**
+## A C++, OpenGL ES scene graph library for iOS
 
 This library supports 3D rendering of a 'scene' described in memory as a '[scene graph](http://en.wikipedia.org/wiki/Scene_graph)'.
 
