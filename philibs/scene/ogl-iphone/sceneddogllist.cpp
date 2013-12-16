@@ -518,7 +518,7 @@ PNIDBG
 
   // * 4 because the stride is in bites and our stride
   // value is for float*.
-  size_t stride = pData->getValueStride () * 4;
+  uint32_t stride = pData->getValueStride () * 4;
 
 // void glDrawElements(GLenum mode,
 //     GLsizei count,
@@ -578,7 +578,7 @@ PNIDBG
   unsigned short const* pIndices = &indices[ 0 ];
   
   glDrawElements ( GL_TRIANGLES, 
-      indices.size (), GL_UNSIGNED_SHORT, pIndices );
+      ( GLsizei ) indices.size (), GL_UNSIGNED_SHORT, pIndices );
 
 CheckGLError
 }
@@ -919,7 +919,7 @@ void ddOglList::dispatch ( lighting const* pState )
 	}
 	else // disable
 	{
-    float defAmbient[ 4 ] = { 0.2f, 0.2f, 0.2f, 1.0f };
+//    float defAmbient[ 4 ] = { 0.2f, 0.2f, 0.2f, 1.0f };
 
 		glLightModelfv ( GL_LIGHT_MODEL_AMBIENT, 
 				pState->getAmbient () );
@@ -963,7 +963,7 @@ void ddOglList::execLightPath ( nodePath const& lpath )
 
 void ddOglList::dispatch ( lightPath const* pState )
 {
-  for ( size_t num = 0; num < lightPath::MaxNodePaths; ++num )
+  for ( GLenum num = 0; num < lightPath::MaxNodePaths; ++num )
   {
     nodePath const& cur = pState->getNodePath ( num );
     mCurLightUnit = GL_LIGHT0 + num;

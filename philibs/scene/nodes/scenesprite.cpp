@@ -266,7 +266,9 @@ void sprites::update ( graphDd::fxUpdate const& update )
   
     // Set geometry binding.
   mGeomData->setBindings ( geomData::Positions | geomData::TCoords0 );
-  SizeType stride = mGeomData->getValueStride ();
+  
+    // Unused... why was it here? PRW
+//  SizeType stride = mGeomData->getValueStride ();
   
     // Resize geom if sprite array size doesn't match.
     // In the reserve call we are doing 4 unique vert values and

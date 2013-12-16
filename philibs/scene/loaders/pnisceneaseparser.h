@@ -26,6 +26,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <inttypes.h>
 
 /////////////////////////////////////////////////////////////////////
 
@@ -214,7 +215,7 @@ class PNISCENEASEAPI line
       
   int strtoi ( char const* src, char** ptr ) const
       {
-        return ::strtol ( src, ptr, 0 );
+        return ( int ) ::strtol ( src, ptr, 10 );
       }
     
   float getFloat () const

@@ -421,8 +421,9 @@ class wheelCore
         
           if ( mItemSize == 0.0f )
             return 0.0f;
-        
-          float dir = mVel > 0.0f ? 1.0f : -1.0f;
+
+            // UNUSED, why? PRW
+//          float dir = mVel > 0.0f ? 1.0f : -1.0f;
           
           PNIFPGOOD ( mCurVal );
           

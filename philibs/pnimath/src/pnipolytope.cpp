@@ -97,7 +97,7 @@ isEmpty () const
 
 
 // sets and gets
-int
+size_t
 polytope::
 getNumPlanes () const
 {
@@ -130,7 +130,7 @@ addPlane ( ValueType x, ValueType y, ValueType z, ValueType d )
 
 void
 polytope::
-setPlane ( int idx, const plane& planeIn )
+setPlane ( size_t idx, const plane& planeIn )
 {
 	assert ( idx < planes.size () );
 
@@ -149,7 +149,7 @@ setPlane ( int idx, const plane& planeIn )
 
 void
 polytope::
-getPlane ( int idx, plane& planeOut ) const
+getPlane ( size_t idx, plane& planeOut ) const
 {
 	assert ( idx < planes.size () );
 

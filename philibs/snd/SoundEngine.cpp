@@ -625,7 +625,7 @@ class BackgroundTrackMgr
 							// if we need to resize the buffer, set the buffer's audio data size to the new file's size
 							// we will also need to get the new file cookie
 							case kQueueState_ResizeBuffer:
-								inCompleteAQBuffer->mAudioDataByteSize = CurFileInfo->mFileDataSize;							
+								inCompleteAQBuffer->mAudioDataByteSize = ( UInt32 ) CurFileInfo->mFileDataSize;
 							// if the data format is the same but we just need a new cookie, attach a new cookie
 							case kQueueState_NeedNewCookie:
 								result = AttachNewCookie(inAQ, CurFileInfo);
@@ -735,7 +735,7 @@ class BackgroundTrackMgr
 					AssertNoError("Error getting packet count for file", end);
 				
 				mNumPacketsToRead = (UInt32)theFileNumPackets;
-				mBufferByteSize = inFileInfo->mFileDataSize;
+				mBufferByteSize = ( UInt32 ) inFileInfo->mFileDataSize;
 				numBuffersToQueue = 1;
 			}	
 			else
@@ -1203,7 +1203,7 @@ class SoundEngineEffectMap
 
 	iterator GetIterator() { return begin(); }
 	
-    UInt32 Size () const { return size(); }
+    UInt32 Size () const { return ( UInt32 ) size(); }
     bool Empty () const { return empty(); }
 };
 

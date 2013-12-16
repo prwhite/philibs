@@ -55,11 +55,11 @@ class PNIMATHAPI polytope
 		bool isEmpty () const;
 
 	    // sets and gets
-		int getNumPlanes () const;
+		size_t getNumPlanes () const;
 		void addPlane ( const plane& planeIn );
 		void addPlane ( ValueType x, ValueType y, ValueType z, ValueType d );
-		void setPlane ( int idx, const plane& planeIn );
-		void getPlane ( int idx, plane& planeOut ) const;
+		void setPlane ( size_t idx, const plane& planeIn );
+		void getPlane ( size_t idx, plane& planeOut ) const;
 
 		// Containment of various object types.
 	    int contains ( const vec3& pt ) const;

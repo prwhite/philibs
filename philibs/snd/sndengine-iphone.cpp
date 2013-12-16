@@ -8,6 +8,8 @@
 
 #include "SoundEngine.h"
 
+#include <iostream>
+
 /////////////////////////////////////////////////////////////////////
 
 namespace snd
@@ -25,6 +27,9 @@ engine::engine ()
 engine::engine ( float mixerOutputRate )
 {
   ErrorType errorVal = SoundEngine_Initialize ( mixerOutputRate );
+  
+  if ( errorVal )
+    std::cerr << "Error in " << __PRETTY_FUNCTION__ << ": " << errorVal << std::endl;
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -32,6 +37,9 @@ engine::engine ( float mixerOutputRate )
 engine::~engine ()
 {
   ErrorType errorVal = SoundEngine_Teardown ();
+
+  if ( errorVal )
+    std::cerr << "Error in " << __PRETTY_FUNCTION__ << ": " << errorVal << std::endl;
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -140,6 +148,9 @@ effect::effect ( std::string const& start, std::string const& loop, std::string 
   setPitch ( 1.0f );
   setLevel ( 1.0f );
   setPos ( pni::math::vec3 () );
+  
+  if ( errorVal )
+    std::cerr << "Error in " << __PRETTY_FUNCTION__ << ": " << errorVal << std::endl;
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -151,6 +162,9 @@ effect::effect ( std::string const& fname )
   setPitch ( 1.0f );
   setLevel ( 1.0f );
   setPos ( pni::math::vec3 () );
+  
+  if ( errorVal )
+    std::cerr << "Error in " << __PRETTY_FUNCTION__ << ": " << errorVal << std::endl;
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -159,6 +173,9 @@ effect::effect ( std::string const& fname )
 effect::~effect ()
 {
   ErrorType errorVal = SoundEngine_UnloadEffect ( mId );
+  
+  if ( errorVal )
+    std::cerr << "Error in " << __PRETTY_FUNCTION__ << ": " << errorVal << std::endl;
 }
 
 /////////////////////////////////////////////////////////////////////

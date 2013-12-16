@@ -107,7 +107,7 @@ class ddOglList :
     //CPVRTglesExt mPvr;
     nodePath mSinkPath;
     unsigned int mCurStateId;
-    size_t mCurLightUnit;
+    GLenum mCurLightUnit;
     
     void resetCurState ();
     void execStates ( stateSet const& sSet );

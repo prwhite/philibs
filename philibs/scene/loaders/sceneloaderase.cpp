@@ -194,7 +194,13 @@ PNIDBG
 
 					rMap[ state::Material ] = ( pMat );         
         }
-    
+
+  
+  // There is some penciled-in stuff in this file that I don't want to
+  // be noisy in every build.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-variable"
+
     void buildMaterial ( node* pSceneNode, StateMap& rMap, ::ase::node const* pSrc )
         {
 PNIDBG
@@ -280,7 +286,9 @@ PNIDBG
             // TEMP Causing an unknown crash right now.
 // 					buildSubMaterials ( pSceneNode, rMap, pSrc );
         }
-        
+
+#pragma clang diagnostic pop
+
     void buildSubMaterials ( node* pNode, StateMap& rMap, ::ase::node const* pSrc )
         {
 PNIDBG
@@ -443,7 +451,7 @@ PNIDBG
 PNIDBG
           geomData* pGdata = pGeom->geometryOp ();
           geomData::SizeType stride = pGdata->getValueStride ();
-          const unsigned int vertOffset = 0;    // Always zero.
+//          const unsigned int vertOffset = 0;    // Always zero.
 //           const unsigned int normOffset = pGdata->getValueOffset ( geomData::Normals );
 
 // cout << "pre invert = \n" << mat << endl;
@@ -756,7 +764,7 @@ PNIDBG
           // uv02
           if ( ::ase::node const* pMapChan = pSrc->findNode ( "MESH_MAPPINGCHANNEL", false ) )
           {
-            if ( (ind.mUVind01 = pSrc->findNode ( "MESH_TFACELIST" )) )
+            if ( (ind.mUVind01 = pMapChan->findNode ( "MESH_TFACELIST" )) )
               initUvIndices ( ind.mUVind01, ind, 1 );
           }
         }
@@ -860,7 +868,7 @@ PNIDBG
           geomData* pGdata = pGeom->geometryOp ();
           size_t stride = pGdata->getValueStride ();
           geomData::Bindings tcoord = ( unit ==  0 ) ? geomData::TCoords0 : geomData::TCoords1;
-          unsigned int offset = pGdata->getValueOffset ( tcoord );
+          size_t offset = pGdata->getValueOffset ( tcoord );
          // Offset for positions is always 0.
           const unsigned int TypeStride = 2;
 

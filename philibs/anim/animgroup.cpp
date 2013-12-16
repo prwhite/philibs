@@ -109,7 +109,9 @@ void group::updateBounds () const
       mBounds.extendBy ( tbounds );
     }
     
-    xform txform ( mXform );
+        // Strange that this is unused... what was it going to be for?
+//    xform txform ( mXform );
+    
     mBounds.transform ( mXform );
   }
 

@@ -526,13 +526,13 @@ void hterrain::generateGeomBounds () const
   // GOTCHA: Currently no bounds checking!!!
 geomData::SizeType hterrain::xyToGeomValueIndex ( Dim xVal, Dim yVal )
 {
-  size_t const DataStride = mGeomData->getValueStride ();
+//  size_t const DataStride = mGeomData->getValueStride ();
   Dim const xStart = 1;
   Dim const yStart = 1;
   Dim const xEnd = mHeightSize[ 0 ] - 1;
-  Dim const yEnd = mHeightSize[ 1 ] - 1;
+//  Dim const yEnd = mHeightSize[ 1 ] - 1;
   Dim const xStride = xEnd - xStart;
-  size_t const DataPitch = xStride * DataStride;
+//  size_t const DataPitch = xStride * DataStride;
   size_t const TrisPerCell = 6;
   
   xVal -= xStart;

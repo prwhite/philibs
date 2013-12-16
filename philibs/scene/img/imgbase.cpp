@@ -50,7 +50,6 @@ base::~base()
 void base::alloc ( bool mipMapsToo )
 {
   size_t const Stride = calcFormatStride ( mFormat );
-  size_t newSize = mPitch * mHeight;
   
   mBuffers.resize ( 0 );
   
@@ -134,15 +133,17 @@ void base::uniquifyBuffers ()
 
 namespace
 {
-  void writei ( std::ostream& str, int val )
+  typedef uint32_t IntType;
+  
+  void writei ( std::ostream& str, IntType val )
   {
-    str.write ( ( char* ) &val, sizeof ( int ) );
+    str.write ( ( char* ) &val, sizeof ( IntType ) );
   }
   
-  int readi ( std::istream& str )
+  IntType readi ( std::istream& str )
   {
-    int tmp;
-    str.read ( ( char* ) &tmp, sizeof ( int ) );
+    IntType tmp;
+    str.read ( ( char* ) &tmp, sizeof ( IntType ) );
     return tmp;
   }
 }
@@ -172,8 +173,14 @@ bool base::read ( std::string const& fname )
     alloc ( size > 1 );
 
     for ( size_t num = 0; num < size; ++num )
-    {      BufferType* pData = &( ( *mBuffers[ num ] )[ 0 ] );
-      in.read ( reinterpret_cast< char* > ( pData ), mBuffers[ num ]->size () );      }        return true;  }
+    {
+      BufferType* pData = &( ( *mBuffers[ num ] )[ 0 ] );
+
+      in.read ( reinterpret_cast< char* > ( pData ), mBuffers[ num ]->size () );  
+    }
+    
+    return true;
+  }
   else  
     return false;
 }
@@ -189,15 +196,21 @@ bool base::write ( std::string const& fname )
 
   if ( out.good () && out.is_open () )
   {
-    writei ( out, ( std::streamsize ) mWidth );
-    writei ( out, ( std::streamsize ) mHeight );
-    writei ( out, ( std::streamsize ) mPitch );
-    writei ( out, ( std::streamsize ) mFormat );
-    writei ( out, ( std::streamsize ) mBuffers.size () );
+    writei ( out, ( int ) mWidth );
+    writei ( out, ( int ) mHeight );
+    writei ( out, ( int ) mPitch );
+    writei ( out, ( int ) mFormat );
+    writei ( out, ( int ) mBuffers.size () );
 
     for ( size_t num = 0; num < mBuffers.size (); ++num )
-    {      BufferType* pData = &( ( *mBuffers[ num ] )[ 0 ] );
-      out.write ( reinterpret_cast< char* > ( pData ), mBuffers[ num ]->size () );      }        return true;  }
+    {
+      BufferType* pData = &( ( *mBuffers[ num ] )[ 0 ] );
+
+      out.write ( reinterpret_cast< char* > ( pData ), mBuffers[ num ]->size () );  
+    }
+    
+    return true;
+  }
   else
     return false;
 }

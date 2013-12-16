@@ -184,9 +184,9 @@ class segBoxIsect
 		segBoxIsect ()  {}
 		virtual ~segBoxIsect ()  {}
 
-		int intersect ( const box2& boxIn, const seg& segIn );
+    //int intersect ( const box2& boxIn, const seg& segIn );
 		//int intersect ( const box2& box, const vec2& segPos, const vec2& segDir, const vec2& segEndPos );
-		int getNumPoints ();
+		size_t getNumPoints ();
 		vec2 getPoint ( unsigned int idx );
 
 
@@ -331,7 +331,7 @@ class segBoxIsect
 
 
 
-int
+size_t
 segBoxIsect::
 getNumPoints ()
 {
