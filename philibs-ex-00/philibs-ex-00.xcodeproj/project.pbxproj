@@ -26,6 +26,7 @@
 		1CDD4243185BDDC2009284F9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD421A185BDDC2009284F9 /* UIKit.framework */; };
 		1CDD424B185BDDC2009284F9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1CDD4249185BDDC2009284F9 /* InfoPlist.strings */; };
 		1CDD424D185BDDC2009284F9 /* philibs_ex_00Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD424C185BDDC2009284F9 /* philibs_ex_00Tests.m */; };
+		1CF4DBAB185EE4C4007331F8 /* libphilibs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF4DBA8185EE4B7007331F8 /* libphilibs.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +36,27 @@
 			proxyType = 1;
 			remoteGlobalIDString = 1CDD4212185BDDC2009284F9;
 			remoteInfo = "philibs-ex-00";
+		};
+		1CF4DBA7185EE4B7007331F8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1CF4DBA2185EE4B7007331F8 /* philibs.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1CDD3FF6185BC965009284F9;
+			remoteInfo = philibs;
+		};
+		1CF4DBA9185EE4B7007331F8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1CF4DBA2185EE4B7007331F8 /* philibs.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1CDD4006185BC965009284F9;
+			remoteInfo = philibsTests;
+		};
+		1CF4DBAC185EE4FE007331F8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1CF4DBA2185EE4B7007331F8 /* philibs.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1CDD3FF5185BC965009284F9;
+			remoteInfo = philibs;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -63,6 +85,7 @@
 		1CDD4248185BDDC2009284F9 /* philibs-ex-00Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "philibs-ex-00Tests-Info.plist"; sourceTree = "<group>"; };
 		1CDD424A185BDDC2009284F9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1CDD424C185BDDC2009284F9 /* philibs_ex_00Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = philibs_ex_00Tests.m; sourceTree = "<group>"; };
+		1CF4DBA2185EE4B7007331F8 /* philibs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = philibs.xcodeproj; path = ../philibs.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +93,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1CF4DBAB185EE4C4007331F8 /* libphilibs.a in Frameworks */,
 				1CDD421F185BDDC2009284F9 /* OpenGLES.framework in Frameworks */,
 				1CDD4219185BDDC2009284F9 /* CoreGraphics.framework in Frameworks */,
 				1CDD421B185BDDC2009284F9 /* UIKit.framework in Frameworks */,
@@ -94,6 +118,7 @@
 		1CDD420A185BDDC2009284F9 = {
 			isa = PBXGroup;
 			children = (
+				1CF4DBA2185EE4B7007331F8 /* philibs.xcodeproj */,
 				1CDD4220185BDDC2009284F9 /* philibs-ex-00 */,
 				1CDD4246185BDDC2009284F9 /* philibs-ex-00Tests */,
 				1CDD4215185BDDC2009284F9 /* Frameworks */,
@@ -169,6 +194,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		1CF4DBA3185EE4B7007331F8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1CF4DBA8185EE4B7007331F8 /* libphilibs.a */,
+				1CF4DBAA185EE4B7007331F8 /* philibsTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -183,6 +217,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				1CF4DBAD185EE4FE007331F8 /* PBXTargetDependency */,
 			);
 			name = "philibs-ex-00";
 			productName = "philibs-ex-00";
@@ -233,6 +268,12 @@
 			mainGroup = 1CDD420A185BDDC2009284F9;
 			productRefGroup = 1CDD4214185BDDC2009284F9 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 1CF4DBA3185EE4B7007331F8 /* Products */;
+					ProjectRef = 1CF4DBA2185EE4B7007331F8 /* philibs.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				1CDD4212185BDDC2009284F9 /* philibs-ex-00 */,
@@ -240,6 +281,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		1CF4DBA8185EE4B7007331F8 /* libphilibs.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libphilibs.a;
+			remoteRef = 1CF4DBA7185EE4B7007331F8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1CF4DBAA185EE4B7007331F8 /* philibsTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = philibsTests.xctest;
+			remoteRef = 1CF4DBA9185EE4B7007331F8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		1CDD4211185BDDC2009284F9 /* Resources */ = {
@@ -291,6 +349,11 @@
 			isa = PBXTargetDependency;
 			target = 1CDD4212185BDDC2009284F9 /* philibs-ex-00 */;
 			targetProxy = 1CDD4244185BDDC2009284F9 /* PBXContainerItemProxy */;
+		};
+		1CF4DBAD185EE4FE007331F8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = philibs;
+			targetProxy = 1CF4DBAC185EE4FE007331F8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -365,6 +428,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -398,6 +462,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -491,6 +556,7 @@
 				1CDD4252185BDDC2009284F9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1CDD4253185BDDC2009284F9 /* Build configuration list for PBXNativeTarget "philibs-ex-00Tests" */ = {
 			isa = XCConfigurationList;
@@ -499,6 +565,7 @@
 				1CDD4255185BDDC2009284F9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

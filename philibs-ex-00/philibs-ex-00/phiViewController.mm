@@ -8,7 +8,7 @@
 
 #import "phiViewController.h"
 
-//#include "pnimath.h"
+#include "philibs/pnivec3.h"
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
