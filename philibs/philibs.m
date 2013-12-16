@@ -7,7 +7,3 @@
 //
 
 #import "philibs.h"
-
-@implementation philibs
-
-@end

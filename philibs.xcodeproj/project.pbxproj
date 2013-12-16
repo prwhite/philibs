@@ -110,6 +110,127 @@
 		1CDD4207185BCAF0009284F9 /* uiscene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD4176185BCAF0009284F9 /* uiscene.cpp */; };
 		1CDD4208185BCAF0009284F9 /* uiwheel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD4178185BCAF0009284F9 /* uiwheel.cpp */; };
 		1CDD4209185BCAF0009284F9 /* uiwheelcore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD417A185BCAF0009284F9 /* uiwheelcore.cpp */; };
+		1CDD4275185EDBD1009284F9 /* animbase.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4029185BCAEF009284F9 /* animbase.h */; };
+		1CDD4277185EDBD1009284F9 /* animbgmusicfader.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD402B185BCAEF009284F9 /* animbgmusicfader.h */; };
+		1CDD4278185EDBD1009284F9 /* animcommon.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD402C185BCAEF009284F9 /* animcommon.h */; };
+		1CDD4279185EDBD1009284F9 /* animeventobserver.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD402D185BCAEF009284F9 /* animeventobserver.h */; };
+		1CDD427A185EDBD1009284F9 /* animevents.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD402E185BCAEF009284F9 /* animevents.h */; };
+		1CDD427C185EDBD1009284F9 /* animgroup.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4030185BCAEF009284F9 /* animgroup.h */; };
+		1CDD427D185EDBD1009284F9 /* animidbase.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4031185BCAEF009284F9 /* animidbase.h */; };
+		1CDD427F185EDBD1009284F9 /* animmanager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4033185BCAEF009284F9 /* animmanager.h */; };
+		1CDD4281185EDBD1009284F9 /* animmatrixhelper.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4035185BCAEF009284F9 /* animmatrixhelper.h */; };
+		1CDD4283185EDBD1009284F9 /* animscenematerial.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4037185BCAEF009284F9 /* animscenematerial.h */; };
+		1CDD4285185EDBD1009284F9 /* animscenenoderotaxis.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4039185BCAEF009284F9 /* animscenenoderotaxis.h */; };
+		1CDD4287185EDBD1009284F9 /* animscenenodescale.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD403B185BCAEF009284F9 /* animscenenodescale.h */; };
+		1CDD4289185EDBD1009284F9 /* animscenenodetrans.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD403D185BCAEF009284F9 /* animscenenodetrans.h */; };
+		1CDD428B185EDBD1009284F9 /* animscenenodevis.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD403F185BCAEF009284F9 /* animscenenodevis.h */; };
+		1CDD428D185EDBD1009284F9 /* animtrans.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4041185BCAEF009284F9 /* animtrans.h */; };
+		1CDD428F185EDBD1009284F9 /* animuibaserotaxis.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4043185BCAEF009284F9 /* animuibaserotaxis.h */; };
+		1CDD4291185EDBD1009284F9 /* animuibasescale.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4045185BCAEF009284F9 /* animuibasescale.h */; };
+		1CDD4293185EDBD1009284F9 /* animuibasetrans.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4047185BCAEF009284F9 /* animuibasetrans.h */; };
+		1CDD4295185EDBD1009284F9 /* fontfont.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4052185BCAEF009284F9 /* fontfont.h */; };
+		1CDD4296185EDBD1009284F9 /* MersenneTwister.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40B2185BCAEF009284F9 /* MersenneTwister.h */; };
+		1CDD4298185EDBD1009284F9 /* pnibox2.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40B4185BCAEF009284F9 /* pnibox2.h */; };
+		1CDD429A185EDBD1009284F9 /* pnibox3.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40B6185BCAEF009284F9 /* pnibox3.h */; };
+		1CDD429B185EDBD1009284F9 /* pnicontains.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40B7185BCAEF009284F9 /* pnicontains.h */; };
+		1CDD429D185EDBD1009284F9 /* pnicylinder.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40B9185BCAEF009284F9 /* pnicylinder.h */; };
+		1CDD429E185EDBD1009284F9 /* pnidoublemath.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40BA185BCAEF009284F9 /* pnidoublemath.h */; };
+		1CDD42A0185EDBD1009284F9 /* pnidoubletrait.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40BC185BCAEF009284F9 /* pnidoubletrait.h */; };
+		1CDD42A2185EDBD1009284F9 /* pnifloatmath.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40BE185BCAEF009284F9 /* pnifloatmath.h */; };
+		1CDD42A4185EDBD1009284F9 /* pnifloattrait.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40C0185BCAEF009284F9 /* pnifloattrait.h */; };
+		1CDD42A6185EDBD1009284F9 /* pnifrustum.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40C2185BCAEF009284F9 /* pnifrustum.h */; };
+		1CDD42A8185EDBD1009284F9 /* pnimath.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40C4185BCAEF009284F9 /* pnimath.h */; };
+		1CDD42A9185EDBD1009284F9 /* pnimathdef.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40C5185BCAEF009284F9 /* pnimathdef.h */; };
+		1CDD42AA185EDBD1009284F9 /* pnimathfp.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40C6185BCAEF009284F9 /* pnimathfp.h */; };
+		1CDD42AB185EDBD1009284F9 /* pnimathios.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40C7185BCAEF009284F9 /* pnimathios.h */; };
+		1CDD42AC185EDBD1009284F9 /* pnimathstream.cpp in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40C8185BCAEF009284F9 /* pnimathstream.cpp */; };
+		1CDD42AD185EDBD1009284F9 /* pnimathstream.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40C9185BCAEF009284F9 /* pnimathstream.h */; };
+		1CDD42AF185EDBD1009284F9 /* pnimatrix4.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40CB185BCAEF009284F9 /* pnimatrix4.h */; };
+		1CDD42B0185EDBD1009284F9 /* pnimatstack.cpp in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40CC185BCAEF009284F9 /* pnimatstack.cpp */; };
+		1CDD42B1185EDBD1009284F9 /* pnimatstack.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40CD185BCAEF009284F9 /* pnimatstack.h */; };
+		1CDD42B3185EDBD1009284F9 /* pniplane.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40CF185BCAEF009284F9 /* pniplane.h */; };
+		1CDD42B5185EDBD1009284F9 /* pnipolytope.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40D1185BCAEF009284F9 /* pnipolytope.h */; };
+		1CDD42B7185EDBD1009284F9 /* pniquat.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40D3185BCAEF009284F9 /* pniquat.h */; };
+		1CDD42B9185EDBD1009284F9 /* pnirand.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40D5185BCAEF009284F9 /* pnirand.h */; };
+		1CDD42BB185EDBD1009284F9 /* pniseg.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40D7185BCAEF009284F9 /* pniseg.h */; };
+		1CDD42BD185EDBD1009284F9 /* pnisphere.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40D9185BCAEF009284F9 /* pnisphere.h */; };
+		1CDD42BF185EDBD1009284F9 /* pnivec2.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40DB185BCAEF009284F9 /* pnivec2.h */; };
+		1CDD42C1185EDBD1009284F9 /* pnivec3.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40DD185BCAEF009284F9 /* pnivec3.h */; };
+		1CDD42C3185EDBD1009284F9 /* pnivec4.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40DF185BCAEF009284F9 /* pnivec4.h */; };
+		1CDD42C5185EDBD1009284F9 /* pniautoref.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40E8185BCAEF009284F9 /* pniautoref.h */; };
+		1CDD42C6185EDBD1009284F9 /* pniavg.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40E9185BCAEF009284F9 /* pniavg.h */; };
+		1CDD42C7185EDBD1009284F9 /* pnibox.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40EA185BCAEF009284F9 /* pnibox.h */; };
+		1CDD42C8185EDBD1009284F9 /* pnierror.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40EB185BCAEF009284F9 /* pnierror.h */; };
+		1CDD42CA185EDBD1009284F9 /* pnilog.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40ED185BCAEF009284F9 /* pnilog.h */; };
+		1CDD42CB185EDBD1009284F9 /* pniplatform.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40EE185BCAEF009284F9 /* pniplatform.h */; };
+		1CDD42CC185EDBD1009284F9 /* pniprogress.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40EF185BCAEF009284F9 /* pniprogress.h */; };
+		1CDD42CE185EDBD1009284F9 /* pnirefcount.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40F1185BCAEF009284F9 /* pnirefcount.h */; };
+		1CDD42CF185EDBD1009284F9 /* pnirefcountdbg.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40F2185BCAEF009284F9 /* pnirefcountdbg.h */; };
+		1CDD42D0185EDBD1009284F9 /* pnitimer.cpp in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40F3185BCAEF009284F9 /* pnitimer.cpp */; };
+		1CDD42D1185EDBD1009284F9 /* pnitimer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40F4185BCAEF009284F9 /* pnitimer.h */; };
+		1CDD42D5185EDBD1009284F9 /* timerprof.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40F8185BCAEF009284F9 /* timerprof.h */; };
+		1CDD42DA185EDBD1009284F9 /* imgalgo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4100185BCAEF009284F9 /* imgalgo.h */; };
+		1CDD42DC185EDBD1009284F9 /* imgbase.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4102185BCAEF009284F9 /* imgbase.h */; };
+		1CDD42DE185EDBD1009284F9 /* imgdds.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4104185BCAEF009284F9 /* imgdds.h */; };
+		1CDD42E0185EDBD1009284F9 /* imgtarga.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4106185BCAEF009284F9 /* imgtarga.h */; };
+		1CDD42E2185EDBD1009284F9 /* pnisceneaseparser.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4109185BCAEF009284F9 /* pnisceneaseparser.h */; };
+		1CDD42E4185EDBD1009284F9 /* sceneloaderase.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD410B185BCAEF009284F9 /* sceneloaderase.h */; };
+		1CDD42E6185EDBD1009284F9 /* sceneloaderbase.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD410D185BCAEF009284F9 /* sceneloaderbase.h */; };
+		1CDD42E8185EDBD1009284F9 /* scenecamera.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4110185BCAEF009284F9 /* scenecamera.h */; };
+		1CDD42EA185EDBD1009284F9 /* scenegeom.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4112185BCAEF009284F9 /* scenegeom.h */; };
+		1CDD42EC185EDBD1009284F9 /* scenegeomfx.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4114185BCAEF009284F9 /* scenegeomfx.h */; };
+		1CDD42EE185EDBD1009284F9 /* scenegroup.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4116185BCAEF009284F9 /* scenegroup.h */; };
+		1CDD42F0185EDBD1009284F9 /* scenehterrain.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4118185BCAEF009284F9 /* scenehterrain.h */; };
+		1CDD42F2185EDBD1009284F9 /* scenelight.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD411A185BCAEF009284F9 /* scenelight.h */; };
+		1CDD42F4185EDBD1009284F9 /* sceneparticle.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD411C185BCAEF009284F9 /* sceneparticle.h */; };
+		1CDD42F5185EDBD1009284F9 /* sceneparticleactions.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD411D185BCAEF009284F9 /* sceneparticleactions.h */; };
+		1CDD42F7185EDBD1009284F9 /* scenesprite.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD411F185BCAEF009284F9 /* scenesprite.h */; };
+		1CDD42F9185EDBD1009284F9 /* scenetext.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4121185BCAEF009284F9 /* scenetext.h */; };
+		1CDD42FB185EDBD1009284F9 /* sceneblend.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4149185BCAF0009284F9 /* sceneblend.h */; };
+		1CDD42FD185EDBD1009284F9 /* scenecull.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD414B185BCAF0009284F9 /* scenecull.h */; };
+		1CDD42FF185EDBD1009284F9 /* scenedepth.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD414D185BCAF0009284F9 /* scenedepth.h */; };
+		1CDD4301185EDBD1009284F9 /* scenelighting.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD414F185BCAF0009284F9 /* scenelighting.h */; };
+		1CDD4303185EDBD1009284F9 /* scenelightpath.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4151185BCAF0009284F9 /* scenelightpath.h */; };
+		1CDD4305185EDBD1009284F9 /* scenematerial.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4153185BCAF0009284F9 /* scenematerial.h */; };
+		1CDD4307185EDBD1009284F9 /* scenepolygonmode.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4155185BCAF0009284F9 /* scenepolygonmode.h */; };
+		1CDD4309185EDBD1009284F9 /* scenetexenv.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4157185BCAF0009284F9 /* scenetexenv.h */; };
+		1CDD430B185EDBD2009284F9 /* scenetexgen.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4159185BCAF0009284F9 /* scenetexgen.h */; };
+		1CDD430D185EDBD2009284F9 /* scenetexture.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD415B185BCAF0009284F9 /* scenetexture.h */; };
+		1CDD430F185EDBD2009284F9 /* scenetexturexform.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD415D185BCAF0009284F9 /* scenetexturexform.h */; };
+		1CDD4311185EDBD2009284F9 /* sceneddogl.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4124185BCAEF009284F9 /* sceneddogl.h */; };
+		1CDD4313185EDBD2009284F9 /* sceneddogllist.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4126185BCAEF009284F9 /* sceneddogllist.h */; };
+		1CDD4314185EDBD2009284F9 /* sceneogl.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4127185BCAEF009284F9 /* sceneogl.h */; };
+		1CDD4316185EDBD2009284F9 /* scenesnddd.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4129185BCAEF009284F9 /* scenesnddd.h */; };
+		1CDD4318185EDBD2009284F9 /* scenetexobj.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD412B185BCAEF009284F9 /* scenetexobj.h */; };
+		1CDD431B185EDBD2009284F9 /* sceneconverter.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD412E185BCAEF009284F9 /* sceneconverter.h */; };
+		1CDD431D185EDBD2009284F9 /* scenedbgdd.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4130185BCAEF009284F9 /* scenedbgdd.h */; };
+		1CDD431F185EDBD2009284F9 /* scenedupdd.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4132185BCAEF009284F9 /* scenedupdd.h */; };
+		1CDD4321185EDBD2009284F9 /* sceneflattendd.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4134185BCAEF009284F9 /* sceneflattendd.h */; };
+		1CDD4323185EDBD2009284F9 /* scenegraphdd.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4136185BCAF0009284F9 /* scenegraphdd.h */; };
+		1CDD4325185EDBD2009284F9 /* sceneisectdd.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4138185BCAF0009284F9 /* sceneisectdd.h */; };
+		1CDD4327185EDBD2009284F9 /* scenenode.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD413A185BCAF0009284F9 /* scenenode.h */; };
+		1CDD4329185EDBD2009284F9 /* scenenodepath.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD413C185BCAF0009284F9 /* scenenodepath.h */; };
+		1CDD432B185EDBD2009284F9 /* scenesndeffect.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD413E185BCAF0009284F9 /* scenesndeffect.h */; };
+		1CDD432D185EDBD2009284F9 /* scenesndlistener.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4140185BCAF0009284F9 /* scenesndlistener.h */; };
+		1CDD432F185EDBD2009284F9 /* scenestate.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4142185BCAF0009284F9 /* scenestate.h */; };
+		1CDD4331185EDBD2009284F9 /* scenestatedd.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4144185BCAF0009284F9 /* scenestatedd.h */; };
+		1CDD4333185EDBD2009284F9 /* scenetypes.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4146185BCAF0009284F9 /* scenetypes.h */; };
+		1CDD4336185EDBD2009284F9 /* sndengine.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4161185BCAF0009284F9 /* sndengine.h */; };
+		1CDD4338185EDBD2009284F9 /* SoundEngine.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4163185BCAF0009284F9 /* SoundEngine.h */; };
+		1CDD433A185EDBD2009284F9 /* uiactions.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4166185BCAF0009284F9 /* uiactions.h */; };
+		1CDD433C185EDBD2009284F9 /* uibase.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4168185BCAF0009284F9 /* uibase.h */; };
+		1CDD433E185EDBD2009284F9 /* uibutton.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD416A185BCAF0009284F9 /* uibutton.h */; };
+		1CDD433F185EDBD2009284F9 /* uicommon.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD416B185BCAF0009284F9 /* uicommon.h */; };
+		1CDD4340185EDBD2009284F9 /* uieventobserver.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD416C185BCAF0009284F9 /* uieventobserver.h */; };
+		1CDD4342185EDBD2009284F9 /* uievents.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD416E185BCAF0009284F9 /* uievents.h */; };
+		1CDD4344185EDBD2009284F9 /* uiframe.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4170185BCAF0009284F9 /* uiframe.h */; };
+		1CDD4346185EDBD2009284F9 /* uilabel.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4172185BCAF0009284F9 /* uilabel.h */; };
+		1CDD4348185EDBD2009284F9 /* uimanager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4174185BCAF0009284F9 /* uimanager.h */; };
+		1CDD4349185EDBD2009284F9 /* uimanagerevents.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4175185BCAF0009284F9 /* uimanagerevents.h */; };
+		1CDD434B185EDBD2009284F9 /* uiscene.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4177185BCAF0009284F9 /* uiscene.h */; };
+		1CDD434D185EDBD2009284F9 /* uiwheel.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4179185BCAF0009284F9 /* uiwheel.h */; };
+		1CDD434F185EDBD2009284F9 /* uiwheelcore.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD417B185BCAF0009284F9 /* uiwheelcore.h */; };
+		1CF4DB8F185EDD79007331F8 /* sceneattr.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD412C185BCAEF009284F9 /* sceneattr.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -129,6 +250,127 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				1CF4DB8F185EDD79007331F8 /* sceneattr.h in CopyFiles */,
+				1CDD4275185EDBD1009284F9 /* animbase.h in CopyFiles */,
+				1CDD4277185EDBD1009284F9 /* animbgmusicfader.h in CopyFiles */,
+				1CDD4278185EDBD1009284F9 /* animcommon.h in CopyFiles */,
+				1CDD4279185EDBD1009284F9 /* animeventobserver.h in CopyFiles */,
+				1CDD427A185EDBD1009284F9 /* animevents.h in CopyFiles */,
+				1CDD427C185EDBD1009284F9 /* animgroup.h in CopyFiles */,
+				1CDD427D185EDBD1009284F9 /* animidbase.h in CopyFiles */,
+				1CDD427F185EDBD1009284F9 /* animmanager.h in CopyFiles */,
+				1CDD4281185EDBD1009284F9 /* animmatrixhelper.h in CopyFiles */,
+				1CDD4283185EDBD1009284F9 /* animscenematerial.h in CopyFiles */,
+				1CDD4285185EDBD1009284F9 /* animscenenoderotaxis.h in CopyFiles */,
+				1CDD4287185EDBD1009284F9 /* animscenenodescale.h in CopyFiles */,
+				1CDD4289185EDBD1009284F9 /* animscenenodetrans.h in CopyFiles */,
+				1CDD428B185EDBD1009284F9 /* animscenenodevis.h in CopyFiles */,
+				1CDD428D185EDBD1009284F9 /* animtrans.h in CopyFiles */,
+				1CDD428F185EDBD1009284F9 /* animuibaserotaxis.h in CopyFiles */,
+				1CDD4291185EDBD1009284F9 /* animuibasescale.h in CopyFiles */,
+				1CDD4293185EDBD1009284F9 /* animuibasetrans.h in CopyFiles */,
+				1CDD4295185EDBD1009284F9 /* fontfont.h in CopyFiles */,
+				1CDD4296185EDBD1009284F9 /* MersenneTwister.h in CopyFiles */,
+				1CDD4298185EDBD1009284F9 /* pnibox2.h in CopyFiles */,
+				1CDD429A185EDBD1009284F9 /* pnibox3.h in CopyFiles */,
+				1CDD429B185EDBD1009284F9 /* pnicontains.h in CopyFiles */,
+				1CDD429D185EDBD1009284F9 /* pnicylinder.h in CopyFiles */,
+				1CDD429E185EDBD1009284F9 /* pnidoublemath.h in CopyFiles */,
+				1CDD42A0185EDBD1009284F9 /* pnidoubletrait.h in CopyFiles */,
+				1CDD42A2185EDBD1009284F9 /* pnifloatmath.h in CopyFiles */,
+				1CDD42A4185EDBD1009284F9 /* pnifloattrait.h in CopyFiles */,
+				1CDD42A6185EDBD1009284F9 /* pnifrustum.h in CopyFiles */,
+				1CDD42A8185EDBD1009284F9 /* pnimath.h in CopyFiles */,
+				1CDD42A9185EDBD1009284F9 /* pnimathdef.h in CopyFiles */,
+				1CDD42AA185EDBD1009284F9 /* pnimathfp.h in CopyFiles */,
+				1CDD42AB185EDBD1009284F9 /* pnimathios.h in CopyFiles */,
+				1CDD42AC185EDBD1009284F9 /* pnimathstream.cpp in CopyFiles */,
+				1CDD42AD185EDBD1009284F9 /* pnimathstream.h in CopyFiles */,
+				1CDD42AF185EDBD1009284F9 /* pnimatrix4.h in CopyFiles */,
+				1CDD42B0185EDBD1009284F9 /* pnimatstack.cpp in CopyFiles */,
+				1CDD42B1185EDBD1009284F9 /* pnimatstack.h in CopyFiles */,
+				1CDD42B3185EDBD1009284F9 /* pniplane.h in CopyFiles */,
+				1CDD42B5185EDBD1009284F9 /* pnipolytope.h in CopyFiles */,
+				1CDD42B7185EDBD1009284F9 /* pniquat.h in CopyFiles */,
+				1CDD42B9185EDBD1009284F9 /* pnirand.h in CopyFiles */,
+				1CDD42BB185EDBD1009284F9 /* pniseg.h in CopyFiles */,
+				1CDD42BD185EDBD1009284F9 /* pnisphere.h in CopyFiles */,
+				1CDD42BF185EDBD1009284F9 /* pnivec2.h in CopyFiles */,
+				1CDD42C1185EDBD1009284F9 /* pnivec3.h in CopyFiles */,
+				1CDD42C3185EDBD1009284F9 /* pnivec4.h in CopyFiles */,
+				1CDD42C5185EDBD1009284F9 /* pniautoref.h in CopyFiles */,
+				1CDD42C6185EDBD1009284F9 /* pniavg.h in CopyFiles */,
+				1CDD42C7185EDBD1009284F9 /* pnibox.h in CopyFiles */,
+				1CDD42C8185EDBD1009284F9 /* pnierror.h in CopyFiles */,
+				1CDD42CA185EDBD1009284F9 /* pnilog.h in CopyFiles */,
+				1CDD42CB185EDBD1009284F9 /* pniplatform.h in CopyFiles */,
+				1CDD42CC185EDBD1009284F9 /* pniprogress.h in CopyFiles */,
+				1CDD42CE185EDBD1009284F9 /* pnirefcount.h in CopyFiles */,
+				1CDD42CF185EDBD1009284F9 /* pnirefcountdbg.h in CopyFiles */,
+				1CDD42D0185EDBD1009284F9 /* pnitimer.cpp in CopyFiles */,
+				1CDD42D1185EDBD1009284F9 /* pnitimer.h in CopyFiles */,
+				1CDD42D5185EDBD1009284F9 /* timerprof.h in CopyFiles */,
+				1CDD42DA185EDBD1009284F9 /* imgalgo.h in CopyFiles */,
+				1CDD42DC185EDBD1009284F9 /* imgbase.h in CopyFiles */,
+				1CDD42DE185EDBD1009284F9 /* imgdds.h in CopyFiles */,
+				1CDD42E0185EDBD1009284F9 /* imgtarga.h in CopyFiles */,
+				1CDD42E2185EDBD1009284F9 /* pnisceneaseparser.h in CopyFiles */,
+				1CDD42E4185EDBD1009284F9 /* sceneloaderase.h in CopyFiles */,
+				1CDD42E6185EDBD1009284F9 /* sceneloaderbase.h in CopyFiles */,
+				1CDD42E8185EDBD1009284F9 /* scenecamera.h in CopyFiles */,
+				1CDD42EA185EDBD1009284F9 /* scenegeom.h in CopyFiles */,
+				1CDD42EC185EDBD1009284F9 /* scenegeomfx.h in CopyFiles */,
+				1CDD42EE185EDBD1009284F9 /* scenegroup.h in CopyFiles */,
+				1CDD42F0185EDBD1009284F9 /* scenehterrain.h in CopyFiles */,
+				1CDD42F2185EDBD1009284F9 /* scenelight.h in CopyFiles */,
+				1CDD42F4185EDBD1009284F9 /* sceneparticle.h in CopyFiles */,
+				1CDD42F5185EDBD1009284F9 /* sceneparticleactions.h in CopyFiles */,
+				1CDD42F7185EDBD1009284F9 /* scenesprite.h in CopyFiles */,
+				1CDD42F9185EDBD1009284F9 /* scenetext.h in CopyFiles */,
+				1CDD42FB185EDBD1009284F9 /* sceneblend.h in CopyFiles */,
+				1CDD42FD185EDBD1009284F9 /* scenecull.h in CopyFiles */,
+				1CDD42FF185EDBD1009284F9 /* scenedepth.h in CopyFiles */,
+				1CDD4301185EDBD1009284F9 /* scenelighting.h in CopyFiles */,
+				1CDD4303185EDBD1009284F9 /* scenelightpath.h in CopyFiles */,
+				1CDD4305185EDBD1009284F9 /* scenematerial.h in CopyFiles */,
+				1CDD4307185EDBD1009284F9 /* scenepolygonmode.h in CopyFiles */,
+				1CDD4309185EDBD1009284F9 /* scenetexenv.h in CopyFiles */,
+				1CDD430B185EDBD2009284F9 /* scenetexgen.h in CopyFiles */,
+				1CDD430D185EDBD2009284F9 /* scenetexture.h in CopyFiles */,
+				1CDD430F185EDBD2009284F9 /* scenetexturexform.h in CopyFiles */,
+				1CDD4311185EDBD2009284F9 /* sceneddogl.h in CopyFiles */,
+				1CDD4313185EDBD2009284F9 /* sceneddogllist.h in CopyFiles */,
+				1CDD4314185EDBD2009284F9 /* sceneogl.h in CopyFiles */,
+				1CDD4316185EDBD2009284F9 /* scenesnddd.h in CopyFiles */,
+				1CDD4318185EDBD2009284F9 /* scenetexobj.h in CopyFiles */,
+				1CDD431B185EDBD2009284F9 /* sceneconverter.h in CopyFiles */,
+				1CDD431D185EDBD2009284F9 /* scenedbgdd.h in CopyFiles */,
+				1CDD431F185EDBD2009284F9 /* scenedupdd.h in CopyFiles */,
+				1CDD4321185EDBD2009284F9 /* sceneflattendd.h in CopyFiles */,
+				1CDD4323185EDBD2009284F9 /* scenegraphdd.h in CopyFiles */,
+				1CDD4325185EDBD2009284F9 /* sceneisectdd.h in CopyFiles */,
+				1CDD4327185EDBD2009284F9 /* scenenode.h in CopyFiles */,
+				1CDD4329185EDBD2009284F9 /* scenenodepath.h in CopyFiles */,
+				1CDD432B185EDBD2009284F9 /* scenesndeffect.h in CopyFiles */,
+				1CDD432D185EDBD2009284F9 /* scenesndlistener.h in CopyFiles */,
+				1CDD432F185EDBD2009284F9 /* scenestate.h in CopyFiles */,
+				1CDD4331185EDBD2009284F9 /* scenestatedd.h in CopyFiles */,
+				1CDD4333185EDBD2009284F9 /* scenetypes.h in CopyFiles */,
+				1CDD4336185EDBD2009284F9 /* sndengine.h in CopyFiles */,
+				1CDD4338185EDBD2009284F9 /* SoundEngine.h in CopyFiles */,
+				1CDD433A185EDBD2009284F9 /* uiactions.h in CopyFiles */,
+				1CDD433C185EDBD2009284F9 /* uibase.h in CopyFiles */,
+				1CDD433E185EDBD2009284F9 /* uibutton.h in CopyFiles */,
+				1CDD433F185EDBD2009284F9 /* uicommon.h in CopyFiles */,
+				1CDD4340185EDBD2009284F9 /* uieventobserver.h in CopyFiles */,
+				1CDD4342185EDBD2009284F9 /* uievents.h in CopyFiles */,
+				1CDD4344185EDBD2009284F9 /* uiframe.h in CopyFiles */,
+				1CDD4346185EDBD2009284F9 /* uilabel.h in CopyFiles */,
+				1CDD4348185EDBD2009284F9 /* uimanager.h in CopyFiles */,
+				1CDD4349185EDBD2009284F9 /* uimanagerevents.h in CopyFiles */,
+				1CDD434B185EDBD2009284F9 /* uiscene.h in CopyFiles */,
+				1CDD434D185EDBD2009284F9 /* uiwheel.h in CopyFiles */,
+				1CDD434F185EDBD2009284F9 /* uiwheelcore.h in CopyFiles */,
 				1CDD3FFF185BC965009284F9 /* philibs.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -821,7 +1063,6 @@
 				1CDD3FF2185BC965009284F9 /* Sources */,
 				1CDD3FF3185BC965009284F9 /* Frameworks */,
 				1CDD3FF4185BC965009284F9 /* CopyFiles */,
-				1CDD4273185E393F009284F9 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -888,22 +1129,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		1CDD4273185E393F009284F9 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/Users/payton/me/dev/phi/philibs/copy-headers.sh";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1CDD3FF2185BC965009284F9 /* Sources */ = {
