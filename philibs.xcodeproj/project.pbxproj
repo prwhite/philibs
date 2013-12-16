@@ -901,7 +901,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "";
+			shellScript = "/Users/payton/me/dev/phi/philibs/copy-headers.sh";
 		};
 /* End PBXShellScriptBuildPhase section */
 
