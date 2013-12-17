@@ -72,7 +72,7 @@ base* dds::loadHelper ( std::string const& fname )
 			
 			BufferType* buff = new BufferType[ fileStat.st_size ];
 			// TODO: Error check fread.
-			fread ( buff, fileStat.st_size, 1, fid );
+			fread ( buff, ( size_t ) fileStat.st_size, 1, fid );
 			
 			base* pImg = new base ();
       pImg->setName ( fname );

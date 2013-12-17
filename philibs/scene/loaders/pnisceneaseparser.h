@@ -69,7 +69,7 @@ class str
             struct stat tstat;
             stat ( fname.c_str (), &tstat );
 #endif
-            mLen = tstat.st_size;
+            mLen = ( size_t ) tstat.st_size;
             
             mData.resize ( mLen + 16 );
             
