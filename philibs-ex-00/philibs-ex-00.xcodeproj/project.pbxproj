@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1CC4B9051860D22700169CF6 /* phiViewController-gles1.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1CC4B9041860D22700169CF6 /* phiViewController-gles1.mm */; };
 		1CDD4217185BDDC2009284F9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD4216185BDDC2009284F9 /* Foundation.framework */; };
 		1CDD4219185BDDC2009284F9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD4218185BDDC2009284F9 /* CoreGraphics.framework */; };
 		1CDD421B185BDDC2009284F9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD421A185BDDC2009284F9 /* UIKit.framework */; };
@@ -19,7 +20,6 @@
 		1CDD4231185BDDC2009284F9 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1CDD422F185BDDC2009284F9 /* Main_iPad.storyboard */; };
 		1CDD4233185BDDC2009284F9 /* Shader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 1CDD4232185BDDC2009284F9 /* Shader.fsh */; };
 		1CDD4235185BDDC2009284F9 /* Shader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 1CDD4234185BDDC2009284F9 /* Shader.vsh */; };
-		1CDD4238185BDDC2009284F9 /* phiViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD4237185BDDC2009284F9 /* phiViewController.mm */; };
 		1CDD423A185BDDC2009284F9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1CDD4239185BDDC2009284F9 /* Images.xcassets */; };
 		1CDD4241185BDDC2009284F9 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD4240185BDDC2009284F9 /* XCTest.framework */; };
 		1CDD4242185BDDC2009284F9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD4216185BDDC2009284F9 /* Foundation.framework */; };
@@ -61,6 +61,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1CC4B9041860D22700169CF6 /* phiViewController-gles1.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "phiViewController-gles1.mm"; sourceTree = "<group>"; };
 		1CDD4213185BDDC2009284F9 /* philibs-ex-00.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "philibs-ex-00.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CDD4216185BDDC2009284F9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1CDD4218185BDDC2009284F9 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -159,6 +160,7 @@
 				1CDD4234185BDDC2009284F9 /* Shader.vsh */,
 				1CDD4236185BDDC2009284F9 /* phiViewController.h */,
 				1CDD4237185BDDC2009284F9 /* phiViewController.mm */,
+				1CC4B9041860D22700169CF6 /* phiViewController-gles1.mm */,
 				1CDD4239185BDDC2009284F9 /* Images.xcassets */,
 				1CDD4221185BDDC2009284F9 /* Supporting Files */,
 			);
@@ -330,7 +332,7 @@
 			files = (
 				1CDD422B185BDDC2009284F9 /* phiAppDelegate.m in Sources */,
 				1CDD4227185BDDC2009284F9 /* main.m in Sources */,
-				1CDD4238185BDDC2009284F9 /* phiViewController.mm in Sources */,
+				1CC4B9051860D22700169CF6 /* phiViewController-gles1.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
