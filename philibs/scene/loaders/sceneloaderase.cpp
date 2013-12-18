@@ -1188,29 +1188,36 @@ PSTDPROFCALL(tp.start () );
 PSTDPROFCALL(static pstd::timerProf tpParse ( "ase::load - parse", 1 ) );
 PSTDPROFCALL(tpParse.start () );
 
-  helper aHelper ( *this, parser.parse ( fname ) );
+  ::ase::node* pParseRoot = parser.parse ( fname );
+  
+  if ( pParseRoot )
+  {
+    helper aHelper ( *this, pParseRoot );
 
 PSTDPROFCALL(tpParse.stop () );
 
-  pni::pstd::progressEvent event ( this );
-  emitProgressStart ( event );
-  
-  group* pRoot = new group;
-  aHelper.addNodeToDirectory ( pRoot );
-  
-  mObserver->onPreNode ( pRoot );
-  
-  aHelper.processChild ( pRoot, aHelper.mRoot );
-  
-  mObserver->onPostNode ( pRoot );
+    pni::pstd::progressEvent event ( this );
+    emitProgressStart ( event );
+    
+    group* pRoot = new group;
+    aHelper.addNodeToDirectory ( pRoot );
+    
+    mObserver->onPreNode ( pRoot );
+    
+    aHelper.processChild ( pRoot, aHelper.mRoot );
+    
+    mObserver->onPostNode ( pRoot );
 
-  pRoot->setName ( fname );
+    pRoot->setName ( fname );
 
-  emitProgressEnd ( event );
+    emitProgressEnd ( event );
 
 PSTDPROFCALL(tp.stop () );
 
-  return pRoot;
+    return pRoot;
+  }
+  else
+    return nullptr;
 }
 
 /////////////////////////////////////////////////////////////////////

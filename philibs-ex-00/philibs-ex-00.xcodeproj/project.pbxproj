@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1CAD97121861879B00C547E1 /* test-00.ase in Resources */ = {isa = PBXBuildFile; fileRef = 1CAD97111861879B00C547E1 /* test-00.ase */; };
 		1CC4B9051860D22700169CF6 /* phiViewController-gles1.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1CC4B9041860D22700169CF6 /* phiViewController-gles1.mm */; };
 		1CDD4217185BDDC2009284F9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD4216185BDDC2009284F9 /* Foundation.framework */; };
 		1CDD4219185BDDC2009284F9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD4218185BDDC2009284F9 /* CoreGraphics.framework */; };
@@ -61,6 +62,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1CAD97111861879B00C547E1 /* test-00.ase */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "test-00.ase"; path = "philibs-ex-00/Resources/test-00.ase"; sourceTree = "<group>"; };
+		1CAD97131861922A00C547E1 /* pniosxplatform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pniosxplatform.h; sourceTree = "<group>"; };
 		1CC4B9041860D22700169CF6 /* phiViewController-gles1.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "phiViewController-gles1.mm"; sourceTree = "<group>"; };
 		1CDD4213185BDDC2009284F9 /* philibs-ex-00.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "philibs-ex-00.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CDD4216185BDDC2009284F9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -116,6 +119,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1CAD970F1861876300C547E1 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				1CAD97111861879B00C547E1 /* test-00.ase */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		1CDD420A185BDDC2009284F9 = {
 			isa = PBXGroup;
 			children = (
@@ -124,6 +135,7 @@
 				1CDD4246185BDDC2009284F9 /* philibs-ex-00Tests */,
 				1CDD4215185BDDC2009284F9 /* Frameworks */,
 				1CDD4214185BDDC2009284F9 /* Products */,
+				1CAD970F1861876300C547E1 /* Resources */,
 			);
 			sourceTree = "<group>";
 		};
@@ -170,6 +182,7 @@
 		1CDD4221185BDDC2009284F9 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				1CAD97131861922A00C547E1 /* pniosxplatform.h */,
 				1CDD4222185BDDC2009284F9 /* philibs-ex-00-Info.plist */,
 				1CDD4223185BDDC2009284F9 /* InfoPlist.strings */,
 				1CDD4226185BDDC2009284F9 /* main.m */,
@@ -312,6 +325,7 @@
 				1CDD423A185BDDC2009284F9 /* Images.xcassets in Resources */,
 				1CDD4225185BDDC2009284F9 /* InfoPlist.strings in Resources */,
 				1CDD4235185BDDC2009284F9 /* Shader.vsh in Resources */,
+				1CAD97121861879B00C547E1 /* test-00.ase in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
