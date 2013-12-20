@@ -137,7 +137,9 @@
 				1CDD4214185BDDC2009284F9 /* Products */,
 				1CAD970F1861876300C547E1 /* Resources */,
 			);
+			indentWidth = 2;
 			sourceTree = "<group>";
+			tabWidth = 2;
 		};
 		1CDD4214185BDDC2009284F9 /* Products */ = {
 			isa = PBXGroup;

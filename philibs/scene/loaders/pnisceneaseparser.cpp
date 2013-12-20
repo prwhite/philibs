@@ -95,9 +95,9 @@ node* parser::parse ( const std::string& fname )
   Stream istr ( fname.c_str () );
   
   if ( istr.good () )
-  return parse ( istr );
+    return parse ( istr );
   else
-  return 0;
+    return 0;
 }
 
 node* parser::parse ( Stream& istr )

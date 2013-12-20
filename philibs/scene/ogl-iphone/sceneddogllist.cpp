@@ -516,9 +516,9 @@ PNIDBG
   geomData::Values const& values = pData->getValues ();
   float const* pValues = &values[ 0 ];
 
-  // * 4 because the stride is in bites and our stride
+  // * 4 because the stride is in bytes and our stride
   // value is for float*.
-  uint32_t stride = pData->getValueStride () * 4;
+  uint32_t stride = pData->getValueStride () * sizeof ( float );
 
 // void glDrawElements(GLenum mode,
 //     GLsizei count,

@@ -31,6 +31,12 @@ std::string nsStringToStdString ( NSString* pStr )
   return std::string ( str );
 }
 
+/** Get the system's path to a given directory.
+ Includes:
+   DocsDir, AppDir, BundleDir, TmpDir locations.
+ @param loc The ShellLoc location enum specifying the desired location.
+*/
+ 
 std::string getShellPath ( ShellLoc loc )
 {
   std::string retVal;

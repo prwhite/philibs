@@ -19,6 +19,12 @@ namespace scene {
   
 /////////////////////////////////////////////////////////////////////
 
+/** 
+  Groups are basic nodes, which have no rendering
+  behavior, but collect other nodes for scene management and
+  manipulation purposes.
+*/
+  
 class group :
   public node
 {

@@ -124,6 +124,7 @@ enum Errors {
 	FileNotFound = 100,
 	TextureNotFound,
 	ResourceNotFound,
+  ParseFailed,
 
 	InternalErrorGeom = 1000,
 	InternalErrorHierarchy,

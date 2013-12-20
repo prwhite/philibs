@@ -21,8 +21,8 @@ camera::camera() :
   mNormalizeMode ( NoNormalize ),
   mEnableScissor ( false )
 {
-  setSymmetric ();
   setViewport ();
+  setSymmetric ();
 }
 
 camera::~camera()

@@ -101,7 +101,7 @@ class geomData :
       public std::vector< SizeType >
     {
         typedef std::vector< SizeType > Base;
-        enum { Buff = 4 };
+        enum { Buff = 0 };
         
       public:
         void resize ( size_type size, SizeType val = 0 )

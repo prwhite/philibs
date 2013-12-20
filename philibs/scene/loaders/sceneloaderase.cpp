@@ -1217,7 +1217,12 @@ PSTDPROFCALL(tp.stop () );
     return pRoot;
   }
   else
+  {
+    std::string err ( "Could not parse file: " + fname );
+    mObserver->onError ( pni::pstd::error ( loader::ParseFailed, err ) );
+    
     return nullptr;
+  }
 }
 
 /////////////////////////////////////////////////////////////////////
