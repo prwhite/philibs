@@ -21,8 +21,6 @@
 #include "pnimatstack.h"
 #include "pnibox3.h"
 
-#include "sceneogl.h"
-
 /////////////////////////////////////////////////////////////////////
 
 namespace scene {
@@ -102,12 +100,13 @@ class ddOglList :
   protected:
     
   private:
+    typedef unsigned int GlEnum;
     stateSet mCurStates;
     RenderList mRenderList;
     //CPVRTglesExt mPvr;
     nodePath mSinkPath;
     unsigned int mCurStateId;
-    GLenum mCurLightUnit;
+    GlEnum mCurLightUnit;
     
     void resetCurState ();
     void execStates ( stateSet const& sSet );

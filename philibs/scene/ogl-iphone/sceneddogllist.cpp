@@ -32,6 +32,8 @@
 
 #include "pnimathstream.h"
 
+#include "sceneogl.h"
+
 using namespace std;
 
 /////////////////////////////////////////////////////////////////////
