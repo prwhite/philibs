@@ -32,7 +32,7 @@
 
 #include "pnimathstream.h"
 
-#include <OpenGLES/ES1/gl.h>
+#include <OpenGLES/ES2/gl.h>
 
 using namespace std;
 
@@ -54,6 +54,8 @@ using namespace std;
 //	GL_APPLE_client_storage
 
 /////////////////////////////////////////////////////////////////////
+
+#pragma mark CheckGLError wrapper
 
 #define CheckGLError checkGlError(__FILE__,__LINE__);
 void checkGlError ( char const* file, int line )
@@ -96,6 +98,8 @@ void configTextureObject ( texture const* textureIn )
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
+
+#pragma mark ddOglTextureBind does a traversal to pre-bind texture
 
 class ddOglTextureBind :
   public graphDd,
@@ -170,6 +174,8 @@ class ddOglTextureBind :
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
+
+#pragma mark ddOglList
 
 ddOglList::ddOglList() :
   mCurStateId ( 0 ),
@@ -321,8 +327,9 @@ PNIDBG
 
   resetCurState ();
 
-  glMatrixMode ( GL_MODELVIEW );
-  glLoadIdentity ();
+    // TODO: PRW PNIGLES1REMOVED
+//  glMatrixMode ( GL_MODELVIEW );
+//  glLoadIdentity ();
 
 PNIDBG
   execCamera ();
@@ -350,9 +357,10 @@ PNIDBG
 
 #endif // _NDEBUG
   
-    glMatrixMode ( GL_MODELVIEW ); // TEMP... remove this after everything works.
-    glPushMatrix ();
-    glMultMatrixf ( cur->mMatrix );
+      // TODO: PRW PNIGLES1REMOVED
+//    glMatrixMode ( GL_MODELVIEW ); // TEMP... remove this after everything works.
+//    glPushMatrix ();
+//    glMultMatrixf ( cur->mMatrix );
 
  //cout << "cur->matrix =\n" << cur->mMatrix << endl;
 
@@ -362,7 +370,8 @@ PNIDBG
 PNIDBG
     cur->mNode->accept ( this );
     
-    glPopMatrix ();
+      // TODO: PRW PNIGLES1REMOVED
+//    glPopMatrix ();
   }
 
 #ifndef _NDEBUG
@@ -381,7 +390,9 @@ void ddOglList::execCamera ()
   // Do something with matrix from camera path.
   pni::math::matrix4 mat;
   mSinkPath.calcInverseXform ( mat );
-  glLoadMatrixf ( mat );
+
+    // TODO: PRW PNIGLES1REMOVED
+//  glLoadMatrixf ( mat );
 
 // std::string tmp;
 // mSinkPath.getPathString ( tmp );
@@ -454,37 +465,39 @@ void doClear ( camera const* pNode )
 void ddOglList::dispatch ( camera const* pNode )
 {
   // Setup projection matrix.
-  glMatrixMode ( GL_PROJECTION );
-  glLoadMatrixf ( pNode->getProjectionMatrix () );
+    // TODO: PRW PNIGLES1REMOVED
+//  glMatrixMode ( GL_PROJECTION );
+//  glLoadMatrixf ( pNode->getProjectionMatrix () );
 
 // cout << "camera proj = " << pNode->getProjectionMatrix () << endl;
 
-  glMatrixMode ( GL_MODELVIEW );
+    // TODO: PRW PNIGLES1REMOVED
+//  glMatrixMode ( GL_MODELVIEW );
   
   // Setup viewport.
   float left, bottom, width, height;
   pNode->getViewport ( left, bottom, width, height );
   glViewport ( left, bottom, width, height );
   
-  // TODO Setup scissor.
+  // TODO: Setup scissor.
   
   // Do clear.
   doClear ( pNode );
   
-  // TODO Setup normalization state.
-  switch ( pNode->getNormalizeMode () )
-  {
-    case camera::Normalize:
-      glEnable ( GL_NORMALIZE );
-      break;
-    case camera::Rescale:
-      glEnable ( GL_RESCALE_NORMAL );
-      break;
-    case camera::NoNormalize:
-    default:
-      glDisable ( GL_NORMALIZE );
-      glDisable ( GL_RESCALE_NORMAL );
-  }
+  // TODO: PRW PNIGLES1REMOVED
+//  switch ( pNode->getNormalizeMode () )
+//  {
+//    case camera::Normalize:
+//      glEnable ( GL_NORMALIZE );
+//      break;
+//    case camera::Rescale:
+//      glEnable ( GL_RESCALE_NORMAL );
+//      break;
+//    case camera::NoNormalize:
+//    default:
+//      glDisable ( GL_NORMALIZE );
+//      glDisable ( GL_RESCALE_NORMAL );
+//  }
 CheckGLError
 }
 
@@ -526,6 +539,9 @@ PNIDBG
 //     GLsizei count,
 //     GLenum type,
 //     const GLvoid * indices)  
+
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
 
   glEnableClientState ( GL_VERTEX_ARRAY );
   glVertexPointer ( 3, GL_FLOAT, stride, pValues );
@@ -574,7 +590,9 @@ PNIDBG
   }
   else
     glDisableClientState ( GL_TEXTURE_COORD_ARRAY );
-    
+
+#endif // PNIGLES1REMOVED
+
   // Get indices and draw everything.
   geomData::Indices const& indices = pData->getIndices ();
   unsigned short const* pIndices = &indices[ 0 ];
@@ -610,7 +628,10 @@ PNIDBG
   //   node->accept ( this ) -> dispatch ( light ).
 
   glEnable ( mCurLightUnit );
-  
+
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
+
 	// set the color
 	glLightfv ( mCurLightUnit, GL_AMBIENT, pNode->getAmbient () );
 	glLightfv ( mCurLightUnit, GL_DIFFUSE, pNode->getDiffuse () );
@@ -662,6 +683,9 @@ PNIDBG
 			}
 			break;
 	}
+
+#endif // PNIGLES1REMOVED
+  
 CheckGLError
 }
 
@@ -734,19 +758,20 @@ void ddOglList::setDefaultState ( state const* pState, state::Id id )
 /////////////////////////////////////////////////////////////////////
 // Blend related.
 
-// GLenum
-// blendEqToGl ( blend::BlendEquation beq )
-// {
-// 	switch ( beq )
-// 	{
-// 		default:
-// 		case blend::Add: return GL_FUNC_ADD;
-// 		case blend::Subtract: return GL_FUNC_SUBTRACT;
-// 		case blend::ReverseSubtract: return GL_FUNC_REVERSE_SUBTRACT;
+GLenum
+blendEqToGl ( blend::BlendEquation beq )
+{
+ 	switch ( beq )
+ 	{
+ 		default:
+ 		case blend::Add: return GL_FUNC_ADD;
+ 		case blend::Subtract: return GL_FUNC_SUBTRACT;
+ 		case blend::ReverseSubtract: return GL_FUNC_REVERSE_SUBTRACT;
+        // Missing from GLES2.0 header for iOS (?).
 // 		case blend::Min: return GL_MIN;
 // 		case blend::Max: return GL_MAX;
-// 	}
-// }
+ 	}
+}
 
 int 
 srcBlendTypeToGl ( blend::SrcFunc srcFunc )
@@ -806,7 +831,7 @@ void ddOglList::dispatch ( blend const* pState )
   {
     glEnable ( GL_BLEND );
 
-// 		glBlendEquation ( blendEqToGl ( pState->getBlendEquation () ) );
+ 		glBlendEquation ( blendEqToGl ( pState->getBlendEquation () ) );
 
 		blend::SrcFunc src;
 		blend::DstFunc dst;
@@ -814,6 +839,9 @@ void ddOglList::dispatch ( blend const* pState )
 		
 		glBlendFunc ( srcBlendTypeToGl ( src ), 
 				dstBlendTypeToGl ( dst ) );
+
+      // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
 
 		// alpha test
 		if ( pState->getAlphaFunc () != blend::AlphaAlways )
@@ -826,11 +854,14 @@ void ddOglList::dispatch ( blend const* pState )
     {
 		  glDisable ( GL_ALPHA_TEST );
     }
+  #endif // PNIGLES1REMOVED
+  
   }
   else
   {
 		glDisable ( GL_BLEND );
-		glDisable ( GL_ALPHA_TEST );
+      // TODO: PRW PNIGLES1REMOVED
+//		glDisable ( GL_ALPHA_TEST );
   }
 CheckGLError
 }
@@ -904,6 +935,9 @@ CheckGLError
 
 void ddOglList::dispatch ( lighting const* pState )
 {
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
+
 	if ( pState->getEnable () )
 	{
 		glLightModelfv ( GL_LIGHT_MODEL_AMBIENT, 
@@ -934,7 +968,11 @@ void ddOglList::dispatch ( lighting const* pState )
 // 		glLightModeli ( GL_LIGHT_MODEL_LOCAL_VIEWER, GL_FALSE );
 
 // 		glLightModelf ( GL_LIGHT_MODEL_COLOR_CONTROL, GL_SINGLE_COLOR );
+
 	}
+
+#endif // PNIGLES1REMOVED
+
 CheckGLError
 }
 
@@ -942,6 +980,10 @@ CheckGLError
 
 void ddOglList::execLightPath ( nodePath const& lpath )
 {
+
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
+
   // We must get the light into global 'scene' space, as we don't really
   // enjoy having lights in weird coordinate frames.
   glMatrixMode ( GL_MODELVIEW );
@@ -961,10 +1003,13 @@ void ddOglList::execLightPath ( nodePath const& lpath )
   lpath.getLeaf ()->accept ( this );
   
   glPopMatrix ();
+#endif // PNIGLES1REMOVED
 }
 
 void ddOglList::dispatch ( lightPath const* pState )
 {
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
   for ( GLenum num = 0; num < lightPath::MaxNodePaths; ++num )
   {
     nodePath const& cur = pState->getNodePath ( num );
@@ -975,6 +1020,9 @@ void ddOglList::dispatch ( lightPath const* pState )
     else
       glDisable ( mCurLightUnit );
   }
+  
+#endif // PNIGLES1REMOVED
+
 CheckGLError
 }
 
@@ -996,6 +1044,10 @@ CheckGLError
 
 void ddOglList::dispatch ( material const* pState )
 {
+
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
+
 	if ( pState->getEnable () )
 	{
 		// material params
@@ -1041,6 +1093,8 @@ void ddOglList::dispatch ( material const* pState )
 	glColor4f ( pState->getDiffuse ()[ 0 ], pState->getDiffuse ()[ 1 ],
 	    pState->getDiffuse ()[ 2 ], pState->getDiffuse ()[ 3 ] );
 
+#endif // PNIGLES1REMOVED
+
 CheckGLError
 }
 
@@ -1054,9 +1108,12 @@ CheckGLError
 
 /////////////////////////////////////////////////////////////////////
 
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
 int
 texEnvModeToGl ( texEnv::Mode modeIn )
 {
+
 	switch ( modeIn )
 	{
 		default:
@@ -1067,11 +1124,16 @@ texEnvModeToGl ( texEnv::Mode modeIn )
 		case texEnv::Add: return GL_ADD;
 		case texEnv::Combine: return GL_COMBINE;
 	}
+
 }
+#endif // PNIGLES1REMOVED
 
 void ddOglList::dispatch ( texEnv const* pState )
 {
 	glActiveTexture ( GL_TEXTURE0 + mCurStateId - state::TexEnv0 );
+
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
 
 	if ( pState->getEnable () )
 	{
@@ -1096,6 +1158,9 @@ void ddOglList::dispatch ( texEnv const* pState )
 		// no disable for texenvs... when not set
 		// it's undefined/inherited from hell.
 	}
+  
+#endif // PNIGLES1REMOVED
+
 CheckGLError
 }
 
@@ -1183,6 +1248,9 @@ void ddOglList::dispatch ( textureXform const* pState )
 
 	glActiveTexture ( GL_TEXTURE0 + mCurStateId - state::TextureXform0 );
 
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
+
   glMatrixMode ( GL_TEXTURE );
 
 	if ( pState->getEnable () )
@@ -1195,6 +1263,9 @@ void ddOglList::dispatch ( textureXform const* pState )
 	}
 
   glMatrixMode ( GL_MODELVIEW );
+  
+#endif // PNIGLES1REMOVED
+
 CheckGLError
 }
     

@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1CAD971B18661E9200C547E1 /* sceneddogllist2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD971918661E9200C547E1 /* sceneddogllist2.cpp */; };
 		1CDD3FFA185BC965009284F9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD3FF9185BC965009284F9 /* Foundation.framework */; };
 		1CDD3FFF185BC965009284F9 /* philibs.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD3FFE185BC965009284F9 /* philibs.h */; };
 		1CDD4001185BC965009284F9 /* philibs.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD4000185BC965009284F9 /* philibs.m */; };
@@ -377,8 +376,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1CAD971918661E9200C547E1 /* sceneddogllist2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneddogllist2.cpp; sourceTree = "<group>"; };
-		1CAD971C18661EBB00C547E1 /* sceneddogllist2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sceneddogllist2.h; sourceTree = "<group>"; };
 		1CDD3FF6185BC965009284F9 /* libphilibs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libphilibs.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CDD3FF9185BC965009284F9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1CDD3FFD185BC965009284F9 /* philibs-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "philibs-Prefix.pch"; sourceTree = "<group>"; };
@@ -969,8 +966,6 @@
 		1CDD4122185BCAEF009284F9 /* ogl-iphone */ = {
 			isa = PBXGroup;
 			children = (
-				1CAD971C18661EBB00C547E1 /* sceneddogllist2.h */,
-				1CAD971918661E9200C547E1 /* sceneddogllist2.cpp */,
 				1CDD4123185BCAEF009284F9 /* sceneddogl.cpp */,
 				1CDD4124185BCAEF009284F9 /* sceneddogl.h */,
 				1CDD4125185BCAEF009284F9 /* sceneddogllist.cpp */,
@@ -1178,7 +1173,6 @@
 				1CDD41C0185BCAF0009284F9 /* pnipolytope.cpp in Sources */,
 				1CDD41B8185BCAF0009284F9 /* pnifloatmath.cpp in Sources */,
 				1CDD41BA185BCAF0009284F9 /* pnifrustum.cpp in Sources */,
-				1CAD971B18661E9200C547E1 /* sceneddogllist2.cpp in Sources */,
 				1CDD41F6185BCAF0009284F9 /* scenelightpath.cpp in Sources */,
 				1CDD417D185BCAF0009284F9 /* animbgmusicfader.cpp in Sources */,
 				1CDD41BB185BCAF0009284F9 /* pnimath.cpp in Sources */,
