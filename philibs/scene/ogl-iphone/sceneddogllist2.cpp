@@ -1,12 +1,12 @@
 /////////////////////////////////////////////////////////////////////
 //
-//    file: sceneddogllist.cpp
+//    file: sceneddogllist2.cpp
 //
 /////////////////////////////////////////////////////////////////////
 
 #define PNIDBGDISABLE
 
-#include "sceneddogllist.h"
+#include "sceneddogllist2.h"
 
 #include <algorithm>
 
@@ -32,7 +32,7 @@
 
 #include "pnimathstream.h"
 
-#include <OpenGLES/ES1/gl.h>
+#include <OpenGLES/ES2/gl.h>
 
 using namespace std;
 
@@ -54,6 +54,8 @@ using namespace std;
 //	GL_APPLE_client_storage
 
 /////////////////////////////////////////////////////////////////////
+
+#pragma mark CheckGLError wrapper
 
 #define CheckGLError checkGlError(__FILE__,__LINE__);
 void checkGlError ( char const* file, int line )
@@ -96,6 +98,8 @@ void configTextureObject ( texture const* textureIn )
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
+
+#pragma mark ddOglTextureBind does a traversal to pre-bind texture
 
 class ddOglTextureBind :
   public graphDd,
@@ -171,7 +175,9 @@ class ddOglTextureBind :
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
-ddOglList::ddOglList() :
+#pragma mark ddOglList2
+
+ddOglList2::ddOglList2() :
   mCurStateId ( 0 ),
   mCurLightUnit ( 0 )
 {
@@ -181,23 +187,23 @@ ddOglList::ddOglList() :
   //mPvr.Init ();
 }
 
-ddOglList::~ddOglList()
+ddOglList2::~ddOglList2()
 {
 
 }
 
-// ddOglList::ddOglList(ddOglList const& rhs)
+// ddOglList2::ddOglList2(ddOglList2 const& rhs)
 // {
 //   
 // }
 // 
-// ddOglList& ddOglList::operator=(ddOglList const& rhs)
+// ddOglList2& ddOglList2::operator=(ddOglList2 const& rhs)
 // {
 //   
 //   return *this;
 // }
 // 
-// bool ddOglList::operator==(ddOglList const& rhs) const
+// bool ddOglList2::operator==(ddOglList2 const& rhs) const
 // {
 //   
 //   return false;
@@ -207,7 +213,7 @@ ddOglList::~ddOglList()
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
-ddOglList::renderItem& ddOglList::alloc ()
+ddOglList2::renderItem& ddOglList2::alloc ()
 {
   // In the constructor we "reserve" a bunch of these...
   // when the ddOgl class needs one they call this method
@@ -220,7 +226,7 @@ ddOglList::renderItem& ddOglList::alloc ()
   return mRenderList.back ();
 }
 
-void ddOglList::resetRenderItems ()
+void ddOglList2::resetRenderItems ()
 {
   mRenderList.clear ();
   mSinkPath.clear ();
@@ -236,8 +242,8 @@ void ddOglList::resetRenderItems ()
 
 struct Sorter
 {
-  bool operator () ( ddOglList::RenderList::value_type const& lhs,
-      ddOglList::RenderList::value_type const& rhs )
+  bool operator () ( ddOglList2::RenderList::value_type const& lhs,
+      ddOglList2::RenderList::value_type const& rhs )
   {
     state const* lhsBlend = lhs.mStateSet.mStates[ state::Blend ];
     state const* rhsBlend = rhs.mStateSet.mStates[ state::Blend ];
@@ -284,7 +290,7 @@ struct Sorter
 
 /////////////////////////////////////////////////////////////////////
 
-void ddOglList::startList ()
+void ddOglList2::startList ()
 {
 #ifdef _WIN32
   static bool initDone = false;
@@ -292,7 +298,7 @@ void ddOglList::startList ()
 #ifndef _NDEBUG
   if ( mDbgVals )
   {
-    printf ( "ddOglList: %X Frame Start\n", this );
+    printf ( "ddOglList2: %X Frame Start\n", this );
   }
 #endif // _NDEBUG
 
@@ -321,8 +327,9 @@ PNIDBG
 
   resetCurState ();
 
-  glMatrixMode ( GL_MODELVIEW );
-  glLoadIdentity ();
+    // TODO: PRW PNIGLES1REMOVED
+//  glMatrixMode ( GL_MODELVIEW );
+//  glLoadIdentity ();
 
 PNIDBG
   execCamera ();
@@ -350,9 +357,10 @@ PNIDBG
 
 #endif // _NDEBUG
   
-    glMatrixMode ( GL_MODELVIEW ); // TEMP... remove this after everything works.
-    glPushMatrix ();
-    glMultMatrixf ( cur->mMatrix );
+      // TODO: PRW PNIGLES1REMOVED
+//    glMatrixMode ( GL_MODELVIEW ); // TEMP... remove this after everything works.
+//    glPushMatrix ();
+//    glMultMatrixf ( cur->mMatrix );
 
  //cout << "cur->matrix =\n" << cur->mMatrix << endl;
 
@@ -362,13 +370,14 @@ PNIDBG
 PNIDBG
     cur->mNode->accept ( this );
     
-    glPopMatrix ();
+      // TODO: PRW PNIGLES1REMOVED
+//    glPopMatrix ();
   }
 
 #ifndef _NDEBUG
   if ( mDbgVals )
   {
-    printf ( "ddOglList: %p Frame End\n", this );
+    printf ( "ddOglList2: %p Frame End\n", this );
   }
 #endif // _NDEBUG
 
@@ -376,12 +385,14 @@ PNIDBG
 PNIDBG
 }
 
-void ddOglList::execCamera ()
+void ddOglList2::execCamera ()
 {
   // Do something with matrix from camera path.
   pni::math::matrix4 mat;
   mSinkPath.calcInverseXform ( mat );
-  glLoadMatrixf ( mat );
+
+    // TODO: PRW PNIGLES1REMOVED
+//  glLoadMatrixf ( mat );
 
 // std::string tmp;
 // mSinkPath.getPathString ( tmp );
@@ -397,7 +408,7 @@ void ddOglList::execCamera ()
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
-void ddOglList::bindTextures ( node const* pNode )
+void ddOglList2::bindTextures ( node const* pNode )
 {
   ddOglTextureBind binder;
   binder.startGraph ( pNode );
@@ -408,7 +419,7 @@ void ddOglList::bindTextures ( node const* pNode )
 /////////////////////////////////////////////////////////////////////
 // Graph methods.
 
-void ddOglList::startGraph ( node const* pNode )
+void ddOglList2::startGraph ( node const* pNode )
 {
   // No-op.  The graph is traversed in ddOgl and the
   // unwound results of the traversal are stored in mRenderList.
@@ -451,40 +462,42 @@ void doClear ( camera const* pNode )
   glClear ( glClearMask );
 }
 
-void ddOglList::dispatch ( camera const* pNode )
+void ddOglList2::dispatch ( camera const* pNode )
 {
   // Setup projection matrix.
-  glMatrixMode ( GL_PROJECTION );
-  glLoadMatrixf ( pNode->getProjectionMatrix () );
+    // TODO: PRW PNIGLES1REMOVED
+//  glMatrixMode ( GL_PROJECTION );
+//  glLoadMatrixf ( pNode->getProjectionMatrix () );
 
 // cout << "camera proj = " << pNode->getProjectionMatrix () << endl;
 
-  glMatrixMode ( GL_MODELVIEW );
+    // TODO: PRW PNIGLES1REMOVED
+//  glMatrixMode ( GL_MODELVIEW );
   
   // Setup viewport.
   float left, bottom, width, height;
   pNode->getViewport ( left, bottom, width, height );
   glViewport ( left, bottom, width, height );
   
-  // TODO Setup scissor.
+  // TODO: Setup scissor.
   
   // Do clear.
   doClear ( pNode );
   
-  // TODO Setup normalization state.
-  switch ( pNode->getNormalizeMode () )
-  {
-    case camera::Normalize:
-      glEnable ( GL_NORMALIZE );
-      break;
-    case camera::Rescale:
-      glEnable ( GL_RESCALE_NORMAL );
-      break;
-    case camera::NoNormalize:
-    default:
-      glDisable ( GL_NORMALIZE );
-      glDisable ( GL_RESCALE_NORMAL );
-  }
+  // TODO: PRW PNIGLES1REMOVED
+//  switch ( pNode->getNormalizeMode () )
+//  {
+//    case camera::Normalize:
+//      glEnable ( GL_NORMALIZE );
+//      break;
+//    case camera::Rescale:
+//      glEnable ( GL_RESCALE_NORMAL );
+//      break;
+//    case camera::NoNormalize:
+//    default:
+//      glDisable ( GL_NORMALIZE );
+//      glDisable ( GL_RESCALE_NORMAL );
+//  }
 CheckGLError
 }
 
@@ -507,7 +520,7 @@ cout << "    stride = " << stride << endl;
   
 }
 
-void ddOglList::dispatch ( geom const* pNode )
+void ddOglList2::dispatch ( geom const* pNode )
 {
 PNIDBG
     // GOTCHA: There is no validity checking here... that should
@@ -526,6 +539,9 @@ PNIDBG
 //     GLsizei count,
 //     GLenum type,
 //     const GLvoid * indices)  
+
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
 
   glEnableClientState ( GL_VERTEX_ARRAY );
   glVertexPointer ( 3, GL_FLOAT, stride, pValues );
@@ -574,7 +590,9 @@ PNIDBG
   }
   else
     glDisableClientState ( GL_TEXTURE_COORD_ARRAY );
-    
+
+#endif // PNIGLES1REMOVED
+
   // Get indices and draw everything.
   geomData::Indices const& indices = pData->getIndices ();
   unsigned short const* pIndices = &indices[ 0 ];
@@ -587,7 +605,7 @@ CheckGLError
 
 /////////////////////////////////////////////////////////////////////
 
-void ddOglList::dispatch ( geomFx const* pNode )
+void ddOglList2::dispatch ( geomFx const* pNode )
 {
   geom const* pGeom = pNode;
   dispatch ( pGeom );
@@ -595,7 +613,7 @@ void ddOglList::dispatch ( geomFx const* pNode )
 
 /////////////////////////////////////////////////////////////////////
 
-void ddOglList::dispatch ( group const* pNode )
+void ddOglList2::dispatch ( group const* pNode )
 {
 PNIDBG
   // No-op.
@@ -603,14 +621,17 @@ PNIDBG
 
 /////////////////////////////////////////////////////////////////////
 
-void ddOglList::dispatch ( light const* pNode )
+void ddOglList2::dispatch ( light const* pNode )
 {
 PNIDBG
   // Invoked by dispatch( lightPath ) -> execLight ( ... ) ->
   //   node->accept ( this ) -> dispatch ( light ).
 
   glEnable ( mCurLightUnit );
-  
+
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
+
 	// set the color
 	glLightfv ( mCurLightUnit, GL_AMBIENT, pNode->getAmbient () );
 	glLightfv ( mCurLightUnit, GL_DIFFUSE, pNode->getDiffuse () );
@@ -662,6 +683,9 @@ PNIDBG
 			}
 			break;
 	}
+
+#endif // PNIGLES1REMOVED
+  
 CheckGLError
 }
 
@@ -669,14 +693,14 @@ CheckGLError
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
-void ddOglList::dispatch ( sndEffect const* pNode )
+void ddOglList2::dispatch ( sndEffect const* pNode )
 {
   // TODO
 }
 
 /////////////////////////////////////////////////////////////////////
 
-void ddOglList::dispatch ( sndListener const* pNode )
+void ddOglList2::dispatch ( sndListener const* pNode )
 {
   // TODO
 }
@@ -686,18 +710,18 @@ void ddOglList::dispatch ( sndListener const* pNode )
 ////////////////////////////////////////////////////////////////////
 // State methods.
 
-void ddOglList::startStates ( node const* pNode )
+void ddOglList2::startStates ( node const* pNode )
 {
   // No-op.  The graph and states are already traversed when
   // this class is used.
 }
 
-void ddOglList::resetCurState ()
+void ddOglList2::resetCurState ()
 {
   mCurStates = stateSet ();
 }
 
-void ddOglList::execStates ( stateSet const& sSet )
+void ddOglList2::execStates ( stateSet const& sSet )
 {
   for ( int num = 0; num < state::StateCount; ++num )
   {
@@ -720,7 +744,7 @@ void ddOglList::execStates ( stateSet const& sSet )
 
 /////////////////////////////////////////////////////////////////////
 
-void ddOglList::setDefaultState ( state const* pState, state::Id id )
+void ddOglList2::setDefaultState ( state const* pState, state::Id id )
 {
   // No-op... ddOgl allows app to setup default state and
   // this class will get default state as a by-product of
@@ -734,19 +758,20 @@ void ddOglList::setDefaultState ( state const* pState, state::Id id )
 /////////////////////////////////////////////////////////////////////
 // Blend related.
 
-// GLenum
-// blendEqToGl ( blend::BlendEquation beq )
-// {
-// 	switch ( beq )
-// 	{
-// 		default:
-// 		case blend::Add: return GL_FUNC_ADD;
-// 		case blend::Subtract: return GL_FUNC_SUBTRACT;
-// 		case blend::ReverseSubtract: return GL_FUNC_REVERSE_SUBTRACT;
+GLenum
+blendEqToGl ( blend::BlendEquation beq )
+{
+ 	switch ( beq )
+ 	{
+ 		default:
+ 		case blend::Add: return GL_FUNC_ADD;
+ 		case blend::Subtract: return GL_FUNC_SUBTRACT;
+ 		case blend::ReverseSubtract: return GL_FUNC_REVERSE_SUBTRACT;
+        // Missing from GLES2.0 header for iOS (?).
 // 		case blend::Min: return GL_MIN;
 // 		case blend::Max: return GL_MAX;
-// 	}
-// }
+ 	}
+}
 
 int 
 srcBlendTypeToGl ( blend::SrcFunc srcFunc )
@@ -800,13 +825,13 @@ alphaFuncTypeToGl ( blend::AlphaFunc afunc )
 	}
 }
 
-void ddOglList::dispatch ( blend const* pState )
+void ddOglList2::dispatch ( blend const* pState )
 {
   if ( pState )
   {
     glEnable ( GL_BLEND );
 
-// 		glBlendEquation ( blendEqToGl ( pState->getBlendEquation () ) );
+ 		glBlendEquation ( blendEqToGl ( pState->getBlendEquation () ) );
 
 		blend::SrcFunc src;
 		blend::DstFunc dst;
@@ -814,6 +839,9 @@ void ddOglList::dispatch ( blend const* pState )
 		
 		glBlendFunc ( srcBlendTypeToGl ( src ), 
 				dstBlendTypeToGl ( dst ) );
+
+      // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
 
 		// alpha test
 		if ( pState->getAlphaFunc () != blend::AlphaAlways )
@@ -826,18 +854,21 @@ void ddOglList::dispatch ( blend const* pState )
     {
 		  glDisable ( GL_ALPHA_TEST );
     }
+  #endif // PNIGLES1REMOVED
+  
   }
   else
   {
 		glDisable ( GL_BLEND );
-		glDisable ( GL_ALPHA_TEST );
+      // TODO: PRW PNIGLES1REMOVED
+//		glDisable ( GL_ALPHA_TEST );
   }
 CheckGLError
 }
 
 /////////////////////////////////////////////////////////////////////
 
-void ddOglList::dispatch ( cull const* pState )
+void ddOglList2::dispatch ( cull const* pState )
 {
 	if ( pState->getEnable () )
 	{
@@ -880,7 +911,7 @@ depthFuncToGl ( depth::DepthFunc func )
 	}
 }
 
-void ddOglList::dispatch ( depth const* pState )
+void ddOglList2::dispatch ( depth const* pState )
 {
 	if ( pState->getEnable () )
 	{
@@ -902,8 +933,11 @@ CheckGLError
 
 /////////////////////////////////////////////////////////////////////
 
-void ddOglList::dispatch ( lighting const* pState )
+void ddOglList2::dispatch ( lighting const* pState )
 {
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
+
 	if ( pState->getEnable () )
 	{
 		glLightModelfv ( GL_LIGHT_MODEL_AMBIENT, 
@@ -934,14 +968,22 @@ void ddOglList::dispatch ( lighting const* pState )
 // 		glLightModeli ( GL_LIGHT_MODEL_LOCAL_VIEWER, GL_FALSE );
 
 // 		glLightModelf ( GL_LIGHT_MODEL_COLOR_CONTROL, GL_SINGLE_COLOR );
+
 	}
+
+#endif // PNIGLES1REMOVED
+
 CheckGLError
 }
 
 /////////////////////////////////////////////////////////////////////
 
-void ddOglList::execLightPath ( nodePath const& lpath )
+void ddOglList2::execLightPath ( nodePath const& lpath )
 {
+
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
+
   // We must get the light into global 'scene' space, as we don't really
   // enjoy having lights in weird coordinate frames.
   glMatrixMode ( GL_MODELVIEW );
@@ -961,10 +1003,13 @@ void ddOglList::execLightPath ( nodePath const& lpath )
   lpath.getLeaf ()->accept ( this );
   
   glPopMatrix ();
+#endif // PNIGLES1REMOVED
 }
 
-void ddOglList::dispatch ( lightPath const* pState )
+void ddOglList2::dispatch ( lightPath const* pState )
 {
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
   for ( GLenum num = 0; num < lightPath::MaxNodePaths; ++num )
   {
     nodePath const& cur = pState->getNodePath ( num );
@@ -975,6 +1020,9 @@ void ddOglList::dispatch ( lightPath const* pState )
     else
       glDisable ( mCurLightUnit );
   }
+  
+#endif // PNIGLES1REMOVED
+
 CheckGLError
 }
 
@@ -994,8 +1042,12 @@ CheckGLError
 // 	}
 // }
 
-void ddOglList::dispatch ( material const* pState )
+void ddOglList2::dispatch ( material const* pState )
 {
+
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
+
 	if ( pState->getEnable () )
 	{
 		// material params
@@ -1041,12 +1093,14 @@ void ddOglList::dispatch ( material const* pState )
 	glColor4f ( pState->getDiffuse ()[ 0 ], pState->getDiffuse ()[ 1 ],
 	    pState->getDiffuse ()[ 2 ], pState->getDiffuse ()[ 3 ] );
 
+#endif // PNIGLES1REMOVED
+
 CheckGLError
 }
 
 /////////////////////////////////////////////////////////////////////
 
-// void ddOglList::dispatch ( polygonMode const* pState )
+// void ddOglList2::dispatch ( polygonMode const* pState )
 // {
 //   // TODO
 // 
@@ -1054,9 +1108,12 @@ CheckGLError
 
 /////////////////////////////////////////////////////////////////////
 
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
 int
 texEnvModeToGl ( texEnv::Mode modeIn )
 {
+
 	switch ( modeIn )
 	{
 		default:
@@ -1067,11 +1124,16 @@ texEnvModeToGl ( texEnv::Mode modeIn )
 		case texEnv::Add: return GL_ADD;
 		case texEnv::Combine: return GL_COMBINE;
 	}
-}
 
-void ddOglList::dispatch ( texEnv const* pState )
+}
+#endif // PNIGLES1REMOVED
+
+void ddOglList2::dispatch ( texEnv const* pState )
 {
 	glActiveTexture ( GL_TEXTURE0 + mCurStateId - state::TexEnv0 );
+
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
 
 	if ( pState->getEnable () )
 	{
@@ -1096,6 +1158,9 @@ void ddOglList::dispatch ( texEnv const* pState )
 		// no disable for texenvs... when not set
 		// it's undefined/inherited from hell.
 	}
+  
+#endif // PNIGLES1REMOVED
+
 CheckGLError
 }
 
@@ -1132,7 +1197,7 @@ CheckGLError
 // 		glDisable ( oglCoord );
 // }
 // 
-// void ddOglList::dispatch ( texGen const* pState )
+// void ddOglList2::dispatch ( texGen const* pState )
 // {
 // 	// TODO Support applyFrame for texgens... ObjectLinear and EyeLinear depend
 // 	// on the currently bound modelview matrix.  (From PNI)
@@ -1159,7 +1224,7 @@ CheckGLError
 
 /////////////////////////////////////////////////////////////////////
 
-void ddOglList::dispatch ( texture const* pState )
+void ddOglList2::dispatch ( texture const* pState )
 {
 	glActiveTexture ( GL_TEXTURE0 + mCurStateId - state::Texture0 );
 
@@ -1177,11 +1242,14 @@ void ddOglList::dispatch ( texture const* pState )
 
 /////////////////////////////////////////////////////////////////////
 
-void ddOglList::dispatch ( textureXform const* pState )
+void ddOglList2::dispatch ( textureXform const* pState )
 {
   // TODO: This class really begs the PNI "applyFrame" functionality.
 
 	glActiveTexture ( GL_TEXTURE0 + mCurStateId - state::TextureXform0 );
+
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
 
   glMatrixMode ( GL_TEXTURE );
 
@@ -1195,6 +1263,9 @@ void ddOglList::dispatch ( textureXform const* pState )
 	}
 
   glMatrixMode ( GL_MODELVIEW );
+  
+#endif // PNIGLES1REMOVED
+
 CheckGLError
 }
     

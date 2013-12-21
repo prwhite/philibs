@@ -11,7 +11,7 @@
 
 #include "scenetexobj.h"
 
-#include "sceneogl.h"
+#include <OpenGLES/ES1/gl.h>
 
 #include <iostream>
 

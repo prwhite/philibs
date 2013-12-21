@@ -13,7 +13,7 @@ namespace scene {
 /////////////////////////////////////////////////////////////////////
 
 blend::blend() :
-//   mBlendEquation ( Add ),
+  mBlendEquation ( Add ),
   mSrcFunc ( SrcAlpha ),
   mDstFunc ( DstOneMinusSrcAlpha ),
   mAlphaFunc ( AlphaAlways ),
