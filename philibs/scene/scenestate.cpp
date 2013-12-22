@@ -55,7 +55,7 @@ state::~state()
 
 void state::collectRefs ( pni::pstd::refCount::Refs& refs )
 {
-  pni::pstd::dbgRefCount::collectVecRefs ( getTravDatum (), refs );
+  pni::pstd::dbgRefCount::collectMapSecondRefs ( getTravDatum (), refs );
 }
 
 /////////////////////////////////////////////////////////////////////

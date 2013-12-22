@@ -75,6 +75,28 @@ void geomData::dbg ()
   }
 }
 
+void geomData::updateBounds () const
+{
+  mBounds.setEmpty ();
+  
+  if ( getElemCount () == 0 )
+    return;
+  
+  Values const& values = getValues ();
+  
+  float const* end = &values.back ();
+  SizeType incr = getValueStride ();
+  for ( float const* ptr = &values[ 0 ];
+       ptr < end;
+       ptr += incr )
+  {
+    mBounds.extendBy ( ptr[ 0 ], ptr[ 1 ], ptr[ 2 ] );
+  }
+  
+  mBounds.setIsDirty( false );
+}
+
+
 
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
@@ -118,6 +140,8 @@ void geom::setGeomBoundsDirty ()
 {
   node::setBoundsDirty ();
   mGeomBoundsDirty = true;
+  if ( mGeomData )
+    mGeomData->setBoundsDirty();
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -151,26 +175,10 @@ void geom::updateBounds () const
 
 void geom::generateGeomBounds () const
 {
-  mBounds.setEmpty ();
-
-  if ( ! mGeomData )
-    return;
-
-  if ( mGeomData->getElemCount () == 0 )
-    return;
-
-//printf ( "generate geom bounds for %x w/name %s\n", this, this->getName ().c_str () );
-
-  Values const& values = mGeomData->getValues ();
-
-  float const* end = &values.back ();
-  SizeType incr = mGeomData->getValueStride ();
-  for ( float const* ptr = &values[ 0 ]; 
-    ptr < end;
-    ptr += incr )
-  {
-    mBounds.extendBy ( ptr[ 0 ], ptr[ 1 ], ptr[ 2 ] );
-  }
+  if ( mGeomData )
+    mBounds = mGeomData->getBounds(); // Will automatically recalc if dirty.
+  else
+    mBounds.setIsDirty ( true );
 }
 
 void geom::generateGeomPartition () const

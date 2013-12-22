@@ -15,6 +15,7 @@
 #include "sceneattr.h"
 
 #include <vector>
+#include <unordered_map>
 #include "pnirefcount.h"
 #include "pniautoref.h"
 
@@ -66,16 +67,23 @@ enum Trav {
 class travDataContainer
 {
   public:
-    travDataContainer () { mTravData.resize ( TravCount ); }
+    travDataContainer () {}
   
     // TODO travDataContainer copy constructor!
   
     typedef pni::pstd::autoRef< attr > TravDataRef;
-    typedef std::vector< TravDataRef > TravDatum;
+    typedef std::unordered_map< size_t, TravDataRef > TravDatum;
 
     void setTravData ( Trav which, attr* pData ) { mTravData[ which ] = pData; }
-    attr* getTravData ( Trav which ) const { return mTravData[ which ].get (); }
-   
+    attr* getTravData ( Trav which ) const
+      {
+        auto found = mTravData.find(which);
+        if ( found != mTravData.end () )
+          return found->second.get ();
+        else
+          return 0;
+      };
+  
       // Exposed for refCount debugging.  Not for human consumption.
     TravDatum& getTravDatum () { return mTravData; }
    

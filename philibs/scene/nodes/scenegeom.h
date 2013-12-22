@@ -24,14 +24,16 @@ namespace scene {
 /////////////////////////////////////////////////////////////////////
 
 class geomData :
-  public pni::pstd::refCount
+  public pni::pstd::refCount,
+  public scene::travDataContainer
 {
   public:
 
     typedef unsigned short SizeType;
 
     geomData () : 
-      mBindings ( Positions )
+      mBindings ( Positions ),
+      mDirty ( true )
         {}
 
     // Bindings:
@@ -50,6 +52,7 @@ class geomData :
     void setBindings ( unsigned int val = Positions )
         {
           mBindings = val;
+          setDirty ();
         }
     
     unsigned int getBindings () const { return mBindings; }
@@ -126,6 +129,7 @@ class geomData :
         {
           mValues.resize ( values );
           mIndices.resize ( indices );
+          setDirty ();
         }
         
     void resizeTrisWithBinding ( SizeType values, SizeType numTris )
@@ -133,6 +137,7 @@ class geomData :
           mValues.resize ( values * getValueStride () );
           size_t newSize = numTris * 3;
           mIndices.resize ( newSize );
+          setDirty ();
         }
         
     SizeType getValueCount () const 
@@ -149,17 +154,27 @@ class geomData :
     
     Indices& getIndices () { return mIndices; }
     Indices const& getIndices () const { return mIndices; }
-    
+  
+    void setDirty () { mDirty = true; } // Used to invalidate GL-side objects like VBOs during rendering pass.
+    void setBoundsDirty () { mBounds.setIsDirty ( true ); }
+    box3 const& getBounds () const { if ( mBounds.getIsDirty() ) updateBounds (); return mBounds; }
+  
     void dbg ();
     
   protected:
     virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) {}
   
+    void updateBounds () const;
+  
   private:
+      friend class geom;
+  
       unsigned int mBindings;
       
       Values mValues;
       Indices mIndices;
+      mutable box3 mBounds;
+      bool mDirty;
 };
 
 /////////////////////////////////////////////////////////////////////

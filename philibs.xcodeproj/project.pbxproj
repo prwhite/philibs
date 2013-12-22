@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1CAD971F186628EE00C547E1 /* scenevbo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD971D186628EE00C547E1 /* scenevbo.cpp */; };
 		1CDD3FFA185BC965009284F9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD3FF9185BC965009284F9 /* Foundation.framework */; };
 		1CDD3FFF185BC965009284F9 /* philibs.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD3FFE185BC965009284F9 /* philibs.h */; };
 		1CDD4001185BC965009284F9 /* philibs.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD4000185BC965009284F9 /* philibs.m */; };
@@ -376,6 +377,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1CAD971D186628EE00C547E1 /* scenevbo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scenevbo.cpp; sourceTree = "<group>"; };
+		1CAD971E186628EE00C547E1 /* scenevbo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenevbo.h; sourceTree = "<group>"; };
+		1CAD972018662A2B00C547E1 /* sceneogl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sceneogl.h; sourceTree = "<group>"; };
 		1CDD3FF6185BC965009284F9 /* libphilibs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libphilibs.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CDD3FF9185BC965009284F9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1CDD3FFD185BC965009284F9 /* philibs-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "philibs-Prefix.pch"; sourceTree = "<group>"; };
@@ -966,6 +970,7 @@
 		1CDD4122185BCAEF009284F9 /* ogl-iphone */ = {
 			isa = PBXGroup;
 			children = (
+				1CAD972018662A2B00C547E1 /* sceneogl.h */,
 				1CDD4123185BCAEF009284F9 /* sceneddogl.cpp */,
 				1CDD4124185BCAEF009284F9 /* sceneddogl.h */,
 				1CDD4125185BCAEF009284F9 /* sceneddogllist.cpp */,
@@ -974,6 +979,8 @@
 				1CDD4129185BCAEF009284F9 /* scenesnddd.h */,
 				1CDD412A185BCAEF009284F9 /* scenetexobj.cpp */,
 				1CDD412B185BCAEF009284F9 /* scenetexobj.h */,
+				1CAD971D186628EE00C547E1 /* scenevbo.cpp */,
+				1CAD971E186628EE00C547E1 /* scenevbo.h */,
 			);
 			path = "ogl-iphone";
 			sourceTree = "<group>";
@@ -1213,6 +1220,7 @@
 				1CDD417C185BCAF0009284F9 /* animbase.cpp in Sources */,
 				1CDD4205185BCAF0009284F9 /* uilabel.cpp in Sources */,
 				1CDD41F9185BCAF0009284F9 /* scenetexenv.cpp in Sources */,
+				1CAD971F186628EE00C547E1 /* scenevbo.cpp in Sources */,
 				1CDD4180185BCAF0009284F9 /* animmatrixhelper.cpp in Sources */,
 				1CDD41DA185BCAF0009284F9 /* scenegeomfx.cpp in Sources */,
 				1CDD41E4185BCAF0009284F9 /* scenetexobj.cpp in Sources */,

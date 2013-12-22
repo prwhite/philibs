@@ -11,20 +11,11 @@
 
 #include "scenetexobj.h"
 
-#include <OpenGLES/ES1/gl.h>
+#include "sceneogl.h"
 
 #include <iostream>
 
 using namespace std;
-
-/////////////////////////////////////////////////////////////////////
-
-#define CheckGLError checkGlError2(__FILE__,__LINE__);
-void checkGlError2 ( char const* file, int line )
-{
-	if ( GLint err = glGetError () )
-		printf ( "gl error = 0x%x at %s:%d\n", err, file, line );
-}
 
 /////////////////////////////////////////////////////////////////////
 
