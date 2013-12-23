@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////
 //
-//    file: scenevbo.cpp
+//  file: scenevbo.cpp
 //
 /////////////////////////////////////////////////////////////////////
 
@@ -20,7 +20,7 @@ using namespace std;
 /////////////////////////////////////////////////////////////////////
 
 namespace scene {
-    
+
 /////////////////////////////////////////////////////////////////////
 
 vbo::vbo():
@@ -43,14 +43,13 @@ vbo::~vbo()
 
 // vbo& vbo::operator=(vbo const& rhs)
 // {
-//     
-//     return *this;
+//   return *this;
 // }
 // 
 // bool vbo::operator==(vbo const& rhs) const
 // {
-//     
-//     return false;
+//
+//   return false;
 // }
 
 /////////////////////////////////////////////////////////////////////
@@ -65,14 +64,21 @@ void vbo::bind ( geom* const pGeom )
 
 void vbo::config ( geom* const pGeom )
 {
-  glGenBuffers(1, &mAttrId);
-  
   bind ( pGeom );
+  
+  if ( ! pGeom )
+    return;
+  
+  geomData* pGeomData = pGeom->getGeomData();
+  
+  if ( ! pGeomData )
+    return;
   
 CheckGLError
 
-  
+  glBufferData(GL_ARRAY_BUFFER, pGeomData->getValueSizeBytes (), &( pGeomData->getValues()[ 0 ] ), GL_DYNAMIC_DRAW );
 
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, pGeomData->getIndexSizeBytes(), &( pGeomData->getIndices()[ 0 ]), GL_DYNAMIC_DRAW);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -82,11 +88,13 @@ CheckGLError
 void vbo::init ()
 {
   glGenBuffers ( 1, &mAttrId );
+  glGenBuffers ( 1, &mIndId );
 }
 
 void vbo::clear ()
 {
   glDeleteBuffers ( 1, &mAttrId );
+  glDeleteBuffers ( 1, &mIndId );
 }
 
 /////////////////////////////////////////////////////////////////////

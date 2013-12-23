@@ -139,7 +139,7 @@ void flattenDd::dispatch ( geom const* pNode )
   geom* pGeom = const_cast< geom* > ( pNode );
   geomData* pData = pGeom->geometryOp ();
   
-  if ( pData->getElemCount () != 0 )
+  if ( pData->getIndexCount () != 0 )
   {
     pni::math::matrix4 invMat = *mMatStack;
     invMat.invert ();

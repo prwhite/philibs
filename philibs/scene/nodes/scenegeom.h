@@ -66,7 +66,12 @@ class geomData :
           if ( mBindings & TCoords1 ) val += 2;
           return val;
         }
-    
+  
+    SizeType getValueStrideBytes () const
+      {
+        return getValueStride () * sizeof ( float );
+      }
+  
      size_t getValueOffset ( Bindings which ) const
         {
           size_t val = 0;
@@ -142,12 +147,18 @@ class geomData :
         
     SizeType getValueCount () const 
         { return static_cast< SizeType > ( mValues.size () ); }
-    
-    SizeType getElemCount () const 
+  
+    SizeType getValueSizeBytes () const
+        { return mValues.size () * sizeof ( float ); }
+  
+    SizeType getIndexCount () const
         { return static_cast< SizeType > ( mIndices.size () ); }
         
+    SizeType getIndexSizeBytes () const
+        { return mIndices.size () * sizeof ( SizeType ); }
+  
     SizeType getTriCount () const
-        { return getElemCount () / 3; }
+        { return getIndexCount () / 3; }
     
     Values& getValues () { return mValues; }
     Values const& getValues () const { return mValues; }

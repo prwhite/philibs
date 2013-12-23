@@ -79,7 +79,7 @@ void geomData::updateBounds () const
 {
   mBounds.setEmpty ();
   
-  if ( getElemCount () == 0 )
+  if ( getIndexCount () == 0 )
     return;
   
   Values const& values = getValues ();

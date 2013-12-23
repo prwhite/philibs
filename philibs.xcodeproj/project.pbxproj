@@ -377,7 +377,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1CAD971D186628EE00C547E1 /* scenevbo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scenevbo.cpp; sourceTree = "<group>"; };
+		1CAD971D186628EE00C547E1 /* scenevbo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.cpp; path = scenevbo.cpp; sourceTree = "<group>"; tabWidth = 2; usesTabs = 0; };
 		1CAD971E186628EE00C547E1 /* scenevbo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenevbo.h; sourceTree = "<group>"; };
 		1CAD972018662A2B00C547E1 /* sceneogl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sceneogl.h; sourceTree = "<group>"; };
 		1CDD3FF6185BC965009284F9 /* libphilibs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libphilibs.a; sourceTree = BUILT_PRODUCTS_DIR; };
