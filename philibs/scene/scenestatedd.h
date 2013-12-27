@@ -24,6 +24,7 @@ namespace scene {
   class lightPath;
   class material;
 //   class polygonMode;
+  class prog;
   class texEnv;
 //   class texGen;
   class texture;
@@ -41,6 +42,7 @@ class stateDd
     friend class lightPath;
     friend class material;
 //     friend class polygonMode;
+    friend class prog;
     friend class texEnv;
 //     friend class texGen;
     friend class texture;
@@ -64,6 +66,7 @@ class stateDd
     virtual void dispatch ( lightPath const* pState ) = 0;
     virtual void dispatch ( material const* pState ) = 0;
 //     virtual void dispatch ( polygonMode const* pState ) = 0;
+    virtual void dispatch ( prog const* pProg ) = 0;
     virtual void dispatch ( texEnv const* pState ) = 0;
 //     virtual void dispatch ( texGen const* pState ) = 0;
     virtual void dispatch ( texture const* pState ) = 0;

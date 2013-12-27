@@ -221,6 +221,8 @@ class geom :
       // LAME: When geom data is shared, it's bounds will be calc'd
       // for every parent... this could be optimized by putting the
       // actual bounds in the geomData class.  No biggie, though.
+      // Update: geomData now has bounds and updates only once, regardless
+      // of multiple parentage.
     void setGeomData ( geomData* pData ) { mGeomData = pData; setGeomBoundsDirty (); }
     geomData* getGeomData () { return mGeomData.get (); }
     geomData const* getGeomData () const { return mGeomData.get (); }

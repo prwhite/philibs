@@ -29,9 +29,9 @@ class vbo :
 //         bool operator==(vbo const& rhs) const;
         
         
-      void bind ( geom* const pGeom );
+      void bind ( geomData const* pData );
       
-      void config ( geom* const pGeom );
+      void config ( geomData const* pData );
       
     protected:
       unsigned int mAttrId;

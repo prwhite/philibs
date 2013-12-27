@@ -12,6 +12,7 @@
 #include "scenevbo.h"
 
 #include "sceneogl.h"
+#include <OpenGLES/ES2/glext.h>
 
 #include <iostream>
 
@@ -54,31 +55,31 @@ vbo::~vbo()
 
 /////////////////////////////////////////////////////////////////////
 
-void vbo::bind ( geom* const pGeom )
+void vbo::bind ( geomData const* pData )
 {
+
+    // Decent VAO example here:
+    // http://www.lastrayofhope.com/tag/gl_oes_vertex_array_object/
+
+//  glBindVertexArrayOES(mArrObjId);
   glBindBuffer( GL_ARRAY_BUFFER, mAttrId );
   glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, mIndId);
 }
 
 /////////////////////////////////////////////////////////////////////
 
-void vbo::config ( geom* const pGeom )
+void vbo::config ( geomData const* pData )
 {
-  bind ( pGeom );
+  bind ( pData );
   
-  if ( ! pGeom )
-    return;
-  
-  geomData* pGeomData = pGeom->getGeomData();
-  
-  if ( ! pGeomData )
+  if ( ! pData )
     return;
   
 CheckGLError
 
-  glBufferData(GL_ARRAY_BUFFER, pGeomData->getValueSizeBytes (), &( pGeomData->getValues()[ 0 ] ), GL_DYNAMIC_DRAW );
+  glBufferData(GL_ARRAY_BUFFER, pData->getValueSizeBytes (), &( pData->getValues()[ 0 ] ), GL_DYNAMIC_DRAW );
 
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, pGeomData->getIndexSizeBytes(), &( pGeomData->getIndices()[ 0 ]), GL_DYNAMIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, pData->getIndexSizeBytes(), &( pData->getIndices()[ 0 ]), GL_DYNAMIC_DRAW);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -89,12 +90,14 @@ void vbo::init ()
 {
   glGenBuffers ( 1, &mAttrId );
   glGenBuffers ( 1, &mIndId );
+//  glGenVertexArraysOES ( 1, &mArrObjId );
 }
 
 void vbo::clear ()
 {
   glDeleteBuffers ( 1, &mAttrId );
   glDeleteBuffers ( 1, &mIndId );
+//  glDeleteVertexArraysOES( 1, &mArrObjId );
 }
 
 /////////////////////////////////////////////////////////////////////

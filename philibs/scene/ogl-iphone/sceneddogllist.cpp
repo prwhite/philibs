@@ -23,12 +23,14 @@
 #include "scenelightpath.h"
 #include "scenematerial.h"
 // #include "scenepolygonmode.h"
+#include "sceneprog.h"
 #include "scenetexenv.h"
 // #include "scenetexgen.h"
 #include "scenetexture.h"
 #include "scenetexturexform.h"
 
 #include "scenetexobj.h"
+#include "scenevbo.h"
 
 #include "pnimathstream.h"
 
@@ -82,6 +84,22 @@ void configTextureObject ( texture const* textureIn )
 		glDisable ( GL_TEXTURE_2D );
 	}
 }
+
+void configVBO ( geomData const* geomDataIn )
+{
+    // get or create textureObject for this texture
+  if ( vbo* pObj = static_cast< vbo* > ( geomDataIn->getTravData ( Draw ) ) )
+  {
+    pObj->config ( geomDataIn );
+  }
+  else
+  {
+    vbo* pVbo = new vbo;
+    pVbo->config ( geomDataIn );
+    const_cast< geomData* > ( geomDataIn )->setTravData ( Draw, pVbo );
+  }
+}
+
 
 
 /////////////////////////////////////////////////////////////////////
@@ -150,6 +168,7 @@ class ddOglTextureBind :
     virtual void dispatch ( depth const* pState ) {}
     virtual void dispatch ( lighting const* pState ) {}
     virtual void dispatch ( lightPath const* pState ) {}
+    virtual void dispatch ( prog const* pState ) {}
     virtual void dispatch ( material const* pState ) {}
     virtual void dispatch ( texEnv const* pState ) {}
     virtual void dispatch ( texture const* pState )
@@ -1094,6 +1113,14 @@ CheckGLError
 //   // TODO
 // 
 // }
+
+/////////////////////////////////////////////////////////////////////
+
+void ddOglList::dispatch ( prog const* pState )
+{
+  // TODO
+
+}
 
 /////////////////////////////////////////////////////////////////////
 

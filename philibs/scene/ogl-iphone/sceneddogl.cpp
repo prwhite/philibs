@@ -562,6 +562,11 @@ void ddOgl::dispatch ( material const* pState )
 // 
 // }
 
+void ddOgl::dispatch ( prog const* pState )
+{
+
+}
+
 void ddOgl::dispatch ( texEnv const* pState )
 {
 
