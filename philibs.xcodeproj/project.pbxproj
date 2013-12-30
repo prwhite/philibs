@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1CAD971F186628EE00C547E1 /* scenevbo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD971D186628EE00C547E1 /* scenevbo.cpp */; };
 		1CAD9723186D72D500C547E1 /* sceneprog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9721186D72D500C547E1 /* sceneprog.cpp */; };
+		1CAD9726186E110200C547E1 /* sceneprogobj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9724186E110200C547E1 /* sceneprogobj.cpp */; };
 		1CDD3FFA185BC965009284F9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD3FF9185BC965009284F9 /* Foundation.framework */; };
 		1CDD3FFF185BC965009284F9 /* philibs.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD3FFE185BC965009284F9 /* philibs.h */; };
 		1CDD4001185BC965009284F9 /* philibs.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD4000185BC965009284F9 /* philibs.m */; };
@@ -383,6 +384,8 @@
 		1CAD972018662A2B00C547E1 /* sceneogl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sceneogl.h; sourceTree = "<group>"; };
 		1CAD9721186D72D500C547E1 /* sceneprog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneprog.cpp; sourceTree = "<group>"; };
 		1CAD9722186D72D500C547E1 /* sceneprog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneprog.h; sourceTree = "<group>"; };
+		1CAD9724186E110200C547E1 /* sceneprogobj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneprogobj.cpp; sourceTree = "<group>"; };
+		1CAD9725186E110200C547E1 /* sceneprogobj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneprogobj.h; sourceTree = "<group>"; };
 		1CDD3FF6185BC965009284F9 /* libphilibs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libphilibs.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CDD3FF9185BC965009284F9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1CDD3FFD185BC965009284F9 /* philibs-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "philibs-Prefix.pch"; sourceTree = "<group>"; };
@@ -973,6 +976,8 @@
 		1CDD4122185BCAEF009284F9 /* ogl-iphone */ = {
 			isa = PBXGroup;
 			children = (
+				1CAD9724186E110200C547E1 /* sceneprogobj.cpp */,
+				1CAD9725186E110200C547E1 /* sceneprogobj.h */,
 				1CAD972018662A2B00C547E1 /* sceneogl.h */,
 				1CDD4123185BCAEF009284F9 /* sceneddogl.cpp */,
 				1CDD4124185BCAEF009284F9 /* sceneddogl.h */,
@@ -1205,6 +1210,7 @@
 				1CDD41B4185BCAF0009284F9 /* pnibox2.cpp in Sources */,
 				1CDD41F4185BCAF0009284F9 /* scenedepth.cpp in Sources */,
 				1CDD41C1185BCAF0009284F9 /* pniquat.cpp in Sources */,
+				1CAD9726186E110200C547E1 /* sceneprogobj.cpp in Sources */,
 				1CDD41C2185BCAF0009284F9 /* pnirand.cpp in Sources */,
 				1CDD41EC185BCAF0009284F9 /* scenenodepath.cpp in Sources */,
 				1CDD4185185BCAF0009284F9 /* animscenenodevis.cpp in Sources */,

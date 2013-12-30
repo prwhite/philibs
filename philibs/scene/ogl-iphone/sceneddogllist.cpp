@@ -31,6 +31,7 @@
 
 #include "scenetexobj.h"
 #include "scenevbo.h"
+#include "sceneprogobj.h"
 
 #include "pnimathstream.h"
 
@@ -100,6 +101,20 @@ void configVBO ( geomData const* geomDataIn )
   }
 }
 
+void configProgobj ( prog const* pProg )
+{
+    // get or create textureObject for this texture
+  if ( progobj* pObj = static_cast< progobj* > ( pProg->getTravData ( Draw ) ) )
+  {
+    pObj->config ( pProg );
+  }
+  else
+  {
+    pObj = new progobj;
+    pObj->config ( pProg );
+    const_cast< prog* > ( pProg )->setTravData ( Draw, pObj );
+  }
+}
 
 
 /////////////////////////////////////////////////////////////////////
