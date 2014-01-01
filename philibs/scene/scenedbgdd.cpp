@@ -13,7 +13,9 @@
 #include "scenegeomfx.h"
 #include "scenegroup.h"
 #include "scenelight.h"
+#include "sceneprog.h"
 #include "scenetexture.h"
+#include "sceneuniform.h"
 #include "scenesndeffect.h"
 #include "scenesndlistener.h"
 
@@ -375,6 +377,11 @@ void dbgDd::dispatch ( material const* pState )
   indent ( "  " ); mStr << "state type = material" << endl;
 }
 
+void dbgDd::dispatch ( prog const* pState )
+{
+  indent ( "  " ); mStr << "state type = prog" << endl;
+}
+
 void dbgDd::dispatch ( texEnv const* pState )
 {
   indent ( "  " ); mStr << "state type = texEnv" << endl;
@@ -393,6 +400,11 @@ void dbgDd::dispatch ( texture const* pState )
 void dbgDd::dispatch ( textureXform const* pState )
 {
   indent ( "  " ); mStr << "state type = textureXform" << endl;
+}
+
+void dbgDd::dispatch ( uniform const* pState )
+{
+  indent ( "  " ); mStr << "state type = uniform" << endl;
 }
 
 

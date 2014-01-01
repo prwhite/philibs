@@ -191,6 +191,7 @@ class ddOglTextureBind :
           configTextureObject ( pState );
         }
     virtual void dispatch ( textureXform const* pState ) {}
+    virtual void dispatch ( uniform const* pState ) {}
 
 };
     
@@ -1299,7 +1300,13 @@ void ddOglList::dispatch ( textureXform const* pState )
 
 CheckGLError
 }
-    
+
+void ddOglList::dispatch ( uniform const* pState )
+{
+  
+}
+
+  
 /////////////////////////////////////////////////////////////////////
 
 

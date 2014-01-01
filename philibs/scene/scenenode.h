@@ -12,6 +12,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <unordered_map>
 
 #include "scenetypes.h"
 #include "scenestate.h"
@@ -42,7 +43,7 @@ class node :
     typedef std::vector< NodeRef > Nodes;
     typedef std::vector< node* > Parents;
     typedef pni::pstd::autoRef< state > StateRef;
-    typedef std::map< state::Id, StateRef > States;
+    typedef std::unordered_map< state::Id, StateRef, std::hash< int > > States;
     typedef unsigned int MaskType;
     typedef std::vector< MaskType > TravMasks;
 

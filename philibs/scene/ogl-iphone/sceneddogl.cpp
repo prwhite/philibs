@@ -586,6 +586,11 @@ void ddOgl::dispatch ( textureXform const* pState )
 {
 
 }
+  
+void ddOgl::dispatch ( uniform const* pState )
+{
+  
+}
     
 /////////////////////////////////////////////////////////////////////
 

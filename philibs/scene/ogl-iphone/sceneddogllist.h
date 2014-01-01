@@ -143,7 +143,7 @@ class ddOglList :
 //     virtual void dispatch ( texGen const* pState );
     virtual void dispatch ( texture const* pState );
     virtual void dispatch ( textureXform const* pState );
-    
+    virtual void dispatch ( uniform const* pState );    
     
 
 };

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C6A02B91873526700672EF8 /* sceneuniform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C6A02B71873526700672EF8 /* sceneuniform.cpp */; };
 		1CAD971F186628EE00C547E1 /* scenevbo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD971D186628EE00C547E1 /* scenevbo.cpp */; };
 		1CAD9723186D72D500C547E1 /* sceneprog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9721186D72D500C547E1 /* sceneprog.cpp */; };
 		1CAD9726186E110200C547E1 /* sceneprogobj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9724186E110200C547E1 /* sceneprogobj.cpp */; };
@@ -379,6 +380,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1C6A02B71873526700672EF8 /* sceneuniform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneuniform.cpp; sourceTree = "<group>"; };
+		1C6A02B81873526700672EF8 /* sceneuniform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneuniform.h; sourceTree = "<group>"; };
 		1CAD971D186628EE00C547E1 /* scenevbo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.cpp; path = scenevbo.cpp; sourceTree = "<group>"; tabWidth = 2; usesTabs = 0; };
 		1CAD971E186628EE00C547E1 /* scenevbo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenevbo.h; sourceTree = "<group>"; };
 		1CAD972018662A2B00C547E1 /* sceneogl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sceneogl.h; sourceTree = "<group>"; };
@@ -996,6 +999,8 @@
 		1CDD4147185BCAF0009284F9 /* states */ = {
 			isa = PBXGroup;
 			children = (
+				1C6A02B71873526700672EF8 /* sceneuniform.cpp */,
+				1C6A02B81873526700672EF8 /* sceneuniform.h */,
 				1CAD9721186D72D500C547E1 /* sceneprog.cpp */,
 				1CAD9722186D72D500C547E1 /* sceneprog.h */,
 				1CDD4148185BCAF0009284F9 /* sceneblend.cpp */,
@@ -1223,6 +1228,7 @@
 				1CDD41BF185BCAF0009284F9 /* pniplane.cpp in Sources */,
 				1CDD41DC185BCAF0009284F9 /* scenehterrain.cpp in Sources */,
 				1CDD41CF185BCAF0009284F9 /* timerprof.cpp in Sources */,
+				1C6A02B91873526700672EF8 /* sceneuniform.cpp in Sources */,
 				1CDD4189185BCAF0009284F9 /* animuibasetrans.cpp in Sources */,
 				1CDD41C3185BCAF0009284F9 /* pniseg.cpp in Sources */,
 				1CDD41E0185BCAF0009284F9 /* scenetext.cpp in Sources */,

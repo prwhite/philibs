@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C9AAAC218735E60001540C3 /* test-instantiaton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AAAC118735E60001540C3 /* test-instantiaton.cpp */; };
 		1CAD97121861879B00C547E1 /* test-00.ase in Resources */ = {isa = PBXBuildFile; fileRef = 1CAD97111861879B00C547E1 /* test-00.ase */; };
 		1CAD97161865580000C547E1 /* phiViewController-gles2.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD97151865580000C547E1 /* phiViewController-gles2.mm */; };
 		1CDD4217185BDDC2009284F9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD4216185BDDC2009284F9 /* Foundation.framework */; };
@@ -62,6 +63,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1C9AAAC118735E60001540C3 /* test-instantiaton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "test-instantiaton.cpp"; sourceTree = "<group>"; };
 		1CAD97111861879B00C547E1 /* test-00.ase */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "test-00.ase"; path = "philibs-ex-00/Resources/test-00.ase"; sourceTree = "<group>"; };
 		1CAD97131861922A00C547E1 /* pniosxplatform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pniosxplatform.h; sourceTree = "<group>"; };
 		1CAD97151865580000C547E1 /* phiViewController-gles2.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "phiViewController-gles2.mm"; sourceTree = "<group>"; };
@@ -179,6 +181,7 @@
 				1CC4B9041860D22700169CF6 /* phiViewController-gles1.mm */,
 				1CDD4239185BDDC2009284F9 /* Images.xcassets */,
 				1CDD4221185BDDC2009284F9 /* Supporting Files */,
+				1C9AAAC118735E60001540C3 /* test-instantiaton.cpp */,
 			);
 			path = "philibs-ex-00";
 			sourceTree = "<group>";
@@ -351,6 +354,7 @@
 				1CAD97161865580000C547E1 /* phiViewController-gles2.mm in Sources */,
 				1CDD422B185BDDC2009284F9 /* phiAppDelegate.m in Sources */,
 				1CDD4227185BDDC2009284F9 /* main.m in Sources */,
+				1C9AAAC218735E60001540C3 /* test-instantiaton.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
