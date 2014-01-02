@@ -27,6 +27,16 @@ In many cases, these half-ass'd features are built around proper abstractions al
 
 A _version_ of this code has been used in an iOS title [(LD50)](http://labs.prehiti.com/ld50/).  But, this code has not been used in its current incarnation as a stand-alone library.
 
+2014/01/02
+
+New work for GLES2 support is going on in the gles2 branch.  Currently, I am pinning down scene graph representations of programs, uniforms, and attributes.  This will allow a basic programmable pipeline in the short term, and it lays the groundwork for user-defined attributes in a future release.
+
+2014/01/20
+
+The library now builds as a relatively clean 32 and 64 bit binary for iOS 7.  A basic example app is also provided.  This work is available on the master branch.
+
+2013/12/01
+
 This current goal of this project is to transform the code into a proper stand-alone library.  Following this transformation, the library will be upgraded from support of GLES 1.x to _only_ support GLES 2.x.
 
 
