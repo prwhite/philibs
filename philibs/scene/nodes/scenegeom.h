@@ -128,18 +128,20 @@ class geomData :
 //    typedef std::vector< SizeType > Indices;
     typedef indexVec Indices;
     
-      // Note: values is count of floats, not count of verts.
+      // Note: numValues is count of floats, not count of verts.
       // Generally it is numVerts * sizeof ( vert ) / sizeof ( float ).
-    void resize ( SizeType values, SizeType indices )
+    void resize ( SizeType numValues, SizeType numIndices )
         {
-          mValues.resize ( values );
-          mIndices.resize ( indices );
+          mValues.resize ( numValues );
+          mIndices.resize ( numIndices );
           setDirty ();
         }
-        
-    void resizeTrisWithBinding ( SizeType values, SizeType numTris )
+  
+        // Note: numVerts is count of verts, which is a different
+        // semantic than the other resize method
+    void resizeTrisWithBinding ( SizeType numVerts, SizeType numTris )
         {
-          mValues.resize ( values * getValueStride () );
+          mValues.resize ( numVerts * getValueStride () );
           size_t newSize = numTris * 3;
           mIndices.resize ( newSize );
           setDirty ();
