@@ -52,6 +52,5 @@ void testAutoRefCompleteness ()
 }
 
 
-
 #pragma clang diagnostic pop
 

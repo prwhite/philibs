@@ -42,11 +42,11 @@ class geomData :
     // below, i.e., positions first, normals second...
     // and if no normals, then TCoords0 is second, etc.
     enum Bindings {
-      Positions = 0,              // Always 3 elements.
-      Normals = 1,                // Always 3 elements.
-      Colors = Normals << 1,      // Always 4 elements.
-      TCoords0 = Colors << 1,     // Always 2 elements.
-      TCoords1 = TCoords0 << 1    // Always 2 elements.
+      Positions  = 0,              // Always 3 elements.
+      Normals    = 1 << 0,         // Always 3 elements.
+      Colors     = 1 << 1,         // Always 4 elements.
+      TCoords0   = 1 << 2,         // Always 2 elements.
+      TCoords1   = 1 << 3,         // Always 2 elements.
     };
     
     void setBindings ( unsigned int val = Positions )

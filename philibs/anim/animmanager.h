@@ -18,6 +18,7 @@
 #include "animeventobserver.h"
 
 #include <map>
+#include <unordered_map>
 #include <vector>
 #include <set>
 
@@ -120,18 +121,19 @@ class manager :
   private:
 
     typedef pni::pstd::autoRef< group > GroupRef;
-    typedef std::map< Id, GroupRef > Groups;
+    typedef std::unordered_map< Id, GroupRef > Groups;
     
     Groups mGroups;
     
     typedef pni::pstd::autoRef< base > BaseRef;
 //     typedef base* BaseRef;
-    typedef std::map< Id, BaseRef > Bases;
+    typedef std::unordered_map< Id, BaseRef > Bases;
     
     Bases mFinalizeList;
     
     typedef pni::pstd::autoRef< matrixHelper > HelperRef;
-    typedef std::map< Id, HelperRef  > Helpers;
+    typedef std::unordered_map
+    < Id, HelperRef  > Helpers;
     
     Helpers mHelpers;
     

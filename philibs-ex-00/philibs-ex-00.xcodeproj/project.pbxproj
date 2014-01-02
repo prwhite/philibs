@@ -181,7 +181,6 @@
 				1CC4B9041860D22700169CF6 /* phiViewController-gles1.mm */,
 				1CDD4239185BDDC2009284F9 /* Images.xcassets */,
 				1CDD4221185BDDC2009284F9 /* Supporting Files */,
-				1C9AAAC118735E60001540C3 /* test-instantiaton.cpp */,
 			);
 			path = "philibs-ex-00";
 			sourceTree = "<group>";
@@ -189,6 +188,7 @@
 		1CDD4221185BDDC2009284F9 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				1C9AAAC118735E60001540C3 /* test-instantiaton.cpp */,
 				1CAD97131861922A00C547E1 /* pniosxplatform.h */,
 				1CDD4222185BDDC2009284F9 /* philibs-ex-00-Info.plist */,
 				1CDD4223185BDDC2009284F9 /* InfoPlist.strings */,
