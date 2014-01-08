@@ -26,7 +26,7 @@
    typedef __int64 int64_t;	// Define it from MSVC's internal type
    typedef int int32_t;
 #else
-   #include <stdint.h>		// Use the C99 official header
+   #include <cstdint>		// Use the C99 official header
 #endif
 
 #include <vector>

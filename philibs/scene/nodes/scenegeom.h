@@ -23,88 +23,190 @@ namespace scene {
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
+  /** 
+    This class is the container for actual geometry values (i.e., the
+    positions, normals, colors, uv's, and user attributes.  It also
+    contains the binding information, which describes what vertex attributes
+    exist in the value array, and how they are interleaved/packed.
+
+    Note: Only float componenets are supported right now.  E.g., no GLByte
+    color components, etc.
+  */
 class geomData :
   public pni::pstd::refCount,
   public scene::travDataContainer
 {
   public:
 
-    typedef unsigned short SizeType;
+    typedef uint16_t SizeType;
 
-    geomData () : 
-      mBindings ( Positions ),
-      mDirty ( true )
+    geomData ()
         {}
+      /*** Use these values for the mType member of BindingVal to indicate which
+           binding you are specifying.  See Bindings help for an example. */
+      // Note: We can only have 64 enums, because of the way these are used for
+      // the 64-bit mTypesEnabled mask cache.
+    enum BindingType : SizeType {
+      Positions,       /// Always 3 elements.
+      Normals,         /// Always 3 elements.
+      Colors,          /// Always 4 elements.
+      TCoords00,        /// Always 2 elements.
+      TCoords01,        /// Always 2 elements.
+      TCoords02,        /// Always 2 elements.
+      TCoords03,        /// Always 2 elements.
+      TCoords04,        /// Always 2 elements.
+      TCoords05,        /// Always 2 elements.
+      TCoords06,        /// Always 2 elements.
+      TCoords07,        /// Always 2 elements.
+      TCoords08,        /// Always 2 elements.
+      TCoords09,        /// Always 2 elements.
+      TCoords10,        /// Always 2 elements.
+      TCoords11,        /// Always 2 elements.
+      TCoords12,        /// Always 2 elements.
+      TCoords13,        /// Always 2 elements.
+      TCoords14,        /// Always 2 elements.
+      TCoords15,        /// Always 2 elements.
+
+      Attrib00,          /// User-defined
+      Attrib01,          /// User-defined
+      Attrib02,          /// User-defined
+      Attrib03,          /// User-defined
+      Attrib04,          /// User-defined
+      Attrib05,          /// User-defined
+      Attrib06,          /// User-defined
+      Attrib07,          /// User-defined
+      Attrib08,          /// User-defined
+      Attrib09,           /// User-defined
+      Attrib10,           /// User-defined
+      Attrib11,           /// User-defined
+      Attrib12,           /// User-defined
+      Attrib13,           /// User-defined
+      Attrib14,           /// User-defined
+      Attrib15,           /// User-defined
+
+      Undef = 0xffff
+
+    };
+      /** Use these values as symbols for the mComponents member of BindingVal
+          when setting up bindings.  For user-defined Attrib bindings, you'll
+          have to set the value explicitly.  See Bindings help for an example. */
+    enum BindingComponents : SizeType {
+      PositionsComponents = 3,
+      NormalsComponents = 3,  
+      ColorsComponents = 4,   
+      TCoords00Components = 2,
+      TCoords01Components = 2,
+      TCoords02Components = 2,
+      TCoords03Components = 2,
+      TCoords04Components = 2,
+      TCoords05Components = 2,
+      TCoords06Components = 2,
+      TCoords07Components = 2,
+      TCoords08Components = 2,
+      TCoords09Components = 2,
+      TCoords10Components = 2,
+      TCoords11Components = 2,
+      TCoords12Components = 2,
+      TCoords13Components = 2,
+      TCoords14Components = 2,
+      TCoords15Components = 2
+    };
+
+      /** Struct that indicates specific geometry attribute names, types, and
+          sizes for driving the VBO setup process during GL evaluation. */
+    struct BindingVal
+      {
+        std::string mName;        /// Only needed for user-defined attributes to match with vertex prog
+        BindingType mType;        /// From BindingType enum
+        SizeType mComponents;     /// Number of floats for this binding attribute
+      };
 
     // Bindings:
-    // Note: The bindings must always be packed in the
-    // values array in the order indicated in the enum
-    // below, i.e., positions first, normals second...
-    // and if no normals, then TCoords0 is second, etc.
-    enum Bindings {
-      Positions  = 0,              // Always 3 elements.
-      Normals    = 1 << 0,         // Always 3 elements.
-      Colors     = 1 << 1,         // Always 4 elements.
-      TCoords0   = 1 << 2,         // Always 2 elements.
-      TCoords1   = 1 << 3,         // Always 2 elements.
-    };
-    
-    void setBindings ( unsigned int val = Positions )
-        {
-          mBindings = val;
-          setDirty ();
-        }
-    
-    unsigned int getBindings () const { return mBindings; }
-    
-    SizeType getValueStride () const
-        {
-          SizeType val = 3; // For positions
-          if ( mBindings & Normals ) val += 3;
-          if ( mBindings & Colors ) val += 4;
-          if ( mBindings & TCoords0 ) val += 2;
-          if ( mBindings & TCoords1 ) val += 2;
-          return val;
-        }
-  
-    SizeType getValueStrideBytes () const
+      /**
+        Note: The bindings must always be packed in the values list in the
+        order they occur in the interleaved values array in geomData. Generally,
+        this is Positions, Normals, Colors, TCoords01, ... then User01 if used, etc.
+
+        Note: Use the vector behavior of this class to add binding elements, e.g.,
+        bindings.push_back ( BindingVal ( "positions", GeomData::Positions, GeomData::PositionsComponents ) ).
+      */
+    class Bindings :
+        public std::vector< BindingVal >
       {
-        return getValueStride () * sizeof ( float );
-      }
-  
-     size_t getValueOffset ( Bindings which ) const
-        {
-          size_t val = 0;
-          if ( which == Positions )
-            return 0;
+          typedef std::vector< BindingVal > Base;
 
-          val += 3;
+        public:
+          SizeType getValueStride () const
+            {
+              SizeType ret = 0;
 
-          if ( which == Colors )
-            return val;
+                // Opt: We could cache stride with a little more work in the
+                // dirty functions.
+              for ( auto binding : *this )
+                ret += binding.mComponents;
 
-          if ( mBindings & Colors )
-            val += 4;
+              return ret;
+            }
 
-          if ( which == Normals )
-            return val;
+          SizeType getValueStrideBytes () const
+            {
+                // Opt: We could cache stride with a little more work in the
+                // dirty functions.
+              return getValueStride() * sizeof ( float );
+            }
 
-          if ( mBindings & Normals )
-            val += 3;
-          
-          if ( which == TCoords0 )
-            return val;
+          SizeType getValueOffset ( BindingType which ) const
+            {
+              SizeType ret = 0;
 
-          if ( mBindings & TCoords0 )
-            val += 2;
+                // Opt: We could cache an array of offsets with a little more
+                // work in the dirty functions.
 
-          if ( which == TCoords1 )
-            return val;
+              for ( auto binding : *this )
+              {
+                if ( binding.mType == which )
+                  return ret;
+                ret += binding.mComponents;
+              }
 
-          return 0;
-        }
+              throw std::invalid_argument( "binding type not found" );
+
+              return 0;
+            }
+
+          bool hasBinding ( BindingType which ) const
+            {
+              clearDirty ();
+              return ( 1 << which ) & mTypesEnabled;
+            }
+
+            // These methods hide std::vector methods
+          void clear () { setDirty (); Base::clear (); }
+          void push_back ( value_type const& val ) { setDirty(); Base::push_back ( val ); }
+          void resize ( size_type val ) { setDirty (); Base::resize ( val ); }
+
+          Base& operator = ( Base const& rhs ) = delete;
+          Base& operator = ( Base&& rhs ) = delete;
+          Base& operator = ( std::initializer_list< value_type > init ) = delete;
+
+        private:
+          void setDirty ( bool val = true ) { mDirty = val; }
+
+          void clearDirty () const
+            {
+              mTypesEnabled = 0;
+              for ( auto binding : *this )
+              {
+                mTypesEnabled |= ( 1 << binding.mType );
+              }
+            }
+
+          bool mDirty = true;                     // Only used for mTypesEnabled right now.
+          mutable uint64_t mTypesEnabled = 0ULL;  // Optimizes hasBinding calls
+      };
 
     /////////////////////////////////////////////////////////////////
+      /** The vector that contains indices for the geomData object */
     class indexVec :
       public std::vector< SizeType >
     {
@@ -123,13 +225,14 @@ class geomData :
         
         bool empty () const { return Base::size () - Buff == 0; }
     };
-    
+
+      /** The values type for storing vertex attribute data.  It's always all
+          floats */
     typedef std::vector< float > Values;
-//    typedef std::vector< SizeType > Indices;
     typedef indexVec Indices;
     
-      // Note: numValues is count of floats, not count of verts.
-      // Generally it is numVerts * sizeof ( vert ) / sizeof ( float ).
+      /** Note: numValues is count of floats, not count of verts.
+          Generally it is numVerts * sizeof ( vert ) / sizeof ( float ). */
     void resize ( SizeType numValues, SizeType numIndices )
         {
           mValues.resize ( numValues );
@@ -137,11 +240,11 @@ class geomData :
           setDirty ();
         }
   
-        // Note: numVerts is count of verts, which is a different
-        // semantic than the other resize method
-    void resizeTrisWithBinding ( SizeType numVerts, SizeType numTris )
+        /** Note: numVerts is count of verts, which is a different
+            semantic than the other resize method */
+    void resizeTrisWithCurrentBinding ( SizeType numVerts, SizeType numTris )
         {
-          mValues.resize ( numVerts * getValueStride () );
+          mValues.resize ( numVerts * mBindings.getValueStride () );
           size_t newSize = numTris * 3;
           mIndices.resize ( newSize );
           setDirty ();
@@ -171,7 +274,14 @@ class geomData :
     void setDirty () { mDirty = true; } // Used to invalidate GL-side objects like VBOs during rendering pass.
     void setBoundsDirty () { mBounds.setIsDirty ( true ); }
     box3 const& getBounds () const { if ( mBounds.getIsDirty() ) updateBounds (); return mBounds; }
-  
+
+      /** @methodgroup Binding Methods */
+    void setBindings ( Bindings const& bindings )
+      { mBindings = bindings; setDirty (); }
+    Bindings const& getBindings () const { return mBindings; }
+    Bindings& bindingsOp () { setDirty (); return mBindings; }
+
+      /** @methodgroup Debugging Methods */
     void dbg ();
     
   protected:
@@ -182,7 +292,7 @@ class geomData :
   private:
       friend class geom;
   
-      unsigned int mBindings;
+      Bindings mBindings;
       
       Values mValues;
       Indices mIndices;
@@ -200,6 +310,9 @@ class geom :
   public:
     typedef geomData::Values Values;
     typedef geomData::Indices Indices;
+    typedef geomData::BindingType BindingType;
+    typedef geomData::BindingComponents BindingComponents;
+    typedef geomData::BindingVal BindingVal;
     typedef geomData::Bindings Bindings;
     typedef geomData::SizeType SizeType;
   
@@ -214,17 +327,19 @@ class geom :
     virtual node* dup () const { return new geom ( *this ); }
 
     
-      // Efficiently reference geometry data so that dup operations can
-      // be lightweight.
-      // NOTE: Public data!
     typedef pni::pstd::autoRef< geomData > GeomDataRef;
     
-      // Handy function that sets bounds dirty and returns geom data.
-      // LAME: When geom data is shared, it's bounds will be calc'd
-      // for every parent... this could be optimized by putting the
-      // actual bounds in the geomData class.  No biggie, though.
-      // Update: geomData now has bounds and updates only once, regardless
-      // of multiple parentage.
+      /** @methodgroup Geometry Methods
+          Efficiently reference geometry data so that dup operations can
+          be lightweight.  E.g., geometry instancing. */
+
+      /**
+          Handy function that sets bounds dirty and returns geom data.
+          LAME: When geom data is shared, it's bounds will be calc'd
+          for every parent... this could be optimized by putting the
+          actual bounds in the geomData class.  No biggie, though.
+          Update: geomData now has bounds and updates only once, regardless
+          of multiple parentage. */
     void setGeomData ( geomData* pData ) { mGeomData = pData; setGeomBoundsDirty (); }
     geomData* getGeomData () { return mGeomData.get (); }
     geomData const* getGeomData () const { return mGeomData.get (); }
@@ -232,7 +347,9 @@ class geom :
         
       ///////
     void uniquifyGeometry ();
-    
+
+      /** @methodgroup Bounds Methods */
+
       // Bounding geometry management hints.
       // TODO: Not all of these are implemented.  
     enum BoundsMode
@@ -288,7 +405,7 @@ class vertIter
   public:
     vertIter ( geom* pGeom ) :
       mGdata ( pGeom->getGeomData () ),
-      mStride ( mGdata->getValueStride () ),
+      mStride ( mGdata->getBindings ().getValueStride () ),
       mCur ( &mGdata->getValues ()[ 0 ] )
         {
           calcEnd ();
@@ -296,7 +413,7 @@ class vertIter
         
     vertIter ( geomData* pGdata ) :
       mGdata ( pGdata ),
-      mStride ( mGdata->getValueStride () ),
+      mStride ( mGdata->getBindings ().getValueStride () ),
       mCur ( &mGdata->getValues ()[ 0 ] )
         {
           calcEnd ();
@@ -351,7 +468,7 @@ class triIter
   public:
     triIter ( geom* pGeom ) :
       mGdata ( pGeom->getGeomData () ),
-      mStride ( mGdata->getValueStride () ),
+      mStride ( mGdata->getBindings ().getValueStride () ),
       mCur ( 0 )
         {
           mPtr = getPtr ( 0 );
@@ -359,7 +476,7 @@ class triIter
         
     triIter ( geomData* pGdata ) :
       mGdata ( pGdata ),
-      mStride ( mGdata->getValueStride () ),
+      mStride ( mGdata->getBindings ().getValueStride () ),
       mCur ( 0 )
         {
           mPtr = getPtr ( 0 );

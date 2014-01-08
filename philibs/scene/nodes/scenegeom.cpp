@@ -21,7 +21,7 @@ void geomData::dbg ()
 
   cout << "geomData : " << this << endl;
 
-  size_t stride = getValueStride ();
+  size_t stride = getBindings ().getValueStride ();
 
   for ( size_t num = 0; num < mValues.size () / stride; ++num )
   {
@@ -32,7 +32,7 @@ void geomData::dbg ()
         << mValues[ cur + 2 ] << endl;
     cur += 3;
     
-    if ( mBindings & Normals )
+    if ( mBindings.hasBinding ( Normals ) )
     {
       cout << " norm = " 
           << mValues[ cur     ] << ", "
@@ -41,7 +41,7 @@ void geomData::dbg ()
         cur += 3;
     }
 
-    if ( mBindings & Colors )
+    if ( mBindings.hasBinding ( Colors ) )
     {
       cout << " color = " 
           << mValues[ cur     ] << ", "
@@ -51,7 +51,7 @@ void geomData::dbg ()
         cur += 4;
     }
 
-    if ( mBindings & TCoords0 )
+    if ( mBindings.hasBinding ( TCoords00 ) )
     {
       cout << " uv0 = " 
           << mValues[ cur    ] << ", "
@@ -59,13 +59,15 @@ void geomData::dbg ()
         cur += 2;
     }
 
-    if ( mBindings & TCoords1 )
+    if ( mBindings.hasBinding ( TCoords01 ) )
     {
       cout << " uv1 = " 
           << mValues[ cur    ] << ", "
           << mValues[ cur + 1 ] << endl;
         cur += 2;
     }
+
+      // TODO: Rework this when we /really/ support TCoords >= 02.
   }
   
   cout << " indices" << endl;
@@ -85,7 +87,7 @@ void geomData::updateBounds () const
   Values const& values = getValues ();
   
   float const* end = &values.back ();
-  SizeType incr = getValueStride ();
+  SizeType incr = mBindings.getValueStride ();
   for ( float const* ptr = &values[ 0 ];
        ptr < end;
        ptr += incr )

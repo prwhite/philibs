@@ -265,8 +265,9 @@ void sprites::update ( graphDd::fxUpdate const& update )
     doDepthSort ( update, sorters );
   
     // Set geometry binding.
-  mGeomData->setBindings ( geomData::Positions | geomData::TCoords0 );
-  
+  mGeomData->bindingsOp().push_back ( { "", geomData::Positions, geomData::PositionsComponents } );
+  mGeomData->bindingsOp().push_back ( { "", geomData::TCoords00, geomData::TCoords00Components } );
+
     // Unused... why was it here? PRW
 //  SizeType stride = mGeomData->getValueStride ();
   
@@ -275,7 +276,7 @@ void sprites::update ( graphDd::fxUpdate const& update )
     // 2 tris per sprite (this is a strip-order quad done with tris).
   size_t elemCount = mData.getElemCount ();
   if ( elemCount * 2 != mGeomData->getTriCount () )
-    mGeomData->resizeTrisWithBinding ( 
+    mGeomData->resizeTrisWithCurrentBinding (
         elemCount * 4, elemCount * 2 );
 
     // Iterate over items creating corresponding sprite tri pairs.    

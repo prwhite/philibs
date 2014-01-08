@@ -533,7 +533,7 @@ void dbg ( geomData const* pGdata )
   }
   
   geomData::Values const& vals = pGdata->getValues ();
-  size_t stride = pGdata->getValueStride ();
+  size_t stride = pGdata->getBindings ().getValueStride ();
 
 cout << "    stride = " << stride << endl;
 
@@ -557,7 +557,7 @@ PNIDBG
 
   // * 4 because the stride is in bytes and our stride
   // value is for float*.
-  uint32_t stride = pData->getValueStride () * sizeof ( float );
+  uint32_t stride = pData->getBindings ().getValueStride () * sizeof ( float );
 
 // void glDrawElements(GLenum mode,
 //     GLsizei count,
