@@ -481,8 +481,8 @@ class blur :
           tmp->setSize ( size, 1, size );
           tmp->setFormat ( base::Gray8 );
           
-          base::Buffer* pBuf = new base::Buffer;
-          base::Buffer& buf = *pBuf;
+          base::buffer* pBuf = new base::buffer;
+          base::buffer& buf = *pBuf;
           pBuf->resize ( calcSizeFromRadius ( radius ) );
           tmp->mBuffers.push_back ( pBuf );
           

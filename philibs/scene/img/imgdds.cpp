@@ -273,11 +273,11 @@ bool dds::determineCaps ()
   return true;
 }
 
-base::Buffer* dds::createBuffer ( void* start, size_t length )
+base::buffer* dds::createBuffer ( void* start, size_t length )
 {
   swapSrcBuffer ( ( char* ) start, length );
 
-  base::Buffer* buf = new base::Buffer;
+  base::buffer* buf = new base::buffer;
   buf->resize ( length );
   
   memcpy ( &buf->front (), start, length );

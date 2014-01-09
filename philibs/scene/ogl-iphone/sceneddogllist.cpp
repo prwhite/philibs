@@ -264,7 +264,7 @@ void ddOglList::resetRenderItems ()
 #define SCENEOGLLTCOMPARE(lhs,rhs) if(!((lhs)==(rhs))) return (lhs)<(rhs)
 #define SCENEOGLGTCOMPARE(lhs,rhs) if(!((lhs)==(rhs))) return (lhs)>(rhs)
 
-struct Sorter
+struct sorter
 {
   bool operator () ( ddOglList::RenderList::value_type const& lhs,
       ddOglList::RenderList::value_type const& rhs )
@@ -346,7 +346,7 @@ CheckGLError
 
 PNIDBG
   // sort the list.
-  std::sort ( mRenderList.begin (), mRenderList.end (), Sorter () );
+  std::sort ( mRenderList.begin (), mRenderList.end (), sorter () );
 PNIDBG
 
   resetCurState ();

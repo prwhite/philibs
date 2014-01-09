@@ -118,7 +118,7 @@ class dds
     // Methods.
     bool determineFormat ();
     bool determineCaps ();
-    base::Buffer* createBuffer ( void* start, size_t length );
+    base::buffer* createBuffer ( void* start, size_t length );
     void swapSrcBuffer ( char* mem, size_t size );
 
     // Data members.

@@ -59,7 +59,7 @@ void base::alloc ( bool mipMapsToo )
   
   while ( ! done )
   {
-    mBuffers.push_back ( new Buffer );
+    mBuffers.push_back ( new buffer );
     mBuffers.back ()->resize ( pitch * height );
     
     if ( ! mipMapsToo ) done = true;
@@ -106,7 +106,7 @@ void base::cloneFormatAndSize ( base const* pBase, bool reallocToo )
   
     for ( size_t num = 0; num < newSize; ++num )
     {
-      mBuffers[ num ] = new Buffer;
+      mBuffers[ num ] = new buffer;
       mBuffers[ num ]->resize ( pBase->mBuffers[ num ]->size () );
     }
   }
@@ -123,7 +123,7 @@ void base::uniquifyBuffers ()
       cur != end;
       ++cur )
   {
-    tmp.push_back ( new Buffer ( *cur->get () ) );
+    tmp.push_back ( new buffer ( *cur->get () ) );
   }
 }
 

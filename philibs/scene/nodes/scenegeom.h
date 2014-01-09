@@ -130,7 +130,7 @@ class geomData :
         Note: Use the vector behavior of this class to add binding elements, e.g.,
         bindings.push_back ( BindingVal ( "positions", GeomData::Positions, GeomData::PositionsComponents ) ).
       */
-    class Bindings :
+    class bindings :
         public std::vector< BindingVal >
       {
           typedef std::vector< BindingVal > Base;
@@ -204,6 +204,11 @@ class geomData :
           bool mDirty = true;                     // Only used for mTypesEnabled right now.
           mutable uint64_t mTypesEnabled = 0ULL;  // Optimizes hasBinding calls
       };
+
+      // This is a cheap convention hack... all classes in phi start with a
+      // lower case, but typedefs upper... so this gets us consistent in
+      // both ways in this class.
+    typedef bindings Bindings;
 
     /////////////////////////////////////////////////////////////////
       /** The vector that contains indices for the geomData object */

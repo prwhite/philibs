@@ -47,7 +47,7 @@ void initImageWithSize ( img::base* pImg,
   pImg->setSize ( width, height, width );
   pImg->setFormat ( format );
   
-  img::base::Buffer* pBuffer = new img::base::Buffer;
+  img::base::buffer* pBuffer = new img::base::buffer;
   pBuffer->resize ( width * height * pImg->calcFormatStride ( format ), 0xff );
   
   pImg->mBuffers.push_back ( pBuffer );
@@ -464,7 +464,7 @@ PNIPSTDLOG
   args.mDz = mDz;
     
     // Fill in vert values.
-  img::base::Buffer* pBuf = mHeightImg->mBuffers[ 0 ].get ();
+  img::base::buffer* pBuf = mHeightImg->mBuffers[ 0 ].get ();
   for ( Dim cury = yStart; cury < yEnd; ++cury )
   {
     size_t vertStart = ( cury - yBase ) * valuePitch + ( xStart - xBase );
