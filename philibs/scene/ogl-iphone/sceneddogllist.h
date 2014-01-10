@@ -25,6 +25,8 @@
 
 namespace scene {
 
+  class progObj;
+
 /////////////////////////////////////////////////////////////////////
 
 class ddOglList :
@@ -74,9 +76,9 @@ class ddOglList :
       renderItem () {}
     
       pni::math::matrix4 mMatrix;
-      stateSet mStateSet;       // Really?  The whole set?
-      // We do not ref-count things during the rendering pass.
-      // pni::pstd::autoRef< node > mNode;
+      stateSet mStateSet;           // Really?  The whole set?
+        // We do not ref-count things during the rendering pass.
+        // pni::pstd::autoRef< node > mNode;
       node const* mNode;
       float distSqr;
     };
@@ -101,10 +103,13 @@ class ddOglList :
     
   private:
     typedef unsigned int GlEnum;
+    typedef pni::pstd::autoRef< prog const > ProgRef;
+
     stateSet mCurStates;
     RenderList mRenderList;
-    //CPVRTglesExt mPvr;
     nodePath mSinkPath;
+    ProgRef mCurProg;         // Currently active program
+
     unsigned int mCurStateId;
     GlEnum mCurLightUnit;
     

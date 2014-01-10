@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////
 //
-//  file: sceneprogobj.cpp
+//  file: sceneprogObj.cpp
 //
 /////////////////////////////////////////////////////////////////////
 
@@ -9,7 +9,7 @@
 
 #include "pnilog.h"
 
-#include "sceneprogobj.h"
+#include "sceneprogObj.h"
 
 #include "sceneogl.h"
 #include <OpenGLES/ES2/glext.h>
@@ -24,27 +24,27 @@ namespace scene {
 
 /////////////////////////////////////////////////////////////////////
 
-progobj::progobj()
+progObj::progObj()
 {
   init ();
 }
 
-progobj::~progobj()
+progObj::~progObj()
 {
   clear ();
 }
 
-// progobj::progobj(progobj const& rhs)
+// progObj::progObj(progObj const& rhs)
 // {
 //   init ();
 // }
 
-// progobj& progobj::operator=(progobj const& rhs)
+// progObj& progObj::operator=(progObj const& rhs)
 // {
 //   return *this;
 // }
 // 
-// bool progobj::operator==(progobj const& rhs) const
+// bool progObj::operator==(progObj const& rhs) const
 // {
 //
 //   return false;
@@ -52,14 +52,14 @@ progobj::~progobj()
 
 /////////////////////////////////////////////////////////////////////
 
-void progobj::bind ( prog const* pData )
+void progObj::bind ( prog const* pData )
 {
   // glBind...
 }
 
 /////////////////////////////////////////////////////////////////////
 
-void progobj::config ( prog const* pData )
+void progObj::config ( prog const* pData )
 {
   bind ( pData );
   
@@ -75,12 +75,12 @@ CheckGLError
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
-void progobj::init ()
+void progObj::init ()
 {
   // glGenPipelines...
 }
 
-void progobj::clear ()
+void progObj::clear ()
 {
   // glDeletePipelines...
 }

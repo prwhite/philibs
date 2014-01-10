@@ -28,14 +28,16 @@
 // #include "scenetexgen.h"
 #include "scenetexture.h"
 #include "scenetexturexform.h"
+#include "sceneuniform.h"
 
 #include "scenetexobj.h"
 #include "scenevbo.h"
-#include "sceneprogobj.h"
+#include "sceneprogObj.h"
 
 #include "pnimathstream.h"
 
 #include "sceneogl.h"
+#include <OpenGLES/ES2/glext.h>
 
 using namespace std;
 
@@ -65,54 +67,64 @@ namespace scene {
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
-void configTextureObject ( texture const* textureIn )
+texObj* configTextureObject ( texture const* textureIn )
 {
-  glEnable ( GL_TEXTURE_2D );
 
 	// get or create textureObject for this texture
 	if ( texObj* pObj = static_cast< texObj* > ( textureIn->getTravData ( Draw ) ) )
 	{
+    glEnable ( GL_TEXTURE_2D ); // in if and else if cases
+
 		pObj->config ( textureIn );
+    return pObj;
 	}
 	else if ( textureIn->getImage () )
 	{
-		texObj* tobj = new texObj;
-		tobj->config ( textureIn );
-		const_cast< texture* > ( textureIn )->setTravData ( Draw, tobj );
+    glEnable ( GL_TEXTURE_2D ); // in if and else if cases
+
+		pObj = new texObj;
+		pObj->config ( textureIn );
+		const_cast< texture* > ( textureIn )->setTravData ( Draw, pObj );
+    return pObj;
 	}
 	else	// not an image texture... can't create it... so disable texture target
 	{
 		glDisable ( GL_TEXTURE_2D );
+    return 0;
 	}
 }
 
-void configVBO ( geomData const* geomDataIn )
+vbo* configVBO ( geomData const* geomDataIn )
 {
     // get or create textureObject for this texture
   if ( vbo* pObj = static_cast< vbo* > ( geomDataIn->getTravData ( Draw ) ) )
   {
     pObj->config ( geomDataIn );
+    return pObj;
   }
   else
   {
-    vbo* pVbo = new vbo;
-    pVbo->config ( geomDataIn );
-    const_cast< geomData* > ( geomDataIn )->setTravData ( Draw, pVbo );
+    pObj = new vbo;
+    pObj->config ( geomDataIn );
+    const_cast< geomData* > ( geomDataIn )->setTravData ( Draw, pObj );
+    return pObj;
   }
 }
 
-void configProgobj ( prog const* pProg )
+progObj* configProgobj ( prog const* pProg )
 {
     // get or create textureObject for this texture
-  if ( progobj* pObj = static_cast< progobj* > ( pProg->getTravData ( Draw ) ) )
+  if ( progObj* pObj = static_cast< progObj* > ( pProg->getTravData ( Draw ) ) )
   {
     pObj->config ( pProg );
+    return pObj;
   }
   else
   {
-    pObj = new progobj;
+    pObj = new progObj;
     pObj->config ( pProg );
     const_cast< prog* > ( pProg )->setTravData ( Draw, pObj );
+    return pObj;
   }
 }
 
@@ -302,12 +314,16 @@ struct sorter
       SCENEOGLLTCOMPARE( lhs.distSqr, rhs.distSqr );  // Less-than/ascending dist sort.
     }
 
+      // TODO: Add sorting based on program here-ish.
+
     SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture0 ],
                         rhs.mStateSet.mStates[ state::Texture0 ] );
     SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture1 ],
                         rhs.mStateSet.mStates[ state::Texture1 ] );
     SCENEOGLLTCOMPARE( lhs.mNode, rhs.mNode );      // Sort geoms together.
-  
+
+      // TODO: Add sorting based on uniforms here-ish (or maybe it's not worth it)
+
     return false;
   }
 };
@@ -325,7 +341,6 @@ void ddOglList::startList ()
     printf ( "ddOglList: %X Frame Start\n", this );
   }
 #endif // _NDEBUG
-
   
   if ( ! initDone )
   {
@@ -373,11 +388,11 @@ PNIDBG
 //printf ( "node: %s  distSqr: %f\n", cur->mNode->getName ().c_str (), cur->distSqr );
 
 #ifndef _NDEBUG
-  if ( mDbgVals & DbgSort )
-  {
-    printf ( "DbgSort: node %s distSqr = %f\n",
-        cur->mNode->getName ().c_str (), cur->distSqr );
-  }
+    if ( mDbgVals & DbgSort )
+    {
+      printf ( "DbgSort: node %s distSqr = %f\n",
+          cur->mNode->getName ().c_str (), cur->distSqr );
+    }
 
 #endif // _NDEBUG
   
@@ -1134,8 +1149,10 @@ CheckGLError
 
 void ddOglList::dispatch ( prog const* pState )
 {
-  // TODO
+    // TODO: Set prog-related state
 
+    // Track current prog, will be needed when binding uniforms, etc.
+  mCurProg = pState;
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -1303,7 +1320,48 @@ CheckGLError
 
 void ddOglList::dispatch ( uniform const* pState )
 {
-  
+  if ( mCurProg )
+  {
+    if ( progObj* pobj = configProgobj ( mCurProg.get () ) )
+    {
+      uniform::Bindings const& bindings = pState->getBindings ();
+
+      for ( auto& bindingIter : bindings )
+      {
+        uniform::binding const& binding = bindingIter.second;
+
+          // TODO: Better setup for this when we support more stages.
+        GLuint glProg = binding.getStage () == uniform::binding::Vertex ? pobj->getVertexProgHandle() : pobj->getFragmentProgHandle();
+
+        GLint loc = glGetUniformLocation ( glProg, binding.getName().c_str () );
+
+        switch ( binding.getType () )
+        {
+          case uniform::binding::Float1: glProgramUniform1fvEXT ( glProg, loc, binding.getCount (), binding.getFloats () ); break;
+          case uniform::binding::Float2: glProgramUniform2fvEXT ( glProg, loc, binding.getCount (), binding.getFloats () ); break;
+          case uniform::binding::Float3: glProgramUniform3fvEXT ( glProg, loc, binding.getCount (), binding.getFloats () ); break;
+          case uniform::binding::Float4: glProgramUniform4fvEXT ( glProg, loc, binding.getCount (), binding.getFloats () ); break;
+
+          case uniform::binding::Int1: glProgramUniform1ivEXT ( glProg, loc, binding.getCount (), binding.getInts () ); break;
+          case uniform::binding::Int2: glProgramUniform2ivEXT ( glProg, loc, binding.getCount (), binding.getInts () ); break;
+          case uniform::binding::Int3: glProgramUniform3ivEXT ( glProg, loc, binding.getCount (), binding.getInts () ); break;
+          case uniform::binding::Int4: glProgramUniform4ivEXT ( glProg, loc, binding.getCount (), binding.getInts () ); break;
+
+          case uniform::binding::Matrix2: glProgramUniformMatrix2fvEXT ( glProg, loc, binding.getCount (), true, binding.getFloats () ); break;
+          case uniform::binding::Matrix3: glProgramUniformMatrix3fvEXT ( glProg, loc, binding.getCount (), true, binding.getFloats () ); break;
+          case uniform::binding::Matrix4: glProgramUniformMatrix4fvEXT ( glProg, loc, binding.getCount (), true, binding.getFloats () ); break;
+
+          default:
+            PNIDBGSTR ( "case not handled, getType out of range" );
+            break;
+        }
+      }
+    }
+  }
+  else
+  {
+    PNIDBGSTR("no program set for uniforms");
+  }
 }
 
   

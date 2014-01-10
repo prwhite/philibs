@@ -1,16 +1,18 @@
 /////////////////////////////////////////////////////////////////////
 //
-//    class: progobj
+//    class: progObj
 //
 /////////////////////////////////////////////////////////////////////
 
-#ifndef scenesceneprogobj_h
-#define scenesceneprogobj_h
+#ifndef scenesceneprogObj_h
+#define scenesceneprogObj_h
 
 /////////////////////////////////////////////////////////////////////
 
 #include "sceneprog.h"
 #include "sceneattr.h"
+
+#include "sceneogl.h"
 
 /////////////////////////////////////////////////////////////////////
 
@@ -18,20 +20,24 @@ namespace scene {
     
 /////////////////////////////////////////////////////////////////////
 
-class progobj :
+class progObj :
     public attr
 {
     public:
-        progobj();
-        virtual ~progobj();
-//         progobj(progobj const& rhs);
-//         progobj& operator=(progobj const& rhs);
-//         bool operator==(progobj const& rhs) const;
+        progObj();
+        virtual ~progObj();
+//         progObj(progObj const& rhs);
+//         progObj& operator=(progObj const& rhs);
+//         bool operator==(progObj const& rhs) const;
         
         
       void bind ( prog const* pData );
       
       void config ( prog const* pData );
+
+      GLuint getPipelineHandle () const { return mPipeline; }
+      GLuint getVertexProgHandle () const { return mVertProg; }
+      GLuint getFragmentProgHandle () const { return mFragProg; }
       
     protected:
       
@@ -39,7 +45,10 @@ class progobj :
       void clear ();
         
     private:
-        
+      GLuint mPipeline = 0;
+      GLuint mVertProg = 0;
+      GLuint mFragProg = 0;
+
 
 	// interface from node::travData
 	public:
@@ -55,6 +64,6 @@ class progobj :
 
 } // end of namespace scene 
 
-#endif // scenesceneprogobj_h
+#endif // scenesceneprogObj_h
 
 
