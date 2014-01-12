@@ -75,7 +75,7 @@ class autoRef
 		bool operator == ( value_type const* rhs ) const { return refClass == rhs; }
 		bool operator == ( autoRef const& rhs ) const { return refClass == rhs.refClass; }
 
-		operator bool () const { return refClass != 0; }
+		explicit operator bool () const { return refClass != 0; }
 
 		value_type* get () const { return refClass; }
 

@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C4BD27C18810EB6000781B0 /* sceneogl.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CAD972018662A2B00C547E1 /* sceneogl.h */; };
+		1C4BD27D18810EE6000781B0 /* sceneuniform.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C6A02B81873526700672EF8 /* sceneuniform.h */; };
+		1C4BD27E18810EE6000781B0 /* sceneprog.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CAD9722186D72D500C547E1 /* sceneprog.h */; };
+		1C4BD27F18810EE6000781B0 /* sceneprogobj.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CAD9725186E110200C547E1 /* sceneprogobj.h */; };
+		1C4BD28018810EE6000781B0 /* scenevbo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CAD971E186628EE00C547E1 /* scenevbo.h */; };
 		1C6A02B91873526700672EF8 /* sceneuniform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C6A02B71873526700672EF8 /* sceneuniform.cpp */; };
 		1CAD971F186628EE00C547E1 /* scenevbo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD971D186628EE00C547E1 /* scenevbo.cpp */; };
 		1CAD9723186D72D500C547E1 /* sceneprog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9721186D72D500C547E1 /* sceneprog.cpp */; };
@@ -253,6 +258,10 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				1C4BD27D18810EE6000781B0 /* sceneuniform.h in CopyFiles */,
+				1C4BD27E18810EE6000781B0 /* sceneprog.h in CopyFiles */,
+				1C4BD27F18810EE6000781B0 /* sceneprogobj.h in CopyFiles */,
+				1C4BD28018810EE6000781B0 /* scenevbo.h in CopyFiles */,
 				1CF4DB8F185EDD79007331F8 /* sceneattr.h in CopyFiles */,
 				1CDD4275185EDBD1009284F9 /* animbase.h in CopyFiles */,
 				1CDD4277185EDBD1009284F9 /* animbgmusicfader.h in CopyFiles */,
@@ -342,6 +351,7 @@
 				1CDD430D185EDBD2009284F9 /* scenetexture.h in CopyFiles */,
 				1CDD430F185EDBD2009284F9 /* scenetexturexform.h in CopyFiles */,
 				1CDD4311185EDBD2009284F9 /* sceneddogl.h in CopyFiles */,
+				1C4BD27C18810EB6000781B0 /* sceneogl.h in CopyFiles */,
 				1CDD4313185EDBD2009284F9 /* sceneddogllist.h in CopyFiles */,
 				1CDD4316185EDBD2009284F9 /* scenesnddd.h in CopyFiles */,
 				1CDD4318185EDBD2009284F9 /* scenetexobj.h in CopyFiles */,

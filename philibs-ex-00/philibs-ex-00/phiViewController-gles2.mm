@@ -18,6 +18,9 @@
 #include "philibs/scenelight.h"
 #include "philibs/scenelightpath.h"
 
+#include "philibs/sceneprog.h"
+#include "philibs/sceneuniform.h"
+
 #include "philibs/pnimathstream.h"
 
 #include "pniosxplatform.h"
@@ -30,6 +33,8 @@
   pni::pstd::autoRef< loader::base > mLoader;
   pni::pstd::autoRef< scene::node > mRoot;
   pni::pstd::autoRef< scene::node > mFile;
+  pni::pstd::autoRef< scene::prog > mProg;
+  pni::pstd::autoRef< scene::uniform > mUniform00;
   pni::pstd::autoRef< scene::camera > mCam;
   
 }
@@ -106,7 +111,24 @@
     // Create the GL visitor and the root group.
   mDd = new scene::ddOgl ();
   mRoot = new scene::group ();
-  
+
+    // Add default vert and frag programs
+  mProg = new scene::prog;
+  mProg->setDefaultProgs();
+  mRoot->setState(mProg.get(), scene::state::Prog);
+
+    // Add a uniform that will be used in the default vertex prog
+    // This is not for real... it's just temp to test the new uniform path
+    // and to vet the API.
+  pni::math::matrix4 mat;
+  mat.setIdentity();
+
+  mUniform00 = new scene::uniform;
+  scene::uniform::binding& binding00test = mUniform00->uniformOp( "modelViewProjectionMatrix" );
+  binding00test.setStageTypeCount ( scene::uniform::binding::Vertex, scene::uniform::binding::Matrix4, 1 );
+  mat.copyTo ( binding00test.getFloats() );
+  mRoot->setState(mUniform00.get(), scene::state::Uniform00);
+
     // Create a default depth state object.
   scene::depth* pDepth = new scene::depth ();
   mRoot->setState(pDepth, scene::state::Depth);

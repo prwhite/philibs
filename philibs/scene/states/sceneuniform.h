@@ -54,9 +54,8 @@ class uniform :
         enum Stage { Vertex, Fragment };
 
           // TODO: This has too many params, switch to individual setters or pub data?
-        void setNameStageTypeCount ( std::string const& name, Stage stage, Type type, size_t count = 1 ) { mName = name; mStage = stage; mType = type; mCount = count; resize (); }
+        void setStageTypeCount ( Stage stage, Type type, size_t count = 1 ) { mStage = stage; mType = type; mCount = count; resize (); }
 
-        std::string const& getName () const { return mName; }
         Stage getStage () const { return mStage; }
         Type getType () const { return mType; }
         size_t getCount () const { return mCount; }
@@ -91,7 +90,6 @@ class uniform :
 
         typedef std::vector< IntType > Vals;
 
-        std::string mName;
         Vals mVals;
         Stage mStage = Fragment;
         Type mType = Float4;
@@ -118,6 +116,7 @@ class uniform :
     binding& uniformOp ( std::string const& which ) { setDirty (); return mBindings[ which ]; }
 
     void setDirty ( bool val = true ) const { mDirty = val; }
+    bool getDirty () const { return mDirty; }
     void clearDirty () { mDirty = false; }
   
   protected:

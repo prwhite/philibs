@@ -111,7 +111,7 @@ vbo* configVBO ( geomData const* geomDataIn )
   }
 }
 
-progObj* configProgobj ( prog const* pProg )
+progObj* configProgObject ( prog const* pProg )
 {
     // get or create textureObject for this texture
   if ( progObj* pObj = static_cast< progObj* > ( pProg->getTravData ( Draw ) ) )
@@ -314,15 +314,13 @@ struct sorter
       SCENEOGLLTCOMPARE( lhs.distSqr, rhs.distSqr );  // Less-than/ascending dist sort.
     }
 
-      // TODO: Add sorting based on program here-ish.
-
+    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Prog ],
+                        rhs.mStateSet.mStates[ state::Prog ] );
     SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture0 ],
                         rhs.mStateSet.mStates[ state::Texture0 ] );
     SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture1 ],
                         rhs.mStateSet.mStates[ state::Texture1 ] );
     SCENEOGLLTCOMPARE( lhs.mNode, rhs.mNode );      // Sort geoms together.
-
-      // TODO: Add sorting based on uniforms here-ish (or maybe it's not worth it)
 
     return false;
   }
@@ -1149,10 +1147,12 @@ CheckGLError
 
 void ddOglList::dispatch ( prog const* pState )
 {
-    // TODO: Set prog-related state
-
     // Track current prog, will be needed when binding uniforms, etc.
   mCurProg = pState;
+
+    // TODO: Set prog-related state
+  if (progObj* pobj = configProgObject(pState) )
+    pobj->bind(pState);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -1322,18 +1322,23 @@ void ddOglList::dispatch ( uniform const* pState )
 {
   if ( mCurProg )
   {
-    if ( progObj* pobj = configProgobj ( mCurProg.get () ) )
+    if ( progObj* pobj = configProgObject ( mCurProg.get () ) )
     {
       uniform::Bindings const& bindings = pState->getBindings ();
 
       for ( auto& bindingIter : bindings )
       {
         uniform::binding const& binding = bindingIter.second;
+        std::string const& name = bindingIter.first;
 
           // TODO: Better setup for this when we support more stages.
         GLuint glProg = binding.getStage () == uniform::binding::Vertex ? pobj->getVertexProgHandle() : pobj->getFragmentProgHandle();
 
-        GLint loc = glGetUniformLocation ( glProg, binding.getName().c_str () );
+CheckGLError
+
+        GLint loc = glGetUniformLocation ( glProg, name.c_str () );
+
+CheckGLError
 
         switch ( binding.getType () )
         {
@@ -1347,14 +1352,15 @@ void ddOglList::dispatch ( uniform const* pState )
           case uniform::binding::Int3: glProgramUniform3ivEXT ( glProg, loc, binding.getCount (), binding.getInts () ); break;
           case uniform::binding::Int4: glProgramUniform4ivEXT ( glProg, loc, binding.getCount (), binding.getInts () ); break;
 
-          case uniform::binding::Matrix2: glProgramUniformMatrix2fvEXT ( glProg, loc, binding.getCount (), true, binding.getFloats () ); break;
-          case uniform::binding::Matrix3: glProgramUniformMatrix3fvEXT ( glProg, loc, binding.getCount (), true, binding.getFloats () ); break;
-          case uniform::binding::Matrix4: glProgramUniformMatrix4fvEXT ( glProg, loc, binding.getCount (), true, binding.getFloats () ); break;
+          case uniform::binding::Matrix2: glProgramUniformMatrix2fvEXT ( glProg, loc, binding.getCount (), GL_FALSE, binding.getFloats () ); break;
+          case uniform::binding::Matrix3: glProgramUniformMatrix3fvEXT ( glProg, loc, binding.getCount (), GL_FALSE, binding.getFloats () ); break;
+          case uniform::binding::Matrix4: glProgramUniformMatrix4fvEXT ( glProg, loc, binding.getCount (), GL_FALSE, binding.getFloats () ); break;
 
           default:
             PNIDBGSTR ( "case not handled, getType out of range" );
             break;
         }
+CheckGLError
       }
     }
   }

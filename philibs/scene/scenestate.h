@@ -55,6 +55,7 @@ class state :
 //         PointStyle, //
 //         PolygonMode,   // Not in OES
 //         PolygonOffset,   //
+        Prog,
 //         Scissor,    //
 //         Stencil,    //
         TexEnv0, // TexEnv1 - TexEnv0 must == 1, etc.
