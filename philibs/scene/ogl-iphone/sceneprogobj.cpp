@@ -4,6 +4,18 @@
 //
 /////////////////////////////////////////////////////////////////////
 
+/* Resources for this implementation:
+
+http://www.khronos.org/registry/gles/extensions/EXT/EXT_separate_shader_objects.txt
+https://www.opengl.org/sdk/docs/man/xhtml/glBindProgramPipeline.xml
+http://www.g-truc.net/post-0348.html
+http://onlygraphix.com/2013/08/18/why-and-when-you-should-use-separate-shader-programs-in-opengl/
+http://www.lastrayofhope.com/tag/gl_ext_separate_shader_objects/
+http://www.rushdigital.co.nz/blog/2013/12/extseparateshaderobject-on-ios
+
+*/
+
+
 #define PNIDBGDISABLE
 #define PNIPSTDLOGDISABLE
 
@@ -60,6 +72,17 @@ void progObj::bind ( prog const* pData )
 
 /////////////////////////////////////////////////////////////////////
 
+  // TODO: Implement a shader cache, so we get more value out of
+  // shader re-use with separable programs.
+  // TODO: Also recognize currently bound vert/frag/other shader
+  // and do not rebind if it matches.
+  // Both these points have up-stream ramifications... if all
+  // this class knows about a shader is the program string, it will
+  // be expensive to do comparisons.  Maybe separate states for each
+  // program would have been a better match, although we'd still need
+  // to find a way to combine them in a program pipeline on the gl side
+  // of things.
+
 void progObj::config ( prog const* pData )
 {
     // We don't bind here... we only need to bind when we are about to draw
@@ -100,6 +123,15 @@ void progObj::config ( prog const* pData )
     {
       glUseProgramStagesEXT( mPipeline, GL_FRAGMENT_SHADER_BIT_EXT, 0 );
     }
+
+#ifndef NDEBUG
+    glValidateProgramPipelineEXT( mPipeline );
+
+    GLint status = 0;
+    glGetProgramPipelineivEXT( mPipeline, GL_VALIDATE_STATUS, &status);
+    if( status == GL_FALSE )
+      PNIDBGSTR( "failed to validate program pipeline" );
+#endif // NDEBUG
 
 CheckGLError
 

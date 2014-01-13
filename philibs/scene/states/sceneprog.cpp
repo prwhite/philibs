@@ -43,6 +43,8 @@ void prog::setDefaultProgs ()
 {
   setProgStr( Vertex,
     R"(
+      #extension GL_EXT_separate_shader_objects : enable
+
       attribute vec4 position;
       attribute vec3 normal;
 
@@ -66,6 +68,8 @@ void prog::setDefaultProgs ()
     )" );
 
   setProgStr( Fragment, R"(
+    #extension GL_EXT_separate_shader_objects : enable
+
     varying lowp vec4 colorVarying;
 
     void main()

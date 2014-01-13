@@ -123,7 +123,7 @@ class uniform :
   
   private:
     Bindings mBindings;
-    mutable bool mDirty;
+    mutable bool mDirty = true;
   
 
   // interface from state

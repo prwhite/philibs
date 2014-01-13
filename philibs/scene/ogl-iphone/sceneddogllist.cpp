@@ -1324,12 +1324,19 @@ void ddOglList::dispatch ( uniform const* pState )
   {
     if ( progObj* pobj = configProgObject ( mCurProg.get () ) )
     {
+        // TODO: All of this should/could go in a uniforms object, and
+        // that should use gl uniform buffer arrays... following
+        // the same pattern as texture, vbo, prog, etc.  It will be
+        // invalidated by the dirty flag already present on the uniform
+        // object.
+
       uniform::Bindings const& bindings = pState->getBindings ();
 
       for ( auto& bindingIter : bindings )
       {
         uniform::binding const& binding = bindingIter.second;
         std::string const& name = bindingIter.first;
+        GLsizei count = ( GLsizei ) binding.getCount ();
 
           // TODO: Better setup for this when we support more stages.
         GLuint glProg = binding.getStage () == uniform::binding::Vertex ? pobj->getVertexProgHandle() : pobj->getFragmentProgHandle();
@@ -1342,19 +1349,21 @@ CheckGLError
 
         switch ( binding.getType () )
         {
-          case uniform::binding::Float1: glProgramUniform1fvEXT ( glProg, loc, binding.getCount (), binding.getFloats () ); break;
-          case uniform::binding::Float2: glProgramUniform2fvEXT ( glProg, loc, binding.getCount (), binding.getFloats () ); break;
-          case uniform::binding::Float3: glProgramUniform3fvEXT ( glProg, loc, binding.getCount (), binding.getFloats () ); break;
-          case uniform::binding::Float4: glProgramUniform4fvEXT ( glProg, loc, binding.getCount (), binding.getFloats () ); break;
+          case uniform::binding::Float1: glProgramUniform1fvEXT ( glProg, loc, count, binding.getFloats () ); break;
+          case uniform::binding::Float2: glProgramUniform2fvEXT ( glProg, loc, count, binding.getFloats () ); break;
+          case uniform::binding::Float3: glProgramUniform3fvEXT ( glProg, loc, count, binding.getFloats () ); break;
+          case uniform::binding::Float4: glProgramUniform4fvEXT ( glProg, loc, count, binding.getFloats () ); break;
 
-          case uniform::binding::Int1: glProgramUniform1ivEXT ( glProg, loc, binding.getCount (), binding.getInts () ); break;
-          case uniform::binding::Int2: glProgramUniform2ivEXT ( glProg, loc, binding.getCount (), binding.getInts () ); break;
-          case uniform::binding::Int3: glProgramUniform3ivEXT ( glProg, loc, binding.getCount (), binding.getInts () ); break;
-          case uniform::binding::Int4: glProgramUniform4ivEXT ( glProg, loc, binding.getCount (), binding.getInts () ); break;
+          case uniform::binding::Int1: glProgramUniform1ivEXT ( glProg, loc, count, binding.getInts () ); break;
+          case uniform::binding::Int2: glProgramUniform2ivEXT ( glProg, loc, count, binding.getInts () ); break;
+          case uniform::binding::Int3: glProgramUniform3ivEXT ( glProg, loc, count, binding.getInts () ); break;
+          case uniform::binding::Int4: glProgramUniform4ivEXT ( glProg, loc, count, binding.getInts () ); break;
 
-          case uniform::binding::Matrix2: glProgramUniformMatrix2fvEXT ( glProg, loc, binding.getCount (), GL_FALSE, binding.getFloats () ); break;
-          case uniform::binding::Matrix3: glProgramUniformMatrix3fvEXT ( glProg, loc, binding.getCount (), GL_FALSE, binding.getFloats () ); break;
-          case uniform::binding::Matrix4: glProgramUniformMatrix4fvEXT ( glProg, loc, binding.getCount (), GL_FALSE, binding.getFloats () ); break;
+            // Note: Simulator was returning error 0x501 (invalid value) for GL_TRUE to transpose param.
+            // No big though, we don't need it because our matrices are in the right format.
+          case uniform::binding::Matrix2: glProgramUniformMatrix2fvEXT ( glProg, loc, count, GL_FALSE, binding.getFloats () ); break;
+          case uniform::binding::Matrix3: glProgramUniformMatrix3fvEXT ( glProg, loc, count, GL_FALSE, binding.getFloats () ); break;
+          case uniform::binding::Matrix4: glProgramUniformMatrix4fvEXT ( glProg, loc, count, GL_FALSE, binding.getFloats () ); break;
 
           default:
             PNIDBGSTR ( "case not handled, getType out of range" );

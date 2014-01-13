@@ -44,7 +44,7 @@ class node :
     typedef std::vector< node* > Parents;
     typedef pni::pstd::autoRef< state > StateRef;
     typedef std::unordered_map< state::Id, StateRef, std::hash< int > > States;
-    typedef unsigned int MaskType;
+    typedef uint32_t MaskType;
     typedef std::vector< MaskType > TravMasks;
 
     // Node framework methods.
