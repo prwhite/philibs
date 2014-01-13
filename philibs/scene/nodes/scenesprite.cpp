@@ -265,8 +265,8 @@ void sprites::update ( graphDd::fxUpdate const& update )
     doDepthSort ( update, sorters );
   
     // Set geometry binding.
-  mGeomData->bindingsOp().push_back ( { "", geomData::Positions, geomData::PositionsComponents } );
-  mGeomData->bindingsOp().push_back ( { "", geomData::TCoords00, geomData::TCoords00Components } );
+  mGeomData->bindingsOp().push_back ( { "", geomData::Positions, geomData::DataType_FLOAT, geomData::PositionsComponents } );
+  mGeomData->bindingsOp().push_back ( { "", geomData::TCoords00, geomData::DataType_FLOAT, geomData::TCoords00Components } );
 
     // Unused... why was it here? PRW
 //  SizeType stride = mGeomData->getValueStride ();

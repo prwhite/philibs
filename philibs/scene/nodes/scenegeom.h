@@ -111,6 +111,24 @@ class geomData :
       TCoords14Components = 2,
       TCoords15Components = 2
     };
+      /** From GL: GL_BYTE, GL_UNSIGNED_BYTE, GL_SHORT,
+           GL_UNSIGNED_SHORT, GL_INT, and GL_UNSIGNED_INT are accepted by both
+           functions. Additionally GL_HALF_FLOAT, GL_FLOAT, GL_DOUBLE,
+           GL_INT_2_10_10_10_REV, and GL_UNSIGNED_INT_2_10_10_10_REV 
+           @note Note all of these data types are supported in GLES 2 on iOS 7, etc. */
+    enum DataType : SizeType {
+      DataType_BYTE,
+      DataType_UNSIGNED_BYTE,
+      DataType_SHORT,
+      DataType_UNSIGNED_SHORT,
+      DataType_INT,
+      DataType_UNSIGNED_INT,
+      DataType_HALF_FLOAT,
+      DataType_FLOAT,
+      DataType_DOUBLE,
+      DataType_INT_2_10_10_10_REV,
+      DataType_UNSIGNED_INT_2_10_10_10_REV
+    };
 
       /** Struct that indicates specific geometry attribute names, types, and
           sizes for driving the VBO setup process during GL evaluation. */
@@ -118,6 +136,7 @@ class geomData :
       {
         std::string mName;        /// Only needed for user-defined attributes to match with vertex prog
         BindingType mType;        /// From BindingType enum
+        DataType mDataType;
         SizeType mComponents;     /// Number of floats for this binding attribute
       };
 
@@ -174,6 +193,11 @@ class geomData :
               return 0;
             }
 
+          SizeType getValueOffsetBytes ( BindingType which ) const
+            {
+              return getValueOffset(which) * sizeof ( float );  // TEMP: We might support things besides FLOAT someday!!!
+            }
+
           bool hasBinding ( BindingType which ) const
             {
               clearDirty ();
@@ -189,9 +213,8 @@ class geomData :
           Base& operator = ( Base&& rhs ) = delete;
           Base& operator = ( std::initializer_list< value_type > init ) = delete;
 
-        private:
           void setDirty ( bool val = true ) { mDirty = val; }
-
+          bool getDirty () const { return mDirty; }
           void clearDirty () const
             {
               mTypesEnabled = 0;
@@ -201,7 +224,10 @@ class geomData :
               }
             }
 
-          bool mDirty = true;                     // Only used for mTypesEnabled right now.
+        private:
+
+
+          mutable bool mDirty = true;             // Only used for mTypesEnabled right now.
           mutable uint64_t mTypesEnabled = 0ULL;  // Optimizes hasBinding calls
       };
 
@@ -277,6 +303,9 @@ class geomData :
     Indices const& getIndices () const { return mIndices; }
   
     void setDirty () { mDirty = true; } // Used to invalidate GL-side objects like VBOs during rendering pass.
+    bool getDirty () const { return mDirty; }
+    void clearDirty () const { mDirty = false; }
+
     void setBoundsDirty () { mBounds.setIsDirty ( true ); }
     box3 const& getBounds () const { if ( mBounds.getIsDirty() ) updateBounds (); return mBounds; }
 
@@ -284,7 +313,7 @@ class geomData :
     void setBindings ( Bindings const& bindings )
       { mBindings = bindings; setDirty (); }
     Bindings const& getBindings () const { return mBindings; }
-    Bindings& bindingsOp () { setDirty (); return mBindings; }
+    Bindings& bindingsOp () { setDirty (); mBindings.setDirty(); return mBindings; }
 
       /** @methodgroup Debugging Methods */
     void dbg ();
@@ -302,7 +331,7 @@ class geomData :
       Values mValues;
       Indices mIndices;
       mutable box3 mBounds;
-      bool mDirty;
+      mutable bool mDirty;
 };
 
 /////////////////////////////////////////////////////////////////////

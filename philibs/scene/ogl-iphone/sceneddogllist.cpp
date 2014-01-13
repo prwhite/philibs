@@ -94,18 +94,18 @@ texObj* configTextureObject ( texture const* textureIn )
 	}
 }
 
-vbo* configVBO ( geomData const* geomDataIn )
+vbo* configVBO ( geomData const* geomDataIn, progObj const* pProgObj )
 {
     // get or create textureObject for this texture
   if ( vbo* pObj = static_cast< vbo* > ( geomDataIn->getTravData ( Draw ) ) )
   {
-    pObj->config ( geomDataIn );
+    pObj->config ( geomDataIn, pProgObj );
     return pObj;
   }
   else
   {
     pObj = new vbo;
-    pObj->config ( geomDataIn );
+    pObj->config ( geomDataIn, pProgObj );
     const_cast< geomData* > ( geomDataIn )->setTravData ( Draw, pObj );
     return pObj;
   }
@@ -563,80 +563,16 @@ PNIDBG
     // GOTCHA: There is no validity checking here... that should
     // all be performed by ddOgl which puts only valid things
     // into this render list.
-  // TODO Optimize to not re-bind current geometry data.
   geomData const* pData = pNode->getGeomData ();
-  geomData::Values const& values = pData->getValues ();
-  float const* pValues = &values[ 0 ];
 
-  // * 4 because the stride is in bytes and our stride
-  // value is for float*.
-  uint32_t stride = pData->getBindings ().getValueStride () * sizeof ( float );
-
-// void glDrawElements(GLenum mode,
-//     GLsizei count,
-//     GLenum type,
-//     const GLvoid * indices)  
-
-    // TODO: PRW PNIGLES1REMOVED
-#ifdef PNIGLES1REMOVED
-
-  glEnableClientState ( GL_VERTEX_ARRAY );
-  glVertexPointer ( 3, GL_FLOAT, stride, pValues );
-  
-  // TODO: All of these ifs could be unrolled into a switch with
-  // some code duplication.
-
-  // Normals
-  if ( pData->getBindings () & geomData::Normals )
+  if ( progObj const* pProgObj = configProgObject(mCurProg.get()) )
   {
-    glEnableClientState ( GL_NORMAL_ARRAY );
-    glNormalPointer ( GL_FLOAT, stride, 
-        pValues + pData->getValueOffset ( geomData::Normals ) );
+    if ( vbo* pvbo = configVBO(pData, pProgObj))
+    {
+      pvbo->bind(pData,pProgObj);
+      glDrawElements ( GL_TRIANGLES, ( GLsizei ) pData->getIndices().size (), GL_UNSIGNED_SHORT, 0 );
+    }
   }
-  else
-    glDisableClientState ( GL_NORMAL_ARRAY );
-
-  // Colors
-  if ( pData->getBindings () & geomData::Colors )
-  {
-    glEnableClientState ( GL_COLOR_ARRAY );
-    glColorPointer ( 4, GL_FLOAT, stride, 
-        pValues + pData->getValueOffset ( geomData::Colors ) );
-  }
-  else
-    glDisableClientState ( GL_COLOR_ARRAY );
-  
-  // Texture 0 UVs
-  glClientActiveTexture ( GL_TEXTURE0 );
-  if ( pData->getBindings () & geomData::TCoords0 )
-  {
-    glEnableClientState ( GL_TEXTURE_COORD_ARRAY );
-    glTexCoordPointer ( 2, GL_FLOAT, stride, 
-        pValues + pData->getValueOffset ( geomData::TCoords0 ) );
-  }
-  else
-    glDisableClientState ( GL_TEXTURE_COORD_ARRAY );
-
-  // Texture 1 UVs
-  glClientActiveTexture ( GL_TEXTURE1 );
-  if ( pData->getBindings () & geomData::TCoords1 )
-  {
-    glEnableClientState ( GL_TEXTURE_COORD_ARRAY );
-    glTexCoordPointer ( 2, GL_FLOAT, stride, 
-        pValues + pData->getValueOffset ( geomData::TCoords1 ) );
-  }
-  else
-    glDisableClientState ( GL_TEXTURE_COORD_ARRAY );
-
-#endif // PNIGLES1REMOVED
-
-  // Get indices and draw everything.
-  geomData::Indices const& indices = pData->getIndices ();
-  unsigned short const* pIndices = &indices[ 0 ];
-  
-  glDrawElements ( GL_TRIANGLES, 
-      ( GLsizei ) indices.size (), GL_UNSIGNED_SHORT, pIndices );
-
 CheckGLError
 }
 

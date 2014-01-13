@@ -416,10 +416,10 @@ PNIPSTDLOG
 
     geomData::Bindings& bindings = mGeomData->bindingsOp();
 
-    bindings.push_back ( { "", geomData::Positions, geomData::PositionsComponents } );
-    bindings.push_back ( { "", geomData::Normals, geomData::NormalsComponents } );
-    bindings.push_back ( { "", geomData::TCoords00, geomData::TCoords00Components } );
-    bindings.push_back ( { "", geomData::TCoords00, geomData::TCoords00Components } );
+    bindings.push_back ( { "", geomData::Positions, geomData::DataType_FLOAT, geomData::PositionsComponents } );
+    bindings.push_back ( { "", geomData::Normals, geomData::DataType_FLOAT, geomData::NormalsComponents } );
+    bindings.push_back ( { "", geomData::TCoords00, geomData::DataType_FLOAT, geomData::TCoords00Components } );
+    bindings.push_back ( { "", geomData::TCoords00, geomData::DataType_FLOAT, geomData::TCoords00Components } );
 
     Dim xEndInd = xEnd - xStart;
     Dim yEndInd = yEnd - yStart;

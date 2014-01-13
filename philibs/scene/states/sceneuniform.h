@@ -117,7 +117,7 @@ class uniform :
 
     void setDirty ( bool val = true ) const { mDirty = val; }
     bool getDirty () const { return mDirty; }
-    void clearDirty () { mDirty = false; }
+    void clearDirty () const { mDirty = false; }
   
   protected:
   

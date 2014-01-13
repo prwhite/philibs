@@ -66,7 +66,7 @@
 		1C9AAAC118735E60001540C3 /* test-instantiaton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "test-instantiaton.cpp"; sourceTree = "<group>"; };
 		1CAD97111861879B00C547E1 /* test-00.ase */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "test-00.ase"; path = "philibs-ex-00/Resources/test-00.ase"; sourceTree = "<group>"; };
 		1CAD97131861922A00C547E1 /* pniosxplatform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pniosxplatform.h; sourceTree = "<group>"; };
-		1CAD97151865580000C547E1 /* phiViewController-gles2.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "phiViewController-gles2.mm"; sourceTree = "<group>"; };
+		1CAD97151865580000C547E1 /* phiViewController-gles2.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = "phiViewController-gles2.mm"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		1CC4B9041860D22700169CF6 /* phiViewController-gles1.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "phiViewController-gles1.mm"; sourceTree = "<group>"; };
 		1CDD4213185BDDC2009284F9 /* philibs-ex-00.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "philibs-ex-00.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CDD4216185BDDC2009284F9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };

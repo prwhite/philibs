@@ -469,8 +469,8 @@
 		1CDD40C7185BCAEF009284F9 /* pnimathios.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pnimathios.h; sourceTree = "<group>"; };
 		1CDD40C8185BCAEF009284F9 /* pnimathstream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pnimathstream.cpp; sourceTree = "<group>"; };
 		1CDD40C9185BCAEF009284F9 /* pnimathstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pnimathstream.h; sourceTree = "<group>"; };
-		1CDD40CA185BCAEF009284F9 /* pnimatrix4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pnimatrix4.cpp; sourceTree = "<group>"; };
-		1CDD40CB185BCAEF009284F9 /* pnimatrix4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pnimatrix4.h; sourceTree = "<group>"; };
+		1CDD40CA185BCAEF009284F9 /* pnimatrix4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = pnimatrix4.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		1CDD40CB185BCAEF009284F9 /* pnimatrix4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = pnimatrix4.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		1CDD40CC185BCAEF009284F9 /* pnimatstack.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pnimatstack.cpp; sourceTree = "<group>"; };
 		1CDD40CD185BCAEF009284F9 /* pnimatstack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pnimatstack.h; sourceTree = "<group>"; };
 		1CDD40CE185BCAEF009284F9 /* pniplane.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pniplane.cpp; sourceTree = "<group>"; };

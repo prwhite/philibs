@@ -15,7 +15,9 @@
 /////////////////////////////////////////////////////////////////////
 
 namespace scene {
-    
+
+class progObj;
+
 /////////////////////////////////////////////////////////////////////
 
 class vbo :
@@ -29,9 +31,9 @@ class vbo :
 //         bool operator==(vbo const& rhs) const;
         
         
-      void bind ( geomData const* pData );
+      void bind ( geomData const* pData, progObj const* pProgObj );
       
-      void config ( geomData const* pData );
+      void config ( geomData const* pData, progObj const* pProgObj );
       
     protected:
       unsigned int mAttrId;

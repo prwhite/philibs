@@ -508,14 +508,14 @@ PNIDBG
             // geomData is guaranteed to be good before this is called (from processObject)
           geomData::Bindings& bindings = pGeom->geometryOp ()->bindingsOp ();
 
-          bindings.push_back ( { "", geomData::Positions, geomData::PositionsComponents } );
+          bindings.push_back ( { "position", geomData::Positions, geomData::DataType_FLOAT, geomData::PositionsComponents } );
 
 					if ( pSrc->findNode ( "MESH_NORMALS", false ) )
-            bindings.push_back ( { "", geomData::Normals, geomData::NormalsComponents } );
+            bindings.push_back ( { "normal", geomData::Normals, geomData::DataType_FLOAT, geomData::NormalsComponents } );
 
 					// First set of UVs.
 					if ( pSrc->findNode ( "MESH_TVERTLIST", false ) )
-            bindings.push_back ( { "", geomData::TCoords00, geomData::TCoords00Components } );
+            bindings.push_back ( { "uv00", geomData::TCoords00, geomData::DataType_FLOAT, geomData::TCoords00Components } );
 
           // Iterate over "MESH_MAPPINGCHANNEL" children for
           // other sets of UVs.
@@ -535,7 +535,7 @@ PNIDBG
               // TEMP Only supporting 2 texture units.
               const unsigned int MaxUnit = 1;
               if ( unit == MaxUnit )
-                bindings.push_back ( { "", geomData::TCoords01, geomData::TCoords01Components } );
+                bindings.push_back ( { "uv01", geomData::TCoords01, geomData::DataType_FLOAT, geomData::TCoords01Components } );
               else
                 mObserver->onError ( 
                     pni::pstd::error ( InternalErrorTexture,

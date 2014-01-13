@@ -214,8 +214,9 @@ class PNIMATHAPI matrix4 {
 		void colMult ( const vec4& svec, matrix4& dmat ) const;
 
       /// Copy this matrix's values into dst.  dst must be able to contain 16 float elements.
-    void copyTo ( ValueType* dst ) const;
-		
+    void copyTo4x4 ( ValueType* dst ) const;
+    void copyTo3x3 ( ValueType* dst ) const;
+
 	protected:
 		friend matrix4::ValueType RCD( const matrix4& A, const matrix4& B, int i, int j);
 		
