@@ -103,12 +103,17 @@ class ddOglList :
     
   private:
     typedef unsigned int GlEnum;
-    typedef pni::pstd::autoRef< prog const > ProgRef;
+    typedef pni::pstd::autoRef< prog const > ProgConstRef;
+    typedef pni::pstd::autoRef< uniform > UniformRef;
 
     stateSet mCurStates;
     RenderList mRenderList;
     nodePath mSinkPath;
-    ProgRef mCurProg;         // Currently active program
+    ProgConstRef mCurProg;         // Currently active program
+    UniformRef mBuiltins;
+    pni::math::matrix4 mProjMat;
+    pni::math::matrix4 mViewMat;
+    pni::math::matrix4 mModelMat;
 
     unsigned int mCurStateId;
     GlEnum mCurLightUnit;
@@ -117,6 +122,7 @@ class ddOglList :
     void execStates ( stateSet const& sSet );
     void execCamera ();
     void execLightPath ( nodePath const& lpath );
+    void execBuiltins ();
 
   // interface from scenegraphdd and scenestatedd
   public:

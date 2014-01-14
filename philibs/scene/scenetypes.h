@@ -93,22 +93,18 @@ class travDataContainer
 };
 
 /////////////////////////////////////////////////////////////////////
-// This is a matrix4 class that also keeps track of whether or not
-// it is identity via an internal bool.  You can call through the
-// class to other underlying methods via a smart pointer call:
-//   matrix4 obj;
-//   obj->preMult ( ... );
 
+/** This is a matrix4 class that also keeps track of whether or not
+   it is identity via an internal bool.  You can call through the
+   class to other underlying methods via a smart pointer call:
+     matrix4 obj;
+     obj->preMult ( ... );
+*/
 class matrix4 :
   public pni::math::matrix4
 {
   public:
-    matrix4 () :
-      mIsIdent ( true )
-        {
-          
-        }
-    
+  
     matrix4& operator = ( pni::math::matrix4 const& rhs )
         {
           pni::math::matrix4& self = *this;
@@ -137,20 +133,17 @@ class matrix4 :
     // Um... this might be too cute.
     operator bool () const { return mIsIdent; }
     
-    bool mIsIdent;    
+    bool mIsIdent = true;
 };
 
 ////////////////////////////////////////////////////////////////////
 
+/** box3 bounds class that adds a dirty flag to track whether it
+    needs to be recalculated by client classes. */
 class box3 :
   public pni::math::box3
 {
   public:
-    box3 () :
-      mIsDirty ( true )
-        {
-          
-        }
         
     // TODO need more constructors from pni::scene::matrix4
     
@@ -159,7 +152,7 @@ class box3 :
     
     operator bool () const { return mIsDirty; }
     
-    bool mIsDirty;
+    bool mIsDirty = true;
 };
 
 /////////////////////////////////////////////////////////////////////

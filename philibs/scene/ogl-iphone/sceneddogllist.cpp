@@ -220,7 +220,13 @@ ddOglList::ddOglList() :
   const size_t ReserveNum = 256;
   mRenderList.reserve ( ReserveNum );
   
-  //mPvr.Init ();
+  mBuiltins = new scene::uniform;
+  
+  uniform::binding& mvpMat = mBuiltins->uniformOp("modelViewProjectionMatrix");
+  mvpMat.setStageTypeCount(uniform::binding::Vertex, uniform::binding::Matrix4, 1);
+  
+  uniform::binding& normMat = mBuiltins->uniformOp("normalMatrix");
+  normMat.setStageTypeCount(uniform::binding::Vertex, uniform::binding::Matrix3, 1);
 }
 
 ddOglList::~ddOglList()
@@ -393,7 +399,10 @@ PNIDBG
     }
 
 #endif // _NDEBUG
-  
+
+      // NEWMATSTACK
+    mModelMat = cur->mMatrix;
+    
       // TODO: PRW PNIGLES1REMOVED
 //    glMatrixMode ( GL_MODELVIEW ); // TEMP... remove this after everything works.
 //    glPushMatrix ();
@@ -403,6 +412,7 @@ PNIDBG
 
 PNIDBG
     execStates ( cur->mStateSet );
+    execBuiltins();
   
 PNIDBG
     cur->mNode->accept ( this );
@@ -422,11 +432,38 @@ PNIDBG
 PNIDBG
 }
 
+void ddOglList::execBuiltins ()
+{
+    // NEWMATSTACK
+    // TODO: Optimize
+  
+  pni::math::matrix4 mvMat = mViewMat;
+  mvMat.preMult(mModelMat);
+
+  pni::math::matrix4 mvpMat = mProjMat;
+  mvpMat.preMult(mvMat);
+
+  mvpMat.copyTo4x4(mBuiltins->uniformOp("modelViewProjectionMatrix").getFloats());
+  
+    // Handle non-uniform scaling... with inverse transpose.
+    // Use camera->getNormalizeMode.
+  camera const* pCam = static_cast< camera const*>(mSinkPath.getLeaf());
+  if ( pCam->getNormalizeMode() != camera::NoNormalize)
+  {
+    mvMat.invert();
+    mvMat.transpose();
+  }
+
+  mvMat.copyTo3x3(mBuiltins->uniformOp("normalMatrix").getFloats());
+  
+  this->dispatch(mBuiltins.get());
+}
+
 void ddOglList::execCamera ()
 {
+    // NEWMATSTACK
   // Do something with matrix from camera path.
-  pni::math::matrix4 mat;
-  mSinkPath.calcInverseXform ( mat );
+  mSinkPath.calcInverseXform ( mViewMat );
 
     // TODO: PRW PNIGLES1REMOVED
 //  glLoadMatrixf ( mat );
@@ -501,6 +538,9 @@ void doClear ( camera const* pNode )
 
 void ddOglList::dispatch ( camera const* pNode )
 {
+    // NEWMATSTACK
+  mProjMat = pNode->getProjectionMatrix();
+
   // Setup projection matrix.
     // TODO: PRW PNIGLES1REMOVED
 //  glMatrixMode ( GL_PROJECTION );
@@ -696,6 +736,12 @@ void ddOglList::resetCurState ()
 
 void ddOglList::execStates ( stateSet const& sSet )
 {
+    // Ensure that program state is set before we walk through other states.
+  if ( auto pProg = sSet.mStates[ state::Prog ] )
+    mCurProg = static_cast< prog const* > ( pProg );
+  else
+    PNIDBGSTR("no prog set for execStates... things might be ugly");
+
   for ( int num = 0; num < state::StateCount; ++num )
   {
     state const* pState = sSet.mStates[ num ];
@@ -1084,7 +1130,10 @@ CheckGLError
 void ddOglList::dispatch ( prog const* pState )
 {
     // Track current prog, will be needed when binding uniforms, etc.
-  mCurProg = pState;
+    // Update... we don't need to do this here because it is done in
+    // execStates... to make sure it's set before any other state is
+    // evaluated.
+//  mCurProg = pState;
 
     // TODO: Set prog-related state
   if (progObj* pobj = configProgObject(pState) )
