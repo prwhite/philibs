@@ -147,8 +147,8 @@ void flattenDd::dispatch ( geom const* pNode )
     
     vertIter iter ( pData );
     
-    size_t posOff = pData->getAttributes ().getValueOffset ( geomData::Positions );
-    size_t normOff = pData->getAttributes ().getValueOffset ( geomData::Normals );
+    size_t posOff = pData->getAttributes ().getValueOffset ( geomData::Position );
+    size_t normOff = pData->getAttributes ().getValueOffset ( geomData::Normal );
 
     for ( vertIter iter ( pData ); iter; ++iter )
     {

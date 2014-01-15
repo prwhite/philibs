@@ -16,7 +16,7 @@ http://www.rushdigital.co.nz/blog/2013/12/extseparateshaderobject-on-ios
 */
 
 
-#define PNIDBGDISABLE
+//#define PNIDBGDISABLE
 #define PNIPSTDLOGDISABLE
 
 #include "pnilog.h"
@@ -102,14 +102,16 @@ void progObj::config ( prog const* pData )
 
       char const* str = pData->getProgStr ( prog::Vertex ).c_str();
       mVertProg = glCreateShaderProgramvEXT(GL_VERTEX_SHADER, 1, &str );
+CheckGLError
       glUseProgramStagesEXT( mPipeline, GL_VERTEX_SHADER_BIT_EXT, mVertProg );
+CheckGLError
     }
     else
     {
       glUseProgramStagesEXT( mPipeline, GL_VERTEX_SHADER_BIT_EXT, 0 );
     }
 
-  CheckGLError
+CheckGLError
 
     if ( ! pData->getProgStr ( prog::Fragment ).empty () )
     {
@@ -117,12 +119,16 @@ void progObj::config ( prog const* pData )
 
       char const* str = pData->getProgStr ( prog::Fragment ).c_str();
       mFragProg = glCreateShaderProgramvEXT(GL_FRAGMENT_SHADER, 1, &str );
+CheckGLError
       glUseProgramStagesEXT( mPipeline, GL_FRAGMENT_SHADER_BIT_EXT, mFragProg );
+CheckGLError
     }
     else
     {
       glUseProgramStagesEXT( mPipeline, GL_FRAGMENT_SHADER_BIT_EXT, 0 );
     }
+
+CheckGLError
 
 #ifndef NDEBUG
     glValidateProgramPipelineEXT( mPipeline );

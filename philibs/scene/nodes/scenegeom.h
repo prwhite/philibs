@@ -47,25 +47,25 @@ class geomData :
       // Note: We can only have 64 enums, because of the way these are used for
       // the 64-bit mTypesEnabled mask cache.
     enum AttributeType : SizeType {
-      Positions,       /// Always 3 elements.
-      Normals,         /// Always 3 elements.
-      Colors,          /// Always 4 elements.
-      TCoords00,        /// Always 2 elements.
-      TCoords01,        /// Always 2 elements.
-      TCoords02,        /// Always 2 elements.
-      TCoords03,        /// Always 2 elements.
-      TCoords04,        /// Always 2 elements.
-      TCoords05,        /// Always 2 elements.
-      TCoords06,        /// Always 2 elements.
-      TCoords07,        /// Always 2 elements.
-      TCoords08,        /// Always 2 elements.
-      TCoords09,        /// Always 2 elements.
-      TCoords10,        /// Always 2 elements.
-      TCoords11,        /// Always 2 elements.
-      TCoords12,        /// Always 2 elements.
-      TCoords13,        /// Always 2 elements.
-      TCoords14,        /// Always 2 elements.
-      TCoords15,        /// Always 2 elements.
+      Position,        /// Always 3 elements.
+      Normal,          /// Always 3 elements.
+      Color,           /// Always 4 elements.
+      TCoord00,        /// Always 2 elements.
+      TCoord01,        /// Always 2 elements.
+      TCoord02,        /// Always 2 elements.
+      TCoord03,        /// Always 2 elements.
+      TCoord04,        /// Always 2 elements.
+      TCoord05,        /// Always 2 elements.
+      TCoord06,        /// Always 2 elements.
+      TCoord07,        /// Always 2 elements.
+      TCoord08,        /// Always 2 elements.
+      TCoord09,        /// Always 2 elements.
+      TCoord10,        /// Always 2 elements.
+      TCoord11,        /// Always 2 elements.
+      TCoord12,        /// Always 2 elements.
+      TCoord13,        /// Always 2 elements.
+      TCoord14,        /// Always 2 elements.
+      TCoord15,        /// Always 2 elements.
 
       Attrib00,          /// User-defined
       Attrib01,          /// User-defined
@@ -94,22 +94,22 @@ class geomData :
       PositionsComponents = 3,
       NormalsComponents = 3,  
       ColorsComponents = 4,   
-      TCoords00Components = 2,
-      TCoords01Components = 2,
-      TCoords02Components = 2,
-      TCoords03Components = 2,
-      TCoords04Components = 2,
-      TCoords05Components = 2,
-      TCoords06Components = 2,
-      TCoords07Components = 2,
-      TCoords08Components = 2,
-      TCoords09Components = 2,
-      TCoords10Components = 2,
-      TCoords11Components = 2,
-      TCoords12Components = 2,
-      TCoords13Components = 2,
-      TCoords14Components = 2,
-      TCoords15Components = 2
+      TCoord00Components = 2,
+      TCoord01Components = 2,
+      TCoord02Components = 2,
+      TCoord03Components = 2,
+      TCoord04Components = 2,
+      TCoord05Components = 2,
+      TCoord06Components = 2,
+      TCoord07Components = 2,
+      TCoord08Components = 2,
+      TCoord09Components = 2,
+      TCoord10Components = 2,
+      TCoord11Components = 2,
+      TCoord12Components = 2,
+      TCoord13Components = 2,
+      TCoord14Components = 2,
+      TCoord15Components = 2
     };
       /** From GL: GL_BYTE, GL_UNSIGNED_BYTE, GL_SHORT,
            GL_UNSIGNED_SHORT, GL_INT, and GL_UNSIGNED_INT are accepted by both
@@ -144,10 +144,11 @@ class geomData :
       /**
         Note: The attributes must always be packed in the values list in the
         order they occur in the interleaved values array in geomData. Generally,
-        this is Positions, Normals, Colors, TCoords01, ... then User01 if used, etc.
+        this is Positions, Normals, Colors, TCoord01, ... then User01 if used, etc.
 
         Note: Use the vector behavior of this class to add attribute elements, e.g.,
-        attributess.push_back ( AttributeVal ( "positions", GeomData::Positions, GeomData::PositionsComponents ) ).
+        attributess.push_back ( AttributeVal ( "positions", geomData::Positions, geomData::PositionsComponents ) ), or better, using common identifiers...
+        attributess.push_back ( AttributeVal ( CommonAttributeNames[ geomData::Positions ], geomData::Positions, geomData::PositionsComponents ) )
       */
     class attributes :
         public std::vector< AttributeVal >

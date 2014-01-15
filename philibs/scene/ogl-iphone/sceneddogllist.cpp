@@ -10,6 +10,8 @@
 
 #include <algorithm>
 
+#include "scenecommon.h"
+
 #include "scenecamera.h"
 #include "scenegeom.h"
 #include "scenegroup.h"
@@ -222,10 +224,10 @@ ddOglList::ddOglList() :
   
   mBuiltins = new scene::uniform;
   
-  uniform::binding& mvpMat = mBuiltins->uniformOp("modelViewProjectionMatrix");
+  uniform::binding& mvpMat = mBuiltins->uniformOp(CommonUniformNames[ UniformModelViewProjMatrix ]);
   mvpMat.set(uniform::binding::Vertex, uniform::binding::Matrix4, 1);
   
-  uniform::binding& normMat = mBuiltins->uniformOp("normalMatrix");
+  uniform::binding& normMat = mBuiltins->uniformOp(CommonUniformNames[ UniformNormalMatrix ]);
   normMat.set(uniform::binding::Vertex, uniform::binding::Matrix3, 1);
 }
 
@@ -438,14 +440,14 @@ void ddOglList::execBuiltins ()
 {
     // NEWMATSTACK
     // TODO: Optimize
-  
+
   mModelViewMat = mViewMat;
   mModelViewMat.preMult(mModelMat);
 
   mModelViewProjectionMat = mProjMat;
   mModelViewProjectionMat.preMult(mModelViewMat);
 
-  mModelViewProjectionMat.copyTo4x4(mBuiltins->uniformOp("modelViewProjectionMatrix").getFloats());
+  mModelViewProjectionMat.copyTo4x4(mBuiltins->uniformOp(CommonUniformNames[ UniformModelViewProjMatrix ]).getFloats());
   
     // Handle non-uniform scaling... with inverse transpose.
     // Use camera->getNormalizeMode.
@@ -456,7 +458,7 @@ void ddOglList::execBuiltins ()
     mModelViewMat.transpose();
   }
 
-  mModelViewMat.copyTo3x3(mBuiltins->uniformOp("normalMatrix").getFloats());
+  mModelViewMat.copyTo3x3(mBuiltins->uniformOp(CommonUniformNames[ UniformNormalMatrix ]).getFloats());
   
   this->dispatch(mBuiltins.get());
 }

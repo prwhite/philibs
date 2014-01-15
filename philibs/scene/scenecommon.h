@@ -52,13 +52,13 @@ char const* const CommonAttributeNames[]= {
 
   // Make sure we have the same number of elements here and in the AttributeType
   // enums [for builtins].
-static_assert ( sizeof ( CommonAttributeNames ) / sizeof ( CommonAttributeNames[ 0 ] ) == geomData::TCoords15 + 1,
+static_assert ( sizeof ( CommonAttributeNames ) / sizeof ( CommonAttributeNames[ 0 ] ) == geomData::TCoord15 + 1,
     "CommonAttributeNames not in sync with geomData::AttributeType enum");
 
 enum CommmonUniformIds : uint16_t
 {
-  ModelViewProjMatrix,
-  NormalMatrix,
+  UniformModelViewProjMatrix,
+  UniformNormalMatrix,
   CommonUniformIdsCount
 };
 
@@ -70,8 +70,8 @@ enum CommmonUniformIds : uint16_t
     runtime. 
   */
 char const* const CommonUniformNames[]= {
-  "u_modelViewProjectionMatrix",
-  "u_normalMatrix"
+  "u_mvpMat",
+  "u_normMat"
 };
 
 static_assert ( ( sizeof ( CommonUniformNames ) / sizeof ( CommonUniformNames[ 0 ] ) ) == CommonUniformIdsCount, "foo" );

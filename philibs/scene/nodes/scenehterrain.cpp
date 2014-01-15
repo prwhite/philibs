@@ -16,6 +16,8 @@
 
 #include "sceneisectdd.h"
 
+#include "scenecommon.h"
+
 #include "imgalgo.h"
 
 #include "pnivec2.h"
@@ -416,10 +418,10 @@ PNIPSTDLOG
 
     geomData::Attributes& attributes = mGeomData->attributesOp();
 
-    attributes.push_back ( { "", geomData::Positions, geomData::DataType_FLOAT, geomData::PositionsComponents } );
-    attributes.push_back ( { "", geomData::Normals, geomData::DataType_FLOAT, geomData::NormalsComponents } );
-    attributes.push_back ( { "", geomData::TCoords00, geomData::DataType_FLOAT, geomData::TCoords00Components } );
-    attributes.push_back ( { "", geomData::TCoords00, geomData::DataType_FLOAT, geomData::TCoords00Components } );
+    attributes.push_back ( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, geomData::PositionsComponents } );
+    attributes.push_back ( { CommonAttributeNames[ geomData::Normal], geomData::Normal, geomData::DataType_FLOAT, geomData::NormalsComponents } );
+    attributes.push_back ( { CommonAttributeNames[ geomData::TCoord00], geomData::TCoord00, geomData::DataType_FLOAT, geomData::TCoord00Components } );
+    attributes.push_back ( { CommonAttributeNames[ geomData::TCoord01], geomData::TCoord00, geomData::DataType_FLOAT, geomData::TCoord00Components } );
 
     Dim xEndInd = xEnd - xStart;
     Dim yEndInd = yEnd - yStart;

@@ -22,59 +22,23 @@ void geomData::dbg ()
   cout << "geomData : " << this << endl;
 
   size_t stride = getAttributes ().getValueStride ();
+  size_t cur = 0;
 
   for ( size_t num = 0; num < mValues.size () / stride; ++num )
   {
-    size_t cur = num * stride;
-    cout << " pos = " 
-        << mValues[ cur     ] << ", "
-        << mValues[ cur + 1 ] << ", "
-        << mValues[ cur + 2 ] << endl;
-    cur += 3;
-    
-    if ( mAttributes.hasAttribute ( Normals ) )
+    for ( auto attrIter : mAttributes )
     {
-      cout << " norm = " 
-          << mValues[ cur     ] << ", "
-          << mValues[ cur + 1 ] << ", "
-          << mValues[ cur + 2 ] << endl;
-        cur += 3;
-    }
+      cout << attrIter.mName << " = ";
 
-    if ( mAttributes.hasAttribute ( Colors ) )
-    {
-      cout << " color = " 
-          << mValues[ cur     ] << ", "
-          << mValues[ cur + 1 ] << ", "
-          << mValues[ cur + 2 ] << ", "
-          << mValues[ cur + 3 ] << endl;
-        cur += 4;
+      for ( size_t comp = 0; comp < attrIter.mComponents; ++comp )
+        cout << mValues[ cur++ ] << " ";
     }
-
-    if ( mAttributes.hasAttribute ( TCoords00 ) )
-    {
-      cout << " uv0 = " 
-          << mValues[ cur    ] << ", "
-          << mValues[ cur + 1 ] << endl;
-        cur += 2;
-    }
-
-    if ( mAttributes.hasAttribute ( TCoords01 ) )
-    {
-      cout << " uv1 = " 
-          << mValues[ cur    ] << ", "
-          << mValues[ cur + 1 ] << endl;
-        cur += 2;
-    }
-
-      // TODO: Rework this when we /really/ support TCoords >= 02.
+    cout << endl;
   }
-  
+
   cout << " indices" << endl;
   for ( size_t num = 0; num < mIndices.size (); ++num )
-  {
     cout << "  " << mIndices[ num ] << endl;
-  }
 }
 
 void geomData::updateBounds () const

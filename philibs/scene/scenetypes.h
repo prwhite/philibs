@@ -28,10 +28,10 @@
 #ifndef PNIDBGDISABLE
   // Nada.
 #else
-#define QUIET
+#define PNIQUIET
 #endif
 
-#ifdef QUIET
+#ifdef PNIQUIET
   #define PNIDBG
   #define PNIDBGSTR(str)
 #else

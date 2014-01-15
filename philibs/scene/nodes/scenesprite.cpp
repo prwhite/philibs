@@ -10,6 +10,8 @@
 
 #include "scenetexture.h"
 
+#include "scenecommon.h"
+
 #include <cassert>
 
 /////////////////////////////////////////////////////////////////////
@@ -265,8 +267,8 @@ void sprites::update ( graphDd::fxUpdate const& update )
     doDepthSort ( update, sorters );
   
     // Set geometry attribute.
-  mGeomData->attributesOp().push_back ( { "", geomData::Positions, geomData::DataType_FLOAT, geomData::PositionsComponents } );
-  mGeomData->attributesOp().push_back ( { "", geomData::TCoords00, geomData::DataType_FLOAT, geomData::TCoords00Components } );
+  mGeomData->attributesOp().push_back ( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, geomData::PositionsComponents } );
+  mGeomData->attributesOp().push_back ( { CommonAttributeNames[ geomData::TCoord00], geomData::TCoord00, geomData::DataType_FLOAT, geomData::TCoord00Components } );
 
     // Unused... why was it here? PRW
 //  SizeType stride = mGeomData->getValueStride ();
