@@ -10,6 +10,9 @@
 		1C9AAAC218735E60001540C3 /* test-instantiaton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AAAC118735E60001540C3 /* test-instantiaton.cpp */; };
 		1CAD97121861879B00C547E1 /* test-00.ase in Resources */ = {isa = PBXBuildFile; fileRef = 1CAD97111861879B00C547E1 /* test-00.ase */; };
 		1CAD97161865580000C547E1 /* phiViewController-gles2.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD97151865580000C547E1 /* phiViewController-gles2.mm */; };
+		1CC482C218868F4D0029408D /* brushed-aluminum-00a.dds in Resources */ = {isa = PBXBuildFile; fileRef = 1CC482C018868F4D0029408D /* brushed-aluminum-00a.dds */; };
+		1CC482C318868F4D0029408D /* test-00a.ase in Resources */ = {isa = PBXBuildFile; fileRef = 1CC482C118868F4D0029408D /* test-00a.ase */; };
+		1CC482C6188694AC0029408D /* test-00b.ase in Resources */ = {isa = PBXBuildFile; fileRef = 1CC482C5188694AC0029408D /* test-00b.ase */; };
 		1CDD4217185BDDC2009284F9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD4216185BDDC2009284F9 /* Foundation.framework */; };
 		1CDD4219185BDDC2009284F9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD4218185BDDC2009284F9 /* CoreGraphics.framework */; };
 		1CDD421B185BDDC2009284F9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD421A185BDDC2009284F9 /* UIKit.framework */; };
@@ -67,6 +70,9 @@
 		1CAD97111861879B00C547E1 /* test-00.ase */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "test-00.ase"; path = "philibs-ex-00/Resources/test-00.ase"; sourceTree = "<group>"; };
 		1CAD97131861922A00C547E1 /* pniosxplatform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pniosxplatform.h; sourceTree = "<group>"; };
 		1CAD97151865580000C547E1 /* phiViewController-gles2.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = "phiViewController-gles2.mm"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		1CC482C018868F4D0029408D /* brushed-aluminum-00a.dds */ = {isa = PBXFileReference; lastKnownFileType = file; name = "brushed-aluminum-00a.dds"; path = "philibs-ex-00/Resources/brushed-aluminum-00a.dds"; sourceTree = "<group>"; };
+		1CC482C118868F4D0029408D /* test-00a.ase */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "test-00a.ase"; path = "philibs-ex-00/Resources/test-00a.ase"; sourceTree = "<group>"; };
+		1CC482C5188694AC0029408D /* test-00b.ase */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "test-00b.ase"; path = "philibs-ex-00/Resources/test-00b.ase"; sourceTree = "<group>"; };
 		1CC4B9041860D22700169CF6 /* phiViewController-gles1.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "phiViewController-gles1.mm"; sourceTree = "<group>"; };
 		1CDD4213185BDDC2009284F9 /* philibs-ex-00.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "philibs-ex-00.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CDD4216185BDDC2009284F9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -125,6 +131,9 @@
 		1CAD970F1861876300C547E1 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1CC482C5188694AC0029408D /* test-00b.ase */,
+				1CC482C018868F4D0029408D /* brushed-aluminum-00a.dds */,
+				1CC482C118868F4D0029408D /* test-00a.ase */,
 				1CAD97111861879B00C547E1 /* test-00.ase */,
 			);
 			name = Resources;
@@ -327,12 +336,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				1CDD4233185BDDC2009284F9 /* Shader.fsh in Resources */,
+				1CC482C218868F4D0029408D /* brushed-aluminum-00a.dds in Resources */,
 				1CDD4231185BDDC2009284F9 /* Main_iPad.storyboard in Resources */,
 				1CDD422E185BDDC2009284F9 /* Main_iPhone.storyboard in Resources */,
 				1CDD423A185BDDC2009284F9 /* Images.xcassets in Resources */,
 				1CDD4225185BDDC2009284F9 /* InfoPlist.strings in Resources */,
+				1CC482C6188694AC0029408D /* test-00b.ase in Resources */,
 				1CDD4235185BDDC2009284F9 /* Shader.vsh in Resources */,
 				1CAD97121861879B00C547E1 /* test-00.ase in Resources */,
+				1CC482C318868F4D0029408D /* test-00a.ase in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -4,6 +4,14 @@
 //
 /////////////////////////////////////////////////////////////////////
 
+// Decent VAO examples/references:
+// http://t-machine.org/index.php/2013/10/18/ios-open-gl-es-2-multiple-objects-at-once/
+// http://www.lastrayofhope.com/tag/gl_oes_vertex_array_object/
+// http://www.khronos.org/registry/gles/extensions/OES/OES_vertex_array_object.txt
+// http://www.opengl.org/wiki/Vao#Vertex_Array_Object
+
+/////////////////////////////////////////////////////////////////////
+
 #define PNIDBGDISABLE
 #define PNIPSTDLOGDISABLE
 
@@ -58,10 +66,6 @@ vbo::~vbo()
 
 void vbo::bind ( geomData const* pData, progObj const* pProgObj )
 {
-
-    // Decent VAO example here:
-    // http://www.lastrayofhope.com/tag/gl_oes_vertex_array_object/
-
   glBindVertexArrayOES(mArrObjId);
 }
 

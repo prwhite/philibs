@@ -59,6 +59,22 @@ enum CommmonUniformIds : uint16_t
 {
   UniformModelViewProjMatrix,
   UniformNormalMatrix,
+  UniformTex00,
+  UniformTex01,
+  UniformTex02,
+  UniformTex03,
+  UniformTex04,
+  UniformTex05,
+  UniformTex06,
+  UniformTex07,
+  UniformTex08,
+  UniformTex09,
+  UniformTex10,
+  UniformTex11,
+  UniformTex12,
+  UniformTex13,
+  UniformTex14,
+  UniformTex15,
   CommonUniformIdsCount
 };
 
@@ -71,7 +87,23 @@ enum CommmonUniformIds : uint16_t
   */
 char const* const CommonUniformNames[]= {
   "u_mvpMat",
-  "u_normMat"
+  "u_normMat",
+  "u_tex00",
+  "u_tex01",
+  "u_tex02",
+  "u_tex03",
+  "u_tex04",
+  "u_tex05",
+  "u_tex06",
+  "u_tex07",
+  "u_tex08",
+  "u_tex09",
+  "u_tex10",
+  "u_tex11",
+  "u_tex12",
+  "u_tex13",
+  "u_tex14",
+  "u_tex15"
 };
 
 static_assert ( ( sizeof ( CommonUniformNames ) / sizeof ( CommonUniformNames[ 0 ] ) ) == CommonUniformIdsCount, "foo" );

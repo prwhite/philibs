@@ -98,7 +98,10 @@
 
     // Path to the app bundle to get the test file.
   std::string bdir ( getShellPath(BundleDir) );
-  std::string fname = { bdir + "/" + "test-00.ase" };
+
+  chdir ( bdir.c_str());
+
+  std::string fname = { "test-00b.ase" };
   
     // Load the file, grab its bounding sphere so we can push back the camera an
     // appropriate amount.
@@ -133,7 +136,7 @@
   
     // Create and setup the camera.
   mCam = new scene::camera ();
-  mCam->matrixOp().setTrans ( 0.0f, 0.0f, 1.5f * boundingSphere.getRadius() );
+  mCam->matrixOp().setTrans ( 0.0f, 0.0f, 2.0f * boundingSphere.getRadius() );
   mCam->setColorClear( pni::math::vec4 ( 0.1f, 0.1f, 0.1f, 1.0f ) );
   mCam->setNormalizeMode( scene::camera::Normalize );
   mCam->setViewport( 0.0f, 0.0f, self.view.frame.size.height * self.view.contentScaleFactor, self.view.frame.size.width * self.view.contentScaleFactor );
@@ -176,7 +179,11 @@
     // Very cheesy rotation animation.
   static float rot = 0.0f;
   rot += 2.0f;
-  mFile->matrixOp().setRot(rot, 0.0f, 1.0f, 0.0f );
+
+  pni::math::vec3 axis { 0.25f, 0.5f, 1.0f };
+  axis.normalize();
+
+  mFile->matrixOp().setRot(rot, axis);
   
     // Invoke the rendering pass.
   mDd->startGraph ( mRoot.get () );

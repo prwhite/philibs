@@ -348,7 +348,7 @@ void dds::swapSrcBuffer ( char* mem, size_t size )
       break;
     // TODO handle other formats if necessary.
     default:
-			printf ( "dds::loadHelper: unsupported format in swapSrcBufer\n" );
+			printf ( "dds::loadHelper: unsupported format in swapSrcBuffer\n" );
       break;
   }
 }

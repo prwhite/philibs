@@ -75,13 +75,64 @@ void progObj::bind ( prog const* pData )
   // TODO: Implement a shader cache, so we get more value out of
   // shader re-use with separable programs.
   // TODO: Also recognize currently bound vert/frag/other shader
-  // and do not rebind if it matches.
+  // and do not rebind if the individual shader prog matches.
   // Both these points have up-stream ramifications... if all
   // this class knows about a shader is the program string, it will
   // be expensive to do comparisons.  Maybe separate states for each
   // program would have been a better match, although we'd still need
   // to find a way to combine them in a program pipeline on the gl side
   // of things.
+
+bool checkProgramLink ( GLuint prog )
+{
+  GLint isLinked = 0;
+  glGetProgramiv(prog, GL_LINK_STATUS, &isLinked);
+
+  if( ! isLinked )
+  {
+    GLint size = 0;
+    glGetProgramiv(prog, GL_INFO_LOG_LENGTH, &size);
+
+    GLchar *str = new GLchar[ size ];
+    GLsizei sizeOut = 0;
+
+    glGetProgramInfoLog(prog, size, &sizeOut, str);
+
+    PNIDBGSTR(str);
+
+    delete[] str;
+    return false;
+  }
+  else
+    return true;
+}
+
+bool checkPipelineLink ( GLuint pipe )
+{
+  glValidateProgramPipelineEXT( pipe );
+
+  GLint status = 0;
+  glGetProgramPipelineivEXT( pipe, GL_VALIDATE_STATUS, &status);
+  if( status == GL_FALSE )
+  {
+    PNIDBGSTR( "failed to validate program pipeline" );
+
+    GLint size = 0;
+    glGetProgramPipelineivEXT(pipe, GL_INFO_LOG_LENGTH, &size);
+
+    GLchar *str = new GLchar[ size ];
+    GLsizei sizeOut = 0;
+
+    glGetProgramPipelineInfoLogEXT(pipe, size, &sizeOut, str);
+
+    PNIDBGSTR(str);
+
+    delete[] str;
+    return false;
+  }
+  else
+    return true;
+}
 
 void progObj::config ( prog const* pData )
 {
@@ -96,14 +147,15 @@ void progObj::config ( prog const* pData )
   if ( pData->getDirty() )
   {
 
+      // TODO: Parameterize this, so we don't have dup'd code for vert and frag.
     if ( ! pData->getProgStr ( prog::Vertex ).empty () )
     {
       glDeleteProgram(mVertProg);
 
       char const* str = pData->getProgStr ( prog::Vertex ).c_str();
       mVertProg = glCreateShaderProgramvEXT(GL_VERTEX_SHADER, 1, &str );
-CheckGLError
-      glUseProgramStagesEXT( mPipeline, GL_VERTEX_SHADER_BIT_EXT, mVertProg );
+      if ( checkProgramLink(mVertProg))
+        glUseProgramStagesEXT( mPipeline, GL_VERTEX_SHADER_BIT_EXT, mVertProg );
 CheckGLError
     }
     else
@@ -119,8 +171,8 @@ CheckGLError
 
       char const* str = pData->getProgStr ( prog::Fragment ).c_str();
       mFragProg = glCreateShaderProgramvEXT(GL_FRAGMENT_SHADER, 1, &str );
-CheckGLError
-      glUseProgramStagesEXT( mPipeline, GL_FRAGMENT_SHADER_BIT_EXT, mFragProg );
+      if ( checkProgramLink(mFragProg))
+        glUseProgramStagesEXT( mPipeline, GL_FRAGMENT_SHADER_BIT_EXT, mFragProg );
 CheckGLError
     }
     else
@@ -130,14 +182,7 @@ CheckGLError
 
 CheckGLError
 
-#ifndef NDEBUG
-    glValidateProgramPipelineEXT( mPipeline );
-
-    GLint status = 0;
-    glGetProgramPipelineivEXT( mPipeline, GL_VALIDATE_STATUS, &status);
-    if( status == GL_FALSE )
-      PNIDBGSTR( "failed to validate program pipeline" );
-#endif // NDEBUG
+  checkPipelineLink( mPipeline );
 
 CheckGLError
 

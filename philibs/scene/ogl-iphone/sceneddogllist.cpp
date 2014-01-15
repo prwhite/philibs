@@ -75,15 +75,18 @@ texObj* configTextureObject ( texture const* textureIn )
 	// get or create textureObject for this texture
 	if ( texObj* pObj = static_cast< texObj* > ( textureIn->getTravData ( Draw ) ) )
 	{
-    glEnable ( GL_TEXTURE_2D ); // in if and else if cases
+        // PNIGLES1REMOVED
+//    glEnable ( GL_TEXTURE_2D ); // in if and else if cases
 
 		pObj->config ( textureIn );
     return pObj;
 	}
 	else if ( textureIn->getImage () )
 	{
-    glEnable ( GL_TEXTURE_2D ); // in if and else if cases
-
+CheckGLError
+        // PNIGLES1REMOVED
+//    glEnable ( GL_TEXTURE_2D ); // in if and else if cases
+CheckGLError
 		pObj = new texObj;
 		pObj->config ( textureIn );
 		const_cast< texture* > ( textureIn )->setTravData ( Draw, pObj );
@@ -91,7 +94,8 @@ texObj* configTextureObject ( texture const* textureIn )
 	}
 	else	// not an image texture... can't create it... so disable texture target
 	{
-		glDisable ( GL_TEXTURE_2D );
+        // PNIGLES1REMOVED
+//		glDisable ( GL_TEXTURE_2D );
     return 0;
 	}
 }
@@ -229,6 +233,12 @@ ddOglList::ddOglList() :
   
   uniform::binding& normMat = mBuiltins->uniformOp(CommonUniformNames[ UniformNormalMatrix ]);
   normMat.set(uniform::binding::Vertex, uniform::binding::Matrix3, 1);
+
+  uniform::binding& tex00 = mBuiltins->uniformOp(CommonUniformNames[ UniformTex00 ]);
+  tex00.set(uniform::binding::Fragment, uniform::binding::Int1, 1);
+
+  uniform::binding& tex01 = mBuiltins->uniformOp(CommonUniformNames[ UniformTex01 ]);
+  tex01.set(uniform::binding::Fragment, uniform::binding::Int1, 1);
 }
 
 ddOglList::~ddOglList()
@@ -415,8 +425,10 @@ PNIDBG
  //cout << "cur->matrix =\n" << cur->mMatrix << endl;
 
 PNIDBG
-    execBuiltins();
+
+CheckGLError
     execStates ( cur->mStateSet );
+    execBuiltins();
 
 PNIDBG
     cur->mNode->accept ( this );
@@ -1264,7 +1276,14 @@ CheckGLError
 
 void ddOglList::dispatch ( texture const* pState )
 {
-	glActiveTexture ( GL_TEXTURE0 + mCurStateId - state::Texture0 );
+CheckGLError
+  size_t texUnit = mCurStateId - state::Texture0;
+	glActiveTexture ( GL_TEXTURE0 + texUnit );
+CheckGLError
+    // Is this the right place to do this?  Can it just be done once, rather
+    // than for every texture bind (probably not once we switch to GLES3
+    // with sampler objects).
+  *( mBuiltins->uniformOp( CommonUniformNames[ UniformTex00 + texUnit ] ).getInts() ) = texUnit;
 
 	if ( pState->getEnable () )
 	{
