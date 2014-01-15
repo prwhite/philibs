@@ -21,7 +21,7 @@ void geomData::dbg ()
 
   cout << "geomData : " << this << endl;
 
-  size_t stride = getBindings ().getValueStride ();
+  size_t stride = getAttributes ().getValueStride ();
 
   for ( size_t num = 0; num < mValues.size () / stride; ++num )
   {
@@ -32,7 +32,7 @@ void geomData::dbg ()
         << mValues[ cur + 2 ] << endl;
     cur += 3;
     
-    if ( mBindings.hasBinding ( Normals ) )
+    if ( mAttributes.hasAttribute ( Normals ) )
     {
       cout << " norm = " 
           << mValues[ cur     ] << ", "
@@ -41,7 +41,7 @@ void geomData::dbg ()
         cur += 3;
     }
 
-    if ( mBindings.hasBinding ( Colors ) )
+    if ( mAttributes.hasAttribute ( Colors ) )
     {
       cout << " color = " 
           << mValues[ cur     ] << ", "
@@ -51,7 +51,7 @@ void geomData::dbg ()
         cur += 4;
     }
 
-    if ( mBindings.hasBinding ( TCoords00 ) )
+    if ( mAttributes.hasAttribute ( TCoords00 ) )
     {
       cout << " uv0 = " 
           << mValues[ cur    ] << ", "
@@ -59,7 +59,7 @@ void geomData::dbg ()
         cur += 2;
     }
 
-    if ( mBindings.hasBinding ( TCoords01 ) )
+    if ( mAttributes.hasAttribute ( TCoords01 ) )
     {
       cout << " uv1 = " 
           << mValues[ cur    ] << ", "
@@ -87,7 +87,7 @@ void geomData::updateBounds () const
   Values const& values = getValues ();
   
   float const* end = &values.back ();
-  SizeType incr = mBindings.getValueStride ();
+  SizeType incr = mAttributes.getValueStride ();
   for ( float const* ptr = &values[ 0 ];
        ptr < end;
        ptr += incr )
@@ -118,7 +118,7 @@ void geomData::updateBounds () const
 
 // geom::geom(geom const& rhs) :
 //   node ( rhs ),
-//   mBindings ( rhs.mBindings ),
+//   mAttributes ( rhs.mAttributes ),
 //   mValues ( rhs.mValues ),
 //   mIndices ( rhs.mIndices )
 // {

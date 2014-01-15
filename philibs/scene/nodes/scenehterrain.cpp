@@ -414,12 +414,12 @@ PNIPSTDLOG
   {
     setGeomData ( new geomData );
 
-    geomData::Bindings& bindings = mGeomData->bindingsOp();
+    geomData::Attributes& attributes = mGeomData->attributesOp();
 
-    bindings.push_back ( { "", geomData::Positions, geomData::DataType_FLOAT, geomData::PositionsComponents } );
-    bindings.push_back ( { "", geomData::Normals, geomData::DataType_FLOAT, geomData::NormalsComponents } );
-    bindings.push_back ( { "", geomData::TCoords00, geomData::DataType_FLOAT, geomData::TCoords00Components } );
-    bindings.push_back ( { "", geomData::TCoords00, geomData::DataType_FLOAT, geomData::TCoords00Components } );
+    attributes.push_back ( { "", geomData::Positions, geomData::DataType_FLOAT, geomData::PositionsComponents } );
+    attributes.push_back ( { "", geomData::Normals, geomData::DataType_FLOAT, geomData::NormalsComponents } );
+    attributes.push_back ( { "", geomData::TCoords00, geomData::DataType_FLOAT, geomData::TCoords00Components } );
+    attributes.push_back ( { "", geomData::TCoords00, geomData::DataType_FLOAT, geomData::TCoords00Components } );
 
     Dim xEndInd = xEnd - xStart;
     Dim yEndInd = yEnd - yStart;
@@ -427,7 +427,7 @@ PNIPSTDLOG
     geomData::SizeType numVals = ( xEnd - xStart ) * ( yEnd - yStart );
     geomData::SizeType numInds = ( xEndInd - xStart ) * ( yEndInd - yStart ) * 6;
 
-    geomData::SizeType tmpValueStride = mGeomData->getBindings ().getValueStride ();
+    geomData::SizeType tmpValueStride = mGeomData->getAttributes ().getValueStride ();
     mGeomData->resize ( numVals * tmpValueStride, numInds );
     
       // Now fill in indices.  These only change when the image size
@@ -452,7 +452,7 @@ PNIPSTDLOG
     }
   }
 
-  geomData::SizeType valueStride = mGeomData->getBindings ().getValueStride ();
+  geomData::SizeType valueStride = mGeomData->getAttributes ().getValueStride ();
 
 PNIPSTDLOG
 

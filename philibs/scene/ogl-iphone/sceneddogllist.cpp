@@ -586,7 +586,7 @@ void dbg ( geomData const* pGdata )
   }
   
   geomData::Values const& vals = pGdata->getValues ();
-  size_t stride = pGdata->getBindings ().getValueStride ();
+  size_t stride = pGdata->getAttributes ().getValueStride ();
 
 cout << "    stride = " << stride << endl;
 

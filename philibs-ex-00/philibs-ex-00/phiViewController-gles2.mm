@@ -123,20 +123,6 @@
   pni::math::matrix4 mat;
   mat.setIdentity();
 
-    // mvp and normal matrix...
-    // These are temp... these will soon be canonically set by the core rendering
-    // layer, while other fancy uniforms will be left to mid and upper-tier code.
-  mUniform00 = new scene::uniform;
-  scene::uniform::binding& mvpMatBinding = mUniform00->uniformOp( "modelViewProjectionMatrix" );
-  mvpMatBinding.setStageTypeCount ( scene::uniform::binding::Vertex, scene::uniform::binding::Matrix4, 1 );
-  mat.copyTo4x4 ( mvpMatBinding.getFloats() );
-  mRoot->setState(mUniform00.get(), scene::state::Uniform00);
-
-  scene::uniform::binding& normalMatBinding = mUniform00->uniformOp( "normalMatrix" );
-  normalMatBinding.setStageTypeCount ( scene::uniform::binding::Vertex, scene::uniform::binding::Matrix3, 1 );
-  mat.copyTo3x3 ( normalMatBinding.getFloats() );
-  mRoot->setState(mUniform00.get(), scene::state::Uniform00);
-
     // Create a default depth state object.
   scene::depth* pDepth = new scene::depth ();
   mRoot->setState(pDepth, scene::state::Depth);

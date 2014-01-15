@@ -94,9 +94,9 @@ void vbo::config ( geomData const* pData, progObj const* pProgObj )
   if ( ! pData )
     return;
 
-  geomData::bindings const& bindings = pData->getBindings();
+  geomData::attributes const& attributes = pData->getAttributes();
 
-  if(pData->getDirty() || bindings.getDirty())
+  if(pData->getDirty() || attributes.getDirty())
   {
     bind ( pData, pProgObj );
     glBindBuffer( GL_ARRAY_BUFFER, mAttrId );
@@ -121,22 +121,22 @@ void vbo::config ( geomData const* pData, progObj const* pProgObj )
 CheckGLError
 
       // Now set up attribute pointers.
-    for ( auto const& bindingIter : bindings )
+    for ( auto const& attributeIter : attributes )
     {
-      GLint attribId = glGetAttribLocation(pProgObj->getVertexProgHandle(), bindingIter.mName.c_str());
+      GLint attribId = glGetAttribLocation(pProgObj->getVertexProgHandle(), attributeIter.mName.c_str());
 CheckGLError
       if ( attribId != -1 ) // Ignore when attribute isn't present in shader.
       {
         glEnableVertexAttribArray(attribId);
 CheckGLError
-//        glVertexAttribPointer(attribId, bindingIter.mComponents, dataTypeToGlDataType(bindingIter.mDataType), GL_FALSE, bindings.getValueStrideBytes(), pValues + bindings.getValueOffset(bindingIter.mType));
-        glVertexAttribPointer(attribId, bindingIter.mComponents, dataTypeToGlDataType(bindingIter.mDataType), GL_FALSE, bindings.getValueStrideBytes(),  reinterpret_cast< void* >( bindings.getValueOffsetBytes(bindingIter.mType)));
+//        glVertexAttribPointer(attribId, attributeIter.mComponents, dataTypeToGlDataType(attributeIter.mDataType), GL_FALSE, attributes.getValueStrideBytes(), pValues + attributes.getValueOffset(attributeIter.mType));
+        glVertexAttribPointer(attribId, attributeIter.mComponents, dataTypeToGlDataType(attributeIter.mDataType), GL_FALSE, attributes.getValueStrideBytes(),  reinterpret_cast< void* >( attributes.getValueOffsetBytes(attributeIter.mType)));
 CheckGLError
       }
     }
 
     pData->clearDirty();
-    pData->getBindings().clearDirty();
+    pData->getAttributes().clearDirty();
 
     glBindVertexArrayOES(0);  // Clear so other state doesn't leak into this VAO
     glBindBuffer( GL_ARRAY_BUFFER, 0 );

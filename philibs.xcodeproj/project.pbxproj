@@ -12,6 +12,7 @@
 		1C4BD27E18810EE6000781B0 /* sceneprog.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CAD9722186D72D500C547E1 /* sceneprog.h */; };
 		1C4BD27F18810EE6000781B0 /* sceneprogobj.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CAD9725186E110200C547E1 /* sceneprogobj.h */; };
 		1C4BD28018810EE6000781B0 /* scenevbo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CAD971E186628EE00C547E1 /* scenevbo.h */; };
+		1C4BD2831885FD8F000781B0 /* scenecommon.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C4BD2821885FCB7000781B0 /* scenecommon.h */; };
 		1C6A02B91873526700672EF8 /* sceneuniform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C6A02B71873526700672EF8 /* sceneuniform.cpp */; };
 		1CAD971F186628EE00C547E1 /* scenevbo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD971D186628EE00C547E1 /* scenevbo.cpp */; };
 		1CAD9723186D72D500C547E1 /* sceneprog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9721186D72D500C547E1 /* sceneprog.cpp */; };
@@ -258,6 +259,7 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				1C4BD2831885FD8F000781B0 /* scenecommon.h in CopyFiles */,
 				1C4BD27D18810EE6000781B0 /* sceneuniform.h in CopyFiles */,
 				1C4BD27E18810EE6000781B0 /* sceneprog.h in CopyFiles */,
 				1C4BD27F18810EE6000781B0 /* sceneprogobj.h in CopyFiles */,
@@ -390,9 +392,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1C4BD2821885FCB7000781B0 /* scenecommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = scenecommon.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		1C6A02B71873526700672EF8 /* sceneuniform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneuniform.cpp; sourceTree = "<group>"; };
-		1C6A02B81873526700672EF8 /* sceneuniform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneuniform.h; sourceTree = "<group>"; };
-		1CAD971D186628EE00C547E1 /* scenevbo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.cpp; path = scenevbo.cpp; sourceTree = "<group>"; tabWidth = 2; usesTabs = 0; };
+		1C6A02B81873526700672EF8 /* sceneuniform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = sceneuniform.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		1CAD971D186628EE00C547E1 /* scenevbo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 2; path = scenevbo.cpp; sourceTree = "<group>"; tabWidth = 2; usesTabs = 0; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		1CAD971E186628EE00C547E1 /* scenevbo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenevbo.h; sourceTree = "<group>"; };
 		1CAD972018662A2B00C547E1 /* sceneogl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sceneogl.h; sourceTree = "<group>"; };
 		1CAD9721186D72D500C547E1 /* sceneprog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneprog.cpp; sourceTree = "<group>"; };
@@ -523,32 +526,32 @@
 		1CDD4106185BCAEF009284F9 /* imgtarga.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imgtarga.h; sourceTree = "<group>"; };
 		1CDD4108185BCAEF009284F9 /* pnisceneaseparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pnisceneaseparser.cpp; sourceTree = "<group>"; };
 		1CDD4109185BCAEF009284F9 /* pnisceneaseparser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pnisceneaseparser.h; sourceTree = "<group>"; };
-		1CDD410A185BCAEF009284F9 /* sceneloaderase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneloaderase.cpp; sourceTree = "<group>"; };
+		1CDD410A185BCAEF009284F9 /* sceneloaderase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = sceneloaderase.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		1CDD410B185BCAEF009284F9 /* sceneloaderase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneloaderase.h; sourceTree = "<group>"; };
 		1CDD410C185BCAEF009284F9 /* sceneloaderbase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneloaderbase.cpp; sourceTree = "<group>"; };
 		1CDD410D185BCAEF009284F9 /* sceneloaderbase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneloaderbase.h; sourceTree = "<group>"; };
 		1CDD410F185BCAEF009284F9 /* scenecamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scenecamera.cpp; sourceTree = "<group>"; };
 		1CDD4110185BCAEF009284F9 /* scenecamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenecamera.h; sourceTree = "<group>"; };
-		1CDD4111185BCAEF009284F9 /* scenegeom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scenegeom.cpp; sourceTree = "<group>"; };
-		1CDD4112185BCAEF009284F9 /* scenegeom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenegeom.h; sourceTree = "<group>"; };
+		1CDD4111185BCAEF009284F9 /* scenegeom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 2; path = scenegeom.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		1CDD4112185BCAEF009284F9 /* scenegeom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = scenegeom.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		1CDD4113185BCAEF009284F9 /* scenegeomfx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scenegeomfx.cpp; sourceTree = "<group>"; };
 		1CDD4114185BCAEF009284F9 /* scenegeomfx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenegeomfx.h; sourceTree = "<group>"; };
 		1CDD4115185BCAEF009284F9 /* scenegroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scenegroup.cpp; sourceTree = "<group>"; };
 		1CDD4116185BCAEF009284F9 /* scenegroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenegroup.h; sourceTree = "<group>"; };
-		1CDD4117185BCAEF009284F9 /* scenehterrain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scenehterrain.cpp; sourceTree = "<group>"; };
+		1CDD4117185BCAEF009284F9 /* scenehterrain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = scenehterrain.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		1CDD4118185BCAEF009284F9 /* scenehterrain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenehterrain.h; sourceTree = "<group>"; };
 		1CDD4119185BCAEF009284F9 /* scenelight.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scenelight.cpp; sourceTree = "<group>"; };
 		1CDD411A185BCAEF009284F9 /* scenelight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenelight.h; sourceTree = "<group>"; };
 		1CDD411B185BCAEF009284F9 /* sceneparticle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneparticle.cpp; sourceTree = "<group>"; };
-		1CDD411C185BCAEF009284F9 /* sceneparticle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneparticle.h; sourceTree = "<group>"; };
+		1CDD411C185BCAEF009284F9 /* sceneparticle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = sceneparticle.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		1CDD411D185BCAEF009284F9 /* sceneparticleactions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneparticleactions.h; sourceTree = "<group>"; };
-		1CDD411E185BCAEF009284F9 /* scenesprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scenesprite.cpp; sourceTree = "<group>"; };
-		1CDD411F185BCAEF009284F9 /* scenesprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenesprite.h; sourceTree = "<group>"; };
+		1CDD411E185BCAEF009284F9 /* scenesprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 2; path = scenesprite.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		1CDD411F185BCAEF009284F9 /* scenesprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = scenesprite.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		1CDD4120185BCAEF009284F9 /* scenetext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scenetext.cpp; sourceTree = "<group>"; };
 		1CDD4121185BCAEF009284F9 /* scenetext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenetext.h; sourceTree = "<group>"; };
 		1CDD4123185BCAEF009284F9 /* sceneddogl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneddogl.cpp; sourceTree = "<group>"; };
 		1CDD4124185BCAEF009284F9 /* sceneddogl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneddogl.h; sourceTree = "<group>"; };
-		1CDD4125185BCAEF009284F9 /* sceneddogllist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneddogllist.cpp; sourceTree = "<group>"; };
+		1CDD4125185BCAEF009284F9 /* sceneddogllist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 2; path = sceneddogllist.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		1CDD4126185BCAEF009284F9 /* sceneddogllist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneddogllist.h; sourceTree = "<group>"; };
 		1CDD4128185BCAEF009284F9 /* scenesnddd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scenesnddd.cpp; sourceTree = "<group>"; };
 		1CDD4129185BCAEF009284F9 /* scenesnddd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenesnddd.h; sourceTree = "<group>"; };
@@ -561,7 +564,7 @@
 		1CDD4130185BCAEF009284F9 /* scenedbgdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenedbgdd.h; sourceTree = "<group>"; };
 		1CDD4131185BCAEF009284F9 /* scenedupdd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scenedupdd.cpp; sourceTree = "<group>"; };
 		1CDD4132185BCAEF009284F9 /* scenedupdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenedupdd.h; sourceTree = "<group>"; };
-		1CDD4133185BCAEF009284F9 /* sceneflattendd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneflattendd.cpp; sourceTree = "<group>"; };
+		1CDD4133185BCAEF009284F9 /* sceneflattendd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 2; path = sceneflattendd.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		1CDD4134185BCAEF009284F9 /* sceneflattendd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneflattendd.h; sourceTree = "<group>"; };
 		1CDD4135185BCAEF009284F9 /* scenegraphdd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scenegraphdd.cpp; sourceTree = "<group>"; };
 		1CDD4136185BCAF0009284F9 /* scenegraphdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenegraphdd.h; sourceTree = "<group>"; };
@@ -902,6 +905,7 @@
 				1CDD4147185BCAF0009284F9 /* states */,
 				1CDD4122185BCAEF009284F9 /* ogl-iphone */,
 				1CDD412C185BCAEF009284F9 /* sceneattr.h */,
+				1C4BD2821885FCB7000781B0 /* scenecommon.h */,
 				1CDD412D185BCAEF009284F9 /* sceneconverter.cpp */,
 				1CDD412E185BCAEF009284F9 /* sceneconverter.h */,
 				1CDD412F185BCAEF009284F9 /* scenedbgdd.cpp */,

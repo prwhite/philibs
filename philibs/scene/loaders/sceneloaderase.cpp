@@ -450,7 +450,7 @@ PNIDBG
 						return;
 PNIDBG
           geomData* pGdata = pGeom->geometryOp ();
-          geomData::SizeType stride = pGdata->getBindings ().getValueStride ();
+          geomData::SizeType stride = pGdata->getAttributes ().getValueStride ();
 //          const unsigned int vertOffset = 0;    // Always zero.
 //           const unsigned int normOffset = pGdata->getValueOffset ( geomData::Normals );
 
@@ -502,20 +502,20 @@ PNIDBG
           return lhs > rhs ? lhs : rhs;
         }
     
-    void initBindings ( geom* pGeom, ::ase::node const* pSrc )
+    void initAttributes ( geom* pGeom, ::ase::node const* pSrc )
         {
 PNIDBG
             // geomData is guaranteed to be good before this is called (from processObject)
-          geomData::Bindings& bindings = pGeom->geometryOp ()->bindingsOp ();
+          geomData::Attributes& attributes = pGeom->geometryOp ()->attributesOp ();
 
-          bindings.push_back ( { "position", geomData::Positions, geomData::DataType_FLOAT, geomData::PositionsComponents } );
+          attributes.push_back ( { "position", geomData::Positions, geomData::DataType_FLOAT, geomData::PositionsComponents } );
 
 					if ( pSrc->findNode ( "MESH_NORMALS", false ) )
-            bindings.push_back ( { "normal", geomData::Normals, geomData::DataType_FLOAT, geomData::NormalsComponents } );
+            attributes.push_back ( { "normal", geomData::Normals, geomData::DataType_FLOAT, geomData::NormalsComponents } );
 
 					// First set of UVs.
 					if ( pSrc->findNode ( "MESH_TVERTLIST", false ) )
-            bindings.push_back ( { "uv00", geomData::TCoords00, geomData::DataType_FLOAT, geomData::TCoords00Components } );
+            attributes.push_back ( { "uv00", geomData::TCoords00, geomData::DataType_FLOAT, geomData::TCoords00Components } );
 
           // Iterate over "MESH_MAPPINGCHANNEL" children for
           // other sets of UVs.
@@ -535,7 +535,7 @@ PNIDBG
               // TEMP Only supporting 2 texture units.
               const unsigned int MaxUnit = 1;
               if ( unit == MaxUnit )
-                bindings.push_back ( { "uv01", geomData::TCoords01, geomData::DataType_FLOAT, geomData::TCoords01Components } );
+                attributes.push_back ( { "uv01", geomData::TCoords01, geomData::DataType_FLOAT, geomData::TCoords01Components } );
               else
                 mObserver->onError ( 
                     pni::pstd::error ( InternalErrorTexture,
@@ -774,7 +774,7 @@ PNIDBG
         {
           typedef std::vector< float > VertVals;
           geomData* pGdata = pGeom->geometryOp ();
-          size_t stride = pGdata->getBindings ().getValueStride ();
+          size_t stride = pGdata->getAttributes ().getValueStride ();
           // Offset for positions is always 0.
           const unsigned int TypeStride = 3;
           
@@ -815,8 +815,8 @@ PNIDBG
         {
           typedef std::vector< float > VertVals;
           geomData* pGdata = pGeom->geometryOp ();
-          geomData::SizeType stride = pGdata->getBindings ().getValueStride ();
-          geomData::SizeType offset = pGdata->getBindings ().getValueOffset ( geomData::Normals );
+          geomData::SizeType stride = pGdata->getAttributes ().getValueStride ();
+          geomData::SizeType offset = pGdata->getAttributes ().getValueOffset ( geomData::Normals );
           const unsigned int TypeStride = 3;
           
           if ( ::ase::node const* pVerts = pSrc->findNode ( "MESH_NORMALS" ) )
@@ -867,9 +867,9 @@ PNIDBG
 PNIDBG
           typedef std::vector< float > VertVals;
           geomData* pGdata = pGeom->geometryOp ();
-          size_t stride = pGdata->getBindings ().getValueStride ();
-          geomData::BindingType tcoord = ( unit ==  0 ) ? geomData::TCoords00 : geomData::TCoords01;
-          size_t offset = pGdata->getBindings ().getValueOffset ( tcoord );
+          size_t stride = pGdata->getAttributes ().getValueStride ();
+          geomData::AttributeType tcoord = ( unit ==  0 ) ? geomData::TCoords00 : geomData::TCoords01;
+          size_t offset = pGdata->getAttributes ().getValueOffset ( tcoord );
          // Offset for positions is always 0.
           const unsigned int TypeStride = 2;
 
@@ -971,15 +971,15 @@ PNIDBG
 					unsigned int numFaces = pMesh->findLine ( "MESH_NUMFACES" )->getInt ();
           unsigned int elements = numFaces * 3; // Size of index list.
 
-          // Figure out geom data bindings and total size.
+          // Figure out geom data attributes and total size.
           geomData* pGdata = new geomData;
           pGeom->setGeomData ( pGdata );
-          initBindings ( pGeom, pMesh );
+          initAttributes ( pGeom, pMesh );
 
           reIndexer ind ( elements );
           initIndices ( pMesh, ind );
           ind.collapse ();
-          pGdata->resizeTrisWithCurrentBinding ( ind.mDataCount, numFaces );
+          pGdata->resizeTrisWithCurrentAttributes ( ind.mDataCount, numFaces );
 
 // cout << "getValueStride  = " << pGdata->getValueStride () << endl;
           processVerts ( pGeom, ind, pMesh );

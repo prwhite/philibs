@@ -26,7 +26,7 @@ namespace scene {
   /** 
     This class is the container for actual geometry values (i.e., the
     positions, normals, colors, uv's, and user attributes.  It also
-    contains the binding information, which describes what vertex attributes
+    contains the attribute binding information, which describes what vertex attributes
     exist in the value array, and how they are interleaved/packed.
 
     Note: Only float componenets are supported right now.  E.g., no GLByte
@@ -40,13 +40,13 @@ class geomData :
 
     typedef uint16_t SizeType;
 
-    geomData ()
-        {}
-      /*** Use these values for the mType member of BindingVal to indicate which
-           binding you are specifying.  See Bindings help for an example. */
+    geomData () {}
+
+      /*** Use these values for the mType member of AttributeVal to indicate which
+           attribute you are specifying.  See Attribute help for an example. */
       // Note: We can only have 64 enums, because of the way these are used for
       // the 64-bit mTypesEnabled mask cache.
-    enum BindingType : SizeType {
+    enum AttributeType : SizeType {
       Positions,       /// Always 3 elements.
       Normals,         /// Always 3 elements.
       Colors,          /// Always 4 elements.
@@ -87,10 +87,10 @@ class geomData :
       Undef = 0xffff
 
     };
-      /** Use these values as symbols for the mComponents member of BindingVal
-          when setting up bindings.  For user-defined Attrib bindings, you'll
-          have to set the value explicitly.  See Bindings help for an example. */
-    enum BindingComponents : SizeType {
+      /** Use these values as symbols for the mComponents member of AttributeVal
+          when setting up attributes.  For user-defined attribute bindings, you'll
+          have to set the value explicitly.  See Attributes help for an example. */
+    enum AttributeComponents : SizeType {
       PositionsComponents = 3,
       NormalsComponents = 3,  
       ColorsComponents = 4,   
@@ -132,27 +132,27 @@ class geomData :
 
       /** Struct that indicates specific geometry attribute names, types, and
           sizes for driving the VBO setup process during GL evaluation. */
-    struct BindingVal
+    struct AttributeVal
       {
         std::string mName;        /// Only needed for user-defined attributes to match with vertex prog
-        BindingType mType;        /// From BindingType enum
-        DataType mDataType;
-        SizeType mComponents;     /// Number of floats for this binding attribute
+        AttributeType mType;      /// From AttributeType enum
+        DataType mDataType;       /// Data type of values in attribute from DataType
+        SizeType mComponents;     /// Number of floats for this attribute
       };
 
-    // Bindings:
+    // Attributes:
       /**
-        Note: The bindings must always be packed in the values list in the
+        Note: The attributes must always be packed in the values list in the
         order they occur in the interleaved values array in geomData. Generally,
         this is Positions, Normals, Colors, TCoords01, ... then User01 if used, etc.
 
-        Note: Use the vector behavior of this class to add binding elements, e.g.,
-        bindings.push_back ( BindingVal ( "positions", GeomData::Positions, GeomData::PositionsComponents ) ).
+        Note: Use the vector behavior of this class to add attribute elements, e.g.,
+        attributess.push_back ( AttributeVal ( "positions", GeomData::Positions, GeomData::PositionsComponents ) ).
       */
-    class bindings :
-        public std::vector< BindingVal >
+    class attributes :
+        public std::vector< AttributeVal >
       {
-          typedef std::vector< BindingVal > Base;
+          typedef std::vector< AttributeVal > Base;
 
         public:
           SizeType getValueStride () const
@@ -161,8 +161,8 @@ class geomData :
 
                 // Opt: We could cache stride with a little more work in the
                 // dirty functions.
-              for ( auto binding : *this )
-                ret += binding.mComponents;
+              for ( auto attribute : *this )
+                ret += attribute.mComponents;
 
               return ret;
             }
@@ -174,31 +174,31 @@ class geomData :
               return getValueStride() * sizeof ( float );
             }
 
-          SizeType getValueOffset ( BindingType which ) const
+          SizeType getValueOffset ( AttributeType which ) const
             {
               SizeType ret = 0;
 
                 // Opt: We could cache an array of offsets with a little more
                 // work in the dirty functions.
 
-              for ( auto binding : *this )
+              for ( auto attribute : *this )
               {
-                if ( binding.mType == which )
+                if ( attribute.mType == which )
                   return ret;
-                ret += binding.mComponents;
+                ret += attribute.mComponents;
               }
 
-              throw std::invalid_argument( "binding type not found" );
+              throw std::invalid_argument( "attribute type not found" );
 
               return 0;
             }
 
-          SizeType getValueOffsetBytes ( BindingType which ) const
+          SizeType getValueOffsetBytes ( AttributeType which ) const
             {
               return getValueOffset(which) * sizeof ( float );  // TEMP: We might support things besides FLOAT someday!!!
             }
 
-          bool hasBinding ( BindingType which ) const
+          bool hasAttribute ( AttributeType which ) const
             {
               clearDirty ();
               return ( 1 << which ) & mTypesEnabled;
@@ -218,9 +218,9 @@ class geomData :
           void clearDirty () const
             {
               mTypesEnabled = 0;
-              for ( auto binding : *this )
+              for ( auto attribute : *this )
               {
-                mTypesEnabled |= ( 1 << binding.mType );
+                mTypesEnabled |= ( 1 << attribute.mType );
               }
             }
 
@@ -228,13 +228,13 @@ class geomData :
 
 
           mutable bool mDirty = true;             // Only used for mTypesEnabled right now.
-          mutable uint64_t mTypesEnabled = 0ULL;  // Optimizes hasBinding calls
+          mutable uint64_t mTypesEnabled = 0ULL;  // Optimizes hasAttribute calls
       };
 
       // This is a cheap convention hack... all classes in phi start with a
       // lower case, but typedefs upper... so this gets us consistent in
       // both ways in this class.
-    typedef bindings Bindings;
+    typedef attributes Attributes;
 
     /////////////////////////////////////////////////////////////////
       /** The vector that contains indices for the geomData object */
@@ -273,9 +273,9 @@ class geomData :
   
         /** Note: numVerts is count of verts, which is a different
             semantic than the other resize method */
-    void resizeTrisWithCurrentBinding ( SizeType numVerts, SizeType numTris )
+    void resizeTrisWithCurrentAttributes ( SizeType numVerts, SizeType numTris )
         {
-          mValues.resize ( numVerts * mBindings.getValueStride () );
+          mValues.resize ( numVerts * mAttributes.getValueStride () );
           size_t newSize = numTris * 3;
           mIndices.resize ( newSize );
           setDirty ();
@@ -309,11 +309,11 @@ class geomData :
     void setBoundsDirty () { mBounds.setIsDirty ( true ); }
     box3 const& getBounds () const { if ( mBounds.getIsDirty() ) updateBounds (); return mBounds; }
 
-      /** @methodgroup Binding Methods */
-    void setBindings ( Bindings const& bindings )
-      { mBindings = bindings; setDirty (); }
-    Bindings const& getBindings () const { return mBindings; }
-    Bindings& bindingsOp () { setDirty (); mBindings.setDirty(); return mBindings; }
+      /** @methodgroup Attribute Methods */
+    void setAttributes ( Attributes const& attributes )
+      { mAttributes = attributes; setDirty (); }
+    Attributes const& getAttributes () const { return mAttributes; }
+    Attributes& attributesOp () { setDirty (); mAttributes.setDirty(); return mAttributes; }
 
       /** @methodgroup Debugging Methods */
     void dbg ();
@@ -326,7 +326,7 @@ class geomData :
   private:
       friend class geom;
   
-      Bindings mBindings;
+      Attributes mAttributes;
       
       Values mValues;
       Indices mIndices;
@@ -344,10 +344,10 @@ class geom :
   public:
     typedef geomData::Values Values;
     typedef geomData::Indices Indices;
-    typedef geomData::BindingType BindingType;
-    typedef geomData::BindingComponents BindingComponents;
-    typedef geomData::BindingVal BindingVal;
-    typedef geomData::Bindings Bindings;
+    typedef geomData::AttributeType AttributeType;
+    typedef geomData::AttributeComponents AttributeComponents;
+    typedef geomData::AttributeVal AttributeVal;
+    typedef geomData::Attributes Attributes;
     typedef geomData::SizeType SizeType;
   
      geom();
@@ -439,7 +439,7 @@ class vertIter
   public:
     vertIter ( geom* pGeom ) :
       mGdata ( pGeom->getGeomData () ),
-      mStride ( mGdata->getBindings ().getValueStride () ),
+      mStride ( mGdata->getAttributes ().getValueStride () ),
       mCur ( &mGdata->getValues ()[ 0 ] )
         {
           calcEnd ();
@@ -447,7 +447,7 @@ class vertIter
         
     vertIter ( geomData* pGdata ) :
       mGdata ( pGdata ),
-      mStride ( mGdata->getBindings ().getValueStride () ),
+      mStride ( mGdata->getAttributes ().getValueStride () ),
       mCur ( &mGdata->getValues ()[ 0 ] )
         {
           calcEnd ();
@@ -502,7 +502,7 @@ class triIter
   public:
     triIter ( geom* pGeom ) :
       mGdata ( pGeom->getGeomData () ),
-      mStride ( mGdata->getBindings ().getValueStride () ),
+      mStride ( mGdata->getAttributes ().getValueStride () ),
       mCur ( 0 )
         {
           mPtr = getPtr ( 0 );
@@ -510,7 +510,7 @@ class triIter
         
     triIter ( geomData* pGdata ) :
       mGdata ( pGdata ),
-      mStride ( mGdata->getBindings ().getValueStride () ),
+      mStride ( mGdata->getAttributes ().getValueStride () ),
       mCur ( 0 )
         {
           mPtr = getPtr ( 0 );
