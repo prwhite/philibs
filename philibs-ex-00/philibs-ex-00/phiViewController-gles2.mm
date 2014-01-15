@@ -117,11 +117,10 @@
   mProg->setDefaultProgs();
   mRoot->setState(mProg.get(), scene::state::Prog);
 
-    // Add a uniform that will be used in the default vertex prog
-    // This is not for real... it's just temp to test the new uniform path
-    // and to vet the API.
-  pni::math::matrix4 mat;
-  mat.setIdentity();
+    // Add a uniform that will do something debuggy
+  mUniform00 = new scene::uniform;
+    // ...add some bindings for debugging...
+  mRoot->setState(mUniform00.get(), scene::state::Uniform00);
 
     // Create a default depth state object.
   scene::depth* pDepth = new scene::depth ();

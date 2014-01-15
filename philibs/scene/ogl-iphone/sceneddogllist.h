@@ -114,6 +114,8 @@ class ddOglList :
     pni::math::matrix4 mProjMat;
     pni::math::matrix4 mViewMat;
     pni::math::matrix4 mModelMat;
+    pni::math::matrix4 mModelViewMat;
+    pni::math::matrix4 mModelViewProjectionMat;
 
     unsigned int mCurStateId;
     GlEnum mCurLightUnit;

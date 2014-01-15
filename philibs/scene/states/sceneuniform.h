@@ -53,8 +53,17 @@ class uniform :
           /// @note Only doing vert and frag right now.
         enum Stage { Vertex, Fragment };
 
+          /// Indicates what coordinate space a uniform should be transformed into
+          /// before handoff to the graphics system.  E.g., 'None' means no transform
+          /// at all, and 'ModelView' means to transform from node space back through model
+          /// and view transforms, etc.
+          /// @note This only affects vectors and matrices (maybe on matrices).
+          /// @note This is experimental, and more importantly, not implemented currently!!!
+        enum Xform { None, Model, ModelView, ModelViewProjection };
+
           // TODO: This has too many params, switch to individual setters or pub data?
-        void setStageTypeCount ( Stage stage, Type type, size_t count = 1 ) { mStage = stage; mType = type; mCount = count; resize (); }
+        void set ( Stage stage, Type type, size_t count = 1 ) { mStage = stage; mType = type; mCount = count; resize (); }
+        void set ( Stage stage, Type type, Xform xform, size_t count = 1 ) { mStage = stage; mType = type; mXform = xform; mCount = count; resize (); }
 
         Stage getStage () const { return mStage; }
         Type getType () const { return mType; }
@@ -93,6 +102,7 @@ class uniform :
         Vals mVals;
         Stage mStage = Fragment;
         Type mType = Float4;
+        Xform mXform = None;
         size_t mCount = 1;
     };
 

@@ -223,10 +223,10 @@ ddOglList::ddOglList() :
   mBuiltins = new scene::uniform;
   
   uniform::binding& mvpMat = mBuiltins->uniformOp("modelViewProjectionMatrix");
-  mvpMat.setStageTypeCount(uniform::binding::Vertex, uniform::binding::Matrix4, 1);
+  mvpMat.set(uniform::binding::Vertex, uniform::binding::Matrix4, 1);
   
   uniform::binding& normMat = mBuiltins->uniformOp("normalMatrix");
-  normMat.setStageTypeCount(uniform::binding::Vertex, uniform::binding::Matrix3, 1);
+  normMat.set(uniform::binding::Vertex, uniform::binding::Matrix3, 1);
 }
 
 ddOglList::~ddOglList()
@@ -375,6 +375,7 @@ PNIDBG
 //  glLoadIdentity ();
 
 PNIDBG
+    // Sets up prog and view mats
   execCamera ();
 
 PNIDBG
@@ -401,6 +402,7 @@ PNIDBG
 #endif // _NDEBUG
 
       // NEWMATSTACK
+      // set up model mat
     mModelMat = cur->mMatrix;
     
       // TODO: PRW PNIGLES1REMOVED
@@ -411,9 +413,9 @@ PNIDBG
  //cout << "cur->matrix =\n" << cur->mMatrix << endl;
 
 PNIDBG
-    execStates ( cur->mStateSet );
     execBuiltins();
-  
+    execStates ( cur->mStateSet );
+
 PNIDBG
     cur->mNode->accept ( this );
     
@@ -437,24 +439,24 @@ void ddOglList::execBuiltins ()
     // NEWMATSTACK
     // TODO: Optimize
   
-  pni::math::matrix4 mvMat = mViewMat;
-  mvMat.preMult(mModelMat);
+  mModelViewMat = mViewMat;
+  mModelViewMat.preMult(mModelMat);
 
-  pni::math::matrix4 mvpMat = mProjMat;
-  mvpMat.preMult(mvMat);
+  mModelViewProjectionMat = mProjMat;
+  mModelViewProjectionMat.preMult(mModelViewMat);
 
-  mvpMat.copyTo4x4(mBuiltins->uniformOp("modelViewProjectionMatrix").getFloats());
+  mModelViewProjectionMat.copyTo4x4(mBuiltins->uniformOp("modelViewProjectionMatrix").getFloats());
   
     // Handle non-uniform scaling... with inverse transpose.
     // Use camera->getNormalizeMode.
   camera const* pCam = static_cast< camera const*>(mSinkPath.getLeaf());
   if ( pCam->getNormalizeMode() != camera::NoNormalize)
   {
-    mvMat.invert();
-    mvMat.transpose();
+    mModelViewMat.invert();
+    mModelViewMat.transpose();
   }
 
-  mvMat.copyTo3x3(mBuiltins->uniformOp("normalMatrix").getFloats());
+  mModelViewMat.copyTo3x3(mBuiltins->uniformOp("normalMatrix").getFloats());
   
   this->dispatch(mBuiltins.get());
 }
@@ -1008,7 +1010,7 @@ void ddOglList::execLightPath ( nodePath const& lpath )
   glMatrixMode ( GL_MODELVIEW );
   glPushMatrix ();
   
-  // TODO Mult on light path matrix.
+  // Mult on light path matrix.
   pni::math::matrix4 mat;
   lpath.calcXform ( mat );
   glLoadMatrixf ( mat );

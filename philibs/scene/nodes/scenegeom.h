@@ -132,7 +132,7 @@ class geomData :
 
       /** Struct that indicates specific geometry attribute names, types, and
           sizes for driving the VBO setup process during GL evaluation. */
-    struct AttributeVal
+    struct AttributeVal final
       {
         std::string mName;        /// Only needed for user-defined attributes to match with vertex prog
         AttributeType mType;      /// From AttributeType enum
