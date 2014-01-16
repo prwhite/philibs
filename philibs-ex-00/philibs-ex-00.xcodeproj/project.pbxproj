@@ -286,6 +286,9 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "PREHITI HEAVY INDUSTRIES";
 				TargetAttributes = {
+					1CDD4212185BDDC2009284F9 = {
+						DevelopmentTeam = PH2M8BQ7YE;
+					};
 					1CDD423E185BDDC2009284F9 = {
 						TestTargetID = 1CDD4212185BDDC2009284F9;
 					};
@@ -517,10 +520,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "philibs-ex-00/philibs-ex-00-Prefix.pch";
 				INFOPLIST_FILE = "philibs-ex-00/philibs-ex-00-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -530,10 +536,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "philibs-ex-00/philibs-ex-00-Prefix.pch";
 				INFOPLIST_FILE = "philibs-ex-00/philibs-ex-00-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

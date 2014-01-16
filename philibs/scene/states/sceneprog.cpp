@@ -55,14 +55,14 @@ void prog::setDefaultProgs ()
       varying lowp vec2 v_uv01;
       varying lowp vec3 v_halfVector;
       varying lowp vec3 v_normal;
-      varying lowp vec3 v_lightpos;     // should be a uniform
+      varying lowp vec3 v_lvvec;
 
       uniform mat4 u_mvpMat;
       uniform mat3 u_normMat;
 
       void main()
       {
-          vec3 lightPosition = vec3(0.0, 0.0, 1.0);       // should be a uniform
+          vec3 lightPosition = vec3(10.0, 10.0, 40.0);    // should be a uniform
           vec4 diffuseColor = vec4(1.0, 1.0, 1.0, 1.0);   // should be a uniform
 
           v_color = diffuseColor;
@@ -70,9 +70,11 @@ void prog::setDefaultProgs ()
           v_uv00 = a_uv00;
           v_uv01 = a_uv01;
 
+          lowp vec4 pos = u_mvpMat * a_position;
+          v_lvvec = normalize(lightPosition - pos.xyz);
+
           v_normal = normalize(u_normMat * a_normal);;
           v_halfVector = normalize(v_normal + lightPosition);
-          v_lightpos = lightPosition;
 
           gl_Position = u_mvpMat * a_position;
       }
@@ -85,26 +87,28 @@ void prog::setDefaultProgs ()
       varying lowp vec2 v_uv01;
       varying lowp vec3 v_halfVector;
       varying lowp vec3 v_normal;
-      varying lowp vec3 v_lightpos;
+      varying lowp vec3 v_lvvec;
 
       uniform sampler2D u_tex00;
       uniform sampler2D u_tex01;
 
       void main()
       {
+          // Ambient
+        lowp vec4 amb = vec4 ( 0.2, 0.2, 0.2, 1.0 );  // should be a uniform
 
           // Diffuse
-        lowp vec4 diff = vec4(max(0.0,dot(normalize(v_normal),v_lightpos)) * v_color.xyz,1.0);
-
-          // Texture
+        lowp vec4 diff = vec4(max(0.0,dot(normalize(v_normal),normalize(v_lvvec))) * v_color.rgb,1.0);
         lowp vec4 tex00 = texture2D ( u_tex00, v_uv00 );
+        diff *= tex00;
 
           // Specular
-        lowp float Shininess = 128.0;
+        lowp float Shininess = 128.0;                 // should be a uniform
         lowp float specMod = max(0.0,dot(normalize(v_normal),normalize(v_halfVector)));
-        lowp vec4 specColor = vec4 ( v_color.xyz * pow(specMod,Shininess), 1.0 );
+        lowp vec4 spec = vec4 ( v_color.xyz * pow(specMod,Shininess), 1.0 );
+        spec *= tex00 * tex00 * tex00;  // cheesy effect to get spec modulated by texture.
 
-        gl_FragColor = min(vec4(1.0,1.0,1.0,1.0),diff * tex00 + specColor);
+        gl_FragColor = min(vec4(1.0,1.0,1.0,1.0), amb + diff + spec);
       }
     )" );
 }

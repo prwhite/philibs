@@ -83,7 +83,7 @@ void progObj::bind ( prog const* pData )
   // to find a way to combine them in a program pipeline on the gl side
   // of things.
 
-bool checkProgramLink ( GLuint prog )
+bool checkProgramLink ( GLuint prog, char const* which )
 {
   GLint isLinked = 0;
   glGetProgramiv(prog, GL_LINK_STATUS, &isLinked);
@@ -98,6 +98,7 @@ bool checkProgramLink ( GLuint prog )
 
     glGetProgramInfoLog(prog, size, &sizeOut, str);
 
+    PNIDBGSTR(which);
     PNIDBGSTR(str);
 
     delete[] str;
@@ -154,7 +155,7 @@ void progObj::config ( prog const* pData )
 
       char const* str = pData->getProgStr ( prog::Vertex ).c_str();
       mVertProg = glCreateShaderProgramvEXT(GL_VERTEX_SHADER, 1, &str );
-      if ( checkProgramLink(mVertProg))
+      if ( checkProgramLink(mVertProg,"Vertex Program:"))
         glUseProgramStagesEXT( mPipeline, GL_VERTEX_SHADER_BIT_EXT, mVertProg );
 CheckGLError
     }
@@ -171,7 +172,7 @@ CheckGLError
 
       char const* str = pData->getProgStr ( prog::Fragment ).c_str();
       mFragProg = glCreateShaderProgramvEXT(GL_FRAGMENT_SHADER, 1, &str );
-      if ( checkProgramLink(mFragProg))
+      if ( checkProgramLink(mFragProg,"Fragment Program:"))
         glUseProgramStagesEXT( mPipeline, GL_FRAGMENT_SHADER_BIT_EXT, mFragProg );
 CheckGLError
     }

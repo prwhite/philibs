@@ -101,7 +101,7 @@
 
   chdir ( bdir.c_str());
 
-  std::string fname = { "test-00c.ase" };
+  std::string fname = { "test-00b.ase" };
   
     // Load the file, grab its bounding sphere so we can push back the camera an
     // appropriate amount.
