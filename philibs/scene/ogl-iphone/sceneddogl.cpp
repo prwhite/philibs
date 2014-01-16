@@ -562,6 +562,11 @@ void ddOgl::dispatch ( material const* pState )
 // 
 // }
 
+void ddOgl::dispatch ( prog const* pState )
+{
+
+}
+
 void ddOgl::dispatch ( texEnv const* pState )
 {
 
@@ -580,6 +585,11 @@ void ddOgl::dispatch ( texture const* pState )
 void ddOgl::dispatch ( textureXform const* pState )
 {
 
+}
+  
+void ddOgl::dispatch ( uniform const* pState )
+{
+  
 }
     
 /////////////////////////////////////////////////////////////////////

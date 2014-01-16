@@ -55,6 +55,7 @@ class state :
 //         PointStyle, //
 //         PolygonMode,   // Not in OES
 //         PolygonOffset,   //
+        Prog,
 //         Scissor,    //
 //         Stencil,    //
         TexEnv0, // TexEnv1 - TexEnv0 must == 1, etc.
@@ -66,6 +67,22 @@ class state :
         TextureXform0,
         TextureXform1,
 // //         Viewport,
+
+          // For shader-defined uniform values.  Apps need to ensure
+          // their geomData attributes, programs, and uniforms all
+          // line up.
+        Uniform00,
+        Uniform01,
+        Uniform02,
+        Uniform03,
+        Uniform04,
+        Uniform05,
+        Uniform06,
+        Uniform07,
+        Uniform08,
+        Uniform09,
+
+
         StateCount
       };
 

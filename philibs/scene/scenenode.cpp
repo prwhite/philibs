@@ -303,7 +303,7 @@ void node::collectRefs ( pni::pstd::refCount::Refs& refs )
   pni::pstd::dbgRefCount::collectVecRefs ( mChildren, refs );
   pni::pstd::dbgRefCount::collectMapSecondRefs ( mStates, refs );
   
-  pni::pstd::dbgRefCount::collectVecRefs ( getTravDatum (), refs );
+  pni::pstd::dbgRefCount::collectMapSecondRefs ( getTravDatum (), refs );
 }
 
 /////////////////////////////////////////////////////////////////////

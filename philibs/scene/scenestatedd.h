@@ -24,10 +24,12 @@ namespace scene {
   class lightPath;
   class material;
 //   class polygonMode;
+  class prog;
   class texEnv;
 //   class texGen;
   class texture;
   class textureXform;
+  class uniform;
   
 /////////////////////////////////////////////////////////////////////
 
@@ -41,10 +43,12 @@ class stateDd
     friend class lightPath;
     friend class material;
 //     friend class polygonMode;
+    friend class prog;
     friend class texEnv;
 //     friend class texGen;
     friend class texture;
     friend class textureXform;
+    friend class uniform;
 
     stateDd();
     virtual ~stateDd();
@@ -57,19 +61,21 @@ class stateDd
     
   protected:
   
-    virtual void dispatch ( blend const* pState ) = 0;
-    virtual void dispatch ( cull const* pState ) = 0;
-    virtual void dispatch ( depth const* pState ) = 0;
-    virtual void dispatch ( lighting const* pState ) = 0;
-    virtual void dispatch ( lightPath const* pState ) = 0;
-    virtual void dispatch ( material const* pState ) = 0;
+    virtual void dispatch ( blend const* pState ) = 0;        //       gles2
+    virtual void dispatch ( cull const* pState ) = 0;         //       gles2
+    virtual void dispatch ( depth const* pState ) = 0;        // gles1/gles2
+    virtual void dispatch ( lighting const* pState ) = 0;     // gles1
+    virtual void dispatch ( lightPath const* pState ) = 0;    // gles1
+    virtual void dispatch ( material const* pState ) = 0;     // gles1
 //     virtual void dispatch ( polygonMode const* pState ) = 0;
-    virtual void dispatch ( texEnv const* pState ) = 0;
+    virtual void dispatch ( prog const* pProg ) = 0;          //       gles2
+    virtual void dispatch ( texEnv const* pState ) = 0;       // gles1
 //     virtual void dispatch ( texGen const* pState ) = 0;
-    virtual void dispatch ( texture const* pState ) = 0;
-    virtual void dispatch ( textureXform const* pState ) = 0;
+    virtual void dispatch ( texture const* pState ) = 0;      // gles1/gles2
+    virtual void dispatch ( textureXform const* pState ) = 0; // gles1
+    virtual void dispatch ( uniform const* pState ) = 0;      //       gles2
 
-    
+  
     
   private:
     

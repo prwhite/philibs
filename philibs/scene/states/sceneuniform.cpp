@@ -1,10 +1,10 @@
 /////////////////////////////////////////////////////////////////////
 //
-//    file: sceneblend.cpp
+//    file: sceneuniform.cpp
 //
 /////////////////////////////////////////////////////////////////////
 
-#include "sceneblend.h"
+#include "sceneuniform.h"
 
 /////////////////////////////////////////////////////////////////////
 
@@ -12,33 +12,28 @@ namespace scene {
   
 /////////////////////////////////////////////////////////////////////
 
-blend::blend() :
-  mBlendEquation ( Add ),
-  mSrcFunc ( SrcAlpha ),
-  mDstFunc ( DstOneMinusSrcAlpha ),
-  mAlphaFunc ( AlphaAlways ),
-  mAlphaRef ( 2.0f / 255.0f )
+uniform::uniform()
 {
   
 }
 
-blend::~blend()
+uniform::~uniform()
 {
   
 }
 
-// blend::blend(blend const& rhs)
+// uniform::uniform(uniform const& rhs)
 // {
 //   
 // }
 // 
-// blend& blend::operator=(blend const& rhs)
+// uniform& uniform::operator=(uniform const& rhs)
 // {
 //   
 //   return *this;
 // }
 // 
-// bool blend::operator==(blend const& rhs) const
+// bool uniform::operator==(uniform const& rhs) const
 // {
 //   
 //   return false;

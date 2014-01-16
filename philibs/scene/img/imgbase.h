@@ -53,7 +53,7 @@ class base :
     typedef unsigned char BufferType;
     typedef std::vector< BufferType > BufferData;
     
-    class Buffer :
+    class buffer :
       public pni::pstd::refCount,
       public BufferData
         {
@@ -61,14 +61,14 @@ class base :
             void collectRefs ( pni::pstd::refCount::Refs& refs ) {}
         };
         
-    typedef std::vector< pni::pstd::autoRef< Buffer > > Buffers;
+    typedef std::vector< pni::pstd::autoRef< buffer > > Buffers;
     
     Buffers mBuffers; // Public data!  First is mip-map level 0, etc.
     
       // Get starting address of 'which' mipmap buffer.
     BufferType* operator[] ( unsigned int which ) const 
         { 
-          Buffer* pBuf = mBuffers[ which ].get ();
+          buffer* pBuf = mBuffers[ which ].get ();
           return &( *pBuf )[ 0 ];
         }
     

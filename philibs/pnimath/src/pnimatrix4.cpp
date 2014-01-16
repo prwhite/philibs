@@ -6,6 +6,7 @@
 
 #include <cstdlib>
 #include <cmath>
+#include <cstring>
 #include "pnimatrix4.h"
 #include "pnivec3.h"
 #include "pnivec4.h"
@@ -1422,6 +1423,30 @@ colMult ( const vec4& svec, matrix4& dmat ) const
 //			dmat[ 3 ][ 2 ] * svec[ 2 ],
 //			dmat[ 3 ][ 3 ] * svec[ 3 ] );
 }
+
+
+void
+matrix4::
+copyTo4x4 ( ValueType* dst ) const
+{
+  memcpy(dst, mat, sizeof(mat));
+}
+
+void
+matrix4::
+copyTo3x3 ( ValueType* dst ) const
+{
+  dst[ 0 ] = mat[ 0 ][ 0 ];
+  dst[ 1 ] = mat[ 0 ][ 1 ];
+  dst[ 2 ] = mat[ 0 ][ 2 ];
+  dst[ 3 ] = mat[ 1 ][ 0 ];
+  dst[ 4 ] = mat[ 1 ][ 1 ];
+  dst[ 5 ] = mat[ 1 ][ 2 ];
+  dst[ 6 ] = mat[ 2 ][ 0 ];
+  dst[ 7 ] = mat[ 2 ][ 1 ];
+  dst[ 8 ] = mat[ 2 ][ 2 ];
+}
+
 
 /////////////////////////////////////////////////////////////////////
 

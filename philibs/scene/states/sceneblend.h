@@ -30,10 +30,10 @@ class blend :
 //     bool operator==(blend const& rhs) const;
 
 
-// 		enum BlendEquation { Add, Subtract, ReverseSubtract, Min, Max };
-// 
-// 		void setBlendEquation ( BlendEquation blendEquationIn = Add ) { mBlendEquation = blendEquationIn; }
-// 		BlendEquation getBlendEquation () const { return mBlendEquation; }
+ 		enum BlendEquation { Add, Subtract, ReverseSubtract, Min, Max };
+ 
+ 		void setBlendEquation ( BlendEquation blendEquationIn = Add ) { mBlendEquation = blendEquationIn; }
+ 		BlendEquation getBlendEquation () const { return mBlendEquation; }
 
 		/////// blend func
 		enum SrcFunc { 
@@ -82,7 +82,7 @@ class blend :
   protected:
     
   private:
-// 		BlendEquation mBlendEquation;
+ 		BlendEquation mBlendEquation;
 		SrcFunc mSrcFunc;
 		DstFunc mDstFunc;
 		AlphaFunc mAlphaFunc;

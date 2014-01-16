@@ -10,6 +10,8 @@
 
 #include <algorithm>
 
+#include "scenecommon.h"
+
 #include "scenecamera.h"
 #include "scenegeom.h"
 #include "scenegroup.h"
@@ -23,14 +25,21 @@
 #include "scenelightpath.h"
 #include "scenematerial.h"
 // #include "scenepolygonmode.h"
+#include "sceneprog.h"
 #include "scenetexenv.h"
 // #include "scenetexgen.h"
 #include "scenetexture.h"
 #include "scenetexturexform.h"
+#include "sceneuniform.h"
 
 #include "scenetexobj.h"
+#include "scenevbo.h"
+#include "sceneprogObj.h"
 
 #include "pnimathstream.h"
+
+#include "sceneogl.h"
+#include <OpenGLES/ES2/glext.h>
 
 using namespace std;
 
@@ -53,15 +62,6 @@ using namespace std;
 
 /////////////////////////////////////////////////////////////////////
 
-#define CheckGLError checkGlError(__FILE__,__LINE__);
-void checkGlError ( char const* file, int line )
-{
-	if ( GLint err = glGetError () )
-		printf ( "gl error = 0x%x at %s:%d\n", err, file, line );
-}
-
-/////////////////////////////////////////////////////////////////////
-
 namespace scene {
 
 
@@ -69,31 +69,77 @@ namespace scene {
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
-void configTextureObject ( texture const* textureIn )
+texObj* configTextureObject ( texture const* textureIn )
 {
-  glEnable ( GL_TEXTURE_2D );
 
 	// get or create textureObject for this texture
 	if ( texObj* pObj = static_cast< texObj* > ( textureIn->getTravData ( Draw ) ) )
 	{
+        // PNIGLES1REMOVED
+//    glEnable ( GL_TEXTURE_2D ); // in if and else if cases
+
 		pObj->config ( textureIn );
+    return pObj;
 	}
 	else if ( textureIn->getImage () )
 	{
-		texObj* tobj = new texObj;
-		tobj->config ( textureIn );
-		const_cast< texture* > ( textureIn )->setTravData ( Draw, tobj );
+CheckGLError
+        // PNIGLES1REMOVED
+//    glEnable ( GL_TEXTURE_2D ); // in if and else if cases
+CheckGLError
+		pObj = new texObj;
+		pObj->config ( textureIn );
+		const_cast< texture* > ( textureIn )->setTravData ( Draw, pObj );
+    return pObj;
 	}
 	else	// not an image texture... can't create it... so disable texture target
 	{
-		glDisable ( GL_TEXTURE_2D );
+        // PNIGLES1REMOVED
+//		glDisable ( GL_TEXTURE_2D );
+    return 0;
 	}
+}
+
+vbo* configVBO ( geomData const* geomDataIn, progObj const* pProgObj )
+{
+    // get or create textureObject for this texture
+  if ( vbo* pObj = static_cast< vbo* > ( geomDataIn->getTravData ( Draw ) ) )
+  {
+    pObj->config ( geomDataIn, pProgObj );
+    return pObj;
+  }
+  else
+  {
+    pObj = new vbo;
+    pObj->config ( geomDataIn, pProgObj );
+    const_cast< geomData* > ( geomDataIn )->setTravData ( Draw, pObj );
+    return pObj;
+  }
+}
+
+progObj* configProgObject ( prog const* pProg )
+{
+    // get or create textureObject for this texture
+  if ( progObj* pObj = static_cast< progObj* > ( pProg->getTravData ( Draw ) ) )
+  {
+    pObj->config ( pProg );
+    return pObj;
+  }
+  else
+  {
+    pObj = new progObj;
+    pObj->config ( pProg );
+    const_cast< prog* > ( pProg )->setTravData ( Draw, pObj );
+    return pObj;
+  }
 }
 
 
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
+
+#pragma mark ddOglTextureBind does a traversal to pre-bind texture
 
 class ddOglTextureBind :
   public graphDd,
@@ -155,6 +201,7 @@ class ddOglTextureBind :
     virtual void dispatch ( depth const* pState ) {}
     virtual void dispatch ( lighting const* pState ) {}
     virtual void dispatch ( lightPath const* pState ) {}
+    virtual void dispatch ( prog const* pState ) {}
     virtual void dispatch ( material const* pState ) {}
     virtual void dispatch ( texEnv const* pState ) {}
     virtual void dispatch ( texture const* pState )
@@ -162,12 +209,15 @@ class ddOglTextureBind :
           configTextureObject ( pState );
         }
     virtual void dispatch ( textureXform const* pState ) {}
+    virtual void dispatch ( uniform const* pState ) {}
 
 };
     
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
+
+#pragma mark ddOglList
 
 ddOglList::ddOglList() :
   mCurStateId ( 0 ),
@@ -176,7 +226,19 @@ ddOglList::ddOglList() :
   const size_t ReserveNum = 256;
   mRenderList.reserve ( ReserveNum );
   
-  //mPvr.Init ();
+  mBuiltins = new scene::uniform;
+  
+  uniform::binding& mvpMat = mBuiltins->uniformOp(CommonUniformNames[ UniformModelViewProjMatrix ]);
+  mvpMat.set(uniform::binding::Vertex, uniform::binding::Matrix4, 1);
+  
+  uniform::binding& normMat = mBuiltins->uniformOp(CommonUniformNames[ UniformNormalMatrix ]);
+  normMat.set(uniform::binding::Vertex, uniform::binding::Matrix3, 1);
+
+  uniform::binding& tex00 = mBuiltins->uniformOp(CommonUniformNames[ UniformTex00 ]);
+  tex00.set(uniform::binding::Fragment, uniform::binding::Int1, 1);
+
+  uniform::binding& tex01 = mBuiltins->uniformOp(CommonUniformNames[ UniformTex01 ]);
+  tex01.set(uniform::binding::Fragment, uniform::binding::Int1, 1);
 }
 
 ddOglList::~ddOglList()
@@ -232,7 +294,7 @@ void ddOglList::resetRenderItems ()
 #define SCENEOGLLTCOMPARE(lhs,rhs) if(!((lhs)==(rhs))) return (lhs)<(rhs)
 #define SCENEOGLGTCOMPARE(lhs,rhs) if(!((lhs)==(rhs))) return (lhs)>(rhs)
 
-struct Sorter
+struct sorter
 {
   bool operator () ( ddOglList::RenderList::value_type const& lhs,
       ddOglList::RenderList::value_type const& rhs )
@@ -270,12 +332,14 @@ struct Sorter
       SCENEOGLLTCOMPARE( lhs.distSqr, rhs.distSqr );  // Less-than/ascending dist sort.
     }
 
+    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Prog ],
+                        rhs.mStateSet.mStates[ state::Prog ] );
     SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture0 ],
                         rhs.mStateSet.mStates[ state::Texture0 ] );
     SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture1 ],
                         rhs.mStateSet.mStates[ state::Texture1 ] );
     SCENEOGLLTCOMPARE( lhs.mNode, rhs.mNode );      // Sort geoms together.
-  
+
     return false;
   }
 };
@@ -293,7 +357,6 @@ void ddOglList::startList ()
     printf ( "ddOglList: %X Frame Start\n", this );
   }
 #endif // _NDEBUG
-
   
   if ( ! initDone )
   {
@@ -314,15 +377,17 @@ CheckGLError
 
 PNIDBG
   // sort the list.
-  std::sort ( mRenderList.begin (), mRenderList.end (), Sorter () );
+  std::sort ( mRenderList.begin (), mRenderList.end (), sorter () );
 PNIDBG
 
   resetCurState ();
 
-  glMatrixMode ( GL_MODELVIEW );
-  glLoadIdentity ();
+    // TODO: PRW PNIGLES1REMOVED
+//  glMatrixMode ( GL_MODELVIEW );
+//  glLoadIdentity ();
 
 PNIDBG
+    // Sets up prog and view mats
   execCamera ();
 
 PNIDBG
@@ -340,27 +405,36 @@ PNIDBG
 //printf ( "node: %s  distSqr: %f\n", cur->mNode->getName ().c_str (), cur->distSqr );
 
 #ifndef _NDEBUG
-  if ( mDbgVals & DbgSort )
-  {
-    printf ( "DbgSort: node %s distSqr = %f\n",
-        cur->mNode->getName ().c_str (), cur->distSqr );
-  }
+    if ( mDbgVals & DbgSort )
+    {
+      printf ( "DbgSort: node %s distSqr = %f\n",
+          cur->mNode->getName ().c_str (), cur->distSqr );
+    }
 
 #endif // _NDEBUG
-  
-    glMatrixMode ( GL_MODELVIEW ); // TEMP... remove this after everything works.
-    glPushMatrix ();
-    glMultMatrixf ( cur->mMatrix );
+
+      // NEWMATSTACK
+      // set up model mat
+    mModelMat = cur->mMatrix;
+    
+      // TODO: PRW PNIGLES1REMOVED
+//    glMatrixMode ( GL_MODELVIEW ); // TEMP... remove this after everything works.
+//    glPushMatrix ();
+//    glMultMatrixf ( cur->mMatrix );
 
  //cout << "cur->matrix =\n" << cur->mMatrix << endl;
 
 PNIDBG
+
+CheckGLError
     execStates ( cur->mStateSet );
-  
+    execBuiltins();
+
 PNIDBG
     cur->mNode->accept ( this );
     
-    glPopMatrix ();
+      // TODO: PRW PNIGLES1REMOVED
+//    glPopMatrix ();
   }
 
 #ifndef _NDEBUG
@@ -374,12 +448,41 @@ PNIDBG
 PNIDBG
 }
 
+void ddOglList::execBuiltins ()
+{
+    // NEWMATSTACK
+    // TODO: Optimize
+
+  mModelViewMat = mViewMat;
+  mModelViewMat.preMult(mModelMat);
+
+  mModelViewProjectionMat = mProjMat;
+  mModelViewProjectionMat.preMult(mModelViewMat);
+
+  mModelViewProjectionMat.copyTo4x4(mBuiltins->uniformOp(CommonUniformNames[ UniformModelViewProjMatrix ]).getFloats());
+  
+    // Handle non-uniform scaling... with inverse transpose.
+    // Use camera->getNormalizeMode.
+  camera const* pCam = static_cast< camera const*>(mSinkPath.getLeaf());
+  if ( pCam->getNormalizeMode() != camera::NoNormalize)
+  {
+    mModelViewMat.invert();
+    mModelViewMat.transpose();
+  }
+
+  mModelViewMat.copyTo3x3(mBuiltins->uniformOp(CommonUniformNames[ UniformNormalMatrix ]).getFloats());
+  
+  this->dispatch(mBuiltins.get());
+}
+
 void ddOglList::execCamera ()
 {
+    // NEWMATSTACK
   // Do something with matrix from camera path.
-  pni::math::matrix4 mat;
-  mSinkPath.calcInverseXform ( mat );
-  glLoadMatrixf ( mat );
+  mSinkPath.calcInverseXform ( mViewMat );
+
+    // TODO: PRW PNIGLES1REMOVED
+//  glLoadMatrixf ( mat );
 
 // std::string tmp;
 // mSinkPath.getPathString ( tmp );
@@ -451,38 +554,43 @@ void doClear ( camera const* pNode )
 
 void ddOglList::dispatch ( camera const* pNode )
 {
+    // NEWMATSTACK
+  mProjMat = pNode->getProjectionMatrix();
+
   // Setup projection matrix.
-  glMatrixMode ( GL_PROJECTION );
-  glLoadMatrixf ( pNode->getProjectionMatrix () );
+    // TODO: PRW PNIGLES1REMOVED
+//  glMatrixMode ( GL_PROJECTION );
+//  glLoadMatrixf ( pNode->getProjectionMatrix () );
 
 // cout << "camera proj = " << pNode->getProjectionMatrix () << endl;
 
-  glMatrixMode ( GL_MODELVIEW );
+    // TODO: PRW PNIGLES1REMOVED
+//  glMatrixMode ( GL_MODELVIEW );
   
   // Setup viewport.
   float left, bottom, width, height;
   pNode->getViewport ( left, bottom, width, height );
   glViewport ( left, bottom, width, height );
   
-  // TODO Setup scissor.
+  // TODO: Setup scissor.
   
   // Do clear.
   doClear ( pNode );
   
-  // TODO Setup normalization state.
-  switch ( pNode->getNormalizeMode () )
-  {
-    case camera::Normalize:
-      glEnable ( GL_NORMALIZE );
-      break;
-    case camera::Rescale:
-      glEnable ( GL_RESCALE_NORMAL );
-      break;
-    case camera::NoNormalize:
-    default:
-      glDisable ( GL_NORMALIZE );
-      glDisable ( GL_RESCALE_NORMAL );
-  }
+  // TODO: PRW PNIGLES1REMOVED
+//  switch ( pNode->getNormalizeMode () )
+//  {
+//    case camera::Normalize:
+//      glEnable ( GL_NORMALIZE );
+//      break;
+//    case camera::Rescale:
+//      glEnable ( GL_RESCALE_NORMAL );
+//      break;
+//    case camera::NoNormalize:
+//    default:
+//      glDisable ( GL_NORMALIZE );
+//      glDisable ( GL_RESCALE_NORMAL );
+//  }
 CheckGLError
 }
 
@@ -494,7 +602,7 @@ void dbg ( geomData const* pGdata )
   }
   
   geomData::Values const& vals = pGdata->getValues ();
-  size_t stride = pGdata->getValueStride ();
+  size_t stride = pGdata->getAttributes ().getValueStride ();
 
 cout << "    stride = " << stride << endl;
 
@@ -511,75 +619,16 @@ PNIDBG
     // GOTCHA: There is no validity checking here... that should
     // all be performed by ddOgl which puts only valid things
     // into this render list.
-  // TODO Optimize to not re-bind current geometry data.
   geomData const* pData = pNode->getGeomData ();
-  geomData::Values const& values = pData->getValues ();
-  float const* pValues = &values[ 0 ];
 
-  // * 4 because the stride is in bytes and our stride
-  // value is for float*.
-  uint32_t stride = pData->getValueStride () * sizeof ( float );
-
-// void glDrawElements(GLenum mode,
-//     GLsizei count,
-//     GLenum type,
-//     const GLvoid * indices)  
-
-  glEnableClientState ( GL_VERTEX_ARRAY );
-  glVertexPointer ( 3, GL_FLOAT, stride, pValues );
-  
-  // TODO: All of these ifs could be unrolled into a switch with
-  // some code duplication.
-
-  // Normals
-  if ( pData->getBindings () & geomData::Normals )
+  if ( progObj const* pProgObj = configProgObject(mCurProg.get()) )
   {
-    glEnableClientState ( GL_NORMAL_ARRAY );
-    glNormalPointer ( GL_FLOAT, stride, 
-        pValues + pData->getValueOffset ( geomData::Normals ) );
+    if ( vbo* pvbo = configVBO(pData, pProgObj))
+    {
+      pvbo->bind(pData,pProgObj);
+      glDrawElements ( GL_TRIANGLES, ( GLsizei ) pData->getIndices().size (), GL_UNSIGNED_SHORT, 0 );
+    }
   }
-  else
-    glDisableClientState ( GL_NORMAL_ARRAY );
-
-  // Colors
-  if ( pData->getBindings () & geomData::Colors )
-  {
-    glEnableClientState ( GL_COLOR_ARRAY );
-    glColorPointer ( 4, GL_FLOAT, stride, 
-        pValues + pData->getValueOffset ( geomData::Colors ) );
-  }
-  else
-    glDisableClientState ( GL_COLOR_ARRAY );
-  
-  // Texture 0 UVs
-  glClientActiveTexture ( GL_TEXTURE0 );
-  if ( pData->getBindings () & geomData::TCoords0 )
-  {
-    glEnableClientState ( GL_TEXTURE_COORD_ARRAY );
-    glTexCoordPointer ( 2, GL_FLOAT, stride, 
-        pValues + pData->getValueOffset ( geomData::TCoords0 ) );
-  }
-  else
-    glDisableClientState ( GL_TEXTURE_COORD_ARRAY );
-
-  // Texture 1 UVs
-  glClientActiveTexture ( GL_TEXTURE1 );
-  if ( pData->getBindings () & geomData::TCoords1 )
-  {
-    glEnableClientState ( GL_TEXTURE_COORD_ARRAY );
-    glTexCoordPointer ( 2, GL_FLOAT, stride, 
-        pValues + pData->getValueOffset ( geomData::TCoords1 ) );
-  }
-  else
-    glDisableClientState ( GL_TEXTURE_COORD_ARRAY );
-    
-  // Get indices and draw everything.
-  geomData::Indices const& indices = pData->getIndices ();
-  unsigned short const* pIndices = &indices[ 0 ];
-  
-  glDrawElements ( GL_TRIANGLES, 
-      ( GLsizei ) indices.size (), GL_UNSIGNED_SHORT, pIndices );
-
 CheckGLError
 }
 
@@ -608,7 +657,10 @@ PNIDBG
   //   node->accept ( this ) -> dispatch ( light ).
 
   glEnable ( mCurLightUnit );
-  
+
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
+
 	// set the color
 	glLightfv ( mCurLightUnit, GL_AMBIENT, pNode->getAmbient () );
 	glLightfv ( mCurLightUnit, GL_DIFFUSE, pNode->getDiffuse () );
@@ -660,6 +712,9 @@ PNIDBG
 			}
 			break;
 	}
+
+#endif // PNIGLES1REMOVED
+  
 CheckGLError
 }
 
@@ -697,6 +752,12 @@ void ddOglList::resetCurState ()
 
 void ddOglList::execStates ( stateSet const& sSet )
 {
+    // Ensure that program state is set before we walk through other states.
+  if ( auto pProg = sSet.mStates[ state::Prog ] )
+    mCurProg = static_cast< prog const* > ( pProg );
+  else
+    PNIDBGSTR("no prog set for execStates... things might be ugly");
+
   for ( int num = 0; num < state::StateCount; ++num )
   {
     state const* pState = sSet.mStates[ num ];
@@ -732,19 +793,20 @@ void ddOglList::setDefaultState ( state const* pState, state::Id id )
 /////////////////////////////////////////////////////////////////////
 // Blend related.
 
-// GLenum
-// blendEqToGl ( blend::BlendEquation beq )
-// {
-// 	switch ( beq )
-// 	{
-// 		default:
-// 		case blend::Add: return GL_FUNC_ADD;
-// 		case blend::Subtract: return GL_FUNC_SUBTRACT;
-// 		case blend::ReverseSubtract: return GL_FUNC_REVERSE_SUBTRACT;
+GLenum
+blendEqToGl ( blend::BlendEquation beq )
+{
+ 	switch ( beq )
+ 	{
+ 		default:
+ 		case blend::Add: return GL_FUNC_ADD;
+ 		case blend::Subtract: return GL_FUNC_SUBTRACT;
+ 		case blend::ReverseSubtract: return GL_FUNC_REVERSE_SUBTRACT;
+        // Missing from GLES2.0 header for iOS (?).
 // 		case blend::Min: return GL_MIN;
 // 		case blend::Max: return GL_MAX;
-// 	}
-// }
+ 	}
+}
 
 int 
 srcBlendTypeToGl ( blend::SrcFunc srcFunc )
@@ -804,7 +866,7 @@ void ddOglList::dispatch ( blend const* pState )
   {
     glEnable ( GL_BLEND );
 
-// 		glBlendEquation ( blendEqToGl ( pState->getBlendEquation () ) );
+ 		glBlendEquation ( blendEqToGl ( pState->getBlendEquation () ) );
 
 		blend::SrcFunc src;
 		blend::DstFunc dst;
@@ -812,6 +874,9 @@ void ddOglList::dispatch ( blend const* pState )
 		
 		glBlendFunc ( srcBlendTypeToGl ( src ), 
 				dstBlendTypeToGl ( dst ) );
+
+      // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
 
 		// alpha test
 		if ( pState->getAlphaFunc () != blend::AlphaAlways )
@@ -824,11 +889,14 @@ void ddOglList::dispatch ( blend const* pState )
     {
 		  glDisable ( GL_ALPHA_TEST );
     }
+  #endif // PNIGLES1REMOVED
+  
   }
   else
   {
 		glDisable ( GL_BLEND );
-		glDisable ( GL_ALPHA_TEST );
+      // TODO: PRW PNIGLES1REMOVED
+//		glDisable ( GL_ALPHA_TEST );
   }
 CheckGLError
 }
@@ -902,6 +970,9 @@ CheckGLError
 
 void ddOglList::dispatch ( lighting const* pState )
 {
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
+
 	if ( pState->getEnable () )
 	{
 		glLightModelfv ( GL_LIGHT_MODEL_AMBIENT, 
@@ -932,7 +1003,11 @@ void ddOglList::dispatch ( lighting const* pState )
 // 		glLightModeli ( GL_LIGHT_MODEL_LOCAL_VIEWER, GL_FALSE );
 
 // 		glLightModelf ( GL_LIGHT_MODEL_COLOR_CONTROL, GL_SINGLE_COLOR );
+
 	}
+
+#endif // PNIGLES1REMOVED
+
 CheckGLError
 }
 
@@ -940,12 +1015,16 @@ CheckGLError
 
 void ddOglList::execLightPath ( nodePath const& lpath )
 {
+
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
+
   // We must get the light into global 'scene' space, as we don't really
   // enjoy having lights in weird coordinate frames.
   glMatrixMode ( GL_MODELVIEW );
   glPushMatrix ();
   
-  // TODO Mult on light path matrix.
+  // Mult on light path matrix.
   pni::math::matrix4 mat;
   lpath.calcXform ( mat );
   glLoadMatrixf ( mat );
@@ -959,10 +1038,13 @@ void ddOglList::execLightPath ( nodePath const& lpath )
   lpath.getLeaf ()->accept ( this );
   
   glPopMatrix ();
+#endif // PNIGLES1REMOVED
 }
 
 void ddOglList::dispatch ( lightPath const* pState )
 {
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
   for ( GLenum num = 0; num < lightPath::MaxNodePaths; ++num )
   {
     nodePath const& cur = pState->getNodePath ( num );
@@ -973,6 +1055,9 @@ void ddOglList::dispatch ( lightPath const* pState )
     else
       glDisable ( mCurLightUnit );
   }
+  
+#endif // PNIGLES1REMOVED
+
 CheckGLError
 }
 
@@ -994,6 +1079,10 @@ CheckGLError
 
 void ddOglList::dispatch ( material const* pState )
 {
+
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
+
 	if ( pState->getEnable () )
 	{
 		// material params
@@ -1039,6 +1128,8 @@ void ddOglList::dispatch ( material const* pState )
 	glColor4f ( pState->getDiffuse ()[ 0 ], pState->getDiffuse ()[ 1 ],
 	    pState->getDiffuse ()[ 2 ], pState->getDiffuse ()[ 3 ] );
 
+#endif // PNIGLES1REMOVED
+
 CheckGLError
 }
 
@@ -1052,9 +1143,27 @@ CheckGLError
 
 /////////////////////////////////////////////////////////////////////
 
+void ddOglList::dispatch ( prog const* pState )
+{
+    // Track current prog, will be needed when binding uniforms, etc.
+    // Update... we don't need to do this here because it is done in
+    // execStates... to make sure it's set before any other state is
+    // evaluated.
+//  mCurProg = pState;
+
+    // TODO: Set prog-related state
+  if (progObj* pobj = configProgObject(pState) )
+    pobj->bind(pState);
+}
+
+/////////////////////////////////////////////////////////////////////
+
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
 int
 texEnvModeToGl ( texEnv::Mode modeIn )
 {
+
 	switch ( modeIn )
 	{
 		default:
@@ -1065,11 +1174,16 @@ texEnvModeToGl ( texEnv::Mode modeIn )
 		case texEnv::Add: return GL_ADD;
 		case texEnv::Combine: return GL_COMBINE;
 	}
+
 }
+#endif // PNIGLES1REMOVED
 
 void ddOglList::dispatch ( texEnv const* pState )
 {
 	glActiveTexture ( GL_TEXTURE0 + mCurStateId - state::TexEnv0 );
+
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
 
 	if ( pState->getEnable () )
 	{
@@ -1094,6 +1208,9 @@ void ddOglList::dispatch ( texEnv const* pState )
 		// no disable for texenvs... when not set
 		// it's undefined/inherited from hell.
 	}
+  
+#endif // PNIGLES1REMOVED
+
 CheckGLError
 }
 
@@ -1159,7 +1276,14 @@ CheckGLError
 
 void ddOglList::dispatch ( texture const* pState )
 {
-	glActiveTexture ( GL_TEXTURE0 + mCurStateId - state::Texture0 );
+CheckGLError
+  size_t texUnit = mCurStateId - state::Texture0;
+	glActiveTexture ( GL_TEXTURE0 + texUnit );
+CheckGLError
+    // Is this the right place to do this?  Can it just be done once, rather
+    // than for every texture bind (probably not once we switch to GLES3
+    // with sampler objects).
+  *( mBuiltins->uniformOp( CommonUniformNames[ UniformTex00 + texUnit ] ).getInts() ) = texUnit;
 
 	if ( pState->getEnable () )
 	{
@@ -1181,6 +1305,9 @@ void ddOglList::dispatch ( textureXform const* pState )
 
 	glActiveTexture ( GL_TEXTURE0 + mCurStateId - state::TextureXform0 );
 
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
+
   glMatrixMode ( GL_TEXTURE );
 
 	if ( pState->getEnable () )
@@ -1193,9 +1320,74 @@ void ddOglList::dispatch ( textureXform const* pState )
 	}
 
   glMatrixMode ( GL_MODELVIEW );
+  
+#endif // PNIGLES1REMOVED
+
 CheckGLError
 }
-    
+
+void ddOglList::dispatch ( uniform const* pState )
+{
+  if ( mCurProg )
+  {
+    if ( progObj* pobj = configProgObject ( mCurProg.get () ) )
+    {
+        // TODO: All of this should/could go in a uniforms object, and
+        // that should use gl uniform buffer arrays... following
+        // the same pattern as texture, vbo, prog, etc.  It will be
+        // invalidated by the dirty flag already present on the uniform
+        // object.
+
+      uniform::Bindings const& bindings = pState->getBindings ();
+
+      for ( auto& bindingIter : bindings )
+      {
+        uniform::binding const& binding = bindingIter.second;
+        std::string const& name = bindingIter.first;
+        GLsizei count = ( GLsizei ) binding.getCount ();
+
+          // TODO: Better setup for this when we support more stages.
+        GLuint glProg = binding.getStage () == uniform::binding::Vertex ? pobj->getVertexProgHandle() : pobj->getFragmentProgHandle();
+
+CheckGLError
+
+        GLint loc = glGetUniformLocation ( glProg, name.c_str () );
+
+CheckGLError
+
+        switch ( binding.getType () )
+        {
+          case uniform::binding::Float1: glProgramUniform1fvEXT ( glProg, loc, count, binding.getFloats () ); break;
+          case uniform::binding::Float2: glProgramUniform2fvEXT ( glProg, loc, count, binding.getFloats () ); break;
+          case uniform::binding::Float3: glProgramUniform3fvEXT ( glProg, loc, count, binding.getFloats () ); break;
+          case uniform::binding::Float4: glProgramUniform4fvEXT ( glProg, loc, count, binding.getFloats () ); break;
+
+          case uniform::binding::Int1: glProgramUniform1ivEXT ( glProg, loc, count, binding.getInts () ); break;
+          case uniform::binding::Int2: glProgramUniform2ivEXT ( glProg, loc, count, binding.getInts () ); break;
+          case uniform::binding::Int3: glProgramUniform3ivEXT ( glProg, loc, count, binding.getInts () ); break;
+          case uniform::binding::Int4: glProgramUniform4ivEXT ( glProg, loc, count, binding.getInts () ); break;
+
+            // Note: Simulator was returning error 0x501 (invalid value) for GL_TRUE to transpose param.
+            // No big though, we don't need it because our matrices are in the right format.
+          case uniform::binding::Matrix2: glProgramUniformMatrix2fvEXT ( glProg, loc, count, GL_FALSE, binding.getFloats () ); break;
+          case uniform::binding::Matrix3: glProgramUniformMatrix3fvEXT ( glProg, loc, count, GL_FALSE, binding.getFloats () ); break;
+          case uniform::binding::Matrix4: glProgramUniformMatrix4fvEXT ( glProg, loc, count, GL_FALSE, binding.getFloats () ); break;
+
+          default:
+            PNIDBGSTR ( "case not handled, getType out of range" );
+            break;
+        }
+CheckGLError
+      }
+    }
+  }
+  else
+  {
+    PNIDBGSTR("no program set for uniforms");
+  }
+}
+
+  
 /////////////////////////////////////////////////////////////////////
 
 

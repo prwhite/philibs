@@ -21,59 +21,47 @@ void geomData::dbg ()
 
   cout << "geomData : " << this << endl;
 
-  size_t stride = getValueStride ();
+  size_t stride = getAttributes ().getValueStride ();
+  size_t cur = 0;
 
   for ( size_t num = 0; num < mValues.size () / stride; ++num )
   {
-    size_t cur = num * stride;
-    cout << " pos = " 
-        << mValues[ cur     ] << ", "
-        << mValues[ cur + 1 ] << ", "
-        << mValues[ cur + 2 ] << endl;
-    cur += 3;
-    
-    if ( mBindings & Normals )
+    for ( auto attrIter : mAttributes )
     {
-      cout << " norm = " 
-          << mValues[ cur     ] << ", "
-          << mValues[ cur + 1 ] << ", "
-          << mValues[ cur + 2 ] << endl;
-        cur += 3;
-    }
+      cout << attrIter.mName << " = ";
 
-    if ( mBindings & Colors )
-    {
-      cout << " color = " 
-          << mValues[ cur     ] << ", "
-          << mValues[ cur + 1 ] << ", "
-          << mValues[ cur + 2 ] << ", "
-          << mValues[ cur + 3 ] << endl;
-        cur += 4;
+      for ( size_t comp = 0; comp < attrIter.mComponents; ++comp )
+        cout << mValues[ cur++ ] << " ";
     }
-
-    if ( mBindings & TCoords0 )
-    {
-      cout << " uv0 = " 
-          << mValues[ cur    ] << ", "
-          << mValues[ cur + 1 ] << endl;
-        cur += 2;
-    }
-
-    if ( mBindings & TCoords1 )
-    {
-      cout << " uv1 = " 
-          << mValues[ cur    ] << ", "
-          << mValues[ cur + 1 ] << endl;
-        cur += 2;
-    }
+    cout << endl;
   }
-  
+
   cout << " indices" << endl;
   for ( size_t num = 0; num < mIndices.size (); ++num )
-  {
     cout << "  " << mIndices[ num ] << endl;
-  }
 }
+
+void geomData::updateBounds () const
+{
+  mBounds.setEmpty ();
+  
+  if ( getIndexCount () == 0 )
+    return;
+  
+  Values const& values = getValues ();
+  
+  float const* end = &values.back ();
+  SizeType incr = mAttributes.getValueStride ();
+  for ( float const* ptr = &values[ 0 ];
+       ptr < end;
+       ptr += incr )
+  {
+    mBounds.extendBy ( ptr[ 0 ], ptr[ 1 ], ptr[ 2 ] );
+  }
+  
+  mBounds.setIsDirty( false );
+}
+
 
 
 /////////////////////////////////////////////////////////////////////
@@ -94,7 +82,7 @@ void geomData::dbg ()
 
 // geom::geom(geom const& rhs) :
 //   node ( rhs ),
-//   mBindings ( rhs.mBindings ),
+//   mAttributes ( rhs.mAttributes ),
 //   mValues ( rhs.mValues ),
 //   mIndices ( rhs.mIndices )
 // {
@@ -118,6 +106,8 @@ void geom::setGeomBoundsDirty ()
 {
   node::setBoundsDirty ();
   mGeomBoundsDirty = true;
+  if ( mGeomData )
+    mGeomData->setBoundsDirty();
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -151,26 +141,10 @@ void geom::updateBounds () const
 
 void geom::generateGeomBounds () const
 {
-  mBounds.setEmpty ();
-
-  if ( ! mGeomData )
-    return;
-
-  if ( mGeomData->getElemCount () == 0 )
-    return;
-
-//printf ( "generate geom bounds for %x w/name %s\n", this, this->getName ().c_str () );
-
-  Values const& values = mGeomData->getValues ();
-
-  float const* end = &values.back ();
-  SizeType incr = mGeomData->getValueStride ();
-  for ( float const* ptr = &values[ 0 ]; 
-    ptr < end;
-    ptr += incr )
-  {
-    mBounds.extendBy ( ptr[ 0 ], ptr[ 1 ], ptr[ 2 ] );
-  }
+  if ( mGeomData )
+    mBounds = mGeomData->getBounds(); // Will automatically recalc if dirty.
+  else
+    mBounds.setIsDirty ( true );
 }
 
 void geom::generateGeomPartition () const

@@ -21,11 +21,11 @@
 #include "pnimatstack.h"
 #include "pnibox3.h"
 
-#include "sceneogl.h"
-
 /////////////////////////////////////////////////////////////////////
 
 namespace scene {
+
+  class progObj;
 
 /////////////////////////////////////////////////////////////////////
 
@@ -76,9 +76,9 @@ class ddOglList :
       renderItem () {}
     
       pni::math::matrix4 mMatrix;
-      stateSet mStateSet;       // Really?  The whole set?
-      // We do not ref-count things during the rendering pass.
-      // pni::pstd::autoRef< node > mNode;
+      stateSet mStateSet;           // Really?  The whole set?
+        // We do not ref-count things during the rendering pass.
+        // pni::pstd::autoRef< node > mNode;
       node const* mNode;
       float distSqr;
     };
@@ -102,17 +102,29 @@ class ddOglList :
   protected:
     
   private:
+    typedef unsigned int GlEnum;
+    typedef pni::pstd::autoRef< prog const > ProgConstRef;
+    typedef pni::pstd::autoRef< uniform > UniformRef;
+
     stateSet mCurStates;
     RenderList mRenderList;
-    //CPVRTglesExt mPvr;
     nodePath mSinkPath;
+    ProgConstRef mCurProg;         // Currently active program
+    UniformRef mBuiltins;
+    pni::math::matrix4 mProjMat;
+    pni::math::matrix4 mViewMat;
+    pni::math::matrix4 mModelMat;
+    pni::math::matrix4 mModelViewMat;
+    pni::math::matrix4 mModelViewProjectionMat;
+
     unsigned int mCurStateId;
-    GLenum mCurLightUnit;
+    GlEnum mCurLightUnit;
     
     void resetCurState ();
     void execStates ( stateSet const& sSet );
     void execCamera ();
     void execLightPath ( nodePath const& lpath );
+    void execBuiltins ();
 
   // interface from scenegraphdd and scenestatedd
   public:
@@ -139,11 +151,12 @@ class ddOglList :
     virtual void dispatch ( lightPath const* pState );
     virtual void dispatch ( material const* pState );
 //     virtual void dispatch ( polygonMode const* pState );
+    virtual void dispatch ( prog const* pState );
     virtual void dispatch ( texEnv const* pState );
 //     virtual void dispatch ( texGen const* pState );
     virtual void dispatch ( texture const* pState );
     virtual void dispatch ( textureXform const* pState );
-    
+    virtual void dispatch ( uniform const* pState );    
     
 
 };

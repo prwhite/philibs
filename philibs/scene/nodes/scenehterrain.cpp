@@ -16,6 +16,8 @@
 
 #include "sceneisectdd.h"
 
+#include "scenecommon.h"
+
 #include "imgalgo.h"
 
 #include "pnivec2.h"
@@ -47,7 +49,7 @@ void initImageWithSize ( img::base* pImg,
   pImg->setSize ( width, height, width );
   pImg->setFormat ( format );
   
-  img::base::Buffer* pBuffer = new img::base::Buffer;
+  img::base::buffer* pBuffer = new img::base::buffer;
   pBuffer->resize ( width * height * pImg->calcFormatStride ( format ), 0xff );
   
   pImg->mBuffers.push_back ( pBuffer );
@@ -414,11 +416,12 @@ PNIPSTDLOG
   {
     setGeomData ( new geomData );
 
-    mGeomData->setBindings ( 
-        geomData::Positions | 
-        geomData::Normals |
-        geomData::TCoords0 |
-        geomData::TCoords1 );
+    geomData::Attributes& attributes = mGeomData->attributesOp();
+
+    attributes.push_back ( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, geomData::PositionsComponents } );
+    attributes.push_back ( { CommonAttributeNames[ geomData::Normal], geomData::Normal, geomData::DataType_FLOAT, geomData::NormalsComponents } );
+    attributes.push_back ( { CommonAttributeNames[ geomData::TCoord00], geomData::TCoord00, geomData::DataType_FLOAT, geomData::TCoord00Components } );
+    attributes.push_back ( { CommonAttributeNames[ geomData::TCoord01], geomData::TCoord00, geomData::DataType_FLOAT, geomData::TCoord00Components } );
 
     Dim xEndInd = xEnd - xStart;
     Dim yEndInd = yEnd - yStart;
@@ -426,7 +429,7 @@ PNIPSTDLOG
     geomData::SizeType numVals = ( xEnd - xStart ) * ( yEnd - yStart );
     geomData::SizeType numInds = ( xEndInd - xStart ) * ( yEndInd - yStart ) * 6;
 
-    geomData::SizeType tmpValueStride = mGeomData->getValueStride ();
+    geomData::SizeType tmpValueStride = mGeomData->getAttributes ().getValueStride ();
     mGeomData->resize ( numVals * tmpValueStride, numInds );
     
       // Now fill in indices.  These only change when the image size
@@ -451,7 +454,7 @@ PNIPSTDLOG
     }
   }
 
-  geomData::SizeType valueStride = mGeomData->getValueStride ();
+  geomData::SizeType valueStride = mGeomData->getAttributes ().getValueStride ();
 
 PNIPSTDLOG
 
@@ -463,7 +466,7 @@ PNIPSTDLOG
   args.mDz = mDz;
     
     // Fill in vert values.
-  img::base::Buffer* pBuf = mHeightImg->mBuffers[ 0 ].get ();
+  img::base::buffer* pBuf = mHeightImg->mBuffers[ 0 ].get ();
   for ( Dim cury = yStart; cury < yEnd; ++cury )
   {
     size_t vertStart = ( cury - yBase ) * valuePitch + ( xStart - xBase );

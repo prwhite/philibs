@@ -139,7 +139,7 @@ void flattenDd::dispatch ( geom const* pNode )
   geom* pGeom = const_cast< geom* > ( pNode );
   geomData* pData = pGeom->geometryOp ();
   
-  if ( pData->getElemCount () != 0 )
+  if ( pData->getIndexCount () != 0 )
   {
     pni::math::matrix4 invMat = *mMatStack;
     invMat.invert ();
@@ -147,8 +147,8 @@ void flattenDd::dispatch ( geom const* pNode )
     
     vertIter iter ( pData );
     
-    size_t posOff = pData->getValueOffset ( geomData::Positions );
-    size_t normOff = pData->getValueOffset ( geomData::Normals );
+    size_t posOff = pData->getAttributes ().getValueOffset ( geomData::Position );
+    size_t normOff = pData->getAttributes ().getValueOffset ( geomData::Normal );
 
     for ( vertIter iter ( pData ); iter; ++iter )
     {

@@ -10,6 +10,8 @@
 
 #include "scenetexture.h"
 
+#include "scenecommon.h"
+
 #include <cassert>
 
 /////////////////////////////////////////////////////////////////////
@@ -264,9 +266,10 @@ void sprites::update ( graphDd::fxUpdate const& update )
   if ( mDoDepthSort )
     doDepthSort ( update, sorters );
   
-    // Set geometry binding.
-  mGeomData->setBindings ( geomData::Positions | geomData::TCoords0 );
-  
+    // Set geometry attribute.
+  mGeomData->attributesOp().push_back ( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, geomData::PositionsComponents } );
+  mGeomData->attributesOp().push_back ( { CommonAttributeNames[ geomData::TCoord00], geomData::TCoord00, geomData::DataType_FLOAT, geomData::TCoord00Components } );
+
     // Unused... why was it here? PRW
 //  SizeType stride = mGeomData->getValueStride ();
   
@@ -275,7 +278,7 @@ void sprites::update ( graphDd::fxUpdate const& update )
     // 2 tris per sprite (this is a strip-order quad done with tris).
   size_t elemCount = mData.getElemCount ();
   if ( elemCount * 2 != mGeomData->getTriCount () )
-    mGeomData->resizeTrisWithBinding ( 
+    mGeomData->resizeTrisWithCurrentAttributes (
         elemCount * 4, elemCount * 2 );
 
     // Iterate over items creating corresponding sprite tri pairs.    

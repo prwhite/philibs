@@ -60,11 +60,13 @@ class ddOgl :
     virtual void dispatch ( lightPath const* pState );
     virtual void dispatch ( material const* pState );
 //     virtual void dispatch ( polygonMode const* pState );
+    virtual void dispatch ( prog const* pState );
     virtual void dispatch ( texEnv const* pState );
 //     virtual void dispatch ( texGen const* pState );
     virtual void dispatch ( texture const* pState );
     virtual void dispatch ( textureXform const* pState );
-    
+    virtual void dispatch ( uniform const* pState );
+  
   private:
   
     // Bool return indicates whether node was culled or not.

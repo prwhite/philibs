@@ -23,11 +23,12 @@
 #include "scenelightpath.h"
 #include "scenematerial.h"
 // #include "scenepolygonmode.h"
+#include "sceneprog.h"
 #include "scenetexenv.h"
 // #include "scenetexgen.h"
 #include "scenetexture.h"
 #include "scenetexturexform.h"
-
+#include "sceneuniform.h"
 
 /////////////////////////////////////////////////////////////////////
 
@@ -271,6 +272,11 @@ void dupDd::dispatch ( material const* pState )
   dispatchState ( pState );
 }
 
+void dupDd::dispatch ( prog const* pState )
+{
+  dispatchState ( pState );
+}
+
 void dupDd::dispatch ( texEnv const* pState )
 {
   dispatchState ( pState );
@@ -282,6 +288,11 @@ void dupDd::dispatch ( texture const* pState )
 }
 
 void dupDd::dispatch ( textureXform const* pState )
+{
+  dispatchState ( pState );
+}
+
+void dupDd::dispatch ( uniform const* pState )
 {
   dispatchState ( pState );
 }

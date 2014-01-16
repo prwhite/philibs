@@ -273,11 +273,11 @@ bool dds::determineCaps ()
   return true;
 }
 
-base::Buffer* dds::createBuffer ( void* start, size_t length )
+base::buffer* dds::createBuffer ( void* start, size_t length )
 {
   swapSrcBuffer ( ( char* ) start, length );
 
-  base::Buffer* buf = new base::Buffer;
+  base::buffer* buf = new base::buffer;
   buf->resize ( length );
   
   memcpy ( &buf->front (), start, length );
@@ -348,7 +348,7 @@ void dds::swapSrcBuffer ( char* mem, size_t size )
       break;
     // TODO handle other formats if necessary.
     default:
-			printf ( "dds::loadHelper: unsupported format in swapSrcBufer\n" );
+			printf ( "dds::loadHelper: unsupported format in swapSrcBuffer\n" );
       break;
   }
 }

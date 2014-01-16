@@ -1,9 +1,6 @@
 /////////////////////////////////////////////////////////////////////
 //
-//!	class: matrix4
-//
-//  A row-major 4x4 matrix class... translation is in the last
-//  row ( mat[ 3 ][ 0 - 3 ] ).
+//	class: matrix4
 //
 /////////////////////////////////////////////////////////////////////
 
@@ -30,6 +27,12 @@ namespace pni {
 class vec4;
 
 /////////////////////////////////////////////////////////////////////
+
+/**  A row-major 4x4 matrix class... translation is in the last
+     row ( mat[ 3 ][ 0 - 3 ] ).  While it is row major (c-style layout),
+     it is transposed, so it exactly lines up with the expectation of
+     OpenGL to be column-major [non-transposed].
+*/
 
 class PNIMATHAPI matrix4 { 
 	public:
@@ -210,7 +213,10 @@ class PNIMATHAPI matrix4 {
 		void colMult ( const matrix4& smat, vec4& dvec ) const;
 		void colMult ( const vec4& svec, matrix4& dmat ) const;
 
-		
+      /// Copy this matrix's values into dst.  dst must be able to contain 16 float elements.
+    void copyTo4x4 ( ValueType* dst ) const;
+    void copyTo3x3 ( ValueType* dst ) const;
+
 	protected:
 		friend matrix4::ValueType RCD( const matrix4& A, const matrix4& B, int i, int j);
 		
@@ -576,6 +582,7 @@ getScale ( vec3& scaleOut ) const
 { 	
 	return getScale ( scaleOut.vec[ 0 ], scaleOut.vec[ 1 ], scaleOut.vec[ 2 ] );
 }
+
 
 
 /////////////////////////////////////////////////////////////////////
