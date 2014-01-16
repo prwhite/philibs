@@ -3,13 +3,15 @@
 
 ## A C++, OpenGL ES scene graph library for iOS
 
-This library supports 3D rendering of a 'scene' described in memory as a '[scene graph](http://en.wikipedia.org/wiki/Scene_graph)'.
+This library supports 3D rendering of a 'scene' described in memory as a '[scene graph](http://en.wikipedia.org/wiki/Scene_graph)', using the GLES graphics library for hardware accelerated rendering.
 
 ### Current features include:
 
-* Hierarchical scene management, ray-based scene picking with culling, multi-texture, GLES state management, linear algebra library, particle system, sprites
+* Hierarchical scene management, ray-based scene picking with culling, multi-texture, GLES state management, linear algebra library, particle system, sprites, and more.
 
 ### Half-ass'd features include:
+
+* Programmable pipeline support is in, and relatively generalized, but I need to build up more high-level concepts around it, including a lighting model and shaders that are conditional on light and texture binding, etc.
 
 * Key-frame animation system, UI system, bitmap font node, deformable height-mapped terrain, spatialized sound, 2d image and 3d file format loaders, view frustum culling
 
@@ -17,15 +19,20 @@ In many cases, these half-ass'd features are built around proper abstractions al
 
 ### Really missing:
 
-* GLES 2.0 support (programmable pipeline), parallelism/thread safety strategy
+* Parallelism/thread safety strategy
+* A ton of other things
 
 ### Short-term feature goals:
 
-* A number of features to support a high-polish 3D authoring application, such as real-time reflections, soft shadows, section planes, high-quality line rendering, ambient occlusion, 
+* A number of features to support a high-polish 3D authoring application, such as real-time reflections, soft shadows, section planes, high-quality line rendering, ambient occlusion, etc.
 
 ## Status
 
-A _version_ of this code has been used in an iOS title [(LD50)](http://labs.prehiti.com/ld50/).  But, this code has not been used in its current incarnation as a stand-alone library.
+A _version_ of this code has been used in an iOS title [(LD50)](http://labs.prehiti.com/ld50/).  But, this code has not been used in its current incarnation as a stand-alone library, _yet_.
+
+2014/01/16
+
+GLES2 support is working, albeit in its earliest stages.  The current default shader supports positions/normals/uv00 and a single texture.  It implements a basic per-pixel lighting model, but a number of the parameters for lighting are magic numbers in the shader, and need to be moved out to uniforms derived from scene graph state.  That's one of the next things.
 
 2014/01/02
 
