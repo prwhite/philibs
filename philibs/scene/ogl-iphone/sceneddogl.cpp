@@ -16,7 +16,7 @@
 #include "scenelight.h"
 #include "scenetext.h"
 
-#include "timerprof.h"
+#include "pnitimerprof.h"
 
 #include "sceneconverter.h"
 
@@ -93,7 +93,7 @@ void ddOgl::startGraph ( node const* pNode )
 #endif // _NDEBUG
 
 PNIDBG
-static pstd::timerProf trav ( "graph traversal" );
+static pni::pstd::timerProf trav ( "graph traversal" );
 
   // FIXME Should be real error handling somewhere.
   if ( mSinkPath.empty () )
@@ -121,7 +121,7 @@ PNIDBG
   // Now trigger the real rendering.
   mDdList.setSinkPath ( getSinkPath () );
 
-static pstd::timerProf list ( "list traversal" );
+static pni::pstd::timerProf list ( "list traversal" );
 PSTDPROFCALL(list.start ());
   mDdList.startList ();
 PSTDPROFCALL(list.stop ());
@@ -230,7 +230,7 @@ PNIDBG
   if ( ! ( mTravMask & pNode->getTravMask ( Draw ) ) )
     return false;
   
-static pstd::timerProf aa ( "mat stack", 120 * 5 );
+static pni::pstd::timerProf aa ( "mat stack", 120 * 5 );
 PSTDPROFCALL(aa.start ());
 
 PNIDBG
@@ -252,7 +252,7 @@ PNIDBG
   }
 PSTDPROFCALL(aa.stop ());
 
-static pstd::timerProf bb ( "bounds stack", 120 * 5 );
+static pni::pstd::timerProf bb ( "bounds stack", 120 * 5 );
 PSTDPROFCALL(bb.start ());
 
 #ifdef USEBOUNDSSTACK
@@ -288,7 +288,7 @@ PNIDBG
     return false;
   }
   
-static pstd::timerProf cc ( "states", 120 * 5 );
+static pni::pstd::timerProf cc ( "states", 120 * 5 );
 PSTDPROFCALL(cc.start ());
 
 PNIDBG
@@ -467,7 +467,7 @@ void ddOgl::dispatch ( group const* pNode )
 {
 PNIDBG
 
-static pstd::timerProf pre ( "dispatchPre", 120 * 5 );
+static pni::pstd::timerProf pre ( "dispatchPre", 120 * 5 );
 PSTDPROFCALL(pre.start ());
 
   if ( dispatchPre ( pNode ) )

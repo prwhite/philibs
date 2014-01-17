@@ -43,7 +43,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include "timerprof.h"
+#include "pnitimerprof.h"
 
 /////////////////////////////////////////////////////////////////////
 
@@ -1181,12 +1181,12 @@ ase::~ase()
 scene::node* ase::load ( std::string const& fname )
 {
 
-PSTDPROFCALL(static pstd::timerProf tp ( "ase::load - all", 1 ) );
+PSTDPROFCALL(static pni::pstd::timerProf tp ( "ase::load - all", 1 ) );
 PSTDPROFCALL(tp.start () );
 
   ::ase::parser parser;
 
-PSTDPROFCALL(static pstd::timerProf tpParse ( "ase::load - parse", 1 ) );
+PSTDPROFCALL(static pni::pstd::timerProf tpParse ( "ase::load - parse", 1 ) );
 PSTDPROFCALL(tpParse.start () );
 
   ::ase::node* pParseRoot = parser.parse ( fname );

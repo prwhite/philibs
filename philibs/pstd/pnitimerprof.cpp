@@ -5,13 +5,14 @@
 /////////////////////////////////////////////////////////////////////
 
 
-#include "timerprof.h"
+#include "pnitimerprof.h"
 #include <iostream>
 #include <fstream>
 
 /////////////////////////////////////////////////////////////////////
 
-namespace pstd {
+namespace pni {
+  namespace pstd {
 
 std::ostream& getTpStr ()
 {
@@ -26,5 +27,6 @@ std::ostream& getTpStr ()
 
 /////////////////////////////////////////////////////////////////////
 
-} // end namespace pstd
+  } // end of namespace pstd
+} // end namespace pni
 

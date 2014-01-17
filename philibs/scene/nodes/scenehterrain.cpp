@@ -26,7 +26,7 @@
 #include <cassert>
 
   // TEMP
-#include "timerprof.h"
+#include "pnitimerprof.h"
 
 /////////////////////////////////////////////////////////////////////
 

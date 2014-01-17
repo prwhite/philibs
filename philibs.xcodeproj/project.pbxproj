@@ -66,7 +66,7 @@
 		1CDD41CB185BCAF0009284F9 /* pnirefcount.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD40F0185BCAEF009284F9 /* pnirefcount.cpp */; };
 		1CDD41CC185BCAF0009284F9 /* pnitimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD40F3185BCAEF009284F9 /* pnitimer.cpp */; };
 		1CDD41CE185BCAF0009284F9 /* pnitimerplatform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD40F6185BCAEF009284F9 /* pnitimerplatform.cpp */; };
-		1CDD41CF185BCAF0009284F9 /* timerprof.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD40F7185BCAEF009284F9 /* timerprof.cpp */; };
+		1CDD41CF185BCAF0009284F9 /* pnitimerprof.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD40F7185BCAEF009284F9 /* pnitimerprof.cpp */; };
 		1CDD41D1185BCAF0009284F9 /* imgalgo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD40FF185BCAEF009284F9 /* imgalgo.cpp */; };
 		1CDD41D2185BCAF0009284F9 /* imgbase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD4101185BCAEF009284F9 /* imgbase.cpp */; };
 		1CDD41D3185BCAF0009284F9 /* imgdds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD4103185BCAEF009284F9 /* imgdds.cpp */; };
@@ -179,7 +179,7 @@
 		1CDD42CF185EDBD1009284F9 /* pnirefcountdbg.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40F2185BCAEF009284F9 /* pnirefcountdbg.h */; };
 		1CDD42D0185EDBD1009284F9 /* pnitimer.cpp in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40F3185BCAEF009284F9 /* pnitimer.cpp */; };
 		1CDD42D1185EDBD1009284F9 /* pnitimer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40F4185BCAEF009284F9 /* pnitimer.h */; };
-		1CDD42D5185EDBD1009284F9 /* timerprof.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40F8185BCAEF009284F9 /* timerprof.h */; };
+		1CDD42D5185EDBD1009284F9 /* pnitimerprof.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40F8185BCAEF009284F9 /* pnitimerprof.h */; };
 		1CDD42DA185EDBD1009284F9 /* imgalgo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4100185BCAEF009284F9 /* imgalgo.h */; };
 		1CDD42DC185EDBD1009284F9 /* imgbase.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4102185BCAEF009284F9 /* imgbase.h */; };
 		1CDD42DE185EDBD1009284F9 /* imgdds.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4104185BCAEF009284F9 /* imgdds.h */; };
@@ -324,7 +324,7 @@
 				1CDD42CF185EDBD1009284F9 /* pnirefcountdbg.h in CopyFiles */,
 				1CDD42D0185EDBD1009284F9 /* pnitimer.cpp in CopyFiles */,
 				1CDD42D1185EDBD1009284F9 /* pnitimer.h in CopyFiles */,
-				1CDD42D5185EDBD1009284F9 /* timerprof.h in CopyFiles */,
+				1CDD42D5185EDBD1009284F9 /* pnitimerprof.h in CopyFiles */,
 				1CDD42DA185EDBD1009284F9 /* imgalgo.h in CopyFiles */,
 				1CDD42DC185EDBD1009284F9 /* imgbase.h in CopyFiles */,
 				1CDD42DE185EDBD1009284F9 /* imgdds.h in CopyFiles */,
@@ -513,8 +513,8 @@
 		1CDD40F4185BCAEF009284F9 /* pnitimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pnitimer.h; sourceTree = "<group>"; };
 		1CDD40F5185BCAEF009284F9 /* pnitimerplatform-win32.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "pnitimerplatform-win32.cpp"; sourceTree = "<group>"; };
 		1CDD40F6185BCAEF009284F9 /* pnitimerplatform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pnitimerplatform.cpp; sourceTree = "<group>"; };
-		1CDD40F7185BCAEF009284F9 /* timerprof.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = timerprof.cpp; sourceTree = "<group>"; };
-		1CDD40F8185BCAEF009284F9 /* timerprof.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = timerprof.h; sourceTree = "<group>"; };
+		1CDD40F7185BCAEF009284F9 /* pnitimerprof.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pnitimerprof.cpp; sourceTree = "<group>"; };
+		1CDD40F8185BCAEF009284F9 /* pnitimerprof.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pnitimerprof.h; sourceTree = "<group>"; };
 		1CDD40FA185BCAEF009284F9 /* PVRTContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PVRTContext.h; sourceTree = "<group>"; };
 		1CDD40FB185BCAEF009284F9 /* PVRTglesExt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PVRTglesExt.cpp; sourceTree = "<group>"; };
 		1CDD40FC185BCAEF009284F9 /* PVRTglesExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PVRTglesExt.h; sourceTree = "<group>"; };
@@ -881,8 +881,8 @@
 				1CDD40F4185BCAEF009284F9 /* pnitimer.h */,
 				1CDD40F5185BCAEF009284F9 /* pnitimerplatform-win32.cpp */,
 				1CDD40F6185BCAEF009284F9 /* pnitimerplatform.cpp */,
-				1CDD40F7185BCAEF009284F9 /* timerprof.cpp */,
-				1CDD40F8185BCAEF009284F9 /* timerprof.h */,
+				1CDD40F7185BCAEF009284F9 /* pnitimerprof.cpp */,
+				1CDD40F8185BCAEF009284F9 /* pnitimerprof.h */,
 				1CC482CF1888D0CD0029408D /* pnisearchpath.cpp */,
 				1CC482D01888D0CD0029408D /* pnisearchpath.h */,
 			);
@@ -1245,7 +1245,7 @@
 				1CDD41DD185BCAF0009284F9 /* scenelight.cpp in Sources */,
 				1CDD41BF185BCAF0009284F9 /* pniplane.cpp in Sources */,
 				1CDD41DC185BCAF0009284F9 /* scenehterrain.cpp in Sources */,
-				1CDD41CF185BCAF0009284F9 /* timerprof.cpp in Sources */,
+				1CDD41CF185BCAF0009284F9 /* pnitimerprof.cpp in Sources */,
 				1C6A02B91873526700672EF8 /* sceneuniform.cpp in Sources */,
 				1CDD4189185BCAF0009284F9 /* animuibasetrans.cpp in Sources */,
 				1CDD41C3185BCAF0009284F9 /* pniseg.cpp in Sources */,

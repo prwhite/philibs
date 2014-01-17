@@ -28,7 +28,8 @@
 
 /////////////////////////////////////////////////////////////////////
 
-namespace pstd {
+namespace pni {
+  namespace pstd {
 
 std::ostream& getTpStr ();
 		
@@ -100,7 +101,8 @@ class timerProf
 
 /////////////////////////////////////////////////////////////////////
 
-} // end of namespace pstd
+  } // end of namespace pstd
+} // end of namespace pni
 
 #endif // pnitimer_h
 
