@@ -17,6 +17,8 @@
 		1CAD971F186628EE00C547E1 /* scenevbo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD971D186628EE00C547E1 /* scenevbo.cpp */; };
 		1CAD9723186D72D500C547E1 /* sceneprog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9721186D72D500C547E1 /* sceneprog.cpp */; };
 		1CAD9726186E110200C547E1 /* sceneprogobj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9724186E110200C547E1 /* sceneprogobj.cpp */; };
+		1CC482D11888D0CD0029408D /* pnisearchpath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC482CF1888D0CD0029408D /* pnisearchpath.cpp */; };
+		1CC482D21888E7D30029408D /* pnisearchpath.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CC482D01888D0CD0029408D /* pnisearchpath.h */; };
 		1CDD3FFA185BC965009284F9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD3FF9185BC965009284F9 /* Foundation.framework */; };
 		1CDD3FFF185BC965009284F9 /* philibs.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD3FFE185BC965009284F9 /* philibs.h */; };
 		1CDD4001185BC965009284F9 /* philibs.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD4000185BC965009284F9 /* philibs.m */; };
@@ -169,7 +171,6 @@
 		1CDD42C3185EDBD1009284F9 /* pnivec4.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40DF185BCAEF009284F9 /* pnivec4.h */; };
 		1CDD42C5185EDBD1009284F9 /* pniautoref.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40E8185BCAEF009284F9 /* pniautoref.h */; };
 		1CDD42C6185EDBD1009284F9 /* pniavg.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40E9185BCAEF009284F9 /* pniavg.h */; };
-		1CDD42C7185EDBD1009284F9 /* pnibox.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40EA185BCAEF009284F9 /* pnibox.h */; };
 		1CDD42C8185EDBD1009284F9 /* pnierror.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40EB185BCAEF009284F9 /* pnierror.h */; };
 		1CDD42CA185EDBD1009284F9 /* pnilog.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40ED185BCAEF009284F9 /* pnilog.h */; };
 		1CDD42CB185EDBD1009284F9 /* pniplatform.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40EE185BCAEF009284F9 /* pniplatform.h */; };
@@ -259,6 +260,7 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				1CC482D21888E7D30029408D /* pnisearchpath.h in CopyFiles */,
 				1C4BD2831885FD8F000781B0 /* scenecommon.h in CopyFiles */,
 				1C4BD27D18810EE6000781B0 /* sceneuniform.h in CopyFiles */,
 				1C4BD27E18810EE6000781B0 /* sceneprog.h in CopyFiles */,
@@ -314,7 +316,6 @@
 				1CDD42C3185EDBD1009284F9 /* pnivec4.h in CopyFiles */,
 				1CDD42C5185EDBD1009284F9 /* pniautoref.h in CopyFiles */,
 				1CDD42C6185EDBD1009284F9 /* pniavg.h in CopyFiles */,
-				1CDD42C7185EDBD1009284F9 /* pnibox.h in CopyFiles */,
 				1CDD42C8185EDBD1009284F9 /* pnierror.h in CopyFiles */,
 				1CDD42CA185EDBD1009284F9 /* pnilog.h in CopyFiles */,
 				1CDD42CB185EDBD1009284F9 /* pniplatform.h in CopyFiles */,
@@ -402,6 +403,8 @@
 		1CAD9722186D72D500C547E1 /* sceneprog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneprog.h; sourceTree = "<group>"; };
 		1CAD9724186E110200C547E1 /* sceneprogobj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneprogobj.cpp; sourceTree = "<group>"; };
 		1CAD9725186E110200C547E1 /* sceneprogobj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneprogobj.h; sourceTree = "<group>"; };
+		1CC482CF1888D0CD0029408D /* pnisearchpath.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pnisearchpath.cpp; sourceTree = "<group>"; };
+		1CC482D01888D0CD0029408D /* pnisearchpath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pnisearchpath.h; sourceTree = "<group>"; };
 		1CDD3FF6185BC965009284F9 /* libphilibs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libphilibs.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CDD3FF9185BC965009284F9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1CDD3FFD185BC965009284F9 /* philibs-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "philibs-Prefix.pch"; sourceTree = "<group>"; };
@@ -498,7 +501,6 @@
 		1CDD40E2185BCAEF009284F9 /* pnimathtest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pnimathtest.cpp; sourceTree = "<group>"; };
 		1CDD40E8185BCAEF009284F9 /* pniautoref.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pniautoref.h; sourceTree = "<group>"; };
 		1CDD40E9185BCAEF009284F9 /* pniavg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pniavg.h; sourceTree = "<group>"; };
-		1CDD40EA185BCAEF009284F9 /* pnibox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pnibox.h; sourceTree = "<group>"; };
 		1CDD40EB185BCAEF009284F9 /* pnierror.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pnierror.h; sourceTree = "<group>"; };
 		1CDD40EC185BCAEF009284F9 /* pnilog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pnilog.cpp; sourceTree = "<group>"; };
 		1CDD40ED185BCAEF009284F9 /* pnilog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pnilog.h; sourceTree = "<group>"; };
@@ -867,7 +869,6 @@
 			children = (
 				1CDD40E8185BCAEF009284F9 /* pniautoref.h */,
 				1CDD40E9185BCAEF009284F9 /* pniavg.h */,
-				1CDD40EA185BCAEF009284F9 /* pnibox.h */,
 				1CDD40EB185BCAEF009284F9 /* pnierror.h */,
 				1CDD40EC185BCAEF009284F9 /* pnilog.cpp */,
 				1CDD40ED185BCAEF009284F9 /* pnilog.h */,
@@ -882,6 +883,8 @@
 				1CDD40F6185BCAEF009284F9 /* pnitimerplatform.cpp */,
 				1CDD40F7185BCAEF009284F9 /* timerprof.cpp */,
 				1CDD40F8185BCAEF009284F9 /* timerprof.h */,
+				1CC482CF1888D0CD0029408D /* pnisearchpath.cpp */,
+				1CC482D01888D0CD0029408D /* pnisearchpath.h */,
 			);
 			path = pstd;
 			sourceTree = "<group>";
@@ -1179,6 +1182,7 @@
 				1CDD41B9185BCAF0009284F9 /* pnifloattrait.cpp in Sources */,
 				1CDD41BD185BCAF0009284F9 /* pnimatrix4.cpp in Sources */,
 				1CDD417F185BCAF0009284F9 /* animmanager.cpp in Sources */,
+				1CC482D11888D0CD0029408D /* pnisearchpath.cpp in Sources */,
 				1CDD41C6185BCAF0009284F9 /* pnivec3.cpp in Sources */,
 				1CDD4183185BCAF0009284F9 /* animscenenodescale.cpp in Sources */,
 				1CDD41C5185BCAF0009284F9 /* pnivec2.cpp in Sources */,

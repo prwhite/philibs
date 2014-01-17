@@ -17,8 +17,6 @@
 
 #include "sceneisectdd.h"
 
-#include "pnibox.h"
-
 /////////////////////////////////////////////////////////////////////
 
 namespace ui {
@@ -38,7 +36,6 @@ class event
     TimeType getTimeStamp () const { return mTimeStamp; }
 
     typedef pni::pstd::autoRef< base > BaseRef;
-    //typedef pni::pstd::box< base* > BaseRef;
     void setBase ( base* pBase ) { mBase = pBase; }
     base* getBase () const { return mBase.get (); }
 

@@ -68,7 +68,7 @@ class wheel :
     
     enum Orientation { Xaxis, Yaxis };
     void setOrientation ( Orientation which ) { mMouseDimension = which; };
-    Orientation getOrientation () const { return ( Orientation ) mMouseDimension.get (); }
+    Orientation getOrientation () const { return ( Orientation ) mMouseDimension; }
     
       // Vis orientation tells the widget which axis should be used
       // to update the visualization of the wheel.    

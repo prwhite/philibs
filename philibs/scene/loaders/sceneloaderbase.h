@@ -18,6 +18,7 @@
 #include "pnierror.h"
 #include "scenenode.h"
 #include "pniprogress.h"
+#include "pnisearchpath.h"
 
 /////////////////////////////////////////////////////////////////////
 
@@ -175,13 +176,17 @@ class base :
       // has protected inheritance from the loader::observer class.
     void setObserver ( observer* pObserver ) { mObserver = pObserver; }
     observer* getObserver () const { return mObserver; }
-    
-    
+
+    typedef pni::pstd::autoRef< pni::pstd::searchPath > SearchPathRef;
+    void setSearchPath ( pni::pstd::searchPath* pSearchPath ) { mSearchPath = pSearchPath; }
+    pni::pstd::searchPath* getSearchPath () const { return mSearchPath.get (); }
+
   protected:
   
     CacheRef mCache;
     observer* mObserver;
     DirRef mDirectory;
+    SearchPathRef mSearchPath;
     
     virtual void collectRefs ( pni::pstd::refCount::Refs& refs );
     

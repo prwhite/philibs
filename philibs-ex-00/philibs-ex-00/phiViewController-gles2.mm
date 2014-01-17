@@ -98,10 +98,7 @@
 
     // Path to the app bundle to get the test file.
   std::string bdir ( getShellPath(BundleDir) );
-
-  chdir ( bdir.c_str());
-
-  std::string fname = { "test-00b.ase" };
+  std::string fname = { bdir + "/" + "test-00b.ase" };
   
     // Load the file, grab its bounding sphere so we can push back the camera an
     // appropriate amount.

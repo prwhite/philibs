@@ -139,12 +139,12 @@ class wheelCore
     float getPos ( ui::mouseEvent const& event )
         {
         #ifndef PNI_TARGET_WIN32
-          if ( mMouseDimension.get () == 0 )
+          if ( mMouseDimension == 0 )
             return event.mMousePointers[ 0 ].mXpos;
           else
             return event.mMousePointers[ 0 ].mYpos;
         #else
-          if ( mMouseDimension.get () == 0 )
+          if ( mMouseDimension == 0 )
             return event.mMousePointers[ 0 ].mYpos;
           else
             return 480.0f - event.mMousePointers[ 0 ].mXpos;
@@ -242,10 +242,10 @@ class wheelCore
     virtual void onSetDirty ( bool val ) = 0;
     virtual bool isGoodMouseDown ( mouseEvent const& mevent ) = 0;
 
-    pni::pstd::box< float > mVelDamp;
-    pni::pstd::box< float > mVelMin;
-    pni::pstd::box< float > mModVal;
-    pni::pstd::box< IndType > mMouseDimension;
+    float mVelDamp = 0.0f;
+    float mVelMin = 0.0f;
+    float mModVal = 0.0f;
+    IndType mMouseDimension = 0;
 
 
   private:
@@ -444,13 +444,13 @@ class wheelCore
     ui::relativeTracker< float > mMouseTracker;
     ui::timeTracker mGlideTracker;
 
-    pni::pstd::box< IndType > mCurSelection;
-    pni::pstd::box< float > mCurVal;
-    pni::pstd::box< float > mItemSize;
+    IndType mCurSelection = 0;
+    float mCurVal = 0.0f;
+    float mItemSize = 0.0f;
     pni::pstd::avg< float > mVelAvg;
-    pni::pstd::box< float > mVel;
-    pni::pstd::box< bool > mGoodDrag;
-    pni::pstd::box< bool > mGliding;
+    float mVel = 0.0f;
+    bool mGoodDrag = false;
+    bool mGliding = false;
 
 
 

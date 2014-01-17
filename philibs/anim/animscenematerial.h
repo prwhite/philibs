@@ -12,7 +12,6 @@
 #include "animbase.h"
 
 #include "pniautoref.h"
-//#include "pnibox.h"
 #include "pnivec4.h"
 
 #include "scenematerial.h"

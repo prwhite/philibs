@@ -31,10 +31,12 @@ void directory::collectRefs ( pni::pstd::refCount::Refs& refs )
 
 base::base() :
   mCache ( new cache ),
-  mDirectory ( new directory )
+  mDirectory ( new directory ),
+  mSearchPath ( new pni::pstd::searchPath )
 {
   mObserver = this;
   setProgressObserver ( this );
+  mSearchPath->addPath(".");
 }
 
 base::~base()
@@ -132,6 +134,7 @@ void base::collectRefs ( pni::pstd::refCount::Refs& refs )
 {
   refs.push_back ( mDirectory.get () );
   refs.push_back ( mCache.get () );
+  refs.push_back ( mSearchPath.get () );
 }
 
 /////////////////////////////////////////////////////////////////////

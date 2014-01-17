@@ -72,12 +72,14 @@ class helper
     pni::math::matStack< pni::math::matrix4 > mMatStack;
     AseMaterialMap mMatNodes;
     ShaderMap mShaderMap;
+    std::string mFname;
     
-    helper ( ase& rAse, ::ase::node* pRoot ) :
+    helper ( ase& rAse, ::ase::node* pRoot, std::string fname ) :
       mAse ( rAse ),
       mRoot ( pRoot ),
       mObserver ( rAse.getObserver () ),
-      mCache ( rAse.getCache () )
+      mCache ( rAse.getCache () ),
+      mFname(fname)
         {
           
         }
@@ -343,19 +345,15 @@ PNIDBG
     bool resolveImageName( std::string const& src, std::string& dst )
         {
 PNIDBG
-          std::string tmp ( tail ( src ) );
-PNIDBG
-          if ( doStat ( tmp ) )
-          {
-PNIDBG
-            dst = tmp;
-            return true;
-          }
-          else
-	  {
-PNIDBG
-            return false;
-          }
+            // Temporarily add the ase file path head to the search paths,
+            // making relative texture file names work.
+          std::string tmpPath = pni::pstd::searchPath::head(mFname);
+          pni::pstd::searchPath tmpSearch ( *mAse.getSearchPath () );
+          tmpSearch.addPath(tmpPath);
+
+          bool ret = tmpSearch.resolve ( src, dst );
+
+          return ret;
         }
 
     texture* processTexture ( StateMap& rMap, ::ase::node const* pSrc )
@@ -1195,7 +1193,7 @@ PSTDPROFCALL(tpParse.start () );
   
   if ( pParseRoot )
   {
-    helper aHelper ( *this, pParseRoot );
+    helper aHelper ( *this, pParseRoot, fname );
 
 PSTDPROFCALL(tpParse.stop () );
 

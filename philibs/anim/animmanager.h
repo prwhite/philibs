@@ -11,7 +11,6 @@
 
 #include "pnirefcount.h"
 #include "pniautoref.h"
-#include "pnibox.h"
 
 #include "animgroup.h"
 #include "animmatrixhelper.h"
@@ -141,7 +140,7 @@ class manager :
     
     TimeType mLastUpdate;
     
-    pni::pstd::box< base* > mTrackBase;
+    base* mTrackBase = 0;
 
   // interface from pni::pstd::refCount
   public:
