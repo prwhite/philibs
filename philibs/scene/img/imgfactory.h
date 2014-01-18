@@ -25,6 +25,9 @@ class factory
   public:
     factory ();
 
+      /// Singleton accessor.
+    static factory& getInstance ();
+
       // Load fname, with callback.
     typedef std::future< base* > LoadFuture;
     typedef std::function< base* ( std::string const& fname ) > LoadFunction;

@@ -32,7 +32,7 @@
 
 #include "scenecommon.h"
 
-#include "imgdds.h"
+#include "imgfactory.h"
 
 #include <iostream>
 #include <map>
@@ -404,7 +404,7 @@ PNIDBG
             pTex->setMinFilter ( texture::MinLinearMipNearest );
             
             // TODO: Set up better handling for different image types.
-            if ( (pImg = img::dds::loadHelper ( fname )) )
+            if ( ( pImg = img::factory::getInstance().loadSync ( fname ) ) )
             {
               pTex->setImage ( pImg );
               

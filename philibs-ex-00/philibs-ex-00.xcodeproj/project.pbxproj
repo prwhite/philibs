@@ -14,6 +14,7 @@
 		1CC482C318868F4D0029408D /* test-00a.ase in Resources */ = {isa = PBXBuildFile; fileRef = 1CC482C118868F4D0029408D /* test-00a.ase */; };
 		1CC482C6188694AC0029408D /* test-00b.ase in Resources */ = {isa = PBXBuildFile; fileRef = 1CC482C5188694AC0029408D /* test-00b.ase */; };
 		1CC482C8188776650029408D /* test-00c.ase in Resources */ = {isa = PBXBuildFile; fileRef = 1CC482C7188776650029408D /* test-00c.ase */; };
+		1CC482E4188A0EC30029408D /* brushed-aluminum-00a.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1CC482E3188A0EC30029408D /* brushed-aluminum-00a.jpg */; };
 		1CDD4217185BDDC2009284F9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD4216185BDDC2009284F9 /* Foundation.framework */; };
 		1CDD4219185BDDC2009284F9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD4218185BDDC2009284F9 /* CoreGraphics.framework */; };
 		1CDD421B185BDDC2009284F9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD421A185BDDC2009284F9 /* UIKit.framework */; };
@@ -75,6 +76,7 @@
 		1CC482C118868F4D0029408D /* test-00a.ase */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "test-00a.ase"; path = "philibs-ex-00/Resources/test-00a.ase"; sourceTree = "<group>"; };
 		1CC482C5188694AC0029408D /* test-00b.ase */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "test-00b.ase"; path = "philibs-ex-00/Resources/test-00b.ase"; sourceTree = "<group>"; };
 		1CC482C7188776650029408D /* test-00c.ase */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "test-00c.ase"; path = "philibs-ex-00/Resources/test-00c.ase"; sourceTree = "<group>"; };
+		1CC482E3188A0EC30029408D /* brushed-aluminum-00a.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "brushed-aluminum-00a.jpg"; path = "philibs-ex-00/Resources/brushed-aluminum-00a.jpg"; sourceTree = "<group>"; };
 		1CC4B9041860D22700169CF6 /* phiViewController-gles1.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "phiViewController-gles1.mm"; sourceTree = "<group>"; };
 		1CDD4213185BDDC2009284F9 /* philibs-ex-00.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "philibs-ex-00.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CDD4216185BDDC2009284F9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -133,6 +135,7 @@
 		1CAD970F1861876300C547E1 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1CC482E3188A0EC30029408D /* brushed-aluminum-00a.jpg */,
 				1CC482C7188776650029408D /* test-00c.ase */,
 				1CC482C5188694AC0029408D /* test-00b.ase */,
 				1CC482C018868F4D0029408D /* brushed-aluminum-00a.dds */,
@@ -352,6 +355,7 @@
 				1CAD97121861879B00C547E1 /* test-00.ase in Resources */,
 				1CC482C8188776650029408D /* test-00c.ase in Resources */,
 				1CC482C318868F4D0029408D /* test-00a.ase in Resources */,
+				1CC482E4188A0EC30029408D /* brushed-aluminum-00a.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
