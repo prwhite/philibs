@@ -1277,7 +1277,7 @@ CheckGLError
 void ddOglList::dispatch ( texture const* pState )
 {
 CheckGLError
-  size_t texUnit = mCurStateId - state::Texture0;
+  uint32_t texUnit = mCurStateId - state::Texture0;
 	glActiveTexture ( GL_TEXTURE0 + texUnit );
 CheckGLError
     // Is this the right place to do this?  Can it just be done once, rather

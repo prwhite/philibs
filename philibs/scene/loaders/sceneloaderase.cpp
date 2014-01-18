@@ -8,7 +8,7 @@
 #define PSTDPROFDISABLE
 
 #include "sceneloaderase.h"
-#include "pnisceneaseparser.h"
+#include "sceneaseparser.h"
 
 #include "pnimatstack.h"
 #include "pnimathstream.h"

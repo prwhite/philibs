@@ -23,6 +23,8 @@
 
 #include "philibs/pnimathstream.h"
 
+#include "philibs/sceneloaderfactory.h"
+
 #include "pniosxplatform.h"
 
 #include <iostream>
@@ -30,12 +32,12 @@
 @interface phiViewController () {
   
   scene::ddOgl* mDd;
-  pni::pstd::autoRef< loader::base > mLoader;
   pni::pstd::autoRef< scene::node > mRoot;
   pni::pstd::autoRef< scene::node > mFile;
   pni::pstd::autoRef< scene::prog > mProg;
   pni::pstd::autoRef< scene::uniform > mUniform00;
   pni::pstd::autoRef< scene::camera > mCam;
+  loader::factory::LoadFuture mLoadFuture;
   
 }
 @property (strong, nonatomic) EAGLContext *context;
@@ -43,6 +45,7 @@
 
 - (void)setupGL;
 - (void)tearDownGL;
+- (void)initScene;
 
 @end
 
@@ -102,11 +105,7 @@
   
     // Load the file, grab its bounding sphere so we can push back the camera an
     // appropriate amount.
-  mLoader = new loader::ase;
-  mFile = mLoader->load( fname );
-  std::cout << "mFile bounds is " << mFile->getBounds() << std::endl;
-  pni::math::sphere boundingSphere;
-  boundingSphere.extendBy(mFile->getBounds());
+  mLoadFuture = loader::factory::getInstance().loadAsync(fname);
 
     // Create the GL visitor and the root group.
   mDd = new scene::ddOgl ();
@@ -117,33 +116,48 @@
   mProg->setDefaultProgs();
   mRoot->setState(mProg.get(), scene::state::Prog);
 
+    // Create a default depth state object.
+  scene::depth* pDepth = new scene::depth ();
+  mRoot->setState(pDepth, scene::state::Depth);
+
+    // Create and setup the camera.
+  mCam = new scene::camera ();
+  mCam->setColorClear( pni::math::vec4 ( 0.1f, 0.1f, 0.1f, 1.0f ) );
+  mCam->setNormalizeMode( scene::camera::Normalize );
+  mCam->setViewport( 0.0f, 0.0f, self.view.frame.size.height * self.view.contentScaleFactor, self.view.frame.size.width * self.view.contentScaleFactor );
+
+  mRoot->addChild ( mCam.get () );
+
+    // Set the root -> camera path as the sink (viewer) for the scene.
+  scene::nodePath camPath ( mCam.get () );
+  mDd->setSinkPath ( camPath );
+}
+
+- (void) initScene
+{
+  mFile = mLoadFuture.get();
+  std::cout << "mFile bounds is " << mFile->getBounds() << std::endl;
+  pni::math::sphere boundingSphere;
+  boundingSphere.extendBy(mFile->getBounds());
+
     // Add a uniform that will do something debuggy
   mUniform00 = new scene::uniform;
     // ...add some bindings for debugging...
   mRoot->setState(mUniform00.get(), scene::state::Uniform00);
-
-    // Create a default depth state object.
-  scene::depth* pDepth = new scene::depth ();
-  mRoot->setState(pDepth, scene::state::Depth);
 
     // Enable basic lighting state.
   scene::lighting* pLighting = new scene::lighting;
   pLighting->setAmbient ( pni::math::vec4 ( 0.2f, 0.2f, 0.2f, 1.0f ) );  // TEMP
   mRoot->setState ( pLighting, scene::state::Lighting );
   
-    // Create and setup the camera.
-  mCam = new scene::camera ();
+    // Update cam position
   mCam->matrixOp().setTrans ( 0.0f, 0.0f, 2.0f * boundingSphere.getRadius() );
-  mCam->setColorClear( pni::math::vec4 ( 0.1f, 0.1f, 0.1f, 1.0f ) );
-  mCam->setNormalizeMode( scene::camera::Normalize );
-  mCam->setViewport( 0.0f, 0.0f, self.view.frame.size.height * self.view.contentScaleFactor, self.view.frame.size.width * self.view.contentScaleFactor );
 
     // Create a dynamic light.
   scene::light* pLight = new scene::light;
   pLight->setDirection( pni::math::vec3 ( 1.0f, -1.0f, -1.0f ) ); // Not normalized :(
   
-    // Add file and camera as children to the root.
-  mRoot->addChild ( mCam.get () );
+    // Add file and light as children to the root.
   mRoot->addChild ( mFile.get () );
   mRoot->addChild ( pLight );
   
@@ -151,10 +165,6 @@
   scene::lightPath* pLightPath = new scene::lightPath ();
   pLightPath->setLight ( pLight, 0 );
   mRoot->setState ( pLightPath, scene::state::LightPath );
-  
-    // Set the root -> camera path as the sink (viewer) for the scene.
-  scene::nodePath camPath ( mCam.get () );
-  mDd->setSinkPath ( camPath );
 }
 
 - (void)tearDownGL
@@ -167,8 +177,11 @@
 
 - (void)update
 {
-  
-  
+  if ( ! mFile )
+  {
+    if ( mLoadFuture.wait_for( std::chrono::seconds ( 0 ) ) == std::future_status::ready )
+      [self initScene];
+  }
 }
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
@@ -180,8 +193,9 @@
   pni::math::vec3 axis { 0.25f, 0.5f, 1.0f };
   axis.normalize();
 
-  mFile->matrixOp().setRot(rot, axis);
-  
+  if ( mFile )
+    mFile->matrixOp().setRot(rot, axis);
+    
     // Invoke the rendering pass.
   mDd->startGraph ( mRoot.get () );
 }

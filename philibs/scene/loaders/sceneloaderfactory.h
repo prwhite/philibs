@@ -4,21 +4,24 @@
 //
 /////////////////////////////////////////////////////////////////////
 
-#ifndef imgimgfactory_h
-#define imgimgfactory_h
+#ifndef loaderloaderfactory_h
+#define loaderloaderfactory_h
 
 /////////////////////////////////////////////////////////////////////
 
-#include "imgbase.h"
+#include "sceneloaderbase.h"
 #include "pnithreadpool.h"
+#include "pniautoref.h"
 
 #include <string>
 #include <functional>
 #include <unordered_map>
 
+class scene::node;
+
 /////////////////////////////////////////////////////////////////////
 
-namespace img {
+namespace loader {
 
 class factory
 {
@@ -28,32 +31,32 @@ class factory
       /// Singleton accessor.
     static factory& getInstance ();
 
-      // Load fname, with callback.
-    typedef std::future< base* > LoadFuture;
-    typedef std::function< base* ( std::string const& fname ) > LoadFunction;
+    typedef std::future< scene::node* > LoadFuture;
 
       /// Load an image file asynchronously and receive callback when done.
     LoadFuture loadAsync ( std::string const& fname );
       /// Load an image synchronously.
-    base* loadSync ( std::string const& fname );
+    scene::node* loadSync ( std::string const& fname );
       /// Cancel a pending image load.
       /// @note Not implemented yet!!!
     void cancel ( LoadFuture const& loadFuture );
 
       /// Register loaderBase instances with the extension they handle.
-    void addLoader ( std::string const& extension, LoadFunction func );
+    void addLoader ( std::string const& extension, loader::base* pLoader );
     void remLoader ( std::string const& extension );
 
   private:
-    typedef std::unordered_map< std::string, LoadFunction > LoadFunctions;
+    typedef pni::pstd::autoRef<loader::base> BaseRef;
+    typedef std::unordered_map< std::string, BaseRef > Loaders;
 
       // TODO: Implement a work queue thread to handle file reads.
     pni::pstd::threadPool mThreadPool { 2 };
-    LoadFunctions mLoadFunctions;
+    Loaders mLoaders;
+
 
 };
 
 
-} // end namespace img
+} // end namespace loader
 
-#endif // imgimgfactory_h
+#endif // loaderloaderfactory_h

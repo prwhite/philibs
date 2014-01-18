@@ -4,7 +4,7 @@
 //
 /////////////////////////////////////////////////////////////////////
 
-#include "pnisceneaseparser.h"
+#include "sceneaseparser.h"
 
 #include <fstream>
 

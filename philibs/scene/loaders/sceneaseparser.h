@@ -4,13 +4,13 @@
 //
 /////////////////////////////////////////////////////////////////////
 
-#ifndef PNISCENEASEASEPARSER_H
-#define PNISCENEASEASEPARSER_H
+#ifndef SCENEASEASEPARSER_H
+#define SCENEASEASEPARSER_H
 
 /////////////////////////////////////////////////////////////////////
 
 // #include "pnisceneasedef.h"
-#define PNISCENEASEAPI
+#define SCENEASEAPI
 
 #include "pniplatform.h"
 
@@ -130,7 +130,7 @@ size_t getline ( str& istr, std::string& str )
 
 /////////////////////////////////////////////////////////////////////
 
-class PNISCENEASEAPI line
+class SCENEASEAPI line
 {
   public:
   
@@ -324,7 +324,7 @@ class PNISCENEASEAPI line
 
 /////////////////////////////////////////////////////////////////////
 
-class PNISCENEASEAPI node :
+class SCENEASEAPI node :
   public line
 {
   public:
@@ -455,7 +455,7 @@ std::cout << "line name = " << ( *cur )->getName () << std::endl;
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
-class PNISCENEASEAPI parser 
+class SCENEASEAPI parser
 {
   public:
     typedef line::Stream Stream;
@@ -482,6 +482,6 @@ class PNISCENEASEAPI parser
 
 } // end of namespace ase 
 
-#endif // PNISCENEASEASEPARSER_H
+#endif // SCENEASEASEPARSER_H
 
 
