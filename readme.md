@@ -46,8 +46,21 @@ The library now builds as a relatively clean 32 and 64 bit binary for iOS 7.  A 
 
 This current goal of this project is to transform the code into a proper stand-alone library.  Following this transformation, the library will be upgraded from support of GLES 1.x to _only_ support GLES 2.x.
 
+## License
 
+The philibs source code is covered by the (zlib/libpng)[http://opensource.org/licenses/Zlib] open source license, except where otherwise noted.  E.g:
 
+	Copyright (c) 2014 Payton R White
+	
+	This software is provided 'as-is', without any express or implied warranty. In no event will the authors be held liable for any damages arising from the use of this software.
+	
+	Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:
+	
+	1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+	
+	2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+	
+	3. This notice may not be removed or altered from any source distribution.
 
 
 

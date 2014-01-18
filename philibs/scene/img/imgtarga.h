@@ -60,6 +60,7 @@ class targa
 		
 		// Allocates a new img::targa object.  Don't forget to also
 		// delete the buffer pointer or use unloadHelper.
+    // TODO: loadHelper should return an img::base* !!!
 		static targa* loadHelper ( const std::string& fname );
 		static void unloadHelper ( targa* pImg );
 		
