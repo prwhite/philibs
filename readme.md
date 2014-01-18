@@ -48,7 +48,7 @@ This current goal of this project is to transform the code into a proper stand-a
 
 ## License
 
-The philibs source code is covered by the (zlib/libpng)[http://opensource.org/licenses/Zlib] open source license, except where otherwise noted.  E.g:
+The philibs source code is covered by the [zlib/libpng](http://opensource.org/licenses/Zlib) open source license, except where otherwise noted.  E.g:
 
 	Copyright (c) 2014 Payton R White
 	
