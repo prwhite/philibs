@@ -36,7 +36,7 @@ A _version_ of this code has been used in an iOS title [(LD50)](http://labs.preh
 
 2014/01/18
 
-GLES2 support, from the gles2 branch, has been merged to master.  There are still a few things not buttoned up, like interpreting the scene graph light nodes as uniforms, etc.  That will come soon, ideally with sufficient generalization to allow for a range of lighting models.
+GLES2 support, from the gles2 branch, has been merged to master.  There are still a few things not buttoned up, like interpreting the scene graph light nodes as uniforms, etc.  That will come soon, ideally with sufficient generalization to allow for a range of lighting models.  Additionally, the file loader and image loaders have added factories that also intermediate asynchronous loading.  These use some C++11 features, such as threads/futures, etc.
 
 2014/01/16
 
