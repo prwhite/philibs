@@ -24,9 +24,10 @@ class base :
   public pni::pstd::refCount
 {
   protected:
-    virtual ~base();
+    virtual ~base() = default;
+
   public:
-    base();
+    base() = default;
 //     base(base const& rhs);
 //     base& operator=(base const& rhs);
 //     bool operator==(base const& rhs) const;
@@ -137,11 +138,11 @@ class base :
     
   protected:
     std::string mName;
-    mutable Dirty mDirty;
-    Format mFormat;
-    Dim mWidth;
-    Dim mHeight;
-    Dim mPitch;
+    mutable Dirty mDirty = DirtyTrue;
+    Format mFormat = Uninit;
+    Dim mWidth = 0;
+    Dim mHeight = 0;
+    Dim mPitch = 0;
     
   private:
     

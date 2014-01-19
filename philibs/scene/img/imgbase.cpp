@@ -17,17 +17,6 @@ namespace img {
   
 /////////////////////////////////////////////////////////////////////
 
-base::base() :
-  mDirty ( DirtyTrue )
-{
-  
-}
-
-base::~base()
-{
-  
-}
-
 // base::base(base const& rhs)
 // {
 //   

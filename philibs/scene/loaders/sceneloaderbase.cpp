@@ -77,9 +77,13 @@ scene::node* directory::getNode ( std::string const& name )
       // Gets lower/upper iterators for node name query.
 directory::NodeRange directory::getNodes ( std::string const& name )
 {
-  return NodeRange ( 
-      mNodes.lower_bound ( name ), 
-      mNodes.upper_bound ( name ) );
+    // For multimap
+//  return NodeRange ( 
+//      mNodes.lower_bound ( name ), 
+//      mNodes.upper_bound ( name ) );
+
+    // For unordered_multimap
+  return mNodes.equal_range(name);
 }
 
 /////////////////////////////////////////////////////////////////////

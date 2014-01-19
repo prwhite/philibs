@@ -12,6 +12,7 @@
 #include "scenetypes.h"
 #include <string>
 #include <map>
+#include <unordered_map>
 #include "scenetexture.h"
 #include "sceneblend.h"
 #include "pniautoref.h"
@@ -37,7 +38,7 @@ class cache :
         }
   
     typedef pni::pstd::autoRef< scene::texture > TextureRef;
-    typedef std::map< std::string, TextureRef > Textures;
+    typedef std::unordered_map< std::string, TextureRef > Textures;
       
     Textures mTextures;
     
@@ -60,7 +61,7 @@ class directory :
     
       ///////
       // Nodes
-    typedef std::multimap< std::string, pni::pstd::autoRef< scene::node > > Nodes;
+    typedef std::unordered_multimap< std::string, pni::pstd::autoRef< scene::node > > Nodes;
     typedef Nodes::iterator NodeIter;
     typedef std::pair< NodeIter, NodeIter > NodeRange;
 

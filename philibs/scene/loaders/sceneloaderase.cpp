@@ -58,12 +58,22 @@ namespace loader {
 
 class helper
 {
+    typedef img::factory::LoadFuture ImgFuture;
+
+    struct ImgFutureTuple
+    {
+      ImgFuture imgFuture;
+      scene::node* mNode;
+      scene::texture* mTex;
+    };
+
   public:
     typedef std::string Str;
     typedef std::string const Strc;
     typedef std::map< unsigned int, ::ase::node const* > AseMaterialMap;
     typedef std::map< unsigned int, state* > StateMap;
     typedef std::map< unsigned int, StateMap >  ShaderMap;
+    typedef std::vector< ImgFutureTuple* > ImgFutures;
   
     ase& mAse;
     ::ase::node* mRoot;
@@ -73,6 +83,7 @@ class helper
     AseMaterialMap mMatNodes;
     ShaderMap mShaderMap;
     std::string mFname;
+    ImgFutures mImgFutures;
     
     helper ( ase& rAse, ::ase::node* pRoot, std::string fname ) :
       mAse ( rAse ),
@@ -212,7 +223,7 @@ PNIDBG
 
 					if ( ::ase::node const* pNode = pSrc->findNode ( "MAP_DIFFUSE", false ) )
 					{
-						if ( texture* pTex = processTexture ( rMap, pNode ) )
+						if ( texture* pTex = processTexture ( rMap, pNode, pSceneNode ) )
 						{
 						
 						}
@@ -247,7 +258,7 @@ PNIDBG
 					// Light map.
 					if ( ::ase::node const* pNode = pSrc->findNode ( "MAP_SELFILLUM", false ) )
 					{
-						if ( texture* pTex = processTexture ( rMap, pNode ) )
+						if ( texture* pTex = processTexture ( rMap, pNode, pSceneNode ) )
 						{
 							// TODO Maybe override texenv on this unit.
 						}
@@ -356,7 +367,7 @@ PNIDBG
           return ret;
         }
 
-    texture* processTexture ( StateMap& rMap, ::ase::node const* pSrc )
+    texture* processTexture ( StateMap& rMap, ::ase::node const* pSrc, scene::node* pDst )
         {
 PNIDBG
 					// We only handle bitmap textures right now.
@@ -402,7 +413,8 @@ PNIDBG
             
             pTex->setName ( pSrc->findLine ( "MAP_NAME" )->getQuoted() );
             pTex->setMinFilter ( texture::MinLinearMipNearest );
-            
+
+#ifdef IMGSYNCHRONOUS
             // TODO: Set up better handling for different image types.
             if ( ( pImg = img::factory::getInstance().loadSync ( fname ) ) )
             {
@@ -411,8 +423,15 @@ PNIDBG
               if ( pImg->mBuffers.size () == 1 )
                 pTex->setMinFilter ( texture::MinLinear );
             }
+#else // ! IMGSYNCHRONOUS
+            ImgFutureTuple* tuple = new ImgFutureTuple;
+            tuple->imgFuture = img::factory::getInstance().loadAsync(fname);
+            tuple->mTex = pTex;
+            tuple->mNode = pDst;
+            mImgFutures.push_back(tuple);
+#endif  // ! IMGSYNCHRONOUS
           }
-                
+
 PNIDBG
 					// Add to shader with proper unit.
 					// Our unit is 0 based, theirs is one based.
@@ -427,6 +446,7 @@ PNIDBG
           rMap[ state::Texture0 + channel ] = pTex;
           
 PNIDBG
+#ifndef IMGSYNCHRONOUS
           if ( pImg && pImg->hasAlpha () )
           {
             //printf ( "  %s has alpha\n", pImg->getName ().c_str () );
@@ -436,10 +456,43 @@ PNIDBG
           {
             //printf ( "  %s has no alpha\n", pImg->getName ().c_str () );
           }
-          
+#endif // IMGSYNCHRONOUS
+
 PNIDBG
           return pTex;
         }
+
+        void finishTextureFutures ()
+        {
+          for ( auto tuple : mImgFutures )
+          {
+            img::base* pImg = tuple->imgFuture.get();    // Will wait indefinitely
+            finishTexture(tuple->mTex, tuple->mNode, pImg);
+            delete tuple;
+          }
+
+          mImgFutures.clear ();
+        }
+
+        void finishTexture ( scene::texture* pTex, scene::node* pNode, img::base* pImg )
+        {
+          pTex->setImage ( pImg );
+
+          if ( pImg->mBuffers.size () == 1 )
+            pTex->setMinFilter ( texture::MinLinear );
+
+          if ( pImg && pImg->hasAlpha () )
+          {
+            //printf ( "  %s has alpha\n", pImg->getName ().c_str () );
+//            rMap[ state::Blend ] = mCache->mDefBlend.get ();
+            pNode->setState(mCache->mDefBlend.get(), state::Blend);
+          }
+          else
+          {
+            //printf ( "  %s has no alpha\n", pImg->getName ().c_str () );
+          }
+        }
+
 
     void invertGeom ( geom* pGeom )
         {
@@ -1210,6 +1263,8 @@ PSTDPROFCALL(tpParse.stop () );
     mObserver->onPostNode ( pRoot );
 
     pRoot->setName ( fname );
+
+    aHelper.finishTextureFutures();
 
     emitProgressEnd ( event );
 
