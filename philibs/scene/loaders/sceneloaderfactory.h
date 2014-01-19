@@ -50,7 +50,13 @@ class factory
     typedef std::unordered_map< std::string, BaseRef > Loaders;
 
       // TODO: Implement a work queue thread to handle file reads.
-    pni::pstd::threadPool mThreadPool { 2 };
+    pni::pstd::threadPool mThreadPool { 1 };  // loader::base is currently not
+                                              // re-entrant, but can run in a
+                                              // separate thread.  Need to make
+                                              // shared state like dict, cache
+                                              // thread safe to bump this up.
+                                              // Not a big deal though, as img
+                                              // loading will run in parallel.
     Loaders mLoaders;
 
 

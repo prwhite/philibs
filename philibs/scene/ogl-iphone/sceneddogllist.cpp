@@ -417,11 +417,6 @@ PNIDBG
       // set up model mat
     mModelMat = cur->mMatrix;
     
-      // TODO: PRW PNIGLES1REMOVED
-//    glMatrixMode ( GL_MODELVIEW ); // TEMP... remove this after everything works.
-//    glPushMatrix ();
-//    glMultMatrixf ( cur->mMatrix );
-
  //cout << "cur->matrix =\n" << cur->mMatrix << endl;
 
 PNIDBG
@@ -480,9 +475,6 @@ void ddOglList::execCamera ()
     // NEWMATSTACK
   // Do something with matrix from camera path.
   mSinkPath.calcInverseXform ( mViewMat );
-
-    // TODO: PRW PNIGLES1REMOVED
-//  glLoadMatrixf ( mat );
 
 // std::string tmp;
 // mSinkPath.getPathString ( tmp );
@@ -557,16 +549,8 @@ void ddOglList::dispatch ( camera const* pNode )
     // NEWMATSTACK
   mProjMat = pNode->getProjectionMatrix();
 
-  // Setup projection matrix.
-    // TODO: PRW PNIGLES1REMOVED
-//  glMatrixMode ( GL_PROJECTION );
-//  glLoadMatrixf ( pNode->getProjectionMatrix () );
-
 // cout << "camera proj = " << pNode->getProjectionMatrix () << endl;
 
-    // TODO: PRW PNIGLES1REMOVED
-//  glMatrixMode ( GL_MODELVIEW );
-  
   // Setup viewport.
   float left, bottom, width, height;
   pNode->getViewport ( left, bottom, width, height );
@@ -576,22 +560,7 @@ void ddOglList::dispatch ( camera const* pNode )
   
   // Do clear.
   doClear ( pNode );
-  
-  // TODO: PRW PNIGLES1REMOVED
-//  switch ( pNode->getNormalizeMode () )
-//  {
-//    case camera::Normalize:
-//      glEnable ( GL_NORMALIZE );
-//      break;
-//    case camera::Rescale:
-//      glEnable ( GL_RESCALE_NORMAL );
-//      break;
-//    case camera::NoNormalize:
-//    default:
-//      glDisable ( GL_NORMALIZE );
-//      glDisable ( GL_RESCALE_NORMAL );
-//  }
-CheckGLError
+  CheckGLError
 }
 
 void dbg ( geomData const* pGdata )
