@@ -7,6 +7,8 @@
 #define PNIDBGDISABLE
 #define PNIPSTDLOGDISABLE
 
+#include <OpenGLES/ES2/glext.h>
+
 #include "pnilog.h"
 
 #include "scenetexobj.h"
@@ -101,6 +103,7 @@ imageFormatToGlFormat ( img::base::Format formatIn )	// img::image* imgIn )
 		case img::base::Gray8: return GL_LUMINANCE;
 		case img::base::Alpha8: return GL_ALPHA;
 		case img::base::GrayAlpha88: return GL_LUMINANCE_ALPHA;
+
 	}
 }
 
@@ -122,6 +125,10 @@ imageFormatToGlType ( img::base::Format typeIn )	// img::image* imgIn )
 		case img::base::Gray8: return GL_UNSIGNED_BYTE;
 		case img::base::Alpha8: return GL_UNSIGNED_BYTE;
 		case img::base::GrayAlpha88: return GL_UNSIGNED_BYTE;
+    case img::base::RGB_PVRTC_2BPPV1: return GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG;
+    case img::base::RGB_PVRTC_4BPPV1: return GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
+    case img::base::RGBA_PVRTC_2BPPV1: return GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG;
+    case img::base::RGBA_PVRTC_4BPPV1: return GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
 	}
 }
 
@@ -206,6 +213,12 @@ int wrapToGl ( texture::Wrap wrap )
 	}
 }
 
+int textureTargetToGlParam ( texture::Target target )
+{
+    // TODO: Support other targets, e.g., cube map.
+  return GL_TEXTURE_2D;
+}
+
 // float textureAnisotropyToGl ( float valIn )
 // {
 // 	static bool first = true;
@@ -227,8 +240,7 @@ int wrapToGl ( texture::Wrap wrap )
 
 void setGlTexParams ( texture const* texIn )
 {
-// 	int targetGl = textureTargetToGlParam ( texIn->getTarget () );
-	int targetGl = GL_TEXTURE_2D;
+ 	int targetGl = textureTargetToGlParam ( texIn->getTarget () );
 
 	glTexParameteri ( targetGl, GL_TEXTURE_MIN_FILTER, 
 			minFilterToGl ( texIn->getMinFilter () ) );
@@ -241,17 +253,6 @@ void setGlTexParams ( texture const* texIn )
 
 	glTexParameteri ( targetGl, GL_TEXTURE_WRAP_T,
 			wrapToGl ( texIn->getTWrap () ) );
-
-// 	glHint ( GL_GENERATE_MIPMAP_HINT_SGIS, GL_NICEST );
-
-// 	if ( extgl_Extensions.SGIS_generate_mipmap )
-// 	{
-// 		if ( texIn->getMinFilter () > texture::MinLinear )
-// 			glTexParameteri ( targetGl, GL_GENERATE_MIPMAP_SGIS, 1 );
-// 		else
-// 			glTexParameteri ( targetGl, GL_GENERATE_MIPMAP_SGIS, 0 );
-// 
-// 	}
 
 // 	glTexParameterf ( targetGl, GL_TEXTURE_MAX_ANISOTROPY_EXT, textureAnisotropyToGl ( texIn->getMaxAnisotropy () ) );
 }
@@ -302,7 +303,17 @@ CheckGLError
 CheckGLError
       }
     }
-    
+
+   	int targetGl = textureTargetToGlParam ( pTex->getTarget () );
+
+    glHint ( GL_GENERATE_MIPMAP_HINT, GL_FASTEST );
+
+      // Generate mipmaps if texture is set to mipmap but only one image buffer is present.
+      // Note, the current file loader doesn't do this, so it will take action by the app to
+      // get this to be invoked.
+    if ( pTex->getMinFilter () > texture::MinLinear && pImg->mBuffers.size() == 1 )
+      glGenerateMipmap ( targetGl );
+
     pTex->setDirty ( texture::DirtyFalse );
     pImg->setDirty ( img::base::DirtyFalse );
   }

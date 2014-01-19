@@ -27,6 +27,8 @@
 		1CC482E2188A093B0029408D /* imgcoreimage.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CC482DF188A07C90029408D /* imgcoreimage.h */; };
 		1CC482E8188A3FB00029408D /* sceneloaderfactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC482E6188A3FB00029408D /* sceneloaderfactory.cpp */; };
 		1CC482E9188A68BF0029408D /* sceneloaderfactory.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CC482E7188A3FB00029408D /* sceneloaderfactory.h */; };
+		1CC482EC188B916A0029408D /* imgpvr.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1CC482EB188B916A0029408D /* imgpvr.mm */; };
+		1CC482ED188B91940029408D /* imgpvr.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CC482EA188B916A0029408D /* imgpvr.h */; };
 		1CDD3FFA185BC965009284F9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD3FF9185BC965009284F9 /* Foundation.framework */; };
 		1CDD3FFF185BC965009284F9 /* philibs.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD3FFE185BC965009284F9 /* philibs.h */; };
 		1CDD4001185BC965009284F9 /* philibs.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD4000185BC965009284F9 /* philibs.m */; };
@@ -268,6 +270,7 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				1CC482ED188B91940029408D /* imgpvr.h in CopyFiles */,
 				1CC482E2188A093B0029408D /* imgcoreimage.h in CopyFiles */,
 				1CC482DE1889E6DF0029408D /* pnithreadpool.h in CopyFiles */,
 				1CC482DC1889E59C0029408D /* ThreadPool.h in CopyFiles */,
@@ -426,6 +429,8 @@
 		1CC482E0188A07C90029408D /* imgcoreimage.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = imgcoreimage.mm; sourceTree = "<group>"; };
 		1CC482E6188A3FB00029408D /* sceneloaderfactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneloaderfactory.cpp; sourceTree = "<group>"; };
 		1CC482E7188A3FB00029408D /* sceneloaderfactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneloaderfactory.h; sourceTree = "<group>"; };
+		1CC482EA188B916A0029408D /* imgpvr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imgpvr.h; sourceTree = "<group>"; };
+		1CC482EB188B916A0029408D /* imgpvr.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = imgpvr.mm; sourceTree = "<group>"; };
 		1CDD3FF6185BC965009284F9 /* libphilibs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libphilibs.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CDD3FF9185BC965009284F9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1CDD3FFD185BC965009284F9 /* philibs-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "philibs-Prefix.pch"; sourceTree = "<group>"; };
@@ -965,6 +970,8 @@
 		1CDD40FE185BCAEF009284F9 /* img */ = {
 			isa = PBXGroup;
 			children = (
+				1CC482EA188B916A0029408D /* imgpvr.h */,
+				1CC482EB188B916A0029408D /* imgpvr.mm */,
 				1CC482DF188A07C90029408D /* imgcoreimage.h */,
 				1CC482E0188A07C90029408D /* imgcoreimage.mm */,
 				1CC482D3188913820029408D /* imgfactory.cpp */,
@@ -1261,6 +1268,7 @@
 				1CDD4200185BCAF0009284F9 /* uiactions.cpp in Sources */,
 				1CDD4001185BC965009284F9 /* philibs.m in Sources */,
 				1CDD41D9185BCAF0009284F9 /* scenegeom.cpp in Sources */,
+				1CC482EC188B916A0029408D /* imgpvr.mm in Sources */,
 				1CDD41B4185BCAF0009284F9 /* pnibox2.cpp in Sources */,
 				1CDD41F4185BCAF0009284F9 /* scenedepth.cpp in Sources */,
 				1CDD41C1185BCAF0009284F9 /* pniquat.cpp in Sources */,

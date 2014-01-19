@@ -11,6 +11,7 @@
 #include "imgdds.h"
 #include "imgtarga.h"
 #include "imgcoreimage.h"
+#include "imgpvr.h"
 
 #include <string>
 #include <algorithm>
@@ -33,9 +34,9 @@ factory::factory ()
   addLoader("dds", [] ( std::string const& fname ) { return dds::loadHelper ( fname ); } );
 //  addLoader("tga", [] ( std::string const& fname ) { return targa::loadHelper ( fname ); } );
 
-  auto coreImageFunc = [] ( std::string const& fname ) { return coreImage::loadHelper(fname); };
-
 #if defined __IPHONE_7_0 || defined __MAC_10_9
+
+  auto coreImageFunc = [] ( std::string const& fname ) { return coreImage::loadHelper(fname); };
 
   addLoader("jpg", coreImageFunc);
   addLoader("jpeg", coreImageFunc);
@@ -43,6 +44,11 @@ factory::factory ()
   addLoader("tif", coreImageFunc);
   addLoader("tiff", coreImageFunc);
   addLoader("gif", coreImageFunc);
+
+  auto pvrImageFunc = [] ( std::string const& fname ) { return pvr::loadHelper(fname); };
+
+  addLoader("pvr",pvrImageFunc);
+  addLoader("pvrtc",pvrImageFunc);
 
 #endif
 

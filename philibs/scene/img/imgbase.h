@@ -47,6 +47,10 @@ class base :
         Gray8,
         Alpha8,
         GrayAlpha88,
+        RGB_PVRTC_2BPPV1, //GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG
+        RGB_PVRTC_4BPPV1, //GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG
+        RGBA_PVRTC_2BPPV1, //GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG
+        RGBA_PVRTC_4BPPV1, //GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG
         FormatCount
       };
       
