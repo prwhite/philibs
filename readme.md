@@ -26,9 +26,17 @@ In many cases, these half-ass'd features are built around proper abstractions al
 
 * A number of features to support a high-polish 3D authoring application, such as real-time reflections, soft shadows, section planes, high-quality line rendering, ambient occlusion, etc.
 
+## Example
+
+Check out the source, then open, build, and run the project file `philibs-ex-00/philibs-ex-00.xcodeproj`.  You will generally see something spinning on screen... the current example is geared toward landscape orientation BTW.
+
 ## Status
 
 A _version_ of this code has been used in an iOS title [(LD50)](http://labs.prehiti.com/ld50/).  But, this code has not been used in its current incarnation as a stand-alone library, _yet_.
+
+2014/01/18
+
+GLES2 support, from the gles2 branch, has been merged to master.  There are still a few things not buttoned up, like interpreting the scene graph light nodes as uniforms, etc.  That will come soon, ideally with sufficient generalization to allow for a range of lighting models.
 
 2014/01/16
 
