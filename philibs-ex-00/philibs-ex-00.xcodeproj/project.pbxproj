@@ -15,6 +15,7 @@
 		1CC482C6188694AC0029408D /* test-00b.ase in Resources */ = {isa = PBXBuildFile; fileRef = 1CC482C5188694AC0029408D /* test-00b.ase */; };
 		1CC482C8188776650029408D /* test-00c.ase in Resources */ = {isa = PBXBuildFile; fileRef = 1CC482C7188776650029408D /* test-00c.ase */; };
 		1CC482E4188A0EC30029408D /* brushed-aluminum-00a.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1CC482E3188A0EC30029408D /* brushed-aluminum-00a.jpg */; };
+		1CC48343188D270C0029408D /* libassimp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CC48342188D26FF0029408D /* libassimp.a */; };
 		1CDD4217185BDDC2009284F9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD4216185BDDC2009284F9 /* Foundation.framework */; };
 		1CDD4219185BDDC2009284F9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD4218185BDDC2009284F9 /* CoreGraphics.framework */; };
 		1CDD421B185BDDC2009284F9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD421A185BDDC2009284F9 /* UIKit.framework */; };
@@ -37,6 +38,41 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		1CC48339188D26FF0029408D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1CC48331188D26FE0029408D /* assimp.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8E8DEEA3127E2D59005EF64D;
+			remoteInfo = assimp;
+		};
+		1CC4833B188D26FF0029408D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1CC48331188D26FE0029408D /* assimp.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8E8DEEA4127E2D59005EF64D;
+			remoteInfo = "assimp-static";
+		};
+		1CC4833D188D26FF0029408D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1CC48331188D26FE0029408D /* assimp.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8E8DEEA5127E2D59005EF64D;
+			remoteInfo = "assimp-no-boost";
+		};
+		1CC4833F188D26FF0029408D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1CC48331188D26FE0029408D /* assimp.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8E8DEEA6127E2D59005EF64D;
+			remoteInfo = "assimp-static-no-boost";
+		};
+		1CC48341188D26FF0029408D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1CC48331188D26FE0029408D /* assimp.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B919763F163AEA54009C397B;
+			remoteInfo = "assimp-ios-static-no-boost";
+		};
 		1CDD4244185BDDC2009284F9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1CDD420B185BDDC2009284F9 /* Project object */;
@@ -77,6 +113,7 @@
 		1CC482C5188694AC0029408D /* test-00b.ase */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "test-00b.ase"; path = "philibs-ex-00/Resources/test-00b.ase"; sourceTree = "<group>"; };
 		1CC482C7188776650029408D /* test-00c.ase */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "test-00c.ase"; path = "philibs-ex-00/Resources/test-00c.ase"; sourceTree = "<group>"; };
 		1CC482E3188A0EC30029408D /* brushed-aluminum-00a.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "brushed-aluminum-00a.jpg"; path = "philibs-ex-00/Resources/brushed-aluminum-00a.jpg"; sourceTree = "<group>"; };
+		1CC48331188D26FE0029408D /* assimp.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = assimp.xcodeproj; path = ../3p/assimp/workspaces/xcode3/assimp.xcodeproj; sourceTree = "<group>"; };
 		1CC4B9041860D22700169CF6 /* phiViewController-gles1.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "phiViewController-gles1.mm"; sourceTree = "<group>"; };
 		1CDD4213185BDDC2009284F9 /* philibs-ex-00.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "philibs-ex-00.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CDD4216185BDDC2009284F9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -110,6 +147,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1CC48343188D270C0029408D /* libassimp.a in Frameworks */,
 				1CF4DBAB185EE4C4007331F8 /* libphilibs.a in Frameworks */,
 				1CDD421F185BDDC2009284F9 /* OpenGLES.framework in Frameworks */,
 				1CDD4219185BDDC2009284F9 /* CoreGraphics.framework in Frameworks */,
@@ -145,9 +183,22 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		1CC48332188D26FE0029408D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1CC4833A188D26FF0029408D /* libassimpd.dylib */,
+				1CC4833C188D26FF0029408D /* libassimpd.a */,
+				1CC4833E188D26FF0029408D /* libassimpd.dylib */,
+				1CC48340188D26FF0029408D /* libassimpd.a */,
+				1CC48342188D26FF0029408D /* libassimp.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		1CDD420A185BDDC2009284F9 = {
 			isa = PBXGroup;
 			children = (
+				1CC48331188D26FE0029408D /* assimp.xcodeproj */,
 				1CF4DBA2185EE4B7007331F8 /* philibs.xcodeproj */,
 				1CDD4220185BDDC2009284F9 /* philibs-ex-00 */,
 				1CDD4246185BDDC2009284F9 /* philibs-ex-00Tests */,
@@ -310,6 +361,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 1CC48332188D26FE0029408D /* Products */;
+					ProjectRef = 1CC48331188D26FE0029408D /* assimp.xcodeproj */;
+				},
+				{
 					ProductGroup = 1CF4DBA3185EE4B7007331F8 /* Products */;
 					ProjectRef = 1CF4DBA2185EE4B7007331F8 /* philibs.xcodeproj */;
 				},
@@ -323,6 +378,41 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		1CC4833A188D26FF0029408D /* libassimpd.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			path = libassimpd.dylib;
+			remoteRef = 1CC48339188D26FF0029408D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1CC4833C188D26FF0029408D /* libassimpd.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libassimpd.a;
+			remoteRef = 1CC4833B188D26FF0029408D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1CC4833E188D26FF0029408D /* libassimpd.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			path = libassimpd.dylib;
+			remoteRef = 1CC4833D188D26FF0029408D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1CC48340188D26FF0029408D /* libassimpd.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libassimpd.a;
+			remoteRef = 1CC4833F188D26FF0029408D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1CC48342188D26FF0029408D /* libassimp.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libassimp.a;
+			remoteRef = 1CC48341188D26FF0029408D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		1CF4DBA8185EE4B7007331F8 /* libphilibs.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;

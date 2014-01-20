@@ -29,6 +29,8 @@
 		1CC482E9188A68BF0029408D /* sceneloaderfactory.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CC482E7188A3FB00029408D /* sceneloaderfactory.h */; };
 		1CC482EC188B916A0029408D /* imgpvr.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1CC482EB188B916A0029408D /* imgpvr.mm */; };
 		1CC482ED188B91940029408D /* imgpvr.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CC482EA188B916A0029408D /* imgpvr.h */; };
+		1CC482F4188C87020029408D /* sceneloaderassimp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC482F2188C87020029408D /* sceneloaderassimp.cpp */; };
+		1CC482F5188C87170029408D /* sceneloaderassimp.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CC482F3188C87020029408D /* sceneloaderassimp.h */; };
 		1CDD3FFA185BC965009284F9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD3FF9185BC965009284F9 /* Foundation.framework */; };
 		1CDD3FFF185BC965009284F9 /* philibs.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD3FFE185BC965009284F9 /* philibs.h */; };
 		1CDD4001185BC965009284F9 /* philibs.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD4000185BC965009284F9 /* philibs.m */; };
@@ -270,6 +272,7 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				1CC482F5188C87170029408D /* sceneloaderassimp.h in CopyFiles */,
 				1CC482ED188B91940029408D /* imgpvr.h in CopyFiles */,
 				1CC482E2188A093B0029408D /* imgcoreimage.h in CopyFiles */,
 				1CC482DE1889E6DF0029408D /* pnithreadpool.h in CopyFiles */,
@@ -431,6 +434,9 @@
 		1CC482E7188A3FB00029408D /* sceneloaderfactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneloaderfactory.h; sourceTree = "<group>"; };
 		1CC482EA188B916A0029408D /* imgpvr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imgpvr.h; sourceTree = "<group>"; };
 		1CC482EB188B916A0029408D /* imgpvr.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = imgpvr.mm; sourceTree = "<group>"; };
+		1CC482F0188C82380029408D /* assimp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = assimp.a; path = 3p/assimp/lib/ios/assimp.a; sourceTree = "<group>"; };
+		1CC482F2188C87020029408D /* sceneloaderassimp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneloaderassimp.cpp; sourceTree = "<group>"; };
+		1CC482F3188C87020029408D /* sceneloaderassimp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneloaderassimp.h; sourceTree = "<group>"; };
 		1CDD3FF6185BC965009284F9 /* libphilibs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libphilibs.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CDD3FF9185BC965009284F9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1CDD3FFD185BC965009284F9 /* philibs-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "philibs-Prefix.pch"; sourceTree = "<group>"; };
@@ -711,6 +717,7 @@
 		1CDD3FF8185BC965009284F9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1CC482F0188C82380029408D /* assimp.a */,
 				1CDD3FF9185BC965009284F9 /* Foundation.framework */,
 				1CDD4007185BC965009284F9 /* XCTest.framework */,
 				1CDD400A185BC965009284F9 /* UIKit.framework */,
@@ -991,6 +998,8 @@
 		1CDD4107185BCAEF009284F9 /* loaders */ = {
 			isa = PBXGroup;
 			children = (
+				1CC482F2188C87020029408D /* sceneloaderassimp.cpp */,
+				1CC482F3188C87020029408D /* sceneloaderassimp.h */,
 				1CC482E6188A3FB00029408D /* sceneloaderfactory.cpp */,
 				1CC482E7188A3FB00029408D /* sceneloaderfactory.h */,
 				1CDD4108185BCAEF009284F9 /* sceneaseparser.cpp */,
@@ -1290,6 +1299,7 @@
 				1CDD41C3185BCAF0009284F9 /* pniseg.cpp in Sources */,
 				1CDD41E0185BCAF0009284F9 /* scenetext.cpp in Sources */,
 				1CDD41DB185BCAF0009284F9 /* scenegroup.cpp in Sources */,
+				1CC482F4188C87020029408D /* sceneloaderassimp.cpp in Sources */,
 				1CDD41CA185BCAF0009284F9 /* pnilog.cpp in Sources */,
 				1CDD41D5185BCAF0009284F9 /* sceneaseparser.cpp in Sources */,
 				1CDD417C185BCAF0009284F9 /* animbase.cpp in Sources */,
