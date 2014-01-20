@@ -256,7 +256,7 @@ base* pvr::loadHelper ( std::string const& fname )
   if ( PVRTexture* tex = [[PVRTexture alloc] initWithContentsOfFile:nsfname] )
   {
     img::base* img = new img::base;
-    img->setSize(tex.width, tex.height, [tex.imageData count]);
+    img->setSize( (img::base::Dim) tex.width, (img::base::Dim) tex.height, (img::base::Dim) [tex.imageData count]);
     img->setName(fname);
     img->setFormat( PVRFormatToImgFormat(tex));
 
