@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1C9AAAC218735E60001540C3 /* test-instantiaton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AAAC118735E60001540C3 /* test-instantiaton.cpp */; };
+		1C9E34B91891A50700E49195 /* blue-grid-512-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C9E34B71891A50700E49195 /* blue-grid-512-32.png */; };
+		1C9E34BA1891A50700E49195 /* cyclorama-00a.dae in Resources */ = {isa = PBXBuildFile; fileRef = 1C9E34B81891A50700E49195 /* cyclorama-00a.dae */; };
 		1CAD97121861879B00C547E1 /* test-00.ase in Resources */ = {isa = PBXBuildFile; fileRef = 1CAD97111861879B00C547E1 /* test-00.ase */; };
 		1CAD97161865580000C547E1 /* phiViewController-gles2.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD97151865580000C547E1 /* phiViewController-gles2.mm */; };
 		1CC482C218868F4D0029408D /* brushed-aluminum-00a.dds in Resources */ = {isa = PBXBuildFile; fileRef = 1CC482C018868F4D0029408D /* brushed-aluminum-00a.dds */; };
@@ -105,6 +107,8 @@
 
 /* Begin PBXFileReference section */
 		1C9AAAC118735E60001540C3 /* test-instantiaton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "test-instantiaton.cpp"; sourceTree = "<group>"; };
+		1C9E34B71891A50700E49195 /* blue-grid-512-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blue-grid-512-32.png"; sourceTree = "<group>"; };
+		1C9E34B81891A50700E49195 /* cyclorama-00a.dae */ = {isa = PBXFileReference; explicitFileType = text.xml; fileEncoding = 4; name = "cyclorama-00a.dae"; path = "philibs-ex-00/Resources/cyclorama-00a.dae"; sourceTree = "<group>"; };
 		1CAD97111861879B00C547E1 /* test-00.ase */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "test-00.ase"; path = "philibs-ex-00/Resources/test-00.ase"; sourceTree = "<group>"; };
 		1CAD97131861922A00C547E1 /* pniosxplatform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pniosxplatform.h; sourceTree = "<group>"; };
 		1CAD97151865580000C547E1 /* phiViewController-gles2.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = "phiViewController-gles2.mm"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -170,9 +174,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1C9E34B61891A50700E49195 /* cyclorama-00a */ = {
+			isa = PBXGroup;
+			children = (
+				1C9E34B71891A50700E49195 /* blue-grid-512-32.png */,
+			);
+			name = "cyclorama-00a";
+			path = "philibs-ex-00/Resources/cyclorama-00a";
+			sourceTree = "<group>";
+		};
 		1CAD970F1861876300C547E1 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1C9E34B61891A50700E49195 /* cyclorama-00a */,
+				1C9E34B81891A50700E49195 /* cyclorama-00a.dae */,
 				1CC482E3188A0EC30029408D /* brushed-aluminum-00a.jpg */,
 				1CC482C7188776650029408D /* test-00c.ase */,
 				1CC482C5188694AC0029408D /* test-00b.ase */,
@@ -440,7 +455,9 @@
 				1CDD422E185BDDC2009284F9 /* Main_iPhone.storyboard in Resources */,
 				1CDD423A185BDDC2009284F9 /* Images.xcassets in Resources */,
 				1CDD4225185BDDC2009284F9 /* InfoPlist.strings in Resources */,
+				1C9E34BA1891A50700E49195 /* cyclorama-00a.dae in Resources */,
 				1CC482C6188694AC0029408D /* test-00b.ase in Resources */,
+				1C9E34B91891A50700E49195 /* blue-grid-512-32.png in Resources */,
 				1CDD4235185BDDC2009284F9 /* Shader.vsh in Resources */,
 				1CAD97121861879B00C547E1 /* test-00.ase in Resources */,
 				1CC482C8188776650029408D /* test-00c.ase in Resources */,

@@ -15,30 +15,35 @@ namespace scene {
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
-void geomData::dbg ()
+void geomData::dbg ( std::ostream& ostr ) const
 {
   using namespace std;
 
-  cout << "geomData : " << this << endl;
+  ostr << "geomData : " << this << endl;
 
   size_t stride = getAttributes ().getValueStride ();
+  size_t numVerts = mValues.size () / stride;
   size_t cur = 0;
 
-  for ( size_t num = 0; num < mValues.size () / stride; ++num )
+  ostr << " attributes: num verts = " << numVerts <<
+      " num values = " << mValues.size() <<
+      " stride = " << stride << std::endl;
+  ostr << " indices: num indices = " << mIndices.size () << endl;
+
+  for ( size_t num = 0; num < numVerts; ++num )
   {
     for ( auto attrIter : mAttributes )
     {
-      cout << attrIter.mName << " = ";
+      ostr << num << " " << attrIter.mName << " = ";
 
       for ( size_t comp = 0; comp < attrIter.mComponents; ++comp )
-        cout << mValues[ cur++ ] << " ";
+        ostr << mValues[ cur++ ] << " ";
     }
-    cout << endl;
+    ostr << endl;
   }
 
-  cout << " indices" << endl;
   for ( size_t num = 0; num < mIndices.size (); ++num )
-    cout << "  " << mIndices[ num ] << endl;
+    ostr << "  " << num << " " << mIndices[ num ] << endl;
 }
 
 void geomData::updateBounds () const

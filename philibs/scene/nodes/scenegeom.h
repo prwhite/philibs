@@ -14,6 +14,7 @@
 #include "scenegraphdd.h"
 #include <vector>
 #include <cassert>
+#include <iostream>
 
 /////////////////////////////////////////////////////////////////////
 
@@ -38,6 +39,7 @@ class geomData :
 {
   public:
 
+    typedef float ValueType;
     typedef uint16_t SizeType;
 
     geomData () {}
@@ -84,6 +86,7 @@ class geomData :
       Attrib14,           /// User-defined
       Attrib15,           /// User-defined
 
+      NumTexUnits = TCoord15 - Color,
       Undef = 0xffff
 
     };
@@ -91,9 +94,9 @@ class geomData :
           when setting up attributes.  For user-defined attribute bindings, you'll
           have to set the value explicitly.  See Attributes help for an example. */
     enum AttributeComponents : SizeType {
-      PositionsComponents = 3,
-      NormalsComponents = 3,  
-      ColorsComponents = 4,   
+      PositionComponents = 3,
+      NormalComponents = 3,  
+      ColorComponents = 4,   
       TCoord00Components = 2,
       TCoord01Components = 2,
       TCoord02Components = 2,
@@ -147,8 +150,8 @@ class geomData :
         this is Positions, Normals, Colors, TCoord01, ... then User01 if used, etc.
 
         Note: Use the vector behavior of this class to add attribute elements, e.g.,
-        attributess.push_back ( AttributeVal ( "positions", geomData::Positions, geomData::PositionsComponents ) ), or better, using common identifiers...
-        attributess.push_back ( AttributeVal ( CommonAttributeNames[ geomData::Positions ], geomData::Positions, geomData::PositionsComponents ) )
+        attributess.push_back ( AttributeVal ( "positions", geomData::Position, geomData::PositionComponents ) ), or better, using common identifiers...
+        attributess.push_back ( AttributeVal ( CommonAttributeNames[ geomData::Position ], geomData::Position, geomData::PositionComponents ) )
       */
     class attributes :
         public std::vector< AttributeVal >
@@ -172,7 +175,7 @@ class geomData :
             {
                 // Opt: We could cache stride with a little more work in the
                 // dirty functions.
-              return getValueStride() * sizeof ( float );
+              return getValueStride() * sizeof ( ValueType );
             }
 
           SizeType getValueOffset ( AttributeType which ) const
@@ -196,7 +199,7 @@ class geomData :
 
           SizeType getValueOffsetBytes ( AttributeType which ) const
             {
-              return getValueOffset(which) * sizeof ( float );  // TEMP: We might support things besides FLOAT someday!!!
+              return getValueOffset(which) * sizeof ( ValueType );  // TEMP: We might support things besides FLOAT someday!!!
             }
 
           bool hasAttribute ( AttributeType which ) const
@@ -223,6 +226,7 @@ class geomData :
               {
                 mTypesEnabled |= ( 1 << attribute.mType );
               }
+              mDirty = false;
             }
 
         private:
@@ -260,7 +264,7 @@ class geomData :
 
       /** The values type for storing vertex attribute data.  It's always all
           floats */
-    typedef std::vector< float > Values;
+    typedef std::vector< ValueType > Values;
     typedef indexVec Indices;
     
       /** Note: numValues is count of floats, not count of verts.
@@ -286,7 +290,7 @@ class geomData :
         { return static_cast< SizeType > ( mValues.size () ); }
   
     SizeType getValueSizeBytes () const
-        { return mValues.size () * sizeof ( float ); }
+        { return mValues.size () * sizeof ( ValueType ); }
   
     SizeType getIndexCount () const
         { return static_cast< SizeType > ( mIndices.size () ); }
@@ -299,11 +303,17 @@ class geomData :
     
     Values& getValues () { return mValues; }
     Values const& getValues () const { return mValues; }
-    
+    ValueType* getValuesPtr () { return &mValues[ 0 ]; }
+    ValueType const* getValuesPtr () const { return &mValues[ 0 ]; }
+    ValueType* getAttributePtr ( geomData::AttributeType which ) { return getValuesPtr() + mAttributes.getValueOffset ( which ); }
+    ValueType const* getAttributePtr ( geomData::AttributeType which ) const { return getValuesPtr() + mAttributes.getValueOffset ( which ); }
+
     Indices& getIndices () { return mIndices; }
     Indices const& getIndices () const { return mIndices; }
-  
-    void setDirty () { mDirty = true; } // Used to invalidate GL-side objects like VBOs during rendering pass.
+    SizeType* getIndicesPtr () { return & mIndices[ 0 ]; }
+    SizeType const* getIndicesPtr () const { return & mIndices[ 0 ]; }
+
+    void setDirty ( bool dirty = true ) { mDirty = dirty; } // Used to invalidate GL-side objects like VBOs during rendering pass.
     bool getDirty () const { return mDirty; }
     void clearDirty () const { mDirty = false; }
 
@@ -317,7 +327,7 @@ class geomData :
     Attributes& attributesOp () { setDirty (); mAttributes.setDirty(); return mAttributes; }
 
       /** @methodgroup Debugging Methods */
-    void dbg ();
+    void dbg ( std::ostream& ostr = std::cout ) const;
     
   protected:
     virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) {}
@@ -332,7 +342,7 @@ class geomData :
       Values mValues;
       Indices mIndices;
       mutable box3 mBounds;
-      mutable bool mDirty;
+      mutable bool mDirty = true;
 };
 
 /////////////////////////////////////////////////////////////////////
@@ -425,11 +435,12 @@ class geom :
 class vertIter
 {
     typedef geomData::SizeType SizeType;
+    typedef geomData::ValueType ValueType;
 
     geom::GeomDataRef mGdata;
     SizeType mStride;
-    float* mCur;
-    float* mEnd;
+    ValueType* mCur;
+    ValueType* mEnd;
     
     void calcEnd ()
         {
@@ -455,10 +466,10 @@ class vertIter
         }
         
     geomData* operator->() const { return mGdata.get (); }
-    float* operator& () { return mCur; }
-    float& operator* () const { return *mCur; }
-    float& operator[] ( size_t val ) const { return mCur[ val ]; }
-    float* operator () ( size_t val ) const { return &mCur[ val * mStride ]; }
+    ValueType* operator& () { return mCur; }
+    ValueType& operator* () const { return *mCur; }
+    ValueType& operator[] ( size_t val ) const { return mCur[ val ]; }
+    ValueType* operator () ( size_t val ) const { return &mCur[ val * mStride ]; }
 
       // Increments to next full vertex (i.e., stride), not next float value.
     vertIter& operator++ ()
@@ -488,13 +499,14 @@ class vertIter
 class triIter
 {
     typedef geomData::SizeType SizeType;
+    typedef geomData::ValueType ValueType;
     
     geom::GeomDataRef mGdata;
     SizeType mStride;
     size_t mCur;
-    float* mPtr;
+    ValueType* mPtr;
     
-    float* getPtr ( size_t val ) const
+    ValueType* getPtr ( size_t val ) const
         {
           size_t ind = mGdata->getIndices ()[ val ];
           return &mGdata->getValues ()[ ind * mStride ];        
@@ -518,14 +530,14 @@ class triIter
         }
         
     geomData* operator->() const { return mGdata.get (); }
-    float* operator& () { return mPtr; }
-    float& operator* () const { return *mPtr; }
-    float& operator[] ( size_t val ) const { return mPtr[ val ]; }
+    ValueType* operator& () { return mPtr; }
+    ValueType& operator* () const { return *mPtr; }
+    ValueType& operator[] ( size_t val ) const { return mPtr[ val ]; }
     
     // Relative vertex address operator.  If mCur is 3, calling this with 2 
     // will give the starting pointer for vertex 5.
-    float* operator () () const { return mPtr; }
-    float* operator () ( size_t val ) const { return getPtr ( mCur + val ); }
+    ValueType* operator () () const { return mPtr; }
+    ValueType* operator () ( size_t val ) const { return getPtr ( mCur + val ); }
 
     // Increments to next full vertex (i.e., stride), not next float value.
     // Apps need to keep track of their own mod 3 arithmetic.

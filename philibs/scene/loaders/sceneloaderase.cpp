@@ -561,10 +561,10 @@ PNIDBG
             // geomData is guaranteed to be good before this is called (from processObject)
           geomData::Attributes& attributes = pGeom->geometryOp ()->attributesOp ();
 
-          attributes.push_back ( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, geomData::PositionsComponents } );
+          attributes.push_back ( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, geomData::PositionComponents } );
 
 					if ( pSrc->findNode ( "MESH_NORMALS", false ) )
-            attributes.push_back ( { CommonAttributeNames[ geomData::Normal], geomData::Normal, geomData::DataType_FLOAT, geomData::NormalsComponents } );
+            attributes.push_back ( { CommonAttributeNames[ geomData::Normal], geomData::Normal, geomData::DataType_FLOAT, geomData::NormalComponents } );
 
 					// First set of UVs.
 					if ( pSrc->findNode ( "MESH_TVERTLIST", false ) )

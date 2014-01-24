@@ -8,6 +8,7 @@
 
 #include "sceneloaderfactory.h"
 #include "sceneloaderase.h"
+#include "sceneloaderassimp.h"
 #include "pnisearchpath.h"
 
 #include <string>
@@ -31,6 +32,13 @@ factory::factory ()
 //  addLoader("dds", [] ( std::string const& fname ) { return dds::loadHelper ( fname ); } );
 
   addLoader ( "ase", new loader::ase );
+
+  loader::assimp* pAssimp = new loader::assimp;
+
+  addLoader ( "stl", pAssimp );
+  addLoader ( "obj", pAssimp );
+  addLoader ( "stl", pAssimp );
+  addLoader ( "dae", pAssimp );
 }
 
 factory& factory::getInstance ()

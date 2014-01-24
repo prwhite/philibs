@@ -21,8 +21,8 @@ class assimp :
   public base
 {
   public:
-    assimp();
-    virtual ~assimp();
+    assimp() = default;
+    virtual ~assimp() = default;
 //     assimp(assimp const& rhs);
 //     assimp& operator=(assimp const& rhs);
 //     bool operator==(assimp const& rhs) const;

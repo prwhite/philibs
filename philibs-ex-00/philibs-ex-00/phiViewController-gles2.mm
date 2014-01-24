@@ -101,7 +101,8 @@
 
     // Path to the app bundle to get the test file.
   std::string bdir ( getShellPath(BundleDir) );
-  std::string fname = { bdir + "/" + "test-00b.ase" };
+//  std::string fname = { bdir + "/" + "test-00b.ase" };
+  std::string fname = { bdir + "/" + "cyclorama-00a.dae" };
   
     // Load the file, grab its bounding sphere so we can push back the camera an
     // appropriate amount.

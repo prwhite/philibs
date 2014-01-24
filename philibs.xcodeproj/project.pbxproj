@@ -14,6 +14,7 @@
 		1C4BD28018810EE6000781B0 /* scenevbo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CAD971E186628EE00C547E1 /* scenevbo.h */; };
 		1C4BD2831885FD8F000781B0 /* scenecommon.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C4BD2821885FCB7000781B0 /* scenecommon.h */; };
 		1C6A02B91873526700672EF8 /* sceneuniform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C6A02B71873526700672EF8 /* sceneuniform.cpp */; };
+		1C88803218923B89005EAF2E /* libassimp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C88803118923B89005EAF2E /* libassimp.a */; };
 		1CAD971F186628EE00C547E1 /* scenevbo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD971D186628EE00C547E1 /* scenevbo.cpp */; };
 		1CAD9723186D72D500C547E1 /* sceneprog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9721186D72D500C547E1 /* sceneprog.cpp */; };
 		1CAD9726186E110200C547E1 /* sceneprogobj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9724186E110200C547E1 /* sceneprogobj.cpp */; };
@@ -415,6 +416,7 @@
 		1C4BD2821885FCB7000781B0 /* scenecommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = scenecommon.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		1C6A02B71873526700672EF8 /* sceneuniform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneuniform.cpp; sourceTree = "<group>"; };
 		1C6A02B81873526700672EF8 /* sceneuniform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = sceneuniform.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		1C88803118923B89005EAF2E /* libassimp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libassimp.a; path = "3p/assimp/workspaces/xcode3/build/Debug-iphoneos/libassimp.a"; sourceTree = "<group>"; };
 		1CAD971D186628EE00C547E1 /* scenevbo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 2; path = scenevbo.cpp; sourceTree = "<group>"; tabWidth = 2; usesTabs = 0; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		1CAD971E186628EE00C547E1 /* scenevbo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenevbo.h; sourceTree = "<group>"; };
 		1CAD972018662A2B00C547E1 /* sceneogl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sceneogl.h; sourceTree = "<group>"; };
@@ -675,6 +677,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C88803218923B89005EAF2E /* libassimp.a in Frameworks */,
 				1CDD3FFA185BC965009284F9 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -717,6 +720,7 @@
 		1CDD3FF8185BC965009284F9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1C88803118923B89005EAF2E /* libassimp.a */,
 				1CC482F0188C82380029408D /* assimp.a */,
 				1CDD3FF9185BC965009284F9 /* Foundation.framework */,
 				1CDD4007185BC965009284F9 /* XCTest.framework */,
@@ -1430,6 +1434,10 @@
 				DSTROOT = /tmp/philibs.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "philibs/philibs-Prefix.pch";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/payton/me/dev/phi/philibs/3p/assimp/workspaces/xcode3/build/Debug-iphoneos",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1442,6 +1450,10 @@
 				DSTROOT = /tmp/philibs.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "philibs/philibs-Prefix.pch";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/payton/me/dev/phi/philibs/3p/assimp/workspaces/xcode3/build/Debug-iphoneos",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

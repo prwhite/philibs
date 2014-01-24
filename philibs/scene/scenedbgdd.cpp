@@ -30,7 +30,7 @@ namespace scene {
 
 dbgDd::dbgDd ( std::ostream& str ) :
   mIndent ( 0 ),
-  mOpts ( All ),
+  mOpts ( Normal ),
   mStr ( str )
 {
   
@@ -257,7 +257,13 @@ void dbgDd::dispatchGeom ( geom const* pNode )
   dispatchNode ( pNode );
 
   if ( pNode->getGeomData () )
-    mGeomDataSet.insert ( pNode->getGeomData () );  
+  {
+    mGeomDataSet.insert ( pNode->getGeomData () );
+
+      // Holy shit this will be a lot of output...
+    if ( mOpts & GeomDataValues )
+      pNode->getGeomData()->dbg( mStr );
+  }
 }
 
 

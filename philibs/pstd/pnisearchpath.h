@@ -46,7 +46,7 @@ class searchPath :
     bool resolve ( std::string const& fname, std::string& ret );
 
       // Helper methods
-      /// @return true if fname exists
+      /// @return true if file 'fname' exists
     static bool doStat ( std::string const& fname );
 
       /// @return tail of fname ( e.g., "bar/foo.gif" => "foo.gif" )

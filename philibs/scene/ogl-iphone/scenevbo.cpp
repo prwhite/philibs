@@ -110,16 +110,16 @@ void vbo::config ( geomData const* pData, progObj const* pProgObj )
 
     if ( PHINOBUFFERSUBDATA )
     {
-      glBufferData(GL_ARRAY_BUFFER, pData->getValueSizeBytes (), &( pData->getValues()[ 0 ] ), GL_DYNAMIC_DRAW );
-      glBufferData(GL_ELEMENT_ARRAY_BUFFER, pData->getIndexSizeBytes(), &( pData->getIndices()[ 0 ]), GL_DYNAMIC_DRAW);
+      glBufferData(GL_ARRAY_BUFFER, pData->getValueSizeBytes (), pData->getValuesPtr(), GL_DYNAMIC_DRAW );
+      glBufferData(GL_ELEMENT_ARRAY_BUFFER, pData->getIndexSizeBytes(), pData->getIndicesPtr(), GL_DYNAMIC_DRAW);
     }
     else
     {
       glBufferData(GL_ARRAY_BUFFER, pData->getValueSizeBytes (), 0, GL_DYNAMIC_DRAW );
-      glBufferSubData(GL_ARRAY_BUFFER, 0, pData->getValueSizeBytes(), & ( pData->getValues()[ 0 ] ));
+      glBufferSubData(GL_ARRAY_BUFFER, 0, pData->getValueSizeBytes(), pData->getValuesPtr() );
 
       glBufferData(GL_ELEMENT_ARRAY_BUFFER, pData->getIndexSizeBytes(), 0, GL_DYNAMIC_DRAW);
-      glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, pData->getIndexSizeBytes(), &( pData->getIndices()[ 0 ]));
+      glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, pData->getIndexSizeBytes(), pData->getIndicesPtr());
     }
 
 CheckGLError
