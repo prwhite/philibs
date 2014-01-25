@@ -25,6 +25,8 @@
 
 #include <iostream>
 
+inline void const* BUFFER_OFFSET( size_t offset ) { return reinterpret_cast< void const* >( offset ); }
+
 using namespace std;
 
 /////////////////////////////////////////////////////////////////////
@@ -133,8 +135,7 @@ CheckGLError
       {
         glEnableVertexAttribArray(attribId);
 CheckGLError
-//        glVertexAttribPointer(attribId, attributeIter.mComponents, dataTypeToGlDataType(attributeIter.mDataType), GL_FALSE, attributes.getValueStrideBytes(), pValues + attributes.getValueOffset(attributeIter.mType));
-        glVertexAttribPointer(attribId, attributeIter.mComponents, dataTypeToGlDataType(attributeIter.mDataType), GL_FALSE, attributes.getValueStrideBytes(),  reinterpret_cast< void* >( attributes.getValueOffsetBytes(attributeIter.mType)));
+        glVertexAttribPointer(attribId, attributeIter.mComponents, dataTypeToGlDataType(attributeIter.mDataType), GL_FALSE, attributes.getValueStrideBytes(), BUFFER_OFFSET( attributes.getValueOffsetBytes(attributeIter.mType)));
 CheckGLError
       }
     }

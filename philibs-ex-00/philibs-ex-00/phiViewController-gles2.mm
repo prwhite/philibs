@@ -22,12 +22,14 @@
 #include "philibs/sceneuniform.h"
 
 #include "philibs/pnimathstream.h"
+#include "philibs/scenedbgdd.h"
 
 #include "philibs/sceneloaderfactory.h"
 
 #include "pniosxplatform.h"
 
 #include <iostream>
+#include <fstream>
 
 @interface phiViewController () {
   
@@ -103,7 +105,7 @@
   std::string bdir ( getShellPath(BundleDir) );
 //  std::string fname = { bdir + "/" + "test-00b.ase" };
   std::string fname = { bdir + "/" + "cyclorama-00a.dae" };
-  
+
     // Load the file, grab its bounding sphere so we can push back the camera an
     // appropriate amount.
   mLoadFuture = loader::factory::getInstance().loadAsync(fname);
@@ -137,6 +139,16 @@
 - (void) initScene
 {
   mFile = mLoadFuture.get();
+
+#ifdef DBGFILE
+  std::string ofile ( getShellPath(BundleDir) + "/scene-dbg.txt" );
+  std::ofstream ostr ( ofile );
+  scene::dbgDd dbg ( ostr );
+  dbg.setDbgOpts(scene::dbgDd::All);
+  dbg.startGraph(mFile.get());
+  std::cout << ofile << std::endl;
+#endif // DBGFILE
+
   std::cout << "mFile bounds is " << mFile->getBounds() << std::endl;
   pni::math::sphere boundingSphere;
   boundingSphere.extendBy(mFile->getBounds());

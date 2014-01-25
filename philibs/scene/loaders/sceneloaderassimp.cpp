@@ -252,13 +252,28 @@ class helper
 
             // Copy out indices
           geomData::Indices& dstIndices = pData->getIndices();
-          for ( size_t num = 0, dstInd = 0; num < pSrc->mNumFaces; ++num )
+          size_t numFaces = pSrc->mNumFaces;
+          size_t maxVert = pData->getValueCount() / pData->getAttributes().getValueStride();
+
+          assert(dstIndices.size() == numFaces * 3);
+          assert(maxVert < 0xffff); // Make sure we don't overflow uint16_t
+
+//          dstIndices.resize(numFaces*3);
+          size_t dstInd = 0;
+          for ( size_t num = 0; num < numFaces; ++num )
           {
             aiFace const& face = pSrc->mFaces[ num ];
 
             for ( size_t srcInd = 0; srcInd < face.mNumIndices; ++srcInd )
-              dstIndices[ dstInd++ ] = face.mIndices[ srcInd ];
+            {
+//              dstIndices[ dstInd++ ] = face.mIndices[ srcInd ];
+              dstIndices[ dstInd++ ] = srcInd;
+              assert(face.mIndices[ srcInd ] < maxVert);
+            }
           }
+
+          assert(dstInd == numFaces * 3);
+          assert(dstInd == dstIndices.size());
         }
 
       void processMaterials ( aiNode const* pSrc, node* pDst )
