@@ -266,8 +266,7 @@ class helper
 
             for ( size_t srcInd = 0; srcInd < face.mNumIndices; ++srcInd )
             {
-//              dstIndices[ dstInd++ ] = face.mIndices[ srcInd ];
-              dstIndices[ dstInd++ ] = srcInd;
+              dstIndices[ dstInd++ ] = face.mIndices[ srcInd ];
               assert(face.mIndices[ srcInd ] < maxVert);
             }
           }

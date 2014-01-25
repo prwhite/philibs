@@ -48,7 +48,7 @@ class geomData :
            attribute you are specifying.  See Attribute help for an example. */
       // Note: We can only have 64 enums, because of the way these are used for
       // the 64-bit mTypesEnabled mask cache.
-    enum AttributeType : SizeType {
+    enum AttributeType {
       Position,        /// Always 3 elements.
       Normal,          /// Always 3 elements.
       Color,           /// Always 4 elements.
@@ -93,7 +93,7 @@ class geomData :
       /** Use these values as symbols for the mComponents member of AttributeVal
           when setting up attributes.  For user-defined attribute bindings, you'll
           have to set the value explicitly.  See Attributes help for an example. */
-    enum AttributeComponents : SizeType {
+    enum AttributeComponents {
       PositionComponents = 3,
       NormalComponents = 3,  
       ColorComponents = 4,   
@@ -119,7 +119,7 @@ class geomData :
            functions. Additionally GL_HALF_FLOAT, GL_FLOAT, GL_DOUBLE,
            GL_INT_2_10_10_10_REV, and GL_UNSIGNED_INT_2_10_10_10_REV 
            @note Note all of these data types are supported in GLES 2 on iOS 7, etc. */
-    enum DataType : SizeType {
+    enum DataType {
       DataType_BYTE,
       DataType_UNSIGNED_BYTE,
       DataType_SHORT,
@@ -140,7 +140,7 @@ class geomData :
         std::string mName;        /// Only needed for user-defined attributes to match with vertex prog
         AttributeType mType;      /// From AttributeType enum
         DataType mDataType;       /// Data type of values in attribute from DataType
-        SizeType mComponents;     /// Number of floats for this attribute
+        size_t mComponents;     /// Number of floats for this attribute
       };
 
     // Attributes:
@@ -159,9 +159,9 @@ class geomData :
           typedef std::vector< AttributeVal > Base;
 
         public:
-          SizeType getValueStride () const
+          size_t getValueStride () const
             {
-              SizeType ret = 0;
+              size_t ret = 0;
 
                 // Opt: We could cache stride with a little more work in the
                 // dirty functions.
@@ -171,16 +171,16 @@ class geomData :
               return ret;
             }
 
-          SizeType getValueStrideBytes () const
+          size_t getValueStrideBytes () const
             {
                 // Opt: We could cache stride with a little more work in the
                 // dirty functions.
               return getValueStride() * sizeof ( ValueType );
             }
 
-          SizeType getValueOffset ( AttributeType which ) const
+          size_t getValueOffset ( AttributeType which ) const
             {
-              SizeType ret = 0;
+              size_t ret = 0;
 
                 // Opt: We could cache an array of offsets with a little more
                 // work in the dirty functions.
@@ -197,7 +197,7 @@ class geomData :
               return 0;
             }
 
-          SizeType getValueOffsetBytes ( AttributeType which ) const
+          size_t getValueOffsetBytes ( AttributeType which ) const
             {
               return getValueOffset(which) * sizeof ( ValueType );  // TEMP: We might support things besides FLOAT someday!!!
             }
@@ -250,7 +250,7 @@ class geomData :
         enum { Buff = 0 };
         
       public:
-        void resize ( size_type size, SizeType val = 0 )
+        void resize ( size_type size, size_t val = 0 )
             {
               Base::resize ( size + Buff, val );
             }
@@ -269,7 +269,7 @@ class geomData :
     
       /** Note: numValues is count of floats, not count of verts.
           Generally it is numVerts * sizeof ( vert ) / sizeof ( float ). */
-    void resize ( SizeType numValues, SizeType numIndices )
+    void resize ( size_t numValues, size_t numIndices )
         {
           mValues.resize ( numValues );
           mIndices.resize ( numIndices );
@@ -278,7 +278,7 @@ class geomData :
   
         /** Note: numVerts is count of verts, which is a different
             semantic than the other resize method */
-    void resizeTrisWithCurrentAttributes ( SizeType numVerts, SizeType numTris )
+    void resizeTrisWithCurrentAttributes ( size_t numVerts, size_t numTris )
         {
           mValues.resize ( numVerts * mAttributes.getValueStride () );
           size_t newSize = numTris * 3;
@@ -286,19 +286,19 @@ class geomData :
           setDirty ();
         }
         
-    SizeType getValueCount () const 
-        { return static_cast< SizeType > ( mValues.size () ); }
+    size_t getValueCount () const
+        { return mValues.size (); }
   
-    SizeType getValueSizeBytes () const
+    size_t getValueSizeBytes () const
         { return mValues.size () * sizeof ( ValueType ); }
   
-    SizeType getIndexCount () const
-        { return static_cast< SizeType > ( mIndices.size () ); }
+    size_t getIndexCount () const
+        { return mIndices.size (); }
         
-    SizeType getIndexSizeBytes () const
+    size_t getIndexSizeBytes () const
         { return mIndices.size () * sizeof ( SizeType ); }
   
-    SizeType getTriCount () const
+    size_t getTriCount () const
         { return getIndexCount () / 3; }
     
     Values& getValues () { return mValues; }
@@ -438,7 +438,7 @@ class vertIter
     typedef geomData::ValueType ValueType;
 
     geom::GeomDataRef mGdata;
-    SizeType mStride;
+    size_t mStride;
     ValueType* mCur;
     ValueType* mEnd;
     
@@ -502,7 +502,7 @@ class triIter
     typedef geomData::ValueType ValueType;
     
     geom::GeomDataRef mGdata;
-    SizeType mStride;
+    size_t mStride;
     size_t mCur;
     ValueType* mPtr;
     
