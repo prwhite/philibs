@@ -7,6 +7,8 @@
 #define PNIDBGDISABLE
 #define PSTDPROFDISABLE
 
+#include <cstdint>
+
 #include "sceneloaderassimp.h"
 
 #include "scenegroup.h"
@@ -49,6 +51,7 @@ class helper
           size_t const MaxVerts = 0x7fff; // 32k
           importer.SetPropertyInteger(AI_CONFIG_PP_SLM_VERTEX_LIMIT, MaxVerts);
 //          importer.SetPropertyInteger(AI_CONFIG_PP_SLM_TRIANGLE_LIMIT, MaxVerts / 3);  // No point
+          importer.SetPropertyInteger(AI_CONFIG_PP_SBP_REMOVE, aiPrimitiveType_POINT | aiPrimitiveType_LINE);
 
           aiScene const* mScene = importer.ReadFile(fname.c_str(),
 //              aiProcessPreset_TargetRealtime_Quality |
@@ -58,7 +61,8 @@ class helper
               aiProcess_Triangulate |
               aiProcess_GenSmoothNormals |
               aiProcess_ValidateDataStructure |
-              aiProcess_GenUVCoords);
+              aiProcess_GenUVCoords |
+              aiProcess_SortByPType );
 
           pRoot->setName(fname);
 
@@ -146,6 +150,8 @@ class helper
                 // big win, considering the state of incoming data.
               processMesh ( pSrcMesh, pGeom );
             }
+            else
+              PNIDBGSTR("received mesh with non-triangle prim type, skipping");
           }
         }
 
@@ -251,12 +257,19 @@ class helper
           }
 
             // Copy out indices
+            // We're going to be really paranoid about buffer overruns and correctness...
+            // the various tests are pretty cheap and are only one-time during load.
           geomData::Indices& dstIndices = pData->getIndices();
           size_t numFaces = pSrc->mNumFaces;
           size_t maxVert = pData->getValueCount() / pData->getAttributes().getValueStride();
+          size_t const NumVertsPerTri = 3;
+          size_t const NumIndices = numFaces * NumVertsPerTri;
+          size_t const MaxIndexNum = UINT16_MAX;
+          
+          static_assert (sizeof(geomData::SizeType) == sizeof(uint16_t), "geomData::SizeType should be 2 bytes, but isn't!" ); // Make sure we're only using shorts.
 
-          assert(dstIndices.size() == numFaces * 3);
-          assert(maxVert < 0xffff); // Make sure we don't overflow uint16_t
+          assert(dstIndices.size() == NumIndices);
+          assert(maxVert < MaxIndexNum); // Make sure we don't overflow uint16_t
 
 //          dstIndices.resize(numFaces*3);
           size_t dstInd = 0;
@@ -271,7 +284,7 @@ class helper
             }
           }
 
-          assert(dstInd == numFaces * 3);
+          assert(dstInd == NumIndices);
           assert(dstInd == dstIndices.size());
         }
 
