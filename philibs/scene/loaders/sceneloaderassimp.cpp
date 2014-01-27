@@ -88,7 +88,6 @@ class helper
           pNode->setName(pSrc->mName.C_Str());
           processXform (pSrc, pNode);
           processMeshes(pSrc, pNode);
-          processMaterials(pSrc, pNode);
           processChildren(pSrc, pNode);
         }
 
@@ -286,16 +285,64 @@ class helper
 
           assert(dstInd == NumIndices);
           assert(dstInd == dstIndices.size());
+          
+          processMaterials(pSrc, pDst);
         }
 
-      void processMaterials ( aiNode const* pSrc, node* pDst )
+      void processMaterials ( aiMesh const* pSrc, geom* pDst )
         {
-
+          if ( pSrc->mMaterialIndex != 0xffffffff )
+          {
+            if ( aiMaterial const* aiMat = mScene->mMaterials[ pSrc->mMaterialIndex ] )
+            {
+              processTextures( aiMat, pDst );
+            }
+          }
         }
 
-      void processTexture ( aiNode const* pSrc, node* pDst )
+      void processTextures ( aiMaterial const* pSrc, node* pDst )
         {
+            // TODO: Support the rest of these types... or more!!!
+          aiTextureType typesWeCareAbout[] = {
+              aiTextureType_DIFFUSE,
+//              aiTextureType_AMBIENT,
+//              aiTextureType_EMISSIVE,
+              aiTextureType_LIGHTMAP,
+//              aiTextureType_NORMALS,
+//              aiTextureType_SPECULAR,
+//              aiTextureType_SHININESS
+            };
+        
+          size_t const NumTypes = sizeof(typesWeCareAbout) / sizeof(aiTextureType);
+        
+          for ( size_t type = 0; type < NumTypes; ++type )
+          {
+            size_t const NumTexturesForType = pSrc->GetTextureCount(typesWeCareAbout[type]);
+            for ( size_t num = 0; num < NumTexturesForType; ++num)
+            {
+              processTexture(pSrc, typesWeCareAbout[type], num, pDst);
+            }
+          }
+        }
 
+      void processTexture ( aiMaterial const* pSrc, aiTextureType type, size_t index, node* pDst )
+        {
+          aiString texName;
+          aiTextureMapping texMapping;
+          unsigned int texUnit;
+          float texBlend;
+          aiTextureOp texOp;
+          aiTextureMapMode texMapMode;
+          
+          pSrc->GetTexture(
+              type,
+              index,
+              &texName,
+              &texMapping,
+              &texUnit,
+              &texBlend,
+              &texOp,
+              &texMapMode);
         }
 
   private:

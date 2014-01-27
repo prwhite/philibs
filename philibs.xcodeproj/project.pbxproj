@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C38744E1894CF0D0055DE2A /* sceneprogfactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C38744C1894CF0D0055DE2A /* sceneprogfactory.cpp */; };
 		1C4BD27C18810EB6000781B0 /* sceneogl.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CAD972018662A2B00C547E1 /* sceneogl.h */; };
 		1C4BD27D18810EE6000781B0 /* sceneuniform.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C6A02B81873526700672EF8 /* sceneuniform.h */; };
 		1C4BD27E18810EE6000781B0 /* sceneprog.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CAD9722186D72D500C547E1 /* sceneprog.h */; };
@@ -413,6 +414,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1C38744C1894CF0D0055DE2A /* sceneprogfactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneprogfactory.cpp; sourceTree = "<group>"; };
+		1C38744D1894CF0D0055DE2A /* sceneprogfactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneprogfactory.h; sourceTree = "<group>"; };
 		1C4BD2821885FCB7000781B0 /* scenecommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = scenecommon.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		1C6A02B71873526700672EF8 /* sceneuniform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneuniform.cpp; sourceTree = "<group>"; };
 		1C6A02B81873526700672EF8 /* sceneuniform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = sceneuniform.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -964,6 +967,8 @@
 				1CDD413A185BCAF0009284F9 /* scenenode.h */,
 				1CDD413B185BCAF0009284F9 /* scenenodepath.cpp */,
 				1CDD413C185BCAF0009284F9 /* scenenodepath.h */,
+				1C38744C1894CF0D0055DE2A /* sceneprogfactory.cpp */,
+				1C38744D1894CF0D0055DE2A /* sceneprogfactory.h */,
 				1CDD413D185BCAF0009284F9 /* scenesndeffect.cpp */,
 				1CDD413E185BCAF0009284F9 /* scenesndeffect.h */,
 				1CDD413F185BCAF0009284F9 /* scenesndlistener.cpp */,
@@ -1225,6 +1230,7 @@
 				1CDD41FF185BCAF0009284F9 /* SoundEngine.cpp in Sources */,
 				1CDD41D6185BCAF0009284F9 /* sceneloaderase.cpp in Sources */,
 				1CDD4204185BCAF0009284F9 /* uiframe.cpp in Sources */,
+				1C38744E1894CF0D0055DE2A /* sceneprogfactory.cpp in Sources */,
 				1CDD41F0185BCAF0009284F9 /* scenestatedd.cpp in Sources */,
 				1CDD41ED185BCAF0009284F9 /* scenesndeffect.cpp in Sources */,
 				1CDD41EA185BCAF0009284F9 /* sceneisectdd.cpp in Sources */,
