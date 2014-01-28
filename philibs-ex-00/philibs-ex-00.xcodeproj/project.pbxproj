@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C53351E18978BA5009525FD /* ld-pod-01b-hi-icon.dae in Resources */ = {isa = PBXBuildFile; fileRef = 1C53351618978BA5009525FD /* ld-pod-01b-hi-icon.dae */; };
+		1C53351F18978BA5009525FD /* texture0.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C53351718978BA5009525FD /* texture0.png */; };
+		1C53352018978BA5009525FD /* texture1.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C53351818978BA5009525FD /* texture1.png */; };
+		1C53352118978BA5009525FD /* texture2.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C53351918978BA5009525FD /* texture2.png */; };
+		1C53352218978BA5009525FD /* texture3.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C53351A18978BA5009525FD /* texture3.png */; };
+		1C53352318978BA5009525FD /* texture4.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C53351B18978BA5009525FD /* texture4.png */; };
+		1C53352418978BA5009525FD /* texture5.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C53351C18978BA5009525FD /* texture5.png */; };
 		1C9AAAC218735E60001540C3 /* test-instantiaton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AAAC118735E60001540C3 /* test-instantiaton.cpp */; };
 		1C9E34B91891A50700E49195 /* blue-grid-512-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C9E34B71891A50700E49195 /* blue-grid-512-32.png */; };
 		1C9E34BA1891A50700E49195 /* cyclorama-00a.dae in Resources */ = {isa = PBXBuildFile; fileRef = 1C9E34B81891A50700E49195 /* cyclorama-00a.dae */; };
@@ -106,6 +113,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1C53351618978BA5009525FD /* ld-pod-01b-hi-icon.dae */ = {isa = PBXFileReference; explicitFileType = text.xml; fileEncoding = 4; path = "ld-pod-01b-hi-icon.dae"; sourceTree = "<group>"; };
+		1C53351718978BA5009525FD /* texture0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = texture0.png; sourceTree = "<group>"; };
+		1C53351818978BA5009525FD /* texture1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = texture1.png; sourceTree = "<group>"; };
+		1C53351918978BA5009525FD /* texture2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = texture2.png; sourceTree = "<group>"; };
+		1C53351A18978BA5009525FD /* texture3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = texture3.png; sourceTree = "<group>"; };
+		1C53351B18978BA5009525FD /* texture4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = texture4.png; sourceTree = "<group>"; };
+		1C53351C18978BA5009525FD /* texture5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = texture5.png; sourceTree = "<group>"; };
 		1C9AAAC118735E60001540C3 /* test-instantiaton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "test-instantiaton.cpp"; sourceTree = "<group>"; };
 		1C9E34B71891A50700E49195 /* blue-grid-512-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blue-grid-512-32.png"; sourceTree = "<group>"; };
 		1C9E34B81891A50700E49195 /* cyclorama-00a.dae */ = {isa = PBXFileReference; explicitFileType = text.xml; fileEncoding = 4; name = "cyclorama-00a.dae"; path = "philibs-ex-00/Resources/cyclorama-00a.dae"; sourceTree = "<group>"; };
@@ -174,6 +188,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1C53351518978BA5009525FD /* ld */ = {
+			isa = PBXGroup;
+			children = (
+				1C53351618978BA5009525FD /* ld-pod-01b-hi-icon.dae */,
+				1C53351718978BA5009525FD /* texture0.png */,
+				1C53351818978BA5009525FD /* texture1.png */,
+				1C53351918978BA5009525FD /* texture2.png */,
+				1C53351A18978BA5009525FD /* texture3.png */,
+				1C53351B18978BA5009525FD /* texture4.png */,
+				1C53351C18978BA5009525FD /* texture5.png */,
+			);
+			name = ld;
+			path = "philibs-ex-00/Resources/ld";
+			sourceTree = "<group>";
+		};
 		1C9E34B61891A50700E49195 /* cyclorama-00a */ = {
 			isa = PBXGroup;
 			children = (
@@ -186,6 +215,7 @@
 		1CAD970F1861876300C547E1 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1C53351518978BA5009525FD /* ld */,
 				1C9E34B61891A50700E49195 /* cyclorama-00a */,
 				1C9E34B81891A50700E49195 /* cyclorama-00a.dae */,
 				1CC482E3188A0EC30029408D /* brushed-aluminum-00a.jpg */,
@@ -449,17 +479,24 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C53351F18978BA5009525FD /* texture0.png in Resources */,
 				1CDD4233185BDDC2009284F9 /* Shader.fsh in Resources */,
+				1C53352218978BA5009525FD /* texture3.png in Resources */,
+				1C53352118978BA5009525FD /* texture2.png in Resources */,
 				1CC482C218868F4D0029408D /* brushed-aluminum-00a.dds in Resources */,
+				1C53352418978BA5009525FD /* texture5.png in Resources */,
 				1CDD4231185BDDC2009284F9 /* Main_iPad.storyboard in Resources */,
 				1CDD422E185BDDC2009284F9 /* Main_iPhone.storyboard in Resources */,
 				1CDD423A185BDDC2009284F9 /* Images.xcassets in Resources */,
 				1CDD4225185BDDC2009284F9 /* InfoPlist.strings in Resources */,
 				1C9E34BA1891A50700E49195 /* cyclorama-00a.dae in Resources */,
+				1C53352018978BA5009525FD /* texture1.png in Resources */,
 				1CC482C6188694AC0029408D /* test-00b.ase in Resources */,
 				1C9E34B91891A50700E49195 /* blue-grid-512-32.png in Resources */,
+				1C53351E18978BA5009525FD /* ld-pod-01b-hi-icon.dae in Resources */,
 				1CDD4235185BDDC2009284F9 /* Shader.vsh in Resources */,
 				1CAD97121861879B00C547E1 /* test-00.ase in Resources */,
+				1C53352318978BA5009525FD /* texture4.png in Resources */,
 				1CC482C8188776650029408D /* test-00c.ase in Resources */,
 				1CC482C318868F4D0029408D /* test-00a.ase in Resources */,
 				1CC482E4188A0EC30029408D /* brushed-aluminum-00a.jpg in Resources */,

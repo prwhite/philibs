@@ -135,7 +135,7 @@ CheckGLError
       {
         glEnableVertexAttribArray(attribId);
 CheckGLError
-        glVertexAttribPointer(attribId, attributeIter.mComponents, dataTypeToGlDataType(attributeIter.mDataType), GL_FALSE, attributes.getValueStrideBytes(), BUFFER_OFFSET( attributes.getValueOffsetBytes(attributeIter.mType)));
+        glVertexAttribPointer(attribId, (GLint) attributeIter.mComponents, dataTypeToGlDataType(attributeIter.mDataType), GL_FALSE, (GLsizei) attributes.getValueStrideBytes(), BUFFER_OFFSET( attributes.getValueOffsetBytes(attributeIter.mType)));
 CheckGLError
       }
     }

@@ -90,6 +90,9 @@ class geomData :
       Undef = 0xffff
 
     };
+  
+    static_assert ( NumTexUnits == 16, "Someone changed the number of texture units" );
+  
       /** Use these values as symbols for the mComponents member of AttributeVal
           when setting up attributes.  For user-defined attribute bindings, you'll
           have to set the value explicitly.  See Attributes help for an example. */

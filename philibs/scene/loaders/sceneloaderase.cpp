@@ -443,7 +443,7 @@ PNIDBG
 								"No texture mapping channel specified, please use SEASE format" ) );
           
 PNIDBG
-          rMap[ state::Texture0 + channel ] = pTex;
+          rMap[ state::Texture00 + channel ] = pTex;
           
 PNIDBG
 #ifndef IMGSYNCHRONOUS

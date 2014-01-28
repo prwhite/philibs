@@ -16,6 +16,7 @@
 #include "scenecommon.h"
 
 #include "pnisearchpath.h"
+#include "imgfactory.h"
 
 #include "assimp/Importer.hpp"
 #include "assimp/PostProcess.h"
@@ -34,6 +35,21 @@ class helper
 {
   public:
 
+    typedef img::factory::LoadFuture ImgFuture;
+
+    struct ImgFutureTuple
+    {
+      ImgFuture imgFuture;
+      scene::node* mNode;
+      scene::texture* mTex;
+    };
+
+    typedef std::vector< ImgFutureTuple* > ImgFutures;
+
+    helper ( loader::assimp* pLoader )
+      : mLoader ( pLoader )
+        {}
+
     bool checkFile ( std::string const& fname )
       {
         return pni::pstd::searchPath::doStat(fname);
@@ -41,6 +57,8 @@ class helper
 
     node* load ( std::string const& fname )
       {
+        mFname = fname;
+      
         if ( checkFile(fname))
         {
           group* pRoot = new group;
@@ -62,11 +80,14 @@ class helper
               aiProcess_GenSmoothNormals |
               aiProcess_ValidateDataStructure |
               aiProcess_GenUVCoords |
-              aiProcess_SortByPType );
+              aiProcess_SortByPType |
+              aiProcess_FlipUVs);
 
           pRoot->setName(fname);
 
           processScene(mScene, pRoot);
+          
+          finishTextureFutures();
 
           delete pLog;
 
@@ -300,17 +321,31 @@ class helper
           }
         }
 
+    bool resolveImageName( std::string const& src, std::string& dst )
+        {
+PNIDBG
+            // Temporarily add the ase file path head to the search paths,
+            // making relative texture file names work.
+          std::string tmpPath = pni::pstd::searchPath::head(mFname);
+          pni::pstd::searchPath tmpSearch ( *mLoader->getSearchPath () );
+          tmpSearch.addPath(tmpPath);
+
+          bool ret = tmpSearch.resolve ( src, dst );
+
+          return ret;
+        }
+
       void processTextures ( aiMaterial const* pSrc, node* pDst )
         {
             // TODO: Support the rest of these types... or more!!!
           aiTextureType typesWeCareAbout[] = {
               aiTextureType_DIFFUSE,
-//              aiTextureType_AMBIENT,
-//              aiTextureType_EMISSIVE,
+              aiTextureType_AMBIENT,
+              aiTextureType_EMISSIVE,
               aiTextureType_LIGHTMAP,
-//              aiTextureType_NORMALS,
-//              aiTextureType_SPECULAR,
-//              aiTextureType_SHININESS
+              aiTextureType_NORMALS,
+              aiTextureType_SPECULAR,
+              aiTextureType_SHININESS
             };
         
           size_t const NumTypes = sizeof(typesWeCareAbout) / sizeof(aiTextureType);
@@ -324,30 +359,160 @@ class helper
             }
           }
         }
-
-      void processTexture ( aiMaterial const* pSrc, aiTextureType type, size_t index, node* pDst )
+  
+      texture::Wrap aiMappingModeToTexWrap ( aiTextureMapMode mode )
         {
-          aiString texName;
+          switch ( mode )
+          {
+            case aiTextureMapMode_Mirror:
+              return texture::RepeatMirrored;
+            case aiTextureMapMode_Clamp:
+              return texture::ClampToEdge;
+            case aiTextureMapMode_Wrap:
+            default:
+              return texture::Repeat;
+          }
+        }
+  
+      texture::Semantic aiTypeToTexSemantic ( aiTextureType type )
+        {
+          switch ( type )
+          {
+            case aiTextureType_DIFFUSE : return texture::Diffuse;
+            case aiTextureType_AMBIENT : return texture::Ambient;
+            case aiTextureType_SPECULAR : return texture::Specular;
+            case aiTextureType_EMISSIVE : return texture::Emissive;
+            case aiTextureType_HEIGHT : return texture::Height;
+            case aiTextureType_NORMALS : return texture::Normals;
+            case aiTextureType_SHININESS : return texture::Shininess;
+            case aiTextureType_OPACITY : return texture::Opacity;
+            case aiTextureType_DISPLACEMENT : return texture::Displacement;
+            case aiTextureType_LIGHTMAP : return texture::LightMap;
+            case aiTextureType_REFLECTION : return texture::Reflection;
+            default:
+              return texture::Unknown;
+          }
+        }
+
+      void processTexture ( aiMaterial const* pSrc, aiTextureType type, size_t num, node* pDst )
+        {
+          aiString texPath;
           aiTextureMapping texMapping;
           unsigned int texUnit;
           float texBlend;
           aiTextureOp texOp;
           aiTextureMapMode texMapMode;
           
-          pSrc->GetTexture(
+          if ( pSrc->GetTexture(
               type,
-              index,
-              &texName,
+              ( unsigned int ) num,
+              &texPath,
               &texMapping,
               &texUnit,
-              &texBlend,
-              &texOp,
-              &texMapMode);
+              &texBlend,    // Currently ignored
+              &texOp,       // Currently ignored, always modulate in simple lighting model
+              &texMapMode) == aiReturn_SUCCESS )
+          {
+            texture* pTex = 0;
+          
+            std::string fname = texPath.C_Str();
+            std::string path;
+            
+            loader::cache* pCache = mLoader->getCache();
+            auto found = pCache->mTextures.find(fname);
+            if ( found != pCache->mTextures.end () )  // in cache
+            {
+              pTex = found->second.get();
+            }
+            else if(resolveImageName(fname, path))                            // build new texture
+            {
+              pTex = new texture;
+              pTex->setName(fname);
+
+                // Currently, the default shader only knows how to deal with diffuse
+                // textures, so all other types are loaded, but disabled.
+                // TODO: need to add loader properties that will direct how things
+                // like this are handled when we have a richer
+              if ( type != aiTextureType_DIFFUSE )
+                pTex->setEnable(false);
+              
+              if ( texMapping != aiTextureMapping_UV)
+              {
+                pTex->setEnable(false);
+                PNIDBGSTR("Invalid texture mapping. Only aiTextureMapping_UV is currently supported");
+              }
+              
+                // ASSIMP doesn't separate s and t wrap
+              texture::Wrap wrap = aiMappingModeToTexWrap(texMapMode);
+              pTex->setSWrap( wrap );
+              pTex->setTWrap( wrap );
+              
+              pTex->setSemantic(aiTypeToTexSemantic(type));
+              
+                // Do async load
+              ImgFutureTuple* tuple = new ImgFutureTuple;
+              tuple->imgFuture = img::factory::getInstance().loadAsync(path);
+              tuple->mTex = pTex;
+              tuple->mNode = pDst;
+              mImgFutures.push_back(tuple);
+              
+              pCache->mTextures[ fname ] = pTex;
+            }
+            else
+            {
+              PNIDBGSTR("Could not resolve image file path for texture");
+              PNIDBGSTR(fname);
+            }
+
+              // Assign to right texture unit.
+            if ( pTex )
+              pDst->setState(pTex, static_cast< state::Id > (state::Texture00 + texUnit));
+          }
+          else
+          {
+            PNIDBGSTR("ASSIMP GetTexture failed for some reason, we get no tex params");
+          }
         }
 
+        void finishTextureFutures ()
+        {
+          for ( auto tuple : mImgFutures )
+          {
+            img::base* pImg = tuple->imgFuture.get();    // Will wait indefinitely
+            finishTexture(tuple->mTex, tuple->mNode, pImg);
+            delete tuple;
+          }
+
+          mImgFutures.clear ();
+        }
+
+        void finishTexture ( scene::texture* pTex, scene::node* pNode, img::base* pImg )
+        {
+          pTex->setImage ( pImg );
+
+          if ( pImg->mBuffers.size () == 1 )
+            pTex->setMinFilter ( texture::MinLinear );
+
+          if ( pImg && pImg->hasAlpha () )
+          {
+            //printf ( "  %s has alpha\n", pImg->getName ().c_str () );
+//            rMap[ state::Blend ] = mCache->mDefBlend.get ();
+            pNode->setState(mLoader->getCache()->mDefBlend.get(), state::Blend);
+          }
+          else
+          {
+            //printf ( "  %s has no alpha\n", pImg->getName ().c_str () );
+          }
+        }
+
+
+
   private:
+    loader::assimp* mLoader;
     Assimp::Importer importer;
     aiScene const* mScene = 0;
+    ImgFutures mImgFutures;
+    std::string mFname;
 };
 
 
@@ -359,13 +524,12 @@ namespace loader {
 
 scene::node* assimp::load ( std::string const& fname )
 {
-  helper hlpr;
+  helper hlpr ( this );
 
   return hlpr.load (fname);
 }
 
 /////////////////////////////////////////////////////////////////////
-
 
 } // end of namespace loader 
 

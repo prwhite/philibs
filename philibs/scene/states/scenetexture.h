@@ -35,17 +35,36 @@ class texture :
 		enum Target { Tex2D };
 		enum Dirty { DirtyFalse, DirtyTrue };
 		enum MinFilter { 
-        MinNearest, 
-        MinLinear, 
-        MinNearestMipNearest, 
-        MinLinearMipNearest, 
-        MinNearestMipLinear, 
-        MinLinearMipLinear 
+      MinNearest, 
+      MinLinear, 
+      MinNearestMipNearest, 
+      MinLinearMipNearest, 
+      MinNearestMipLinear, 
+      MinLinearMipLinear 
     };
 		enum MagFilter { MagNearest, MagLinear };
 // 		enum Wrap { Clamp, Repeat, ClampToEdge };
-		enum Wrap { Repeat };
+		enum Wrap {
+      Repeat,
+      ClampToEdge,
+      RepeatMirrored
+    };
 // 		enum Resize { ResizeNone, Fill, Smaller, Bigger };
+    enum Semantic {
+      Diffuse,
+      Specular,
+      Ambient,
+      Emissive,
+      Height,
+      Normals,
+      Shininess,
+      Opacity,
+      Displacement,
+      LightMap,
+      Reflection,
+      Unknown
+    };
+
 
 		void setTarget ( Target targetIn = Tex2D ) { mTarget = targetIn; }
 		Target getTarget () const { return mTarget; }
@@ -75,6 +94,14 @@ class texture :
 		void setTWrap ( Wrap twrapIn = Repeat ) { setDirty ( DirtyTrue ); mTwrap = twrapIn; }
 		Wrap getTWrap () const { return mTwrap; }
 
+      /// This is a hint on how this texture is intended to be used.  Loaders might do the right
+      /// thing in filling these in, and an application generally needs to set up the corresponding
+      /// programs and uniforms to process these things correctly.
+      /// @note All semantics other than diffuse will currently be disabled by default.
+      /// @note In the future, loader properties will allow these to be turned on by default.
+    void setSemantic ( Semantic semantic = Diffuse ) { mSemantic = semantic; }
+    Semantic getSemantic () const { return mSemantic; }
+
 		void setPriority ( float priorityIn = 0.5f ) { setDirty ( DirtyTrue ); mPriority = priorityIn; }
 		float getPriority () const { return mPriority; }
 
@@ -94,6 +121,7 @@ class texture :
 		MagFilter mMagFilter;
 		Wrap mSwrap;
 		Wrap mTwrap;
+    Semantic mSemantic;
 		mutable Dirty mDirty;
 // 		Resize mResize;
     

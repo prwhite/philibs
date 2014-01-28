@@ -109,6 +109,7 @@ void prog::setDefaultProgs ()
         spec *= tex00 * tex00 * tex00;  // cheesy effect to get spec modulated by texture.
 
         gl_FragColor = min(vec4(1.0,1.0,1.0,1.0), amb + diff + spec);
+        gl_FragColor.a = tex00.a * v_color.a;
       }
     )" );
 }

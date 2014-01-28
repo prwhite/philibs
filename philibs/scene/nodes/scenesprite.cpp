@@ -368,7 +368,7 @@ void sprites::makeSimpleSprite ( pni::math::vec2 const& size, texture* pTex )
   
     // Setup basic state.
     // Share this texture with weapon select sprites.
-  this->setState ( pTex, state::Texture0 );
+  this->setState ( pTex, state::Texture00 );
 }
 
 /////////////////////////////////////////////////////////////////////

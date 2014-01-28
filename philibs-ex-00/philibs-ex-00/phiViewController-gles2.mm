@@ -16,6 +16,7 @@
 #include "philibs/scenedepth.h"
 #include "philibs/scenelighting.h"
 #include "philibs/scenelight.h"
+#include "philibs/scenecull.h"
 #include "philibs/scenelightpath.h"
 
 #include "philibs/sceneprog.h"
@@ -103,8 +104,9 @@
 
     // Path to the app bundle to get the test file.
   std::string bdir ( getShellPath(BundleDir) );
-//  std::string fname = { bdir + "/" + "test-00b.ase" };
-  std::string fname = { bdir + "/" + "cyclorama-00a.dae" };
+//  std::string fname = { bdir + "/" + "test-00c.ase" };
+//  std::string fname = { bdir + "/" + "cyclorama-00a.dae" };
+  std::string fname = { bdir + "/" + "ld-pod-01b-hi-icon.dae" };
 
     // Load the file, grab its bounding sphere so we can push back the camera an
     // appropriate amount.
@@ -128,6 +130,9 @@
   mCam->setColorClear( pni::math::vec4 ( 0.1f, 0.1f, 0.1f, 1.0f ) );
   mCam->setNormalizeMode( scene::camera::Normalize );
   mCam->setViewport( 0.0f, 0.0f, self.view.frame.size.height * self.view.contentScaleFactor, self.view.frame.size.width * self.view.contentScaleFactor );
+
+  scene::cull* pCull = new scene::cull;
+  mRoot->setState(pCull, scene::state::Cull);
 
   mRoot->addChild ( mCam.get () );
 
