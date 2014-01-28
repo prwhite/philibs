@@ -30,7 +30,7 @@ namespace scene {
 
 dbgDd::dbgDd ( std::ostream& str ) :
   mIndent ( 0 ),
-  mOpts ( All ),
+  mOpts ( Normal ),
   mStr ( str )
 {
   
@@ -233,11 +233,16 @@ void dbgDd::dispatchNode ( node const* pNode )
 
 void dbgDd::dispatchTextureMem ( node const* pNode )
 {
-  if ( scene::state const* pState = pNode->getState ( scene::state::Texture0 ) )
-    pState->accept ( this );    
+  for ( size_t num = 0; num < state::NumTexUnits; ++num )
+  {
 
-  if ( scene::state const* pState = pNode->getState ( scene::state::Texture1 ) )
-    pState->accept ( this );
+    state::Id texUnit = static_cast< state::Id > ( state::Texture00 + num );
+    if ( scene::state* pState = pNode->getState(texUnit))
+    {
+      if ( pState->getEnable() )
+        pState->accept ( this );
+    }
+  }
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -257,7 +262,13 @@ void dbgDd::dispatchGeom ( geom const* pNode )
   dispatchNode ( pNode );
 
   if ( pNode->getGeomData () )
-    mGeomDataSet.insert ( pNode->getGeomData () );  
+  {
+    mGeomDataSet.insert ( pNode->getGeomData () );
+
+      // Holy shit this will be a lot of output...
+    if ( mOpts & GeomDataValues )
+      pNode->getGeomData()->dbg( mStr );
+  }
 }
 
 

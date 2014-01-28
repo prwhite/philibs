@@ -267,7 +267,7 @@ void sprites::update ( graphDd::fxUpdate const& update )
     doDepthSort ( update, sorters );
   
     // Set geometry attribute.
-  mGeomData->attributesOp().push_back ( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, geomData::PositionsComponents } );
+  mGeomData->attributesOp().push_back ( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, geomData::PositionComponents } );
   mGeomData->attributesOp().push_back ( { CommonAttributeNames[ geomData::TCoord00], geomData::TCoord00, geomData::DataType_FLOAT, geomData::TCoord00Components } );
 
     // Unused... why was it here? PRW
@@ -368,7 +368,7 @@ void sprites::makeSimpleSprite ( pni::math::vec2 const& size, texture* pTex )
   
     // Setup basic state.
     // Share this texture with weapon select sprites.
-  this->setState ( pTex, state::Texture0 );
+  this->setState ( pTex, state::Texture00 );
 }
 
 /////////////////////////////////////////////////////////////////////

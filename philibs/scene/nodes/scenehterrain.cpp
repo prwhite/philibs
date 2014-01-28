@@ -102,7 +102,7 @@ void hterrain::initDiffImg ( img::base* pImg )
     mDiffTex->setMinFilter ( scene::texture::MinLinearMipNearest );
   else
     mDiffTex->setMinFilter ( scene::texture::MinLinear );
-  setState ( mDiffTex.get (), scene::state::Texture0 );
+  setState ( mDiffTex.get (), scene::state::Texture00 );
   
   Dim width, height, pitch;
   mDiffImg->getSize ( width, height, pitch );
@@ -125,13 +125,17 @@ void hterrain::initDiffImg ( img::base* pImg )
   mFxTex->setImage ( mFxImg.get () );
   mFxTex->setMagFilter ( scene::texture::MagLinear );
   mFxTex->setMinFilter ( scene::texture::MinLinear ); // Too bad.
-  setState ( mFxTex.get (), scene::state::Texture1 );
+  setState ( mFxTex.get (), scene::state::Texture01 );
   
   scene::texEnv* pEnv = new scene::texEnv;
   pEnv->setEnable ( true );
-  setState ( pEnv, scene::state::TexEnv0 );
-  setState ( pEnv, scene::state::TexEnv1 );
-  
+
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
+  setState ( pEnv, scene::state::TexEnv00 );
+  setState ( pEnv, scene::state::TexEnv01 );
+#endif // PNIGLES1REMOVED
+
   scene::material* pMat = new scene::material;
   pMat->setDiffuse ( pni::math::vec4 ( 1.0f, 1.0f, 1.0f, 1.0f ) );
   pMat->setEnable ( true );
@@ -418,8 +422,8 @@ PNIPSTDLOG
 
     geomData::Attributes& attributes = mGeomData->attributesOp();
 
-    attributes.push_back ( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, geomData::PositionsComponents } );
-    attributes.push_back ( { CommonAttributeNames[ geomData::Normal], geomData::Normal, geomData::DataType_FLOAT, geomData::NormalsComponents } );
+    attributes.push_back ( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, geomData::PositionComponents } );
+    attributes.push_back ( { CommonAttributeNames[ geomData::Normal], geomData::Normal, geomData::DataType_FLOAT, geomData::NormalComponents } );
     attributes.push_back ( { CommonAttributeNames[ geomData::TCoord00], geomData::TCoord00, geomData::DataType_FLOAT, geomData::TCoord00Components } );
     attributes.push_back ( { CommonAttributeNames[ geomData::TCoord01], geomData::TCoord00, geomData::DataType_FLOAT, geomData::TCoord00Components } );
 

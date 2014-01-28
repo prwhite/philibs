@@ -28,8 +28,8 @@ class vec4;
 
 /////////////////////////////////////////////////////////////////////
 
-/**  A row-major 4x4 matrix class... translation is in the last
-     row ( mat[ 3 ][ 0 - 3 ] ).  While it is row major (c-style layout),
+/**  A column-major 4x4 matrix class... translation is in the last
+     row ( mat[ 3 ][ 0 - 3 ] ).  While it is stored row major (c-style layout),
      it is transposed, so it exactly lines up with the expectation of
      OpenGL to be column-major [non-transposed].
 */

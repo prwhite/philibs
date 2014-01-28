@@ -82,7 +82,7 @@ void text::updateTexture ()
   // currently have a texture factory, and we don't want to 
   // hard-code a loader into this implementation.
   
-  texture* pTex = static_cast< texture* > ( getState ( state::Texture0 ) );
+  texture* pTex = static_cast< texture* > ( getState ( state::Texture00 ) );
 
   assert ( pTex );
   

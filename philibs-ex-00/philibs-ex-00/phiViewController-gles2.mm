@@ -16,18 +16,21 @@
 #include "philibs/scenedepth.h"
 #include "philibs/scenelighting.h"
 #include "philibs/scenelight.h"
+#include "philibs/scenecull.h"
 #include "philibs/scenelightpath.h"
 
 #include "philibs/sceneprog.h"
 #include "philibs/sceneuniform.h"
 
 #include "philibs/pnimathstream.h"
+#include "philibs/scenedbgdd.h"
 
 #include "philibs/sceneloaderfactory.h"
 
 #include "pniosxplatform.h"
 
 #include <iostream>
+#include <fstream>
 
 @interface phiViewController () {
   
@@ -101,8 +104,10 @@
 
     // Path to the app bundle to get the test file.
   std::string bdir ( getShellPath(BundleDir) );
-  std::string fname = { bdir + "/" + "test-00b.ase" };
-  
+//  std::string fname = { bdir + "/" + "test-00c.ase" };
+//  std::string fname = { bdir + "/" + "cyclorama-00a.dae" };
+  std::string fname = { bdir + "/" + "ld-pod-01b-hi-icon.dae" };
+
     // Load the file, grab its bounding sphere so we can push back the camera an
     // appropriate amount.
   mLoadFuture = loader::factory::getInstance().loadAsync(fname);
@@ -126,6 +131,9 @@
   mCam->setNormalizeMode( scene::camera::Normalize );
   mCam->setViewport( 0.0f, 0.0f, self.view.frame.size.height * self.view.contentScaleFactor, self.view.frame.size.width * self.view.contentScaleFactor );
 
+  scene::cull* pCull = new scene::cull;
+  mRoot->setState(pCull, scene::state::Cull);
+
   mRoot->addChild ( mCam.get () );
 
     // Set the root -> camera path as the sink (viewer) for the scene.
@@ -136,6 +144,16 @@
 - (void) initScene
 {
   mFile = mLoadFuture.get();
+
+#ifdef DBGFILE
+  std::string ofile ( getShellPath(BundleDir) + "/scene-dbg.txt" );
+  std::ofstream ostr ( ofile );
+  scene::dbgDd dbg ( ostr );
+  dbg.setDbgOpts(scene::dbgDd::All);
+  dbg.startGraph(mFile.get());
+  std::cout << ofile << std::endl;
+#endif // DBGFILE
+
   std::cout << "mFile bounds is " << mFile->getBounds() << std::endl;
   pni::math::sphere boundingSphere;
   boundingSphere.extendBy(mFile->getBounds());

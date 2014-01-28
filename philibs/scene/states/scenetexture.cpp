@@ -20,7 +20,8 @@ texture::texture() :
   mMinFilter ( MinLinear ),
   mMagFilter ( MagLinear ),
   mSwrap ( Repeat ),
-  mTwrap ( Repeat )
+  mTwrap ( Repeat ),
+  mSemantic(Diffuse)
 //   mResize ( ResizeNone )
 {
   

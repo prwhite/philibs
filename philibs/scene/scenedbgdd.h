@@ -48,11 +48,13 @@ class dbgDd :
       Bounds = 0x40,
       TextureMemTotal = 0x80,
       GeomDataMemTotal = 0xf0,
-      All = Nodes | NodesFull | 
+      GeomDataValues = 0x0100,
+      Normal = Nodes | NodesFull |
           States | StatesFull | 
           TravData | TravDataFull |
           Xform | Bounds |
-          TextureMemTotal | GeomDataMemTotal
+          TextureMemTotal | GeomDataMemTotal,
+      All = Normal | GeomDataValues
     };
     
     void setDbgOpts ( unsigned int opts ) { mOpts = opts; }

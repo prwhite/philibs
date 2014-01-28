@@ -58,14 +58,30 @@ class state :
         Prog,
 //         Scissor,    //
 //         Stencil,    //
-        TexEnv0, // TexEnv1 - TexEnv0 must == 1, etc.
-        TexEnv1,
+//        TexEnv0, // TexEnv1 - TexEnv0 must == 1, etc.
+//        TexEnv1,
 //         TexGen0,
 //         TexGen1,
-        Texture0,
-        Texture1,
-        TextureXform0,
-        TextureXform1,
+        Texture00,
+        Texture01,
+        Texture02,
+        Texture03,
+        Texture04,
+        Texture05,
+        Texture06,
+        Texture07,
+        Texture08,
+        Texture09,
+        Texture10,
+        Texture11,
+        Texture12,
+        Texture13,
+        Texture14,
+        Texture15,
+        
+        
+//        TextureXform0,
+//        TextureXform1,
 // //         Viewport,
 
           // For shader-defined uniform values.  Apps need to ensure
@@ -83,8 +99,11 @@ class state :
         Uniform09,
 
 
-        StateCount
+        StateCount,
+        NumTexUnits = Texture15 - Prog
       };
+  
+    static_assert ( NumTexUnits == 16, "someone changed the number of texture units calculation" );
 
     state();
     virtual ~state();

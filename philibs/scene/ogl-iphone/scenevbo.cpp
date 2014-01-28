@@ -25,6 +25,8 @@
 
 #include <iostream>
 
+inline void const* BUFFER_OFFSET( size_t offset ) { return reinterpret_cast< void const* >( offset ); }
+
 using namespace std;
 
 /////////////////////////////////////////////////////////////////////
@@ -110,16 +112,16 @@ void vbo::config ( geomData const* pData, progObj const* pProgObj )
 
     if ( PHINOBUFFERSUBDATA )
     {
-      glBufferData(GL_ARRAY_BUFFER, pData->getValueSizeBytes (), &( pData->getValues()[ 0 ] ), GL_DYNAMIC_DRAW );
-      glBufferData(GL_ELEMENT_ARRAY_BUFFER, pData->getIndexSizeBytes(), &( pData->getIndices()[ 0 ]), GL_DYNAMIC_DRAW);
+      glBufferData(GL_ARRAY_BUFFER, pData->getValueSizeBytes (), pData->getValuesPtr(), GL_DYNAMIC_DRAW );
+      glBufferData(GL_ELEMENT_ARRAY_BUFFER, pData->getIndexSizeBytes(), pData->getIndicesPtr(), GL_DYNAMIC_DRAW);
     }
     else
     {
       glBufferData(GL_ARRAY_BUFFER, pData->getValueSizeBytes (), 0, GL_DYNAMIC_DRAW );
-      glBufferSubData(GL_ARRAY_BUFFER, 0, pData->getValueSizeBytes(), & ( pData->getValues()[ 0 ] ));
+      glBufferSubData(GL_ARRAY_BUFFER, 0, pData->getValueSizeBytes(), pData->getValuesPtr() );
 
       glBufferData(GL_ELEMENT_ARRAY_BUFFER, pData->getIndexSizeBytes(), 0, GL_DYNAMIC_DRAW);
-      glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, pData->getIndexSizeBytes(), &( pData->getIndices()[ 0 ]));
+      glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, pData->getIndexSizeBytes(), pData->getIndicesPtr());
     }
 
 CheckGLError
@@ -133,8 +135,7 @@ CheckGLError
       {
         glEnableVertexAttribArray(attribId);
 CheckGLError
-//        glVertexAttribPointer(attribId, attributeIter.mComponents, dataTypeToGlDataType(attributeIter.mDataType), GL_FALSE, attributes.getValueStrideBytes(), pValues + attributes.getValueOffset(attributeIter.mType));
-        glVertexAttribPointer(attribId, attributeIter.mComponents, dataTypeToGlDataType(attributeIter.mDataType), GL_FALSE, attributes.getValueStrideBytes(),  reinterpret_cast< void* >( attributes.getValueOffsetBytes(attributeIter.mType)));
+        glVertexAttribPointer(attribId, (GLint) attributeIter.mComponents, dataTypeToGlDataType(attributeIter.mDataType), GL_FALSE, (GLsizei) attributes.getValueStrideBytes(), BUFFER_OFFSET( attributes.getValueOffsetBytes(attributeIter.mType)));
 CheckGLError
       }
     }

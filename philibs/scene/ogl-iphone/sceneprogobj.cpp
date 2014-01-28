@@ -85,41 +85,52 @@ void progObj::bind ( prog const* pData )
 
 bool checkProgramLink ( GLuint prog, char const* which )
 {
-  GLint isLinked = 0;
-  glGetProgramiv(prog, GL_LINK_STATUS, &isLinked);
-
-  if( ! isLinked )
+  if ( prog == 0 )
   {
-    GLint size = 0;
-    glGetProgramiv(prog, GL_INFO_LOG_LENGTH, &size);
-
-    GLchar *str = new GLchar[ size ];
-    GLsizei sizeOut = 0;
-
-    glGetProgramInfoLog(prog, size, &sizeOut, str);
-
     PNIDBGSTR(which);
-    PNIDBGSTR(str);
-
-    delete[] str;
-    return false;
+    PNIDBGSTR("invalid program name generated ");
+    return false;   // Early return
   }
   else
-    return true;
+  {
+    GLint isLinked = 0;
+    glGetProgramiv(prog, GL_LINK_STATUS, &isLinked);
+
+    if( ! isLinked )
+    {
+      GLint size = 0;
+      glGetProgramiv(prog, GL_INFO_LOG_LENGTH, &size);
+
+      GLchar *str = new GLchar[ size ];
+      GLsizei sizeOut = 0;
+
+      glGetProgramInfoLog(prog, size, &sizeOut, str);
+
+      PNIDBGSTR(which);
+      PNIDBGSTR(str);
+
+      delete[] str;
+      return false;   // Early return
+    }
+  }
+
+  return true;
 }
 
 bool checkPipelineLink ( GLuint pipe )
 {
   glValidateProgramPipelineEXT( pipe );
 
-  GLint status = 0;
-  glGetProgramPipelineivEXT( pipe, GL_VALIDATE_STATUS, &status);
-  if( status == GL_FALSE )
+      // This is supposed to work given the extension spec, but it throws
+      // an unknown enum error in gl (via instruments analysis).
+//    glGetProgramPipelineivEXT( pipe, GL_VALIDATE_STATUS, &status);
+
+  GLint size = 0;
+  glGetProgramPipelineivEXT(pipe, GL_INFO_LOG_LENGTH, &size);
+
+  if ( size != 0 )
   {
     PNIDBGSTR( "failed to validate program pipeline" );
-
-    GLint size = 0;
-    glGetProgramPipelineivEXT(pipe, GL_INFO_LOG_LENGTH, &size);
 
     GLchar *str = new GLchar[ size ];
     GLsizei sizeOut = 0;
@@ -151,7 +162,9 @@ void progObj::config ( prog const* pData )
       // TODO: Parameterize this, so we don't have dup'd code for vert and frag.
     if ( ! pData->getProgStr ( prog::Vertex ).empty () )
     {
-      glDeleteProgram(mVertProg);
+      if ( mVertProg )
+        glDeleteProgram(mVertProg);
+      mVertProg = 0;
 
       char const* str = pData->getProgStr ( prog::Vertex ).c_str();
       mVertProg = glCreateShaderProgramvEXT(GL_VERTEX_SHADER, 1, &str );
@@ -168,7 +181,9 @@ CheckGLError
 
     if ( ! pData->getProgStr ( prog::Fragment ).empty () )
     {
-      glDeleteProgram(mFragProg);
+      if ( mFragProg )
+        glDeleteProgram(mFragProg);
+      mFragProg = 0;
 
       char const* str = pData->getProgStr ( prog::Fragment ).c_str();
       mFragProg = glCreateShaderProgramvEXT(GL_FRAGMENT_SHADER, 1, &str );

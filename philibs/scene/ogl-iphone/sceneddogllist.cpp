@@ -332,12 +332,46 @@ struct sorter
       SCENEOGLLTCOMPARE( lhs.distSqr, rhs.distSqr );  // Less-than/ascending dist sort.
     }
 
+      // Hmmm... this might be overkill... if we're the same on the first two
+      // textures, that might be good enough... and then we won't pay a penalty
+      // for all the likely redundant checks below.
     SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Prog ],
                         rhs.mStateSet.mStates[ state::Prog ] );
-    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture0 ],
-                        rhs.mStateSet.mStates[ state::Texture0 ] );
-    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture1 ],
-                        rhs.mStateSet.mStates[ state::Texture1 ] );
+    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture00 ],
+                        rhs.mStateSet.mStates[ state::Texture00 ] );
+    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture01 ],
+                        rhs.mStateSet.mStates[ state::Texture01 ] );
+#ifdef PNICOMPAREALLTEXSTAGES
+    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture02 ],
+                        rhs.mStateSet.mStates[ state::Texture02 ] );
+    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture03 ],
+                        rhs.mStateSet.mStates[ state::Texture03 ] );
+    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture04 ],
+                        rhs.mStateSet.mStates[ state::Texture04 ] );
+    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture05 ],
+                        rhs.mStateSet.mStates[ state::Texture05 ] );
+    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture06 ],
+                        rhs.mStateSet.mStates[ state::Texture06 ] );
+    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture07 ],
+                        rhs.mStateSet.mStates[ state::Texture07 ] );
+    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture08 ],
+                        rhs.mStateSet.mStates[ state::Texture08 ] );
+    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture09 ],
+                        rhs.mStateSet.mStates[ state::Texture09 ] );
+    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture10 ],
+                        rhs.mStateSet.mStates[ state::Texture10 ] );
+    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture11 ],
+                        rhs.mStateSet.mStates[ state::Texture11 ] );
+    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture12 ],
+                        rhs.mStateSet.mStates[ state::Texture12 ] );
+    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture13 ],
+                        rhs.mStateSet.mStates[ state::Texture13 ] );
+    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture14 ],
+                        rhs.mStateSet.mStates[ state::Texture14 ] );
+    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture15 ],
+                        rhs.mStateSet.mStates[ state::Texture15 ] );
+#endif // PNICOMPAREALLTEXSTAGES
+
     SCENEOGLLTCOMPARE( lhs.mNode, rhs.mNode );      // Sort geoms together.
 
     return false;
@@ -1149,10 +1183,10 @@ texEnvModeToGl ( texEnv::Mode modeIn )
 
 void ddOglList::dispatch ( texEnv const* pState )
 {
+#ifdef PNIGLES1REMOVED
 	glActiveTexture ( GL_TEXTURE0 + mCurStateId - state::TexEnv0 );
 
     // TODO: PRW PNIGLES1REMOVED
-#ifdef PNIGLES1REMOVED
 
 	if ( pState->getEnable () )
 	{
@@ -1246,7 +1280,7 @@ CheckGLError
 void ddOglList::dispatch ( texture const* pState )
 {
 CheckGLError
-  uint32_t texUnit = mCurStateId - state::Texture0;
+  uint32_t texUnit = mCurStateId - state::Texture00;
 	glActiveTexture ( GL_TEXTURE0 + texUnit );
 CheckGLError
     // Is this the right place to do this?  Can it just be done once, rather
@@ -1270,12 +1304,12 @@ CheckGLError
 
 void ddOglList::dispatch ( textureXform const* pState )
 {
+    // TODO: PRW PNIGLES1REMOVED
+#ifdef PNIGLES1REMOVED
+
   // TODO: This class really begs the PNI "applyFrame" functionality.
 
 	glActiveTexture ( GL_TEXTURE0 + mCurStateId - state::TextureXform0 );
-
-    // TODO: PRW PNIGLES1REMOVED
-#ifdef PNIGLES1REMOVED
 
   glMatrixMode ( GL_TEXTURE );
 
