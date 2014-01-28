@@ -34,6 +34,10 @@ Check out the source, then open, build, and run the project file `philibs-ex-00/
 
 A _version_ of this code has been used in an iOS title [(LD50)](http://labs.prehiti.com/ld50/).  But, this code has not been used in its current incarnation as a stand-alone library, _yet_.
 
+2014/01/27
+
+Merged assimp branch to master.  This includes the [Assimp](http://assimp.sourceforge.net/) library for 3D file importing.  Currently this is set up to load DAE, STL, OBJ, and PLY files.  Imported material colors are currently ignored (which matches the default shader functionality).  I'm keeping a fork of Assimp with a more up-to-date xcode project... I'll probably clean this part up and submit as a pull request.
+
 2014/01/18
 
 GLES2 support, from the gles2 branch, has been merged to master.  There are still a few things not buttoned up, like interpreting the scene graph light nodes as uniforms, etc.  That will come soon, ideally with sufficient generalization to allow for a range of lighting models.  Additionally, the file loader and image loaders have added factories that also intermediate asynchronous loading.  These use some C++11 features, such as threads/futures, etc.
