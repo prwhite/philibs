@@ -34,6 +34,8 @@ class progObj :
       void bind ( prog const* pData );
       
       void config ( prog const* pData );
+  
+      bool validate () const;
 
       GLuint getPipelineHandle () const { return mPipeline; }
       GLuint getVertexProgHandle () const { return mVertProg; }

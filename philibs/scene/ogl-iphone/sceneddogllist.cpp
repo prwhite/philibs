@@ -341,36 +341,38 @@ struct sorter
                         rhs.mStateSet.mStates[ state::Texture00 ] );
     SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture01 ],
                         rhs.mStateSet.mStates[ state::Texture01 ] );
-#ifdef PNICOMPAREALLTEXSTAGES
-    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture02 ],
-                        rhs.mStateSet.mStates[ state::Texture02 ] );
-    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture03 ],
-                        rhs.mStateSet.mStates[ state::Texture03 ] );
-    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture04 ],
-                        rhs.mStateSet.mStates[ state::Texture04 ] );
-    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture05 ],
-                        rhs.mStateSet.mStates[ state::Texture05 ] );
-    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture06 ],
-                        rhs.mStateSet.mStates[ state::Texture06 ] );
-    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture07 ],
-                        rhs.mStateSet.mStates[ state::Texture07 ] );
-    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture08 ],
-                        rhs.mStateSet.mStates[ state::Texture08 ] );
-    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture09 ],
-                        rhs.mStateSet.mStates[ state::Texture09 ] );
-    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture10 ],
-                        rhs.mStateSet.mStates[ state::Texture10 ] );
-    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture11 ],
-                        rhs.mStateSet.mStates[ state::Texture11 ] );
-    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture12 ],
-                        rhs.mStateSet.mStates[ state::Texture12 ] );
-    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture13 ],
-                        rhs.mStateSet.mStates[ state::Texture13 ] );
-    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture14 ],
-                        rhs.mStateSet.mStates[ state::Texture14 ] );
-    SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture15 ],
+#define PNICOMPAREALLTEXSTAGES 0
+    if ( PNICOMPAREALLTEXSTAGES )
+    {
+      SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture02 ],
+                          rhs.mStateSet.mStates[ state::Texture02 ] );
+      SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture03 ],
+                          rhs.mStateSet.mStates[ state::Texture03 ] );
+      SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture04 ],
+                          rhs.mStateSet.mStates[ state::Texture04 ] );
+      SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture05 ],
+                          rhs.mStateSet.mStates[ state::Texture05 ] );
+      SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture06 ],
+                          rhs.mStateSet.mStates[ state::Texture06 ] );
+      SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture07 ],
+                          rhs.mStateSet.mStates[ state::Texture07 ] );
+      SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture08 ],
+                          rhs.mStateSet.mStates[ state::Texture08 ] );
+      SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture09 ],
+                          rhs.mStateSet.mStates[ state::Texture09 ] );
+      SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture10 ],
+                          rhs.mStateSet.mStates[ state::Texture10 ] );
+      SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture11 ],
+                          rhs.mStateSet.mStates[ state::Texture11 ] );
+      SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture12 ],
+                          rhs.mStateSet.mStates[ state::Texture12 ] );
+      SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture13 ],
+                          rhs.mStateSet.mStates[ state::Texture13 ] );
+      SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture14 ],
+                          rhs.mStateSet.mStates[ state::Texture14 ] );
+      SCENEOGLLTCOMPARE( lhs.mStateSet.mStates[ state::Texture15 ],
                         rhs.mStateSet.mStates[ state::Texture15 ] );
-#endif // PNICOMPAREALLTEXSTAGES
+    }
 
     SCENEOGLLTCOMPARE( lhs.mNode, rhs.mNode );      // Sort geoms together.
 
@@ -629,6 +631,11 @@ PNIDBG
     if ( vbo* pvbo = configVBO(pData, pProgObj))
     {
       pvbo->bind(pData,pProgObj);
+
+#ifndef NDEBUG
+      pProgObj->validate ();
+#endif // NDEBUG
+
       glDrawElements ( GL_TRIANGLES, ( GLsizei ) pData->getIndices().size (), GL_UNSIGNED_SHORT, 0 );
     }
   }
@@ -759,7 +766,7 @@ void ddOglList::execStates ( stateSet const& sSet )
   if ( auto pProg = sSet.mStates[ state::Prog ] )
     mCurProg = static_cast< prog const* > ( pProg );
   else
-    PNIDBGSTR("no prog set for execStates... things might be ugly");
+    PNIDBGSTR("no prog set for execStates... things might get ugly");
 
   for ( int num = 0; num < state::StateCount; ++num )
   {

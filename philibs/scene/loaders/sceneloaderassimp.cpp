@@ -444,8 +444,7 @@ PNIDBG
               
                 // ASSIMP doesn't separate s and t wrap
               texture::Wrap wrap = aiMappingModeToTexWrap(texMapMode);
-              pTex->setSWrap( wrap );
-              pTex->setTWrap( wrap );
+              pTex->setWrap( wrap );
               
               pTex->setSemantic(aiTypeToTexSemantic(type));
               

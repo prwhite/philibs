@@ -198,7 +198,9 @@ CheckGLError
 
 CheckGLError
 
-  checkPipelineLink( mPipeline );
+    // Need to only 1) do this in debug and 2) only do this after uniforms
+    // have been set, etc.  So, we will do it right before drawing.
+//  checkPipelineLink( mPipeline );
 
 CheckGLError
 
@@ -226,6 +228,11 @@ void progObj::clear ()
 
   glDeleteProgram(mFragProg);
   mFragProg = 0;
+}
+
+bool progObj::validate () const
+{
+  return checkPipelineLink(mPipeline);
 }
 
 /////////////////////////////////////////////////////////////////////

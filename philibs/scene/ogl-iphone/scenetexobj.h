@@ -34,11 +34,13 @@ class texObj :
       void config ( texture const* pTex );
       
     protected:
+      unsigned int mGlTextureTarget;
       unsigned int mId;
       
       void init ();
       void clear ();
-        
+      void configOneTextureImg ( texture const* pTex, texture::ImageId imgId, img::base const* pImg );
+  
     private:
         
 

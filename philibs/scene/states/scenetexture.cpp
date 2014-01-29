@@ -5,6 +5,7 @@
 /////////////////////////////////////////////////////////////////////
 
 #include "scenetexture.h"
+#include "pnirefcountdbg.h"
 
 /////////////////////////////////////////////////////////////////////
 
@@ -16,7 +17,7 @@ texture::texture() :
   mDirty ( DirtyTrue ),
   mPriority ( 0.5f ),
 //   mAnisotropy ( 0.0f ),
-  mTarget ( Tex2D ),
+  mTarget ( Tex2DTarget ),
   mMinFilter ( MinLinear ),
   mMagFilter ( MagLinear ),
   mSwrap ( Repeat ),
@@ -55,7 +56,7 @@ void texture::collectRefs ( pni::pstd::refCount::Refs& refs )
 {
   state::collectRefs ( refs );
   
-  refs.push_back ( mImg.get () );
+  pni::pstd::dbgRefCount::collectVecRefs ( mImgs, refs );
 }
 
 /////////////////////////////////////////////////////////////////////

@@ -18,6 +18,8 @@
 #include "philibs/scenelight.h"
 #include "philibs/scenecull.h"
 #include "philibs/scenelightpath.h"
+#include "philibs/scenetexture.h"
+#include "philibs/imgfactory.h"
 
 #include "philibs/sceneprog.h"
 #include "philibs/sceneuniform.h"
@@ -98,15 +100,50 @@
   // Dispose of any resources that can be recreated.
 }
 
+scene::texture* loadCubemap ( std::string const& rootPath )
+{
+  scene::texture* pTex = new scene::texture;
+  pTex->setTarget( scene::texture::CubeMapTarget );
+
+    // The order here matches the order in the ImageId enum so that
+    // the cubeSide counter variable will be in the matching sequence.
+  std::vector< std::string > imgs {
+    "PalmTrees/posx.jpg",
+    "PalmTrees/negx.jpg",
+    "PalmTrees/posy.jpg",
+    "PalmTrees/negy.jpg",
+    "PalmTrees/posz.jpg",
+    "PalmTrees/negz.jpg",
+  };
+  
+  pni::pstd::searchPath spath;
+  spath.addPath(rootPath);
+  
+  uint32_t cubeSide = 0;
+  for ( auto iter : imgs )
+  {
+    if ( spath.resolve(iter, iter) )
+    {
+      pTex->setImage(
+          img::factory::getInstance().loadSync(iter),
+          static_cast< scene::texture::ImageId > ( cubeSide++ ));
+    }
+    else
+      PNIDBGSTR("could not resolve cube map texture image file");
+  }
+  
+  return pTex;
+}
+
 - (void)setupGL
 {
   [EAGLContext setCurrentContext:self.context];
 
     // Path to the app bundle to get the test file.
   std::string bdir ( getShellPath(BundleDir) );
-//  std::string fname = { bdir + "/" + "test-00c.ase" };
+  std::string fname = { bdir + "/" + "test-00b.ase" };
 //  std::string fname = { bdir + "/" + "cyclorama-00a.dae" };
-  std::string fname = { bdir + "/" + "ld-pod-01b-hi-icon.dae" };
+//  std::string fname = { bdir + "/" + "ld-pod-01b-hi-icon.dae" };
 
     // Load the file, grab its bounding sphere so we can push back the camera an
     // appropriate amount.
@@ -124,7 +161,11 @@
     // Create a default depth state object.
   scene::depth* pDepth = new scene::depth ();
   mRoot->setState(pDepth, scene::state::Depth);
-
+  
+  scene::texture* pCubemap = loadCubemap ( bdir );
+  pCubemap->setOverride(true);
+  mRoot->setState(pCubemap, scene::state::Texture01);
+  
     // Create and setup the camera.
   mCam = new scene::camera ();
   mCam->setColorClear( pni::math::vec4 ( 0.1f, 0.1f, 0.1f, 1.0f ) );

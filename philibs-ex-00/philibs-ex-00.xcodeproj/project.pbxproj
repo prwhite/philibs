@@ -19,6 +19,13 @@
 		1C9E34BA1891A50700E49195 /* cyclorama-00a.dae in Resources */ = {isa = PBXBuildFile; fileRef = 1C9E34B81891A50700E49195 /* cyclorama-00a.dae */; };
 		1CAD97121861879B00C547E1 /* test-00.ase in Resources */ = {isa = PBXBuildFile; fileRef = 1CAD97111861879B00C547E1 /* test-00.ase */; };
 		1CAD97161865580000C547E1 /* phiViewController-gles2.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD97151865580000C547E1 /* phiViewController-gles2.mm */; };
+		1CB1DFB018988C79005D3709 /* negx.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1CB1DFA918988C79005D3709 /* negx.jpg */; };
+		1CB1DFB118988C79005D3709 /* negy.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1CB1DFAA18988C79005D3709 /* negy.jpg */; };
+		1CB1DFB218988C79005D3709 /* negz.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1CB1DFAB18988C79005D3709 /* negz.jpg */; };
+		1CB1DFB318988C79005D3709 /* posx.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1CB1DFAC18988C79005D3709 /* posx.jpg */; };
+		1CB1DFB418988C79005D3709 /* posy.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1CB1DFAD18988C79005D3709 /* posy.jpg */; };
+		1CB1DFB518988C79005D3709 /* posz.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1CB1DFAE18988C79005D3709 /* posz.jpg */; };
+		1CB1DFB618988C79005D3709 /* readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1CB1DFAF18988C79005D3709 /* readme.txt */; };
 		1CC482C218868F4D0029408D /* brushed-aluminum-00a.dds in Resources */ = {isa = PBXBuildFile; fileRef = 1CC482C018868F4D0029408D /* brushed-aluminum-00a.dds */; };
 		1CC482C318868F4D0029408D /* test-00a.ase in Resources */ = {isa = PBXBuildFile; fileRef = 1CC482C118868F4D0029408D /* test-00a.ase */; };
 		1CC482C6188694AC0029408D /* test-00b.ase in Resources */ = {isa = PBXBuildFile; fileRef = 1CC482C5188694AC0029408D /* test-00b.ase */; };
@@ -126,6 +133,13 @@
 		1CAD97111861879B00C547E1 /* test-00.ase */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "test-00.ase"; path = "philibs-ex-00/Resources/test-00.ase"; sourceTree = "<group>"; };
 		1CAD97131861922A00C547E1 /* pniosxplatform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pniosxplatform.h; sourceTree = "<group>"; };
 		1CAD97151865580000C547E1 /* phiViewController-gles2.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = "phiViewController-gles2.mm"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		1CB1DFA918988C79005D3709 /* negx.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = negx.jpg; sourceTree = "<group>"; };
+		1CB1DFAA18988C79005D3709 /* negy.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = negy.jpg; sourceTree = "<group>"; };
+		1CB1DFAB18988C79005D3709 /* negz.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = negz.jpg; sourceTree = "<group>"; };
+		1CB1DFAC18988C79005D3709 /* posx.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = posx.jpg; sourceTree = "<group>"; };
+		1CB1DFAD18988C79005D3709 /* posy.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = posy.jpg; sourceTree = "<group>"; };
+		1CB1DFAE18988C79005D3709 /* posz.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = posz.jpg; sourceTree = "<group>"; };
+		1CB1DFAF18988C79005D3709 /* readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme.txt; sourceTree = "<group>"; };
 		1CC482C018868F4D0029408D /* brushed-aluminum-00a.dds */ = {isa = PBXFileReference; lastKnownFileType = file; name = "brushed-aluminum-00a.dds"; path = "philibs-ex-00/Resources/brushed-aluminum-00a.dds"; sourceTree = "<group>"; };
 		1CC482C118868F4D0029408D /* test-00a.ase */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "test-00a.ase"; path = "philibs-ex-00/Resources/test-00a.ase"; sourceTree = "<group>"; };
 		1CC482C5188694AC0029408D /* test-00b.ase */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "test-00b.ase"; path = "philibs-ex-00/Resources/test-00b.ase"; sourceTree = "<group>"; };
@@ -215,6 +229,7 @@
 		1CAD970F1861876300C547E1 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1CB1DFA818988C79005D3709 /* PalmTrees */,
 				1C53351518978BA5009525FD /* ld */,
 				1C9E34B61891A50700E49195 /* cyclorama-00a */,
 				1C9E34B81891A50700E49195 /* cyclorama-00a.dae */,
@@ -226,6 +241,21 @@
 				1CAD97111861879B00C547E1 /* test-00.ase */,
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		1CB1DFA818988C79005D3709 /* PalmTrees */ = {
+			isa = PBXGroup;
+			children = (
+				1CB1DFA918988C79005D3709 /* negx.jpg */,
+				1CB1DFAA18988C79005D3709 /* negy.jpg */,
+				1CB1DFAB18988C79005D3709 /* negz.jpg */,
+				1CB1DFAC18988C79005D3709 /* posx.jpg */,
+				1CB1DFAD18988C79005D3709 /* posy.jpg */,
+				1CB1DFAE18988C79005D3709 /* posz.jpg */,
+				1CB1DFAF18988C79005D3709 /* readme.txt */,
+			);
+			name = PalmTrees;
+			path = "philibs-ex-00/Resources/PalmTrees";
 			sourceTree = "<group>";
 		};
 		1CC48332188D26FE0029408D /* Products */ = {
@@ -483,7 +513,10 @@
 				1CDD4233185BDDC2009284F9 /* Shader.fsh in Resources */,
 				1C53352218978BA5009525FD /* texture3.png in Resources */,
 				1C53352118978BA5009525FD /* texture2.png in Resources */,
+				1CB1DFB418988C79005D3709 /* posy.jpg in Resources */,
+				1CB1DFB118988C79005D3709 /* negy.jpg in Resources */,
 				1CC482C218868F4D0029408D /* brushed-aluminum-00a.dds in Resources */,
+				1CB1DFB318988C79005D3709 /* posx.jpg in Resources */,
 				1C53352418978BA5009525FD /* texture5.png in Resources */,
 				1CDD4231185BDDC2009284F9 /* Main_iPad.storyboard in Resources */,
 				1CDD422E185BDDC2009284F9 /* Main_iPhone.storyboard in Resources */,
@@ -494,8 +527,12 @@
 				1CC482C6188694AC0029408D /* test-00b.ase in Resources */,
 				1C9E34B91891A50700E49195 /* blue-grid-512-32.png in Resources */,
 				1C53351E18978BA5009525FD /* ld-pod-01b-hi-icon.dae in Resources */,
+				1CB1DFB618988C79005D3709 /* readme.txt in Resources */,
 				1CDD4235185BDDC2009284F9 /* Shader.vsh in Resources */,
 				1CAD97121861879B00C547E1 /* test-00.ase in Resources */,
+				1CB1DFB018988C79005D3709 /* negx.jpg in Resources */,
+				1CB1DFB218988C79005D3709 /* negz.jpg in Resources */,
+				1CB1DFB518988C79005D3709 /* posz.jpg in Resources */,
 				1C53352318978BA5009525FD /* texture4.png in Resources */,
 				1CC482C8188776650029408D /* test-00c.ase in Resources */,
 				1CC482C318868F4D0029408D /* test-00a.ase in Resources */,

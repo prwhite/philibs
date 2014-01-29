@@ -90,23 +90,32 @@ void prog::setDefaultProgs ()
       varying lowp vec3 v_lvvec;
 
       uniform sampler2D u_tex00;
-      uniform sampler2D u_tex01;
+      uniform samplerCube u_tex01;
 
       void main()
       {
+        lowp vec3 normalizedNormal = normalize ( v_normal );
+      
           // Ambient
         lowp vec4 amb = vec4 ( 0.2, 0.2, 0.2, 1.0 );  // should be a uniform
 
           // Diffuse
-        lowp vec4 diff = vec4(max(0.0,dot(normalize(v_normal),normalize(v_lvvec))) * v_color.rgb,1.0);
+        lowp vec4 diff  = vec4(max(0.0,dot(normalizedNormal,normalize(v_lvvec))) * v_color.rgb,1.0);
+        
         lowp vec4 tex00 = texture2D ( u_tex00, v_uv00 );
         diff *= tex00;
 
+        //vec3 reflectedDirection = reflect(viewDirection, normalize(normalDirection));
+        //gl_FragColor = textureCube(_Cube, reflectedDirection);
+        lowp vec3 refl  = reflect ( vec3 ( 0, 0, -1 ), normalizedNormal );
+        lowp vec4 tex01 = textureCube ( u_tex01, refl, 0.0 );
+        diff *= tex01;
+
           // Specular
         highp float Shininess = 128.0;                 // should be a uniform
-        lowp float specMod = max(0.0,dot(normalize(v_normal),normalize(v_halfVector)));
+        lowp float specMod = max(0.0,dot(normalizedNormal,normalize(v_halfVector)));
         lowp vec4 spec = vec4 ( v_color.xyz * pow(specMod,Shininess), 1.0 );
-        spec *= tex00 * tex00 * tex00;  // cheesy effect to get spec modulated by texture.
+//        spec *= tex00 * tex00 * tex00;  // cheesy effect to get spec modulated by texture.
 
         gl_FragColor = min(vec4(1.0,1.0,1.0,1.0), amb + diff + spec);
         gl_FragColor.a = tex00.a * v_color.a;

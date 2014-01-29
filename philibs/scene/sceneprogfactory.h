@@ -35,7 +35,7 @@ class progFactory
       /// @note Corresponding uniforms have not been defined.
     enum LightTypes
       {
-        None,
+        NoLight,
         Directional,
         Point,
 //        Spot,      // Not supported yet
@@ -43,11 +43,24 @@ class progFactory
         MaxNumLightUnits = 8
       };
   
-      /// Types specify how texture stages are combined...
+      /// Types specify whether texture units are enabled, and what kind of
+      /// sampler and function they are using.
       /// Appropriate values for how the combination is applied are set
       /// with corresponding uniforms.
       /// @note Corresponding uniforms have not been defined.
     enum TextureTypes
+      {
+        NoTexture,
+        Tex2D,
+        CubemapReflection,
+        CubemapRefraction
+      };
+  
+      /// Ops specify how texture stages are combined...
+      /// Appropriate values for how the combination is applied are set
+      /// with corresponding uniforms.
+      /// @note Corresponding uniforms have not been defined.
+    enum TextureOps
       {
         Multiply,
         Decal,
@@ -61,13 +74,20 @@ class progFactory
       // a basic lighting and texturing shader pair.
     struct progProps
       {
-          /// Set an entry to 'true' if a texture and UVs will be supplied
-          /// for the texture unit.
-        TextureTypes mTexUnitsEnabled[ scene::geomData::NumTexUnits ];
+          /// Set an entry to one of the enum values if a texture will
+          /// be supplied for the texture unit.
+          /// @attribute default NoTexture
+        TextureTypes mTextureTypes[ scene::geomData::NumTexUnits ];
+
+          /// Set an entry to one of the enum values if a texture and UVs will
+          /// be supplied for the texture unit.
+          /// @attribute default Multiply
+        TextureOps mTextureOps[ scene::geomData::NumTexUnits ];
         
           /// From #LightTypes enum, either None for disabled, or
           /// one of the specific types.  Corresponding uniforms
           /// will need to be set.
+          /// @attribute default NoLight
         LightTypes mLightUnitTypes[ MaxNumLightUnits ];
       };
 

@@ -54,13 +54,6 @@ texObj::~texObj()
 // }
 
 /////////////////////////////////////////////////////////////////////
-
-void texObj::bind ( texture const* pTex )
-{
-  glBindTexture ( GL_TEXTURE_2D, mId );
-}
-
-/////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
@@ -132,10 +125,42 @@ imageFormatToGlType ( img::base::Format typeIn )	// img::image* imgIn )
 	}
 }
 
-void
-setGlImage ( texture const* texIn, img::base* imgIn, int level = 0 )
+inline
+int textureTargetToGlTarget ( texture::Target target )
 {
-	unsigned int targetGl = GL_TEXTURE_2D;
+  switch ( target )
+  {
+    case texture::Tex2DTarget: return GL_TEXTURE_2D;
+    case texture::CubeMapTarget: return GL_TEXTURE_CUBE_MAP;
+  }
+}
+
+inline
+int imageIdToGlTargetParam ( texture::Target target, texture::ImageId id )
+{
+  if ( target == texture::Tex2DTarget )
+  {
+    return GL_TEXTURE_2D;
+  }
+  else  // Until we have another target type, the else is for cube maps.
+  {
+    switch ( id )
+    {
+      default:
+      case texture::CubePosX: return GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+      case texture::CubeNegX: return GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
+      case texture::CubePosY: return GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
+      case texture::CubeNegY: return GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
+      case texture::CubePosZ: return GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
+      case texture::CubeNegZ: return GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+    }
+  }
+}
+
+void
+setGlImage ( texture const* texIn, texture::ImageId imgId, img::base const* imgIn, int level = 0 )
+{
+	unsigned int targetGl = imageIdToGlTargetParam ( texIn->getTarget(), imgId );
 // 	unsigned int components = imageFormatToGlComponents ( imgIn->getFormat () );
 // 	unsigned int components = imageFormatToGlFormat ( imgIn->getFormat () );
   img::base::Dim width, height, pitch;
@@ -173,11 +198,6 @@ CheckGLError
 CheckGLError
 }
 
-/////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////
-
-
 int minFilterToGl ( texture::MinFilter filter )
 {
 	switch ( filter )
@@ -208,114 +228,131 @@ int wrapToGl ( texture::Wrap wrap )
 	{
 		default:
 		case texture::Repeat: return GL_REPEAT;
-// 		case texture::Clamp: return GL_CLAMP;
-// 		case texture::ClampToEdge: return GL_CLAMP_TO_EDGE;
+ 		case texture::ClampToEdge: return GL_CLAMP_TO_EDGE;
+    case texture::RepeatMirrored: return GL_MIRRORED_REPEAT;
 	}
 }
 
-int textureTargetToGlParam ( texture::Target target )
+float textureAnisotropyToGl ( float valIn )
 {
-    // TODO: Support other targets, e.g., cube map.
-  return GL_TEXTURE_2D;
+  static bool first = true;
+  static float glMax = 2.0f;
+
+  if ( first )
+  {
+    glGetFloatv ( GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &glMax );
+
+    glMax -= 1.0f;
+    first = false;
+  }
+
+  valIn *= glMax;
+  valIn += 1.0f;
+
+  return valIn;
 }
 
-// float textureAnisotropyToGl ( float valIn )
-// {
-// 	static bool first = true;
-// 	static float glMax = 2.0f;
-// 
-// 	if ( first )
-// 	{
-// 		glGetFloatv ( GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &glMax );
-// 
-// 		glMax -= 1.0f;
-// 		first = false;
-// 	}
-// 
-// 	valIn *= glMax;
-// 	valIn += 1.0f;
-// 
-// 	return valIn;
-// }
-
-void setGlTexParams ( texture const* texIn )
+void setGlTexParams ( texture const* texIn, unsigned int textureTarget )
 {
- 	int targetGl = textureTargetToGlParam ( texIn->getTarget () );
-
-	glTexParameteri ( targetGl, GL_TEXTURE_MIN_FILTER, 
+	glTexParameteri ( textureTarget, GL_TEXTURE_MIN_FILTER,
 			minFilterToGl ( texIn->getMinFilter () ) );
 
-	glTexParameteri ( targetGl, GL_TEXTURE_MAG_FILTER, 
+	glTexParameteri ( textureTarget, GL_TEXTURE_MAG_FILTER,
 			magFilterToGl ( texIn->getMagFilter () ) );
 
-	glTexParameteri ( targetGl, GL_TEXTURE_WRAP_S,
+	glTexParameteri ( textureTarget, GL_TEXTURE_WRAP_S,
 			wrapToGl ( texIn->getSWrap () ) );
 
-	glTexParameteri ( targetGl, GL_TEXTURE_WRAP_T,
+	glTexParameteri ( textureTarget, GL_TEXTURE_WRAP_T,
 			wrapToGl ( texIn->getTWrap () ) );
 
-// 	glTexParameterf ( targetGl, GL_TEXTURE_MAX_ANISOTROPY_EXT, textureAnisotropyToGl ( texIn->getMaxAnisotropy () ) );
+#ifdef GL_ES_VERSION_3_0
+	glTexParameteri ( textureTarget, GL_TEXTURE_WRAP_R,
+			wrapToGl ( texIn->getRWrap () ) );
+#endif // GL_ES_VERSION_3_0
+
+#ifdef GL_ES_VERSION_2_0
+ 	glTexParameterf ( textureTarget, GL_TEXTURE_MAX_ANISOTROPY_EXT, textureAnisotropyToGl ( texIn->getMaxAnisotropy () ) );
+#endif // GL_ES_VERSION_2_0
 }
 
 /////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+
+void texObj::bind ( texture const* pTex )
+{
+  glBindTexture ( mGlTextureTarget, mId );
+}
+
+void texObj::configOneTextureImg ( texture const* pTex, texture::ImageId imgId, img::base const* pImg )
+{
+PNIPSTDLOG
+  if ( pTex->getMinFilter () > texture::MinLinear )
+  {
+//printf ( "image %s is mip-mapped\n", pTex->getImage ()->getName ().c_str () );
+
+    // Iterate through buffers in img calling setGlImage.
+    
+    for ( unsigned int num = 0;
+        num < pImg->mBuffers.size ();
+        ++num )
+    {
+      setGlImage ( pTex, imgId, pImg, num );
+CheckGLError
+    }
+  }
+  else
+  {
+//printf ( "image %s is not mip-mapped\n", pTex->getImage ()->getName ().c_str () );
+    // Do setGlImage for level 0.
+    setGlImage ( pTex, imgId, pImg, 0 );
+CheckGLError
+  }
+}
+
 
 void texObj::config ( texture const* pTex )
 {
-  img::base* pImg = pTex->getImage ();
-  
-  if ( ! pImg )
-    return;
+  mGlTextureTarget = textureTargetToGlTarget ( pTex->getTarget () );
   
 CheckGLError
   bind ( pTex );
 CheckGLError
-  
-  if ( pTex->getDirty () == texture::DirtyTrue ||
-      pImg->getDirty () != img::base::DirtyFalse )
-  {
-    if ( pTex->getDirty () == texture::DirtyTrue )
-      setGlTexParams ( pTex );
-PNIPSTDLOG
-CheckGLError
-    
-    if ( pImg->getDirty () )
-    {
-PNIPSTDLOG
-      if ( pTex->getMinFilter () > texture::MinLinear )
-      {
-//printf ( "image %s is mip-mapped\n", pTex->getImage ()->getName ().c_str () );
 
-        // Iterate through buffers in img calling setGlImage.
-        
-        for ( unsigned int num = 0;
-            num < pTex->getImage ()->mBuffers.size ();
-            ++num )
-        {
-          setGlImage ( pTex, pTex->getImage (), num );
-CheckGLError
-        }
-      }
-      else
+  bool hasMipMaps = true;
+
+  size_t end = pTex->getNumImages ();
+  for ( size_t num = 0; num < end; ++num )
+  {
+    texture::ImageId imgId = static_cast< texture::ImageId > ( num );
+    if ( img::base* pImg = pTex->getImage ( imgId ) )
+    {
+      if ( pImg->getDirty () )
       {
-//printf ( "image %s is not mip-mapped\n", pTex->getImage ()->getName ().c_str () );
-        // Do setGlImage for level 0.
-        setGlImage ( pTex, pTex->getImage (), 0 );
-CheckGLError
+PNIPSTDLOG
+        configOneTextureImg ( pTex, imgId, pImg );
+        pImg->setDirty ( img::base::DirtyFalse );
+        if ( pImg->mBuffers.size () == 1 )
+          hasMipMaps = false;
       }
     }
+  }
+CheckGLError
 
-   	int targetGl = textureTargetToGlParam ( pTex->getTarget () );
+  if ( pTex->getDirty () == texture::DirtyTrue )
+  {
+    setGlTexParams ( pTex, mGlTextureTarget );
 
-    glHint ( GL_GENERATE_MIPMAP_HINT, GL_FASTEST );
-
-      // Generate mipmaps if texture is set to mipmap but only one image buffer is present.
-      // Note, the current file loader doesn't do this, so it will take action by the app to
-      // get this to be invoked.
-    if ( pTex->getMinFilter () > texture::MinLinear && pImg->mBuffers.size() == 1 )
-      glGenerateMipmap ( targetGl );
+    // Generate mipmaps if texture is set to mipmap but only one image buffer is present.
+    // Note, the current file loader doesn't do this, so it will take action by the app to
+    // get this to be invoked.
+    glHint ( GL_GENERATE_MIPMAP_HINT, GL_FASTEST ); // Don't need to call this this much. :(
+    if ( pTex->getMinFilter () > texture::MinLinear && ! hasMipMaps )
+      glGenerateMipmap ( mGlTextureTarget );
+CheckGLError
 
     pTex->setDirty ( texture::DirtyFalse );
-    pImg->setDirty ( img::base::DirtyFalse );
   }
 }
 
