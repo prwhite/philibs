@@ -64,6 +64,23 @@ vbo::~vbo()
 //   return false;
 // }
 
+vbo* vbo::getOrCreate ( geomData const* geomDataIn, progObj const* pProgObj )
+{
+    // get or create textureObject for this texture
+  if ( vbo* pObj = static_cast< vbo* > ( geomDataIn->getTravData ( Draw ) ) )
+  {
+    pObj->config ( geomDataIn, pProgObj );
+    return pObj;
+  }
+  else
+  {
+    pObj = new vbo;
+    pObj->config ( geomDataIn, pProgObj );
+    const_cast< geomData* > ( geomDataIn )->setTravData ( Draw, pObj );
+    return pObj;
+  }
+}
+
 /////////////////////////////////////////////////////////////////////
 
 void vbo::bind ( geomData const* pData, progObj const* pProgObj )

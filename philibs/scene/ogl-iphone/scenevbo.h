@@ -29,7 +29,8 @@ class vbo :
 //         vbo(vbo const& rhs);
 //         vbo& operator=(vbo const& rhs);
 //         bool operator==(vbo const& rhs) const;
-        
+  
+      static vbo* getOrCreate ( geomData const* geomDataIn, progObj const* pProgObj );
         
       void bind ( geomData const* pData, progObj const* pProgObj );
       

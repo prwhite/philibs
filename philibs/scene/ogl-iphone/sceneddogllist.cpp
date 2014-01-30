@@ -64,77 +64,6 @@ using namespace std;
 
 namespace scene {
 
-
-/////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////
-
-texObj* configTextureObject ( texture const* textureIn )
-{
-
-	// get or create textureObject for this texture
-	if ( texObj* pObj = static_cast< texObj* > ( textureIn->getTravData ( Draw ) ) )
-	{
-        // PNIGLES1REMOVED
-//    glEnable ( GL_TEXTURE_2D ); // in if and else if cases
-
-		pObj->config ( textureIn );
-    return pObj;
-	}
-	else if ( textureIn->getImage () )
-	{
-CheckGLError
-        // PNIGLES1REMOVED
-//    glEnable ( GL_TEXTURE_2D ); // in if and else if cases
-CheckGLError
-		pObj = new texObj;
-		pObj->config ( textureIn );
-		const_cast< texture* > ( textureIn )->setTravData ( Draw, pObj );
-    return pObj;
-	}
-	else	// not an image texture... can't create it... so disable texture target
-	{
-        // PNIGLES1REMOVED
-//		glDisable ( GL_TEXTURE_2D );
-    return 0;
-	}
-}
-
-vbo* configVBO ( geomData const* geomDataIn, progObj const* pProgObj )
-{
-    // get or create textureObject for this texture
-  if ( vbo* pObj = static_cast< vbo* > ( geomDataIn->getTravData ( Draw ) ) )
-  {
-    pObj->config ( geomDataIn, pProgObj );
-    return pObj;
-  }
-  else
-  {
-    pObj = new vbo;
-    pObj->config ( geomDataIn, pProgObj );
-    const_cast< geomData* > ( geomDataIn )->setTravData ( Draw, pObj );
-    return pObj;
-  }
-}
-
-progObj* configProgObject ( prog const* pProg )
-{
-    // get or create textureObject for this texture
-  if ( progObj* pObj = static_cast< progObj* > ( pProg->getTravData ( Draw ) ) )
-  {
-    pObj->config ( pProg );
-    return pObj;
-  }
-  else
-  {
-    pObj = new progObj;
-    pObj->config ( pProg );
-    const_cast< prog* > ( pProg )->setTravData ( Draw, pObj );
-    return pObj;
-  }
-}
-
-
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
@@ -206,7 +135,7 @@ class ddOglTextureBind :
     virtual void dispatch ( texEnv const* pState ) {}
     virtual void dispatch ( texture const* pState )
         {
-          configTextureObject ( pState );
+          texObj::getOrCreate ( pState );
         }
     virtual void dispatch ( textureXform const* pState ) {}
     virtual void dispatch ( uniform const* pState ) {}
@@ -626,9 +555,9 @@ PNIDBG
     // into this render list.
   geomData const* pData = pNode->getGeomData ();
 
-  if ( progObj const* pProgObj = configProgObject(mCurProg.get()) )
+  if ( progObj const* pProgObj = progObj::getOrCreate(mCurProg.get()) )
   {
-    if ( vbo* pvbo = configVBO(pData, pProgObj))
+    if ( vbo* pvbo = vbo::getOrCreate(pData, pProgObj))
     {
       pvbo->bind(pData,pProgObj);
 
@@ -1162,7 +1091,7 @@ void ddOglList::dispatch ( prog const* pState )
 //  mCurProg = pState;
 
     // TODO: Set prog-related state
-  if (progObj* pobj = configProgObject(pState) )
+  if (progObj* pobj = progObj::getOrCreate(pState) )
     pobj->bind(pState);
 }
 
@@ -1297,7 +1226,7 @@ CheckGLError
 
 	if ( pState->getEnable () )
 	{
-		configTextureObject ( pState );
+		texObj::getOrCreate ( pState );
 	}
 	else	// disabled
 	{
@@ -1340,7 +1269,7 @@ void ddOglList::dispatch ( uniform const* pState )
 {
   if ( mCurProg )
   {
-    if ( progObj* pobj = configProgObject ( mCurProg.get () ) )
+    if ( progObj* pobj = progObj::getOrCreate ( mCurProg.get () ) )
     {
         // TODO: All of this should/could go in a uniforms object, and
         // that should use gl uniform buffer arrays... following

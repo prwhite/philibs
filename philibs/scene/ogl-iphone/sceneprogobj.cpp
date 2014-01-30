@@ -63,6 +63,24 @@ progObj::~progObj()
 //   return false;
 // }
 
+progObj* progObj::getOrCreate ( prog const* pProg )
+{
+    // get or create textureObject for this texture
+  if ( progObj* pObj = static_cast< progObj* > ( pProg->getTravData ( Draw ) ) )
+  {
+    pObj->config ( pProg );
+    return pObj;
+  }
+  else
+  {
+    pObj = new progObj;
+    pObj->config ( pProg );
+    const_cast< prog* > ( pProg )->setTravData ( Draw, pObj );
+    return pObj;
+  }
+}
+
+
 /////////////////////////////////////////////////////////////////////
 
 void progObj::bind ( prog const* pData )

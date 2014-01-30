@@ -30,7 +30,8 @@ class progObj :
 //         progObj& operator=(progObj const& rhs);
 //         bool operator==(progObj const& rhs) const;
         
-        
+      static progObj* getOrCreate ( prog const* pProg );
+  
       void bind ( prog const* pData );
       
       void config ( prog const* pData );

@@ -27,15 +27,16 @@ class texObj :
 //         texObj(texObj const& rhs);
 //         texObj& operator=(texObj const& rhs);
 //         bool operator==(texObj const& rhs) const;
-        
+  
+      static texObj* getOrCreate ( texture const* textureIn );
         
       void bind ( texture const* pTex );
       
       void config ( texture const* pTex );
       
     protected:
-      unsigned int mGlTextureTarget;
-      unsigned int mId;
+      unsigned int mGlTextureTarget = 0;
+      unsigned int mId = 0;
       
       void init ();
       void clear ();

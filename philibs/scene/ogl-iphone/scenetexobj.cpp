@@ -25,8 +25,7 @@ namespace scene {
     
 /////////////////////////////////////////////////////////////////////
 
-texObj::texObj():
-  mId ( 0 )
+texObj::texObj()
 {
   init ();
 }
@@ -52,6 +51,28 @@ texObj::~texObj()
 //     
 //     return false;
 // }
+
+texObj* texObj::getOrCreate ( texture const* textureIn )
+{
+    // get or create textureObject for this texture
+	if ( texObj* pObj = static_cast< texObj* > ( textureIn->getTravData ( Draw ) ) )
+	{
+		pObj->config ( textureIn );
+    return pObj;
+	}
+	else if ( textureIn->getImage () ) // Is this good criteria???
+	{
+		pObj = new texObj;
+		pObj->config ( textureIn );
+		const_cast< texture* > ( textureIn )->setTravData ( Draw, pObj );
+    return pObj;
+	}
+	else	// not an image texture... can't create it... so disable texture target
+        // TODO: maybe this will be ok with framebuffer textures?
+	{
+    return 0;
+	}
+}
 
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
@@ -124,6 +145,14 @@ imageFormatToGlType ( img::base::Format typeIn )	// img::image* imgIn )
     case img::base::RGBA_PVRTC_4BPPV1: return GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
 	}
 }
+
+  /* Resources for Cubemaps:
+    http://en.wikibooks.org/wiki/GLSL_Programming/Unity/Reflecting_Surfaces
+    http://www.opengl.org/wiki/Common_Mistakes#Creating_a_Cubemap_Texture
+    http://antongerdelan.net/opengl/cubemaps.html
+  
+  
+  */
 
 inline
 int textureTargetToGlTarget ( texture::Target target )

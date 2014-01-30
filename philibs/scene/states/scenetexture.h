@@ -74,6 +74,7 @@ class texture :
       Displacement,
       LightMap,
       Reflection,
+      Depth,
       Unknown
     };
 
