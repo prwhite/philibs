@@ -1,0 +1,59 @@
+/////////////////////////////////////////////////////////////////////
+//
+//    file: sceneframebuffer.cpp
+//
+/////////////////////////////////////////////////////////////////////
+
+#include "sceneframebuffer.h"
+
+/////////////////////////////////////////////////////////////////////
+
+namespace scene {
+
+/////////////////////////////////////////////////////////////////////
+
+//framebuffer::framebuffer()
+//{
+//
+//}
+//
+//framebuffer::~framebuffer()
+//{
+//
+//}
+//
+//framebuffer::framebuffer(framebuffer const& rhs)
+//{
+//
+//}
+//
+//framebuffer& framebuffer::operator=(framebuffer const& rhs)
+//{
+//
+//  return *this;
+//}
+//
+//bool framebuffer::operator==(framebuffer const& rhs) const
+//{
+//
+//  return false;
+//}
+
+/////////////////////////////////////////////////////////////////////
+// overrides from pni::pstd::refCount
+
+void framebuffer::collectRefs ( pni::pstd::refCount::Refs& refs )
+{
+  for(auto iter : mColorTex)
+    refs.push_back(iter.get());
+
+  refs.push_back(mDepthTex.get());
+  refs.push_back(mStencilTex.get());
+}
+
+/////////////////////////////////////////////////////////////////////
+
+
+} // end of namespace scene
+
+

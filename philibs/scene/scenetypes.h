@@ -16,6 +16,8 @@
 
 #include <vector>
 #include <unordered_map>
+#include <iostream>
+
 #include "pnirefcount.h"
 #include "pniautoref.h"
 
@@ -37,10 +39,11 @@
 #else
   #ifndef _WIN32
     #define PNIDBG printf ( "%s:%d %s\n", __FILE__, __LINE__, __PRETTY_FUNCTION__ );
-    #define PNIDBGSTR(str) printf ( "%s:%d %s: %s\n", __FILE__, __LINE__, __PRETTY_FUNCTION__, str );
+//    #define PNIDBGSTR(str) printf ( "%s:%d %s: %s\n", __FILE__, __LINE__, __PRETTY_FUNCTION__, str );
+    #define PNIDBGSTR(expr) std::cout << __FILE__ << ":" << __LINE__ << " " << __PRETTY_FUNCTION__ << ": " << expr << std::endl;
   #else
     #define PNIDBG printf ( "%s:%d %s\n", __FILE__, __LINE__, __FUNCTION__ );
-    #define PNIDBGSTR(str) printf ( "%s:%d %s: %s\n", __FILE__, __LINE__, __FUNCTION__, str );
+    #define PNIDBGSTR(expr) std::cout << __FILE__ << ":" << __LINE__ << " " << __FUNCTION__ << ": " << expr << std::endl
   #endif
 #endif
 

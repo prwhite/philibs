@@ -78,26 +78,7 @@ texObj* texObj::getOrCreate ( texture const* textureIn )
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
-inline
-int
-imageFormatToGlComponents ( img::base::Format formatIn ) // img::image* imgIn )
-{
-	switch ( formatIn )
-	{
-		default:
-		case img::base::RGB888: return 3;
-		case img::base::RGBX8888: return 4;
-		case img::base::RGBA8888: return 4;
-    case img::base::RGB565: return 2;
-    case img::base::RGBA4444: return 2;
-    case img::base::RGBA5551: return 2;
-// 		case img::base::B8G8R8: return 3;
-// 		case img::base::B8G8R8A8: return 4;
-		case img::base::Gray8: return 1;
-		case img::base::Alpha8: return 1;
-		case img::base::GrayAlpha88: return 2;
-	}
-}
+namespace {
 
 inline
 int
@@ -117,7 +98,6 @@ imageFormatToGlFormat ( img::base::Format formatIn )	// img::image* imgIn )
 		case img::base::Gray8: return GL_LUMINANCE;
 		case img::base::Alpha8: return GL_ALPHA;
 		case img::base::GrayAlpha88: return GL_LUMINANCE_ALPHA;
-
 	}
 }
 
@@ -159,6 +139,7 @@ int textureTargetToGlTarget ( texture::Target target )
 {
   switch ( target )
   {
+    case texture::NoTarget:   // There's no good NoTarget... but we need the symbolic constant elsewhere.
     case texture::Tex2DTarget: return GL_TEXTURE_2D;
     case texture::CubeMapTarget: return GL_TEXTURE_CUBE_MAP;
   }
@@ -210,17 +191,44 @@ setGlImage ( texture const* texIn, texture::ImageId imgId, img::base const* imgI
 // 	glPixelStorei ( GL_UNPACK_ALIGNMENT, 1 );		// is this slow?
 CheckGLError
 
-	glTexImage2D (
-		targetGl,
-		level,
-		format,
-		width,
-		height,
-		0,			// border
-		format,
-		type,
-		( *imgIn )[ level ]
-	);
+    // Real-time textures from FBOs will not have image data, but everything
+    // else here is applicable.  Just make sure not to deref a bogus vector
+    // entry.
+  void* imgData = imgIn->mBuffers.size() > level ? ( *imgIn )[ level ] : nullptr;
+
+  static_assert ( ( img::base::RGBA_PVRTC_4BPPV1 - img::base::RGB_PVRTC_2BPPV1 ) == 3,
+    "something is wrong with the PVR enum values expected by texObj" );
+
+  img::base::Format imgFormat = imgIn->getFormat();
+  bool isPvr = imgFormat >= img::base::RGB_PVRTC_2BPPV1 &&
+      imgFormat <= img::base::RGBA_PVRTC_4BPPV1;
+
+  if ( isPvr )
+  {
+    glCompressedTexImage2D(
+      targetGl,
+      level,
+      format,
+      width,
+      height,
+      0,
+      imgIn->mBuffers[ level ]->size(),
+      imgData);
+  }
+  else
+  {
+    glTexImage2D (
+      targetGl,
+      level,
+      format,
+      width,
+      height,
+      0,			// border
+      format,
+      type,
+      imgData
+    );
+  }
 CheckGLError
 
 // 	glPixelStorei ( GL_UNPACK_ALIGNMENT, 4 );	// this should restore the ogl default
@@ -305,6 +313,8 @@ void setGlTexParams ( texture const* texIn, unsigned int textureTarget )
 #endif // GL_ES_VERSION_2_0
 }
 
+} // end namespace anonymous
+
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
@@ -317,12 +327,11 @@ void texObj::bind ( texture const* pTex )
 void texObj::configOneTextureImg ( texture const* pTex, texture::ImageId imgId, img::base const* pImg )
 {
 PNIPSTDLOG
-  if ( pTex->getMinFilter () > texture::MinLinear )
-  {
 //printf ( "image %s is mip-mapped\n", pTex->getImage ()->getName ().c_str () );
 
     // Iterate through buffers in img calling setGlImage.
-    
+  if ( ! pImg->mBuffers.empty () )
+  {
     for ( unsigned int num = 0;
         num < pImg->mBuffers.size ();
         ++num )
@@ -331,13 +340,8 @@ PNIPSTDLOG
 CheckGLError
     }
   }
-  else
-  {
-//printf ( "image %s is not mip-mapped\n", pTex->getImage ()->getName ().c_str () );
-    // Do setGlImage for level 0.
+  else // This is a real-time texture with a placeholder image
     setGlImage ( pTex, imgId, pImg, 0 );
-CheckGLError
-  }
 }
 
 
@@ -362,7 +366,7 @@ CheckGLError
 PNIPSTDLOG
         configOneTextureImg ( pTex, imgId, pImg );
         pImg->setDirty ( img::base::DirtyFalse );
-        if ( pImg->mBuffers.size () == 1 )
+        if ( pImg->mBuffers.size () <= 1 )
           hasMipMaps = false;
       }
     }

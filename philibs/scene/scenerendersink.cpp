@@ -1,0 +1,57 @@
+/////////////////////////////////////////////////////////////////////
+//
+//    file: scenerendersink.cpp
+//
+/////////////////////////////////////////////////////////////////////
+
+#include "scenerendersink.h"
+#include "pnirefcountdbg.h"
+
+/////////////////////////////////////////////////////////////////////
+
+namespace scene {
+    
+/////////////////////////////////////////////////////////////////////
+
+//renderSink::renderSink()
+//{
+//    
+//}
+//
+//renderSink::~renderSink()
+//{
+//    
+//}
+//
+//renderSink::renderSink(renderSink const& rhs)
+//{
+//    
+//}
+//
+//renderSink& renderSink::operator=(renderSink const& rhs)
+//{
+//    
+//    return *this;
+//}
+//
+//bool renderSink::operator==(renderSink const& rhs) const
+//{
+//    
+//    return false;
+//}
+
+/////////////////////////////////////////////////////////////////////
+// overrides from pni::pstd::travDataContainer
+
+void renderSink::collectRefs ( pni::pstd::refCount::Refs& refs )
+{
+  pni::pstd::dbgRefCount::collectMapSecondRefs ( getTravDatum (), refs );
+}
+
+
+/////////////////////////////////////////////////////////////////////
+
+
+} // end of namespace scene 
+
+

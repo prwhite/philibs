@@ -180,7 +180,7 @@ class isectDd :
     bool dispatchPre ( node const* pNode );
     void dispatchPost ( node const* pNode );
     
-    bool ignoreFirstXform ();
+    bool ignoreFirstXform () const;
     void pushAndXformSegs ( pni::math::matrix4 const& mat );
     void pushSegs ();
     void popSegs ();

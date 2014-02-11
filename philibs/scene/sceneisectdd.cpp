@@ -205,7 +205,7 @@ bool isectDd::cullSegs ( node const* pNode )
 // first node's transform because the segs are already in that
 // node's coordinate frame.
 
-bool isectDd::ignoreFirstXform ()
+bool isectDd::ignoreFirstXform () const
 {
   return ( ( mTest->getOps () & isectTest::IgnoreFirstXform  ) &&
     ( mRecursionLevel == 0 ) );

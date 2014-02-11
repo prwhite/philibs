@@ -33,10 +33,14 @@ class texObj :
       void bind ( texture const* pTex );
       
       void config ( texture const* pTex );
+  
+      typedef uint32_t Handle;
+  
+      Handle getId () const { return mId; }
       
     protected:
       unsigned int mGlTextureTarget = 0;
-      unsigned int mId = 0;
+      Handle mId = 0;
       
       void init ();
       void clear ();
@@ -45,10 +49,10 @@ class texObj :
     private:
         
 
-	// interface from node::travData
+    // interface from node::attr
 	public:
   
-    // TRICKY HACK: What happens if we do this?
+      // TRICKY HACK: What happens if we do this?
     virtual attr* dup () const { return 0; }
     
 	protected:

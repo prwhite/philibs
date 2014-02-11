@@ -32,18 +32,20 @@ class texture :
 //     bool operator==(texture const& rhs) const;
 
 		enum Target {
+      NoTarget = 0,
       Tex2DTarget = 1,      // Numbers here are overloaded... used for resizing
       CubeMapTarget = 6,    // image array.
     };
     enum ImageId {
+      NoImage = 0xffff,
       Tex2D = 0,
-      CubePosX = 0, // TRICKY: Tex2D and CubePosX are co-located
+      CubePosX = 0, // TRICKY: Tex2D and CubePosX are co-located at 0
       CubeNegX,
       CubePosY,
       CubeNegY,
       CubePosZ,
       CubeNegZ,
-      NumCubeSlots = 6
+      NumCubeSlots = 6,
     };
 		enum Dirty { DirtyFalse, DirtyTrue };
 		enum MinFilter { 
