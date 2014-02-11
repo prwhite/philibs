@@ -211,7 +211,7 @@ void fbo::bind ( framebuffer const* pFb,
     //glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
 
 
-  dispatchSpec(spec, configFuncs {
+  dispatchFuncs(spec, configFuncs {
     [&] ( size_t num )
       {
         texture* pTex = pFb->getColorTextureTarget(num);
@@ -320,7 +320,7 @@ void fbo::initBuffers ( framebuffer::spec const& spec )
   
   glGenFramebuffers(1, &mFramebufferId);
   
-  dispatchSpec(spec, configFuncs {
+  dispatchFuncs(spec, configFuncs {
     [] ( size_t num ) {},
     [&] ( size_t num ) { glGenRenderbuffers(1, &mRenderbufferColorId); },
     [] () {},
@@ -334,7 +334,7 @@ void fbo::initBuffers ( framebuffer::spec const& spec )
 
 void fbo::configBuffers(framebuffer const* pFb, framebuffer::spec const& spec )
 {
-  dispatchSpec(spec, configFuncs {
+  dispatchFuncs(spec, configFuncs {
     [] ( size_t num ) { },
     [&] ( size_t num )  // Color renderbuffer
       {
