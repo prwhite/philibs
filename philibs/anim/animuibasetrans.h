@@ -57,7 +57,7 @@ class uiBaseTrans :
     virtual scene::matrix4 const& getMatrix () const { return matrixHelperUiBase::getMatrix (); }
 		
 	protected:
-    virtual void collectRefs ( pni::pstd::refCount::Refs& refs );		
+    virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const;
 
 };
 

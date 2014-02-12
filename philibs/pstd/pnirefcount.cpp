@@ -16,6 +16,13 @@
 
 #include "pnirefcountdbg.h"
 
+namespace 
+{
+  typedef pni::pstd::dbgRefCount::Ref Ref;
+  typedef pni::pstd::dbgRefCount dbgRefCount;
+  typedef pni::pstd::dbgRefCount::Refs Refs;
+}
+
 //#define PNIREFCOUNTDBG
 #ifdef PNIREFCOUNTDBG
 
@@ -29,29 +36,26 @@
 
 namespace
 {
-  typedef pni::pstd::refCount refCount;
-  typedef pni::pstd::dbgRefCount dbgRefCount;
-  typedef pni::pstd::dbgRefCount::Refs Refs;
-  typedef std::set< pni::pstd::refCount* > RefSet;
-  typedef std::map< refCount*, Refs > FwdRefMap;
-  typedef std::multimap< refCount*, refCount* > RevRefMap;
+  typedef std::set< Ref* > RefSet;
+  typedef std::map< Ref*, Refs > FwdRefMap;
+  typedef std::multimap< Ref*, Ref* > RevRefMap;
 
   RefSet sRefs;
   FwdRefMap sFwdRefs;
   RevRefMap sRevRefs;
   RefSet sOrphans;
   
-  pni::pstd::refCount* sTrackRef = 0;
+  Ref* sTrackRef = 0;
   
   std::ostream* sStr = &std::cout;
 
-  void onTrackRef ( pni::pstd::refCount const* pRef )
+  void onTrackRef ( Ref* pRef )
       {
         std::string name = typeid ( *pRef ).name ();
-        int numRefs = pRef->getNumRefs ();
+//        int numRefs = pRef->getNumRefs ();
       }
 
-  void dbgNewRef ( pni::pstd::refCount* pRef )
+  void dbgNewRef ( Ref* pRef )
       {
         if ( sTrackRef == pRef )
           onTrackRef ( pRef );
@@ -59,7 +63,7 @@ namespace
         sRefs.insert ( pRef );
       }
       
-  void dbgDelRef ( pni::pstd::refCount* pRef )
+  void dbgDelRef ( Ref* pRef )
       {
         if ( sTrackRef == pRef )
           onTrackRef ( pRef );
@@ -67,23 +71,23 @@ namespace
         sRefs.erase ( pRef );
       }
 
-  void dbgRef ( pni::pstd::refCount const* pRef )
+  void dbgRef ( Ref* pRef )
       {
         if ( pRef == sTrackRef )
           onTrackRef ( pRef );
       }
       
-  void dbgUnref ( pni::pstd::refCount const* pRef )
+  void dbgUnref ( Ref* pRef )
       {
         if ( pRef == sTrackRef )
           onTrackRef ( pRef );
       }
   
-  void printFwdRefs ()
-      {
-      
-      }
-      
+//  void printFwdRefs ()
+//      {
+//      
+//      }
+  
   void printRevRefs ()
       {
         RevRefMap::iterator start = sRevRefs.begin ();
@@ -187,7 +191,7 @@ void dbgRefCount::doDbg ( unsigned int mask )
     if ( mask & dbgRefCount::Details )
       ( *cur )->doDbg ();
     
-    refCount* pRef = *cur;
+    Ref* pRef = *cur;
     
     std::string name = typeid ( *pRef ).name ();
     
@@ -213,7 +217,7 @@ void dbgRefCount::doDbg ( unsigned int mask )
   }
 }
 
-void dbgRefCount::doDbg ( refCount* pRef )
+void dbgRefCount::doDbg ( Ref* pRef )
 {
   pRef->doDbg ();
 }
@@ -228,12 +232,12 @@ std::ostream* dbgRefCount::getStr ()
   return sStr;
 }
 
-void dbgRefCount::trackRef ( refCount* pRef )
+void dbgRefCount::trackRef ( Ref* pRef )
 {
   sTrackRef = pRef;
 }
 
-void dbgRefCount::collectRefs ( refCount* pRef, Refs& refs )
+void dbgRefCount::collectRefs ( Ref* pRef, Refs& refs )
 {
   pRef->collectRefs ( refs );
 }
@@ -245,11 +249,11 @@ void dbgRefCount::collectRefs ( refCount* pRef, Refs& refs )
 
 namespace 
 {
-  void dbgNewRef ( pni::pstd::refCount* pRef ) {}
-  void dbgDelRef ( pni::pstd::refCount* pRef ) {}  
+  void dbgNewRef ( Ref* pRef ) {}
+  void dbgDelRef ( Ref* pRef ) {}
 
-  void dbgRef ( pni::pstd::refCount const* pRef ) {}
-  void dbgUnref ( pni::pstd::refCount const* pRef ) {}
+  void dbgRef ( Ref* pRef ) {}
+  void dbgUnref ( Ref* pRef ) {}
 }
 
 ////////
@@ -260,8 +264,9 @@ namespace pni {
 void dbgRefCount::doDbg ( unsigned int mask ) {}
 void dbgRefCount::setStr ( std::ostream* str ) {}
 std::ostream* dbgRefCount::getStr () { return 0; }
-void dbgRefCount::trackRef ( refCount* pRef ) {}
-void dbgRefCount::collectRefs ( refCount* pRef, Refs& refs ) {}
+void dbgRefCount::trackRef ( Ref* pRef ) {}
+void dbgRefCount::collectRefs ( Ref* pRef, Refs& refs ) {}
+void dbgRefCount::doDbg ( Ref* pRef ) {}
 
   } // setEnd of namespace pstd
 } // setEnd of namespace pni
@@ -351,7 +356,7 @@ getNumRefs () const
 
 /////////////////////////////////////////////////////////////////////
 
-void refCount::doDbg ()
+void refCount::doDbg () const
 {
 #ifdef PNIREFCOUNTDBG
   *sStr << "  " << this << " is ref'd " << refs << " times "

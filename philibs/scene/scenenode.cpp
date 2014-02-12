@@ -298,7 +298,7 @@ void node::onDoDbg ()
     //Nodes mChildren;
     //States mStates;
 
-void node::collectRefs ( pni::pstd::refCount::Refs& refs )
+void node::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
   pni::pstd::dbgRefCount::collectVecRefs ( mChildren, refs );
   pni::pstd::dbgRefCount::collectMapSecondRefs ( mStates, refs );

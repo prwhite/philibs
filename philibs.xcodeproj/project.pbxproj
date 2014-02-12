@@ -11,6 +11,7 @@
 		1C2BB57918A9B75F00938C31 /* scenefbo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CCD1662189A400E001F8DF1 /* scenefbo.h */; };
 		1C2BB57A18A9B75F00938C31 /* sceneframebuffer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CCD1665189CF6F4001F8DF1 /* sceneframebuffer.h */; };
 		1C2BB57B18A9B75F00938C31 /* sceneprogfactory.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C38744D1894CF0D0055DE2A /* sceneprogfactory.h */; };
+		1C2BB57E18AAA19C00938C31 /* scenerendersinkdd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C2BB57C18AAA19C00938C31 /* scenerendersinkdd.cpp */; };
 		1C38744E1894CF0D0055DE2A /* sceneprogfactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C38744C1894CF0D0055DE2A /* sceneprogfactory.cpp */; };
 		1C4BD27C18810EB6000781B0 /* sceneogl.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CAD972018662A2B00C547E1 /* sceneogl.h */; };
 		1C4BD27D18810EE6000781B0 /* sceneuniform.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C6A02B81873526700672EF8 /* sceneuniform.h */; };
@@ -21,6 +22,7 @@
 		1C6A02B91873526700672EF8 /* sceneuniform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C6A02B71873526700672EF8 /* sceneuniform.cpp */; };
 		1C88803218923B89005EAF2E /* libassimp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C88803118923B89005EAF2E /* libassimp.a */; };
 		1C94014318A998CE0011AFF0 /* sceneframebufferogl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C94014118A998CE0011AFF0 /* sceneframebufferogl.cpp */; };
+		1C9AAF0C18AAA1D90062DF8C /* scenerendersinkdd.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C2BB57D18AAA19C00938C31 /* scenerendersinkdd.h */; };
 		1CAD971F186628EE00C547E1 /* scenevbo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD971D186628EE00C547E1 /* scenevbo.cpp */; };
 		1CAD9723186D72D500C547E1 /* sceneprog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9721186D72D500C547E1 /* sceneprog.cpp */; };
 		1CAD9726186E110200C547E1 /* sceneprogobj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9724186E110200C547E1 /* sceneprogobj.cpp */; };
@@ -420,12 +422,15 @@
 				1CDD434D185EDBD2009284F9 /* uiwheel.h in CopyFiles */,
 				1CDD434F185EDBD2009284F9 /* uiwheelcore.h in CopyFiles */,
 				1CDD3FFF185BC965009284F9 /* philibs.h in CopyFiles */,
+				1C9AAF0C18AAA1D90062DF8C /* scenerendersinkdd.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1C2BB57C18AAA19C00938C31 /* scenerendersinkdd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scenerendersinkdd.cpp; sourceTree = "<group>"; };
+		1C2BB57D18AAA19C00938C31 /* scenerendersinkdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenerendersinkdd.h; sourceTree = "<group>"; };
 		1C38744C1894CF0D0055DE2A /* sceneprogfactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneprogfactory.cpp; sourceTree = "<group>"; };
 		1C38744D1894CF0D0055DE2A /* sceneprogfactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneprogfactory.h; sourceTree = "<group>"; };
 		1C4BD2821885FCB7000781B0 /* scenecommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = scenecommon.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -993,6 +998,8 @@
 				1C38744D1894CF0D0055DE2A /* sceneprogfactory.h */,
 				1CCD165E189A3F23001F8DF1 /* scenerendersink.cpp */,
 				1CCD165F189A3F23001F8DF1 /* scenerendersink.h */,
+				1C2BB57C18AAA19C00938C31 /* scenerendersinkdd.cpp */,
+				1C2BB57D18AAA19C00938C31 /* scenerendersinkdd.h */,
 				1CDD413D185BCAF0009284F9 /* scenesndeffect.cpp */,
 				1CDD413E185BCAF0009284F9 /* scenesndeffect.h */,
 				1CDD413F185BCAF0009284F9 /* scenesndlistener.cpp */,
@@ -1319,6 +1326,7 @@
 				1CDD4001185BC965009284F9 /* philibs.m in Sources */,
 				1CDD41D9185BCAF0009284F9 /* scenegeom.cpp in Sources */,
 				1CC482EC188B916A0029408D /* imgpvr.mm in Sources */,
+				1C2BB57E18AAA19C00938C31 /* scenerendersinkdd.cpp in Sources */,
 				1CDD41B4185BCAF0009284F9 /* pnibox2.cpp in Sources */,
 				1CDD41F4185BCAF0009284F9 /* scenedepth.cpp in Sources */,
 				1CDD41C1185BCAF0009284F9 /* pniquat.cpp in Sources */,

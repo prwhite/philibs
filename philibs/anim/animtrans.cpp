@@ -98,7 +98,7 @@ void trans::internalUpdate ( manager* pManager, TimeType tval )
 
 /////////////////////////////////////////////////////////////////////
 
-void trans::collectRefs ( pni::pstd::refCount::Refs& refs )
+void trans::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
   base::collectRefs ( refs );
   refs.push_back ( mHelper.get () );

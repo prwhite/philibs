@@ -58,7 +58,7 @@ class sceneNodeTrans :
     virtual scene::matrix4 const& getMatrix () const { return matrixHelperNode::getMatrix (); }
 
   protected:
-    virtual void collectRefs ( pni::pstd::refCount::Refs& refs );
+    virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const;
 };
 
 /////////////////////////////////////////////////////////////////////

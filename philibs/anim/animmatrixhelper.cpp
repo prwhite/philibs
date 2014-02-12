@@ -69,7 +69,7 @@ pni::math::matrix4& matrixHelper::updateMatrix ()
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
-void matrixHelper::collectRefs ( pni::pstd::refCount::Refs& refs )
+void matrixHelper::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
   
 }

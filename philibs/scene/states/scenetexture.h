@@ -38,14 +38,14 @@ class texture :
     };
     enum ImageId {
       NoImage = 0xffff,
-      Tex2D = 0,
-      CubePosX = 0, // TRICKY: Tex2D and CubePosX are co-located at 0
-      CubeNegX,
-      CubePosY,
-      CubeNegY,
-      CubePosZ,
-      CubeNegZ,
-      NumCubeSlots = 6,
+      Tex2DImg = 0,
+      CubePosXImg = 0, // TRICKY: Tex2D and CubePosX are co-located at 0
+      CubeNegXImg,
+      CubePosYImg,
+      CubeNegYImg,
+      CubePosZImg,
+      CubeNegZImg,
+      NumCubeImgSlots = 6,
     };
 		enum Dirty { DirtyFalse, DirtyTrue };
 		enum MinFilter { 
@@ -95,7 +95,7 @@ class texture :
       // texture sources
       /// Instances can store 0, 1 or 6 images, corresponding to real-time (maybe?),
       /// Tex2D or cube map target types.
-		void setImage ( img::base* pImg, ImageId which = Tex2D )
+		void setImage ( img::base* pImg, ImageId which = Tex2DImg )
       {
         setDirty ( DirtyTrue );
         setTarget ( mTarget );  // Just in case it hasn't been set.
@@ -105,7 +105,7 @@ class texture :
           PNIDBGSTR("texture image out of range for target type");
       }
   
-		img::base* getImage ( ImageId which = Tex2D ) const { return mImgs[ which ].get (); }
+		img::base* getImage ( ImageId which = Tex2DImg ) const { return mImgs[ which ].get (); }
     size_t getNumImages () const { return mImgs.size (); }
     void resetImages () { setDirty ( DirtyTrue ); mImgs.resize ( 0 ); }
 
@@ -186,7 +186,7 @@ class texture :
     virtual state* dup () const { return new texture ( *this ); }
     
   protected:
-    virtual void collectRefs ( pni::pstd::refCount::Refs& refs );
+    virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const;
 
 };
 

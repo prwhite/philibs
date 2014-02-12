@@ -52,7 +52,7 @@ texture::~texture()
 
 /////////////////////////////////////////////////////////////////////
 
-void texture::collectRefs ( pni::pstd::refCount::Refs& refs )
+void texture::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
   state::collectRefs ( refs );
   

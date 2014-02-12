@@ -72,10 +72,10 @@ class isectTest :
 {
   protected:
     virtual ~isectTest () {}
-    void collectRefs ( pni::pstd::refCount::Refs& refs ) 
+    void collectRefs ( pni::pstd::refCount::Refs& refs ) const
         {
-          Hits::iterator end = mHits.end ();
-          for ( Hits::iterator cur = mHits.begin (); cur != end; ++cur )
+          auto end = mHits.end ();
+          for ( auto cur = mHits.begin (); cur != end; ++cur )
             cur->mNodePath.collectRefs ( refs );
         }
 
@@ -225,7 +225,13 @@ class isectDd :
     virtual void dispatch ( light const* pNode );
     virtual void dispatch ( sndEffect const* pNode );
     virtual void dispatch ( sndListener const* pNode );
-    
+
+
+    void collectRefs ( pni::pstd::refCount::Refs& refs ) const
+        {
+          mNodeStack.collectRefs(refs);
+        }
+  
 };
 
 /////////////////////////////////////////////////////////////////////
@@ -288,7 +294,7 @@ class simpleIsect :
     Test mTest;
     scene::isectDd mIsectDd;
     
-    void collectRefs ( pni::pstd::refCount::Refs& refs )
+    void collectRefs ( pni::pstd::refCount::Refs& refs ) const
         {
           refs.push_back ( mTest.get () );
         }

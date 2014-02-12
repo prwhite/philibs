@@ -113,7 +113,7 @@ class node :
   protected:
     virtual void onDoDbg ();
 
-    virtual void collectRefs ( pni::pstd::refCount::Refs& refs );
+    virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const;
 
 };
 

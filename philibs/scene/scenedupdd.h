@@ -80,7 +80,12 @@ class dupDd :
     void dispatchNodePush ( node const* pNode );
     void dispatchNodePre ( node const* pNode );
     void dispatchNodePost ( node const* pNode );
-    
+
+    virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const
+      {
+        refs.push_back(mRetNode);
+      }
+  
     // interface from stateDd
   public:
     virtual void startStates ( node const* pNode );

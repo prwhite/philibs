@@ -316,7 +316,7 @@ void base::onDoDbg ()
     //Actions mActions;
     //ActionRef mCurAction;
 
-void base::collectRefs ( pni::pstd::refCount::Refs& refs )
+void base::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
   refs.push_back ( mBaseNode.get () );
   refs.push_back ( mRootNode.get () );

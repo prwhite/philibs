@@ -140,13 +140,13 @@ bool nodePath::contains ( node* pNode ) const
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
-void nodePath::collectRefs ( Refs& refs )
+void nodePath::collectRefs ( Refs& refs ) const
 {
   if ( mDoRef )
   {
 
-    Nodes::iterator end = mNodes.end ();
-    for ( Nodes::iterator cur = mNodes.begin (); cur != end; ++cur )
+    auto end = mNodes.end ();
+    for ( auto cur = mNodes.begin (); cur != end; ++cur )
     {
       refs.push_back ( *cur );
     }

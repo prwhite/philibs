@@ -46,7 +46,7 @@ class cache :
     BlendRef mDefBlend;
     
   protected:
-    virtual void collectRefs ( pni::pstd::refCount::Refs& refs );
+    virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const;
 };
 
 /////////////////////////////////////////////////////////////////////
@@ -97,7 +97,7 @@ class directory :
   protected:
     ~directory () {}
     
-    virtual void collectRefs ( pni::pstd::refCount::Refs& refs );
+    virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const;
   
   private:
     Nodes mNodes;
@@ -189,7 +189,7 @@ class base :
     DirRef mDirectory;
     SearchPathRef mSearchPath;
     
-    virtual void collectRefs ( pni::pstd::refCount::Refs& refs );
+    virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const;
     
   private:
     

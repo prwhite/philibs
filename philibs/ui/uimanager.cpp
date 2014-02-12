@@ -21,7 +21,7 @@ namespace ui {
 
 /////////////////////////////////////////////////////////////////////
 
-void layer::collectRefs ( pni::pstd::refCount::Refs& refs )
+void layer::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
   refs.push_back ( mRoot.get () );
   
@@ -630,7 +630,7 @@ void manager::clearCaches ()
     //BaseRef mCurBase;
     //BaseRef mTextFocusBase;
 
-void manager::collectRefs ( pni::pstd::refCount::Refs& refs )
+void manager::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
   pni::pstd::dbgRefCount::collectVecRefs ( mLayers, refs );
 

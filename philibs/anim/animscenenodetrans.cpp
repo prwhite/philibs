@@ -41,7 +41,7 @@ namespace anim {
 
 /////////////////////////////////////////////////////////////////////
 
-void sceneNodeTrans::collectRefs ( pni::pstd::refCount::Refs& refs )
+void sceneNodeTrans::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
   trans::collectRefs ( refs );
   refs.push_back ( mNode.get () );

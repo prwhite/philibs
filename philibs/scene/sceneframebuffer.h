@@ -45,6 +45,7 @@ namespace scene {
     framebufferOgl, which actually implements the interaction with GLES.
   */
 class framebuffer :
+    public pni::pstd::refCount,
     public travDataContainer
 {
   public:
@@ -182,7 +183,7 @@ class framebuffer :
   // interface from pni::pstd::refCount
   public:
 
-    virtual void collectRefs ( pni::pstd::refCount::Refs& refs );
+    virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const;
   
   protected:
 		

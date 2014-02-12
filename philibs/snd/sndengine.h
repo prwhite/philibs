@@ -57,7 +57,7 @@ class engine :
   protected:
     virtual ~engine ();
   
-    virtual void collectRefs ( Refs& refs )
+    virtual void collectRefs ( Refs& refs ) const
         {
         
         }
@@ -86,7 +86,7 @@ class effect :
   protected:
     virtual ~effect ();
     
-    virtual void collectRefs ( Refs& refs )
+    virtual void collectRefs ( Refs& refs ) const
         {
         
         }

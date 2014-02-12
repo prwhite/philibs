@@ -46,7 +46,8 @@ class PNIPSTDAPI refCount
 
 	public:
 		typedef int32_t int32;
-        typedef std::vector< refCount* > Refs;
+    typedef refCount const Ref;
+    typedef std::vector< Ref* > Refs;
 		
 		// zero refs on creation
 		refCount ();
@@ -63,11 +64,11 @@ class PNIPSTDAPI refCount
 	protected:
 		virtual ~refCount ();
 		
-		virtual void collectRefs ( Refs& refs ) = 0;
+		virtual void collectRefs ( Refs& refs ) const = 0;
 		
 		  // For debugging.
-		void doDbg ();
-		virtual void onDoDbg () {}
+		void doDbg () const;
+		virtual void onDoDbg () const {}
 		
 	private:
 		int32 mutable volatile refs;				

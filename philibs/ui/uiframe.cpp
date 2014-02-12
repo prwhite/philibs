@@ -90,7 +90,7 @@ void frame::remChild ( base* pBase )
 /////////////////////////////////////////////////////////////////////
 // overrides from base
 
-void frame::collectRefs ( pni::pstd::refCount::Refs& refs )
+void frame::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
   base::collectRefs ( refs );
   pni::pstd::dbgRefCount::collectVecRefs ( mChildren, refs );

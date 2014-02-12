@@ -28,7 +28,8 @@ namespace scene {
   
 /////////////////////////////////////////////////////////////////////
 
-class graphDd 
+class graphDd :
+  public pni::pstd::refCount
 {
     // We don't want the dispatch methods to be generally accessible.
     friend class camera;

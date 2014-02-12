@@ -67,6 +67,8 @@ class ddOgl :
     virtual void dispatch ( textureXform const* pState );
     virtual void dispatch ( uniform const* pState );
   
+     void collectRefs ( pni::pstd::refCount::Refs& refs ) const;
+  
   private:
   
     // Bool return indicates whether node was culled or not.

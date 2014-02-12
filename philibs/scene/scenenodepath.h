@@ -195,7 +195,7 @@ class nodePath
       // Just used for debugging refCount issues.
     typedef pni::pstd::dbgRefCount::Refs Refs;
     
-    void collectRefs ( Refs& refs );
+    void collectRefs ( Refs& refs ) const;
 
   protected:
     void ref ( node* pNode );

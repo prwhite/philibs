@@ -17,6 +17,7 @@
 /////////////////////////////////////////////////////////////////////
 
 #include <iosfwd>
+#include "pnirefcount.h"
 
 /////////////////////////////////////////////////////////////////////
 
@@ -30,7 +31,8 @@ namespace pni {
 class dbgRefCount 
 {
   public:
-    typedef std::vector< refCount* > Refs;
+    typedef refCount::Ref Ref;
+    typedef refCount::Refs Refs;
   
     enum Opts
     {
@@ -46,17 +48,17 @@ class dbgRefCount
     static void setStr ( std::ostream* str );
     static std::ostream* getStr ();
     
-    static void trackRef ( refCount* pRef );
+    static void trackRef ( Ref* pRef );
     
-    static void collectRefs ( refCount* pRef, Refs& refs );
+    static void collectRefs ( Ref* pRef, Refs& refs );
     
-    static void doDbg ( refCount* pRef );
+    static void doDbg ( Ref* pRef );
     
     template< class Type >
     static void collectVecRefs ( Type& srcVec, Refs& refs )
         {
-          typename Type::iterator end = srcVec.end ();
-          for ( typename Type::iterator cur = srcVec.begin ();
+          auto end = srcVec.end ();
+          for ( auto cur = srcVec.begin ();
               cur != end; ++cur )
           {
             refs.push_back ( cur->get () );
@@ -66,8 +68,8 @@ class dbgRefCount
     template< class Type >
     static void collectMapSecondRefs ( Type& srcVec, Refs& refs )
         {
-          typename Type::iterator end = srcVec.end ();
-          for ( typename Type::iterator cur = srcVec.begin ();
+          auto end = srcVec.end ();
+          for ( auto cur = srcVec.begin ();
               cur != end; ++cur )
           {
             refs.push_back ( cur->second.get () );

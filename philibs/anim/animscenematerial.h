@@ -101,7 +101,7 @@ class sceneMaterial :
     virtual void updateBounds () const;
     virtual void internalUpdate ( manager* pManager, TimeType tval );
 
-    virtual void collectRefs ( pni::pstd::refCount::Refs& refs );
+    virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const;
 };
 
 /////////////////////////////////////////////////////////////////////
@@ -152,7 +152,7 @@ class simpleSceneFadeBase :
     BlendRef mOrigBlend;
     float const Threshold;
     
-    void collectRefs ( Refs& refs )
+    void collectRefs ( Refs& refs ) const
         {
           refs.push_back ( mOrigMat.get () );
           refs.push_back ( mMat.get () );

@@ -43,7 +43,7 @@ class bgMusicFader :
 
   protected:
 		
-		virtual void collectRefs ( Refs& refs )
+		virtual void collectRefs ( Refs& refs ) const
 		    {
 		      refs.push_back ( mEngine.get () );
 		    }

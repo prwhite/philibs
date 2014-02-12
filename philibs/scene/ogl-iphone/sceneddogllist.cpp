@@ -140,6 +140,7 @@ class ddOglTextureBind :
     virtual void dispatch ( textureXform const* pState ) {}
     virtual void dispatch ( uniform const* pState ) {}
 
+    virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const {}
 };
     
 /////////////////////////////////////////////////////////////////////
@@ -362,10 +363,7 @@ PNIDBG
     // Lame attempt to deal with some possible default state bug.
   //glColor4f ( 1.0f, 1.0f, 1.0f, 1.0f );
   
-  RenderList::const_iterator end = mRenderList.end ();
-  for ( RenderList::const_iterator cur = mRenderList.begin ();
-      cur != end;
-      ++cur )
+  for ( auto cur : mRenderList )
   {
 //printf ( "node: %s  distSqr: %f\n", cur->mNode->getName ().c_str (), cur->distSqr );
 
@@ -373,29 +371,35 @@ PNIDBG
     if ( mDbgVals & DbgSort )
     {
       printf ( "DbgSort: node %s distSqr = %f\n",
-          cur->mNode->getName ().c_str (), cur->distSqr );
+          cur.mNode->getName ().c_str (), cur.distSqr );
     }
 
 #endif // _NDEBUG
 
       // NEWMATSTACK
       // set up model mat
-    mModelMat = cur->mMatrix;
+    mModelMat = cur.mMatrix;
     
  //cout << "cur->matrix =\n" << cur->mMatrix << endl;
 
 PNIDBG
 
 CheckGLError
-    execStates ( cur->mStateSet );
+    execStates ( cur.mStateSet );
     execBuiltins();
 
 PNIDBG
-    cur->mNode->accept ( this );
+    cur.mNode->accept ( this );
     
       // TODO: PRW PNIGLES1REMOVED
 //    glPopMatrix ();
   }
+
+    // Clear stuff out...
+    // Clear this out so we don't unnecesarily hold onto a ref to a h/w resource.
+  mCurProg = nullptr;
+    // Don't want to leave around a bunch of (not ref-counted) references to states.
+  resetCurState ();
 
 #ifndef _NDEBUG
   if ( mDbgVals )
@@ -1326,7 +1330,15 @@ CheckGLError
   }
 }
 
+
+void ddOglList::collectRefs ( pni::pstd::refCount::Refs& refs ) const
+{
+  refs.push_back(mCurProg.get());
+  refs.push_back(mBuiltins.get());
   
+  mSinkPath.collectRefs(refs);
+}
+
 /////////////////////////////////////////////////////////////////////
 
 

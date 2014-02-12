@@ -655,7 +655,7 @@ void hterrain::generateGeomPartition () const
     //TexRef mDiffTex;
     //TexRef mFxTex;
 
-void hterrain::collectRefs ( pni::pstd::refCount::Refs& refs )
+void hterrain::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
   scene::geom::collectRefs ( refs );
   

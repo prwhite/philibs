@@ -46,7 +46,7 @@ namespace anim {
 /////////////////////////////////////////////////////////////////////
 // overrides from anim::base
 
-void uiBaseTrans::collectRefs ( pni::pstd::refCount::Refs& refs )
+void uiBaseTrans::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
   trans::collectRefs ( refs );
   refs.push_back ( mUiBase.get () );

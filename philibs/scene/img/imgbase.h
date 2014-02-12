@@ -63,7 +63,7 @@ class base :
       public BufferData
         {
           protected:
-            void collectRefs ( pni::pstd::refCount::Refs& refs ) {}
+            void collectRefs ( pni::pstd::refCount::Refs& refs ) const {}
         };
         
     typedef std::vector< pni::pstd::autoRef< buffer > > Buffers;
@@ -156,7 +156,7 @@ class base :
     
   protected:
     virtual void onDoDbg ();
-    virtual void collectRefs ( pni::pstd::refCount::Refs& refs );
+    virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const;
 };
 
 /////////////////////////////////////////////////////////////////////

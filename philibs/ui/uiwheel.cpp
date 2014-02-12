@@ -186,7 +186,7 @@ void wheel::updateTrans ()
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
-void wheel::collectRefs ( pni::pstd::refCount::Refs& refs )
+void wheel::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
   refs.push_back ( mUiMgr.get () );
 }

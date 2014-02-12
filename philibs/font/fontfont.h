@@ -88,7 +88,7 @@ class font :
   public:
 
   protected:
-		void collectRefs ( Refs& refs )
+		void collectRefs ( Refs& refs ) const
 		    {
 		    
 		    }

@@ -72,6 +72,8 @@ class converter :
     virtual void dispatch ( sndEffect const* pNode ) {}
     virtual void dispatch ( sndListener const* pNode ) {}
 
+    void collectRefs ( pni::pstd::refCount::Refs& refs ) const {}
+
   private:
     camera const* mCam;
 

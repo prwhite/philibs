@@ -42,7 +42,7 @@ namespace scene {
 /////////////////////////////////////////////////////////////////////
 // overrides from pni::pstd::refCount
 
-void framebuffer::collectRefs ( pni::pstd::refCount::Refs& refs )
+void framebuffer::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
   for(auto iter : mColorTex)
     refs.push_back(iter.get());

@@ -170,7 +170,7 @@ void geom::uniquifyGeometry ()
 
 /////////////////////////////////////////////////////////////////////
 
-void geom::collectRefs ( pni::pstd::refCount::Refs& refs )
+void geom::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
   node::collectRefs ( refs );
   refs.push_back ( mGeomData.get () );

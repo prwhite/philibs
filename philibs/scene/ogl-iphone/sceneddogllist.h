@@ -158,6 +158,7 @@ class ddOglList :
     virtual void dispatch ( textureXform const* pState );
     virtual void dispatch ( uniform const* pState );    
     
+    virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const;
 
 };
 

@@ -78,7 +78,7 @@ void particles::update ( graphDd::fxUpdate const& update )
 
 /////////////////////////////////////////////////////////////////////
 
-void particles::collectRefs ( pni::pstd::refCount::Refs& refs )
+void particles::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
   sprites::collectRefs ( refs );
   

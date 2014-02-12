@@ -146,7 +146,7 @@ class manager :
   public:
     
   protected:
-    virtual void collectRefs ( pni::pstd::refCount::Refs& refs );
+    virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const;
 
 };
 

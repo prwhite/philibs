@@ -56,7 +56,7 @@ void sceneNodeVis::internalUpdate ( manager* pManager, TimeType tval )
 
 /////////////////////////////////////////////////////////////////////
 
-void sceneNodeVis::collectRefs ( pni::pstd::refCount::Refs& refs )
+void sceneNodeVis::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
   base::collectRefs ( refs );
   refs.push_back ( mNode.get () );

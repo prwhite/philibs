@@ -62,7 +62,7 @@ class searchPath :
     static std::string ext ( std::string const& src );
 
   protected:
-    virtual void collectRefs ( pni::pstd::refCount::Refs& refs );
+    virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const;
 
   private:
     typedef std::vector< std::string > Paths;

@@ -89,7 +89,8 @@ class travDataContainer
   
       // Exposed for refCount debugging.  Not for human consumption.
     TravDatum& getTravDatum () { return mTravData; }
-   
+    TravDatum const& getTravDatum () const { return mTravData; }
+  
   protected:
     TravDatum mTravData;
     

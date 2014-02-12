@@ -101,7 +101,7 @@ bool searchPath::resolve ( std::string const& fname, std::string& ret )
   return false;
 }
 
-void searchPath::collectRefs ( pni::pstd::refCount::Refs& refs )
+void searchPath::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
 
 }

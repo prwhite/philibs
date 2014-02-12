@@ -97,7 +97,9 @@ class dbgDd :
     void dispatchBounds ( node const* pNode );
     void doTotals ();
     std::ostream& indent ( std::string const& str = "  " );
-    
+ 
+    void collectRefs ( pni::pstd::refCount::Refs& refs ) const {}
+  
     // interface from stateDd
   public:
     virtual void startStates ( node const* pNode );

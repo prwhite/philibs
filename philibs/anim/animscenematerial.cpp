@@ -167,7 +167,7 @@ void sceneMaterial::applyValue ( pni::math::vec4 const& val )
 
 /////////////////////////////////////////////////////////////////////
 
-void sceneMaterial::collectRefs ( pni::pstd::refCount::Refs& refs )
+void sceneMaterial::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
   base::collectRefs ( refs );
   refs.push_back ( mMat.get () );

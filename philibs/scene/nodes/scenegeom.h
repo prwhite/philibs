@@ -333,7 +333,7 @@ class geomData :
     void dbg ( std::ostream& ostr = std::cout ) const;
     
   protected:
-    virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) {}
+    virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const {}
   
     void updateBounds () const;
   
@@ -421,7 +421,7 @@ class geom :
     virtual void generateGeomBounds () const;
     virtual void generateGeomPartition () const;
     
-    virtual void collectRefs ( pni::pstd::refCount::Refs& refs );
+    virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const;
     
     GeomDataRef mGeomData;
     int mBoundsMode;

@@ -591,7 +591,11 @@ void ddOgl::dispatch ( uniform const* pState )
 {
   
 }
-    
+
+void ddOgl::collectRefs ( pni::pstd::refCount::Refs& refs ) const
+{
+  mNodePath.collectRefs(refs);
+}
 /////////////////////////////////////////////////////////////////////
 
 

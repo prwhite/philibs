@@ -233,7 +233,7 @@ void base::onDoDbg ()
   *pStr << " file = " << mName;
 }
 
-void base::collectRefs ( pni::pstd::refCount::Refs& refs )
+void base::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
   pni::pstd::dbgRefCount::collectVecRefs ( mBuffers, refs );
 }

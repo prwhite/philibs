@@ -120,7 +120,7 @@ void group::updateBounds () const
 
 /////////////////////////////////////////////////////////////////////
 
-void group::collectRefs ( pni::pstd::refCount::Refs& refs )
+void group::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
   base::collectRefs ( refs );
   pni::pstd::dbgRefCount::collectVecRefs ( mBases, refs );

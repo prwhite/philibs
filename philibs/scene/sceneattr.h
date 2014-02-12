@@ -24,7 +24,7 @@ class attr :
   public:
     virtual attr* dup () const = 0;
 
-    virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) {}
+    virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const {}
 };
 
 /////////////////////////////////////////////////////////////////////

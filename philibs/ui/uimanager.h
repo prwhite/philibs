@@ -71,7 +71,7 @@ class layer :
     unsigned int mOps;
   
   protected:
-    virtual void collectRefs ( pni::pstd::refCount::Refs& refs );
+    virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const;
   
   private:
     manager* mUiMgr;
@@ -155,7 +155,7 @@ class manager :
         pni::math::vec3& farPt );
     bool doIsect ( mouseEvent& event );
     
-    virtual void collectRefs ( pni::pstd::refCount::Refs& refs );
+    virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const;
     
   private:
     typedef pni::pstd::autoRef< base > BaseRef;

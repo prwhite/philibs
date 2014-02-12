@@ -14,7 +14,7 @@ namespace loader {
 
 /////////////////////////////////////////////////////////////////////
 
-void cache::collectRefs ( pni::pstd::refCount::Refs& refs )
+void cache::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
   pni::pstd::dbgRefCount::collectMapSecondRefs ( mTextures, refs );
   refs.push_back ( mDefBlend.get () );
@@ -22,7 +22,7 @@ void cache::collectRefs ( pni::pstd::refCount::Refs& refs )
 
 /////////////////////////////////////////////////////////////////////
 
-void directory::collectRefs ( pni::pstd::refCount::Refs& refs )
+void directory::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
   pni::pstd::dbgRefCount::collectMapSecondRefs ( mNodes, refs );
 }
@@ -134,7 +134,7 @@ void directory::gc ()
 
 /////////////////////////////////////////////////////////////////////
 
-void base::collectRefs ( pni::pstd::refCount::Refs& refs )
+void base::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
   refs.push_back ( mDirectory.get () );
   refs.push_back ( mCache.get () );

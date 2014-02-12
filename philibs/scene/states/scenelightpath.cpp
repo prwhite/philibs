@@ -50,12 +50,12 @@ lightPath::lightPath()
 // overrides from state
 
 
-void lightPath::collectRefs ( pni::pstd::refCount::Refs& refs )
+void lightPath::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
   state::collectRefs ( refs );
 
-  NodePaths::iterator end = mNodePaths.end ();
-  for ( NodePaths::iterator cur = mNodePaths.begin (); cur != end; ++cur )
+  auto end = mNodePaths.end ();
+  for ( auto cur = mNodePaths.begin (); cur != end; ++cur )
     cur->collectRefs ( refs );
 }
 

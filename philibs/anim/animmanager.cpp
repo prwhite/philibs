@@ -409,7 +409,7 @@ float manager::pow ( float val )
 /////////////////////////////////////////////////////////////////////
 // overrides from pni::pstd::refCount
 
-void manager::collectRefs ( pni::pstd::refCount::Refs& refs )
+void manager::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
   pni::pstd::dbgRefCount::collectMapSecondRefs ( mGroups, refs );
   pni::pstd::dbgRefCount::collectMapSecondRefs ( mFinalizeList, refs );

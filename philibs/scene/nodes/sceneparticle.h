@@ -92,7 +92,7 @@ class particles :
     virtual void update ( graphDd::fxUpdate const& update );
 
   protected:
-		virtual void collectRefs ( pni::pstd::refCount::Refs& refs );
+		virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const;
 
 };
 

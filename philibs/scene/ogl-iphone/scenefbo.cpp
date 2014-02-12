@@ -156,12 +156,12 @@ int imageIdToGlTargetParam ( texture::Target target, texture::ImageId id )
     switch ( id )
     {
       default:
-      case texture::CubePosX: return GL_TEXTURE_CUBE_MAP_POSITIVE_X;
-      case texture::CubeNegX: return GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
-      case texture::CubePosY: return GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
-      case texture::CubeNegY: return GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
-      case texture::CubePosZ: return GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
-      case texture::CubeNegZ: return GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+      case texture::CubePosXImg: return GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+      case texture::CubeNegXImg: return GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
+      case texture::CubePosYImg: return GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
+      case texture::CubeNegYImg: return GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
+      case texture::CubePosZImg: return GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
+      case texture::CubeNegZImg: return GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
     }
   }
 }

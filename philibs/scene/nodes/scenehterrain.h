@@ -144,7 +144,7 @@ class hterrain :
     virtual void generateGeomBounds () const;
     virtual void generateGeomPartition () const;
 
-		virtual void collectRefs ( pni::pstd::refCount::Refs& refs );
+		virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const;
 
 };
 

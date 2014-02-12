@@ -132,7 +132,7 @@ void base::onDoDbg ()
   //*pStr << "   mName = " << mName;
 }
 
-void base::collectRefs ( pni::pstd::refCount::Refs& refs )
+void base::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
   
 }

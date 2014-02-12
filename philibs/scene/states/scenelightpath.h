@@ -80,7 +80,7 @@ class lightPath :
     virtual void accept ( stateDd* dd ) const { dd->dispatch ( this ); }
     
   protected:
-    virtual void collectRefs ( pni::pstd::refCount::Refs& refs );
+    virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const;
 
 };
 

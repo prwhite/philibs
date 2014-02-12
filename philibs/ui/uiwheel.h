@@ -142,7 +142,7 @@ class wheel :
     virtual void onHeartbeatShim ( heartbeatEvent const& event, wheelShimSelector const& );
     
   protected:
-    virtual void collectRefs ( pni::pstd::refCount::Refs& refs );
+    virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const;
 
 };
 

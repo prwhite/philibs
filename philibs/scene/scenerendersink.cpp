@@ -6,6 +6,7 @@
 
 #include "scenerendersink.h"
 #include "pnirefcountdbg.h"
+#include "scenerendersinkdd.h"
 
 /////////////////////////////////////////////////////////////////////
 
@@ -40,10 +41,16 @@ namespace scene {
 //    return false;
 //}
 
+void renderSink::accept ( renderSinkDd* pDd ) const
+{
+  pDd->dispatch ( this );
+}
+
+
 /////////////////////////////////////////////////////////////////////
 // overrides from pni::pstd::travDataContainer
 
-void renderSink::collectRefs ( pni::pstd::refCount::Refs& refs )
+void renderSink::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
   pni::pstd::dbgRefCount::collectMapSecondRefs ( getTravDatum (), refs );
 }
