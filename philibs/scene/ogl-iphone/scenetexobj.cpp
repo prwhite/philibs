@@ -212,7 +212,7 @@ CheckGLError
       width,
       height,
       0,
-      imgIn->mBuffers[ level ]->size(),
+      ( GLsizei ) imgIn->mBuffers[ level ]->size(),
       imgData);
   }
   else

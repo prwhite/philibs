@@ -19,13 +19,22 @@
 
 #ifndef _NDEBUG
 
-  #define CheckGLError { if ( GLint err = glGetError () ) printf ( "gl error = 0x%x at %s:%d\n", err, __FILE__, __LINE__ ); }
+  #define CheckGLError { checkGlError ( __FILE__, __LINE__ ); }
 
 #else
 
   #define CheckGLError
 
 #endif
+
+namespace scene {
+
+  inline void checkGlError ( char const* file, int line )
+    {
+      if ( GLint err = glGetError () )
+        printf ( "gl error = 0x%x at %s:%d\n", err, file, line );
+    }
+}
 
 /////////////////////////////////////////////////////////////////////
 

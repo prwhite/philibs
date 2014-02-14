@@ -30,6 +30,8 @@ class framebufferOgl :
 
       // Strangely public, but not part of the framebuffer abstraction. Huh.
     bool verify ();
+
+    virtual void captureDefaultFb ();
   
   protected:
     

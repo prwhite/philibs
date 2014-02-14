@@ -109,6 +109,7 @@ namespace {
   }
 }
 
+  // Called by startGraph via double dispatch
 void renderSinkDd::dispatch ( renderSink const* pSink )
 {
   if(pSink->mFramebuffer->getSpec().mTextureTarget == texture::CubeMapTarget)
@@ -127,12 +128,15 @@ void renderSinkDd::dispatch ( renderSink const* pSink )
   }
 }
 
+  // Called by dispatch, maybe up to 6 times if the renderSink is a cube map
 void renderSinkDd::dispatch ( renderSink const* pSink, texture::ImageId imgId )
 {
-  pSink->mFramebuffer->bind (imgId);
+  if ( pSink->mFramebuffer )
+    pSink->mFramebuffer->bind (imgId);
 
   for(auto iter : { pSink->mDrawSpec, pSink->mSndSpec, pSink->mIsectSpec })
-    execGraphDd(iter);
+    if ( iter.mDd ) // null dd's are part of the design... they are skipped.
+      execGraphDd(iter);
 }
 
 void renderSinkDd::execGraphDd ( renderSink::graphDdSpec const& spec )

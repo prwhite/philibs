@@ -189,18 +189,74 @@ bool fbo::verify ( framebuffer const* pFb )
     return true;
 }
 
+  // The conditional logic about what buffers exist and need to be operated
+  // on is a recurring theme... so it's boiled out here, and all that is needed
+  // is to set up the 8 funcs that would be invoked for a given operation by
+  // using the configFuncs arg.  This is a bit over-the-top C++11 stuff...
+  // but it seems to be a concise way to do this with minimal code duplication.
+void fbo::dispatchFuncs(framebuffer::spec const& spec, configFuncs const& funcs, bool noisy)
+{
+  for ( size_t num = 0; num < framebuffer::NumColorAttachments; ++num )
+  {
+    if ( ( spec.mColorType[ num ] == framebuffer::Texture ) )
+      funcs.mColorTexture(num);
+    else if ( spec.mColorType[ num ] == framebuffer::Renderbuffer )
+      funcs.mColorRenderbuffer(num);
+    else if ( noisy )
+      PNIDBGSTR("no color attachment type set");
+  }
+  
+    // Handle combined depth/stencil specially... not sure if this will
+    // fly with texture, but it will with renderbuffer.
+  if ( spec.mDepthAttachment == framebuffer::DepthAttachment24Stencil8 )
+  {
+    if ( spec.mDepthType == framebuffer::Texture )
+      funcs.mDepth248Texture();
+    else if ( spec.mDepthType == framebuffer::Renderbuffer )
+      funcs.mDepth248Renderbuffer();
+    else if ( noisy )
+      PNIDBGSTR("no depth attachment type set");
+  }
+  else
+  {
+    if ( spec.mDepthType == framebuffer::Texture )
+      funcs.mDepthTexture();
+    else if ( spec.mDepthType == framebuffer::Renderbuffer )
+      funcs.mDepthRenderbuffer();
+    else if ( noisy )
+      PNIDBGSTR("no depth attachment type set");
+
+    if ( spec.mStencilType == framebuffer::Texture )
+      funcs.mStencilTexture();
+    else if ( spec.mStencilType == framebuffer::Renderbuffer )
+      funcs.mStencilRenderbuffer();
+    else if ( noisy )
+      PNIDBGSTR("no stencil attachment type set");
+  }
+}
+
 void fbo::bind ( framebuffer const* pFb )
 {
   glBindFramebuffer ( GL_FRAMEBUFFER, mFramebufferId );
 }
+
+void fbo::captureDefaultFb ()
+{
+  GLint defaultFBO;
+  glGetIntegerv(GL_FRAMEBUFFER_BINDING, &defaultFBO);
+  
+  mFramebufferId = defaultFBO;
+}
+
 
 void fbo::bind ( framebuffer const* pFb,
     framebuffer::TextureImageId colorDest,
     framebuffer::TextureImageId depthDest ,
     framebuffer::TextureImageId stencilDest )
 {
+CheckGLError
   bind ( pFb );
-
+CheckGLError
   framebuffer::spec const& spec = pFb->getSpec();
 
     // For color attachment texture... from
@@ -261,52 +317,7 @@ void fbo::bind ( framebuffer const* pFb,
       },
     [] () {}
   } );
-}
-
-  // The conditional logic about what buffers exist and need to be operated
-  // on is a recurring theme... so it's boiled out here, and all that is needed
-  // is to set up the 8 funcs that would be invoked for a given operation by
-  // using the configFuncs arg.  This is a bit over-the-top C++11 stuff...
-  // but it seems to be a concise way to do this with minimal code duplication.
-void fbo::dispatchFuncs(framebuffer::spec const& spec, configFuncs const& funcs, bool noisy)
-{
-  for ( size_t num = 0; num < framebuffer::NumColorAttachments; ++num )
-  {
-    if ( ( spec.mColorType[ num ] == framebuffer::Texture ) )
-      funcs.mColorTexture(num);
-    else if ( spec.mColorType[ num ] == framebuffer::Renderbuffer )
-      funcs.mColorRenderbuffer(num);
-    else if ( noisy )
-      PNIDBGSTR("no color attachment type set");
-  }
-  
-    // Handle combined depth/stencil specially... not sure if this will
-    // fly with texture, but it will with renderbuffer.
-  if ( spec.mDepthAttachment == framebuffer::DepthAttachment24Stencil8 )
-  {
-    if ( spec.mDepthType == framebuffer::Texture )
-      funcs.mDepth248Texture();
-    else if ( spec.mDepthType == framebuffer::Renderbuffer )
-      funcs.mDepth248Renderbuffer();
-    else if ( noisy )
-      PNIDBGSTR("no depth attachment type set");
-  }
-  else
-  {
-    if ( spec.mDepthType == framebuffer::Texture )
-      funcs.mDepthTexture();
-    else if ( spec.mDepthType == framebuffer::Renderbuffer )
-      funcs.mDepthRenderbuffer();
-    else if ( noisy )
-      PNIDBGSTR("no depth attachment type set");
-
-    if ( spec.mStencilType == framebuffer::Texture )
-      funcs.mStencilTexture();
-    else if ( spec.mStencilType == framebuffer::Renderbuffer )
-      funcs.mStencilRenderbuffer();
-    else if ( noisy )
-      PNIDBGSTR("no stencil attachment type set");
-  }
+CheckGLError
 }
 
 void fbo::initBuffers ( framebuffer::spec const& spec )
@@ -330,6 +341,7 @@ void fbo::initBuffers ( framebuffer::spec const& spec )
     [] () {},
     [&] () { glGenRenderbuffers(1, &mRenderbufferStencilId); }
   } );
+CheckGLError
 }
 
 void fbo::configBuffers(framebuffer const* pFb, framebuffer::spec const& spec )
@@ -364,6 +376,7 @@ void fbo::configBuffers(framebuffer const* pFb, framebuffer::spec const& spec )
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, mRenderbufferStencilId);
       }
   } );
+CheckGLError
 }
 
 void fbo::config ( framebuffer const* pFb )
@@ -376,7 +389,7 @@ void fbo::config ( framebuffer const* pFb )
     // framebuffer if the first color attachment type is Default.
   if ( spec.mColorType[ 0 ] == framebuffer::Default )
   {
-    bind ( pFb );
+//    bind ( pFb );
     return;   // Early return!!!
   }
 

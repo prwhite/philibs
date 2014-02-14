@@ -42,7 +42,13 @@ namespace scene {
 /////////////////////////////////////////////////////////////////////
 // overrides from scene::framebuffer
 
+void framebufferOgl::captureDefaultFb ()
+{
+  fbo* pFbo = fbo::getOrCreate(this);
 
+  pFbo->captureDefaultFb();
+}
+  
 void framebufferOgl::bind (
     framebuffer::TextureImageId colorDest,
     framebuffer::TextureImageId depthDest,

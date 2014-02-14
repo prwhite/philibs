@@ -168,6 +168,12 @@ class framebuffer :
         framebuffer::TextureImageId depthDest = texture::NoImage,
         framebuffer::TextureImageId stencilDest = texture::NoImage ) = 0;
 
+      /// Call this to capture the OS-specific framebuffer ID into the
+      /// framebuffer's underlying implementation.  Make sure when this
+      /// is called that the system-provided default fb is bound... i.e.,
+      /// call this before setting up any other fbs.
+    virtual void captureDefaultFb () = 0;
+
   protected:
       
   private:

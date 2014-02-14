@@ -84,21 +84,28 @@ class renderSink :
     typedef pni::pstd::autoRef<framebuffer> FramebufferRef;
     typedef pni::pstd::autoRef<node> NodeRef;
     typedef node::MaskType MaskType;
-  
-    FramebufferRef mFramebuffer;
-  
-    struct graphDdSpec
-    {
-      GraphDdRef mDd;
-      scene::nodePath mSinkPath;
-      NodeRef mRootNode;
-      MaskType mTravMask;
-    };
 
       // Not a lot of side-effects anticipated for these members,
       // and they're already memory-managed.  So public!!!
+  
+      /// Specify the frame buffer parameters for this sink.
+    FramebufferRef mFramebuffer;
+  
+      /// It is ok for the mDd to be a nullptr.  This indicates to
+      /// the system to skip a given rendering pass.
+    struct graphDdSpec
+    {
+      GraphDdRef mDd;                  // = nullptr
+      scene::nodePath mSinkPath;       // = nullptr
+      NodeRef mRootNode;               // = nullptr
+      MaskType mTravMask                  = ~0x0;
+    };
+
+      /// Specify the drawing parameters for this sink
     graphDdSpec mDrawSpec;
+      /// Specify the sound parameters for this sink
     graphDdSpec mSndSpec;
+      /// Specify the instersection parameters for this sink
     graphDdSpec mIsectSpec;
 
   protected:

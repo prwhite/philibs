@@ -35,6 +35,8 @@ class fbo :
 
     bool verify ( framebuffer const* pFb );
   
+    void captureDefaultFb ();
+  
     void bind ( framebuffer const* pFb );
     void bind ( framebuffer const* pFb,
             framebuffer::TextureImageId colorDest,
