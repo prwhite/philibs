@@ -41,7 +41,7 @@
 
 @interface phiViewController () {
   
-  scene::ddOgl* mDd;
+  pni::pstd::autoRef< scene::node > mMainGeom;
   pni::pstd::autoRef< scene::node > mRoot;
   pni::pstd::autoRef< scene::node > mFile;
   pni::pstd::autoRef< scene::prog > mProg;
@@ -149,44 +149,6 @@ scene::texture* loadCubemap ( std::string const& rootPath )
   return pTex;
 }
 
-//#define USINGCUSTOMFB
-
-scene::framebufferOgl* testFramebuffer ()
-{
-  using namespace scene;
-
-  framebufferOgl* pFb = new framebufferOgl;
-
-#ifdef USINGCUSTOMFB
-  img::base::Dim const Size = 256;
-  img::base* pImg = new img::base;
-  pImg->setSize(Size, Size, Size);
-  pImg->setFormat(img::base::RGB565);
-  
-  texture* pTex = new scene::texture;
-  pTex->setImage(pImg);
-
-  framebuffer::spec spec;
-  spec.mColorType[ 0 ]                    = framebuffer::Texture;
-  spec.mColorAttachment[ 0 ]              = framebuffer::ColorAttachmentRGB565;
-  spec.mDepthType                         = framebuffer::Renderbuffer;
-  spec.mDepthAttachment                   = framebuffer::DepthAttachment16;
-  spec.mStencilType                       = framebuffer::Default;
-  spec.mStencilAttachment                 = framebuffer::StencilAttachmentNone;
-
-  pFb->specOp() = spec;
-  pFb->setColorTextureTarget(0, pTex);
-  pFb->bind(texture::Tex2DImg);
-  pFb->verify();
-
-#else
-  pFb->captureDefaultFb ();
-  
-#endif // USINGCUSTOMFB
-
-  return pFb;
-}
-
 scene::geom* buildQuad ()
 {
   using namespace scene;
@@ -234,7 +196,6 @@ scene::prog* createMainProg ()
       varying lowp vec2 v_uv00;
 
       uniform mat4 u_mvpMat;
-//      uniform mat3 u_normMat;
 
       void main()
       {
@@ -284,6 +245,7 @@ scene::prog* createMainProg ()
 
   node* pMainGeom = buildQuad();
   pMainGeom->setState(pMainSceneTex, state::Texture00);
+  mMainGeom = pMainGeom;      // store this so we can do stuff with it in the update loop.
 
   camera* pMainCam = new camera;
   pMainCam->setOrtho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
@@ -464,15 +426,11 @@ scene::prog* createMainProg ()
 
   if ( mFile )
     mFile->matrixOp().setRot(rot, axis);
-    
-    // TODO: Draw sinks with sinkDd
-    // TODO: Stop drawing with graphDd
+  
+  mMainGeom->matrixOp().setRot(rot, axis);
 
     // Invoke the rendering pass.
-//  mDd->startGraph ( mRoot.get () );
-
   scene::renderSinkDd* rsDd = new scene::renderSinkDd;
-  
   rsDd->startGraph(mMainSink.get(), 0.0);
 }
 
