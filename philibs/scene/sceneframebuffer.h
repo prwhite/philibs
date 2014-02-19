@@ -57,8 +57,8 @@ class framebuffer :
 
     typedef int32_t SizeType;
 
-    typedef texture::Target TextureTarget;
-    typedef texture::ImageId TextureImageId;
+    typedef texture::Target TextureTarget;    /// e.g., NoTarget, Tex2DTarget, CubeMapTarget
+    typedef texture::ImageId TextureImageId;  /// e.g., NoImage, Tex2DImage, CubePosXImg...
 
     enum Type {
       Default,
@@ -114,9 +114,9 @@ class framebuffer :
       TextureTarget mTextureTarget            = texture::NoTarget;
       Type mColorType[ NumColorAttachments ]  = { Default };
       ColorAttachment mColorAttachment[ NumColorAttachments ] = { ColorAttachmentNone };
-      Type mDepthType                        = Default;
+      Type mDepthType                         = Default;
       DepthAttachment mDepthAttachment        = DepthAttachmentNone;
-      Type mStencilType                      = Default;
+      Type mStencilType                       = Default;
       StencilAttachment mStencilAttachment    = StencilAttachmentNone;
       DestinationBuffer mDestinationBuffer    = Back;
 
@@ -162,17 +162,28 @@ class framebuffer :
       }
 
 
-      // TODO: This doesn't do a good job of representing n color attachments.
+      /// Bind this framebuffer, with all of its associated texture or
+      /// renderbuffers, according to the #TextureImageId passed in for each
+      /// attachement.
+      /// @node: TODO: This doesn't do a good job of representing n color attachments.
     virtual void bind (
         framebuffer::TextureImageId colorDest,
-        framebuffer::TextureImageId depthDest = texture::NoImage,
-        framebuffer::TextureImageId stencilDest = texture::NoImage ) = 0;
+        framebuffer::TextureImageId depthDest,
+        framebuffer::TextureImageId stencilDest ) = 0;
+
+      /// Purge resources associated with the framebuffer when a rendering
+      /// pass is done.  This provides the h/w with an opportunity to _not_
+      /// backup a vram buffer to main memory.
+    virtual void discard () = 0;
 
       /// Call this to capture the OS-specific framebuffer ID into the
       /// framebuffer's underlying implementation.  Make sure when this
       /// is called that the system-provided default fb is bound... i.e.,
       /// call this before setting up any other fbs.
     virtual void captureDefaultFb () = 0;
+
+    void setName ( std::string const& name ) { mName = name; }
+    std::string const& getName () const { return mName; }
 
   protected:
       
@@ -183,6 +194,8 @@ class framebuffer :
       TexRef mColorTex[ NumColorAttachments ] = { nullptr };
       TexRef mDepthTex                        = nullptr;
       TexRef mStencilTex                      = nullptr;
+  
+      std::string mName;
   
       mutable bool mDirty                     = true;
 

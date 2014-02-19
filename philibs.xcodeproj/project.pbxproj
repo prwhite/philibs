@@ -26,6 +26,7 @@
 		1CAD971F186628EE00C547E1 /* scenevbo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD971D186628EE00C547E1 /* scenevbo.cpp */; };
 		1CAD9723186D72D500C547E1 /* sceneprog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9721186D72D500C547E1 /* sceneprog.cpp */; };
 		1CAD9726186E110200C547E1 /* sceneprogobj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9724186E110200C547E1 /* sceneprogobj.cpp */; };
+		1CBBFD6718AE9AD80042CD9D /* scenerendersink.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CCD165F189A3F23001F8DF1 /* scenerendersink.h */; };
 		1CC482D11888D0CD0029408D /* pnisearchpath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC482CF1888D0CD0029408D /* pnisearchpath.cpp */; };
 		1CC482D21888E7D30029408D /* pnisearchpath.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CC482D01888D0CD0029408D /* pnisearchpath.h */; };
 		1CC482D7188913820029408D /* imgfactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC482D3188913820029408D /* imgfactory.cpp */; };
@@ -284,6 +285,7 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				1CBBFD6718AE9AD80042CD9D /* scenerendersink.h in CopyFiles */,
 				1C2BB57818A9B75F00938C31 /* sceneframebufferogl.h in CopyFiles */,
 				1C2BB57918A9B75F00938C31 /* scenefbo.h in CopyFiles */,
 				1C2BB57A18A9B75F00938C31 /* sceneframebuffer.h in CopyFiles */,

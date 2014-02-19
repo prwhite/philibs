@@ -411,7 +411,12 @@ PNIDBG
             pTex = new texture;
             mCache->mTextures[ fname ] = pTex;
             
-            pTex->setName ( pSrc->findLine ( "MAP_NAME" )->getQuoted() );
+            std::string prettyName = pSrc->findLine ( "MAP_NAME" )->getQuoted();
+            
+            if ( prettyName.size() == 0 )
+              prettyName = fname;
+            
+            pTex->setName ( prettyName );
             pTex->setMinFilter ( texture::MinLinearMipNearest );
 
 #ifdef IMGSYNCHRONOUS

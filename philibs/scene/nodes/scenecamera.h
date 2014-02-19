@@ -23,6 +23,19 @@ namespace scene {
   
 /////////////////////////////////////////////////////////////////////
 
+  /**
+    Camera node.  Instances of this class are part of the scene graph,
+    so they will inherit transformations, etc.  But, they are used by
+    specifiying a #nodePath for the camera to the #graphDd that is rendering
+    the scene graph.  This way, the grappDd unambigously knows what camera
+    is active for rendering.
+    @note Generally, defaults for this class are as needed for basic rendering,
+    but the projection and viewport should be set with applicaiton values.
+    @note With >= GLES 2.0, the normalize mode will be caried out through
+    an optimization in the ddOgl that will only create a special normal matrix
+    when the mode is not NoNormalize _and_ a node's transformation is not
+    identity.
+  */
 class camera :
   public node
 {

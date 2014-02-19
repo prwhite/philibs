@@ -104,6 +104,8 @@ fbo* fbo::getOrCreate ( framebuffer const* pFb )
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
+#pragma mark - Anon namespace for helper gl mapping functions
+
 namespace {
 
 GLenum colorAttachmentToGlInternalFormat ( framebuffer::ColorAttachment val )
@@ -155,13 +157,14 @@ int imageIdToGlTargetParam ( texture::Target target, texture::ImageId id )
   {
     switch ( id )
     {
-      default:
+//      default:
       case texture::CubePosXImg: return GL_TEXTURE_CUBE_MAP_POSITIVE_X;
       case texture::CubeNegXImg: return GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
       case texture::CubePosYImg: return GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
       case texture::CubeNegYImg: return GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
       case texture::CubePosZImg: return GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
       case texture::CubeNegZImg: return GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+      case texture::NoImage: return GL_FALSE; // HACK: Totally bogus, but should never get hit.
     }
   }
 }
@@ -173,6 +176,7 @@ int imageIdToGlTargetParam ( texture::Target target, texture::ImageId id )
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
+#pragma mark - Methods that modify gl state
 
 bool fbo::verify ( framebuffer const* pFb )
 {
@@ -254,6 +258,8 @@ void fbo::bind ( framebuffer const* pFb,
     framebuffer::TextureImageId depthDest ,
     framebuffer::TextureImageId stencilDest )
 {
+  glInsertEventMarkerEXT(0, "binding framebuffer");
+
 CheckGLError
   bind ( pFb );
 CheckGLError
@@ -317,14 +323,47 @@ CheckGLError
       },
     [] () {}
   } );
+  
 CheckGLError
+
+    // gles doesn't have glDrawBuffer... it imiplicitly always binds to the
+    // current color attachment... front or back.
+#ifdef GL_VERSION_1_0
+  glDrawBuffer ( spec.mDestinationBuffer == framebuffer::Front ? GL_FRONT : GL_BACK );
+#endif // GL_VERSION_1_0
+
+CheckGLError
+}
+
+void fbo::discard ( framebuffer const* pFb )
+{
+  framebuffer::spec const& spec = pFb->getSpec();
+
+  dispatchFuncs(spec, configFuncs {
+    [] ( size_t num ) {},
+    [&] ( size_t num ) {
+        GLenum which = GL_COLOR_ATTACHMENT0;
+        glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, &which); },
+    [] () {},
+    [&] () {
+        GLenum which = GL_DEPTH_ATTACHMENT;
+        glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, &which ); },
+    [] () {},
+    [&] () {
+        GLenum which = GL_DEPTH_ATTACHMENT;
+        glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, &which); },
+    [] () {},
+    [&] () {
+        GLenum which = GL_STENCIL_ATTACHMENT;
+        glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, &which); }
+  } );
 }
 
 void fbo::initBuffers ( framebuffer::spec const& spec )
 {
     // We don't create a framebuffer in init like other gl object classes...
     // so we do it deferred here.  If it's not 0, then we've already created it.
-    // We never get here for Type == Default because that is
+    // We never get here for Type == Default because that is handled upstream.
 
   if ( mFramebufferId != 0 )
     return;   // Early return!!! Precondition
@@ -379,6 +418,8 @@ void fbo::configBuffers(framebuffer const* pFb, framebuffer::spec const& spec )
 CheckGLError
 }
 
+#pragma mark - config method... main entry point from client classes
+
 void fbo::config ( framebuffer const* pFb )
 {
   framebuffer::spec const& spec = pFb->getSpec ();
@@ -389,6 +430,8 @@ void fbo::config ( framebuffer const* pFb )
     // framebuffer if the first color attachment type is Default.
   if ( spec.mColorType[ 0 ] == framebuffer::Default )
   {
+      // Don't bind to zero... that might not be what we want
+      // in the case of the OS-provided fb.  See captureDefaultFb.
 //    bind ( pFb );
     return;   // Early return!!!
   }
@@ -400,12 +443,16 @@ void fbo::config ( framebuffer const* pFb )
   clear();            // So we can be re-init'd.
   initBuffers(spec);
   
+  glLabelObjectEXT(GL_FRAMEBUFFER, mFramebufferId, 0, pFb->getName().c_str());
+  
     // ... so we can't bind until that's done
   bind ( pFb );
   
   configBuffers(pFb, spec);
   
   verify(pFb);
+  
+  pFb->setDirty(false);
 }
 
 

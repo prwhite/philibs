@@ -253,6 +253,9 @@ class geomData :
         enum { Buff = 0 };
         
       public:
+          // Forward all std::vector constructors.
+        using vector::vector;
+      
         void resize ( size_type size, size_t val = 0 )
             {
               Base::resize ( size + Buff, val );
@@ -304,7 +307,9 @@ class geomData :
     size_t getTriCount () const
         { return getIndexCount () / 3; }
     
+      /// Return attribute data as a homogeneous vector< float > of size #getValueCount.
     Values& getValues () { return mValues; }
+      /// Return attribute data as a homogeneous vector< float > of size #getValueCount.
     Values const& getValues () const { return mValues; }
     ValueType* getValuesPtr () { return &mValues[ 0 ]; }
     ValueType const* getValuesPtr () const { return &mValues[ 0 ]; }

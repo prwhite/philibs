@@ -43,8 +43,10 @@ class framebufferOgl :
 
     virtual void bind ( 
         framebuffer::TextureImageId colorDest,
-        framebuffer::TextureImageId depthDest = texture::NoImage,
-        framebuffer::TextureImageId stencilDest = texture::NoImage );
+        framebuffer::TextureImageId depthDest,
+        framebuffer::TextureImageId stencilDest );
+  
+    virtual void discard ();
   
   protected:
     

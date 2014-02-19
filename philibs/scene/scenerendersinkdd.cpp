@@ -84,7 +84,6 @@ namespace {
     { -90.0f, 1.0f, 0.0f, 0.0f },   // Neg Y
     { 180.0f, 0.0f, 1.0f, 0.0f },   // Pos Z
     {   0.0f, 0.0f, 1.0f, 0.0f },   // Neg Z
-    
   };
   
   void setCubemapDdMat ( renderSink const* pSink, texture::ImageId imgId )
@@ -109,6 +108,24 @@ namespace {
   }
 }
 
+framebuffer::TextureImageId calcImageId(
+    framebuffer::TextureTarget texTarget,
+    framebuffer::TextureImageId texImageId,
+    framebuffer::Type type)
+{
+  if(texTarget == texture::NoTarget)
+    return texture::NoImage;
+  else
+  {
+    if(type == framebuffer::Default)
+      return texture::NoImage;
+    else if(type == framebuffer::Renderbuffer)
+      return texture::NoImage;
+    else
+      return texImageId;
+  }
+}
+
   // Called by startGraph via double dispatch
 void renderSinkDd::dispatch ( renderSink const* pSink )
 {
@@ -119,24 +136,42 @@ void renderSinkDd::dispatch ( renderSink const* pSink )
         // TODO: Need to set the 6 different views
       setCubemapDdMat(pSink, cur);
     
-      dispatch(pSink, cur);
+      framebuffer::spec const& spec = pSink->mFramebuffer->getSpec();
+    
+      framebuffer::TextureImageId colorId = calcImageId(spec.mTextureTarget, cur, spec.mColorType[ 0 ]);
+      framebuffer::TextureImageId depthId = calcImageId(spec.mTextureTarget, cur, spec.mDepthType);
+      framebuffer::TextureImageId stencilId = calcImageId(spec.mTextureTarget, cur, spec.mStencilType);
+    
+      dispatch(pSink, colorId, depthId, stencilId);
     }
   }
   else
   {
-    dispatch(pSink, texture::Tex2DImg);
+    framebuffer::spec const& spec = pSink->mFramebuffer->getSpec();
+
+    framebuffer::TextureImageId colorId = calcImageId(spec.mTextureTarget, texture::Tex2DImg, spec.mColorType[ 0 ]);
+    framebuffer::TextureImageId depthId = calcImageId(spec.mTextureTarget, texture::Tex2DImg, spec.mDepthType);
+    framebuffer::TextureImageId stencilId = calcImageId(spec.mTextureTarget, texture::Tex2DImg, spec.mStencilType);
+
+    dispatch(pSink, colorId, depthId, stencilId);
   }
 }
 
   // Called by dispatch, maybe up to 6 times if the renderSink is a cube map
-void renderSinkDd::dispatch ( renderSink const* pSink, texture::ImageId imgId )
+void renderSinkDd::dispatch ( renderSink const* pSink,
+    texture::ImageId colorId,
+    texture::ImageId depthId,
+    texture::ImageId stencilId )
 {
-  if ( pSink->mFramebuffer )
-    pSink->mFramebuffer->bind (imgId);
+  if(pSink->mFramebuffer)
+    pSink->mFramebuffer->bind(colorId, depthId, stencilId);
 
   for(auto iter : { pSink->mDrawSpec, pSink->mSndSpec, pSink->mIsectSpec })
     if ( iter.mDd ) // null dd's are part of the design... they are skipped.
       execGraphDd(iter);
+  
+  if(pSink->mFramebuffer)
+    pSink->mFramebuffer->discard();
 }
 
 void renderSinkDd::execGraphDd ( renderSink::graphDdSpec const& spec )

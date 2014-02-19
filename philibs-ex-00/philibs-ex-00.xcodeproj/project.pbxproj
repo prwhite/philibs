@@ -18,7 +18,6 @@
 		1C9E34B91891A50700E49195 /* blue-grid-512-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C9E34B71891A50700E49195 /* blue-grid-512-32.png */; };
 		1C9E34BA1891A50700E49195 /* cyclorama-00a.dae in Resources */ = {isa = PBXBuildFile; fileRef = 1C9E34B81891A50700E49195 /* cyclorama-00a.dae */; };
 		1CAD97121861879B00C547E1 /* test-00.ase in Resources */ = {isa = PBXBuildFile; fileRef = 1CAD97111861879B00C547E1 /* test-00.ase */; };
-		1CAD97161865580000C547E1 /* phiViewController-gles2.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD97151865580000C547E1 /* phiViewController-gles2.mm */; };
 		1CB1DFB018988C79005D3709 /* negx.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1CB1DFA918988C79005D3709 /* negx.jpg */; };
 		1CB1DFB118988C79005D3709 /* negy.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1CB1DFAA18988C79005D3709 /* negy.jpg */; };
 		1CB1DFB218988C79005D3709 /* negz.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1CB1DFAB18988C79005D3709 /* negz.jpg */; };
@@ -26,6 +25,7 @@
 		1CB1DFB418988C79005D3709 /* posy.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1CB1DFAD18988C79005D3709 /* posy.jpg */; };
 		1CB1DFB518988C79005D3709 /* posz.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1CB1DFAE18988C79005D3709 /* posz.jpg */; };
 		1CB1DFB618988C79005D3709 /* readme.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1CB1DFAF18988C79005D3709 /* readme.txt */; };
+		1CBBFD6618AE9A9E0042CD9D /* phiViewController-gles2-sink.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBFD5D18AE9A660042CD9D /* phiViewController-gles2-sink.mm */; };
 		1CC482C218868F4D0029408D /* brushed-aluminum-00a.dds in Resources */ = {isa = PBXBuildFile; fileRef = 1CC482C018868F4D0029408D /* brushed-aluminum-00a.dds */; };
 		1CC482C318868F4D0029408D /* test-00a.ase in Resources */ = {isa = PBXBuildFile; fileRef = 1CC482C118868F4D0029408D /* test-00a.ase */; };
 		1CC482C6188694AC0029408D /* test-00b.ase in Resources */ = {isa = PBXBuildFile; fileRef = 1CC482C5188694AC0029408D /* test-00b.ase */; };
@@ -140,6 +140,7 @@
 		1CB1DFAD18988C79005D3709 /* posy.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = posy.jpg; sourceTree = "<group>"; };
 		1CB1DFAE18988C79005D3709 /* posz.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = posz.jpg; sourceTree = "<group>"; };
 		1CB1DFAF18988C79005D3709 /* readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme.txt; sourceTree = "<group>"; };
+		1CBBFD5D18AE9A660042CD9D /* phiViewController-gles2-sink.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "phiViewController-gles2-sink.mm"; sourceTree = "<group>"; };
 		1CC482C018868F4D0029408D /* brushed-aluminum-00a.dds */ = {isa = PBXFileReference; lastKnownFileType = file; name = "brushed-aluminum-00a.dds"; path = "philibs-ex-00/Resources/brushed-aluminum-00a.dds"; sourceTree = "<group>"; };
 		1CC482C118868F4D0029408D /* test-00a.ase */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "test-00a.ase"; path = "philibs-ex-00/Resources/test-00a.ase"; sourceTree = "<group>"; };
 		1CC482C5188694AC0029408D /* test-00b.ase */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "test-00b.ase"; path = "philibs-ex-00/Resources/test-00b.ase"; sourceTree = "<group>"; };
@@ -318,6 +319,7 @@
 				1CDD4234185BDDC2009284F9 /* Shader.vsh */,
 				1CDD4236185BDDC2009284F9 /* phiViewController.h */,
 				1CDD4237185BDDC2009284F9 /* phiViewController.mm */,
+				1CBBFD5D18AE9A660042CD9D /* phiViewController-gles2-sink.mm */,
 				1CAD97151865580000C547E1 /* phiViewController-gles2.mm */,
 				1CC4B9041860D22700169CF6 /* phiViewController-gles1.mm */,
 				1CDD4239185BDDC2009284F9 /* Images.xcassets */,
@@ -555,10 +557,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1CAD97161865580000C547E1 /* phiViewController-gles2.mm in Sources */,
 				1CDD422B185BDDC2009284F9 /* phiAppDelegate.m in Sources */,
 				1CDD4227185BDDC2009284F9 /* main.m in Sources */,
 				1C9AAAC218735E60001540C3 /* test-instantiaton.cpp in Sources */,
+				1CBBFD6618AE9A9E0042CD9D /* phiViewController-gles2-sink.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -647,7 +649,6 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;

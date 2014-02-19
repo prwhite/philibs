@@ -320,29 +320,26 @@ bool ddOgl::testInViewFrustum ( node const* pNode )
 void ddOgl::applyStates ( node const* pNode )
 {
 PNIDBG
-  // Source
+    // Source
   node::States const& src = pNode->getStates ();
   typedef node::States::const_iterator StateConstIter;
   
-  // Destination
+    // Destination
   stateSet& dst = mStateStack.back ();
   
-  // Loop over source
-  StateConstIter end = src.end ();
-  for ( StateConstIter cur = src.begin ();
-      cur != end;
-      ++cur )
+    // Loop over source
+  for ( auto cur : src )
   {
-    // Vars for inner loop
-    state::Id id = cur->first;
+      // Vars for inner loop
+    state::Id id = cur.first;
     state const* const pDstState = dst.mStates[ id ];
     
-    // Adopt new state if current stack top for this slot
-    // is null or if it is valid and not overriding.
+      // Adopt new state if current stack top for this slot
+      // is null or if it is valid and not overriding.
     if ( ( ! pDstState ) || 
         ( pDstState && ! pDstState->getOverride () ) )
     {
-      dst.mStates[ id ] = cur->second.get ();
+      dst.mStates[ id ] = cur.second.get ();
     }
   }
 PNIDBG
@@ -352,15 +349,10 @@ PNIDBG
 
 void ddOgl::dispatchChildren ( node const* pNode )
 {
-  typedef node::Nodes Nodes;
-  Nodes const& children = pNode->getChildren ();
-  Nodes::const_iterator end = children.end ();
-  for ( Nodes::const_iterator cur = children.begin ();
-      cur != end;
-      ++cur )
+  for ( auto cur : pNode->getChildren())
   {
-    mNodePath.push ( const_cast< node* > ( cur->get () ) );
-    cur->get ()->accept ( this );
+    mNodePath.push ( const_cast< node* > ( cur.get () ) );
+    cur->accept ( this );
     mNodePath.pop ();
   }
 }

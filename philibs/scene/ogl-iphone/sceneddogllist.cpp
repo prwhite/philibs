@@ -314,6 +314,8 @@ struct sorter
 
 void ddOglList::startList ()
 {
+  glPushGroupMarkerEXT(0, "ddOglList::startList");
+
 #ifdef _WIN32
   static bool initDone = false;
 
@@ -363,8 +365,12 @@ PNIDBG
     // Lame attempt to deal with some possible default state bug.
   //glColor4f ( 1.0f, 1.0f, 1.0f, 1.0f );
   
+  glPushGroupMarkerEXT(0, "Iterating over renderList");
+  
   for ( auto cur : mRenderList )
   {
+    glPushGroupMarkerEXT(0, (std::string ( "node: " ) + cur.mNode->getName() ).c_str());
+
 //printf ( "node: %s  distSqr: %f\n", cur->mNode->getName ().c_str (), cur->distSqr );
 
 #ifndef _NDEBUG
@@ -385,16 +391,23 @@ PNIDBG
 PNIDBG
 
 CheckGLError
+    glPushGroupMarkerEXT(0, "execStates");
     execStates ( cur.mStateSet );
+    glPopGroupMarkerEXT();
+    glPushGroupMarkerEXT(0, "execBuiltins");
     execBuiltins();
+    glPopGroupMarkerEXT();
 
 PNIDBG
     cur.mNode->accept ( this );
     
       // TODO: PRW PNIGLES1REMOVED
 //    glPopMatrix ();
-  }
 
+    glPopGroupMarkerEXT();
+  }
+  glPopGroupMarkerEXT();
+  
     // Clear stuff out...
     // Clear this out so we don't unnecesarily hold onto a ref to a h/w resource.
   mCurProg = nullptr;
@@ -408,7 +421,7 @@ PNIDBG
   }
 #endif // _NDEBUG
 
-  
+  glPopGroupMarkerEXT();
 PNIDBG
 }
 

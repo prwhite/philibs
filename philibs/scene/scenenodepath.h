@@ -37,7 +37,7 @@ class nodePath
 {
     enum MagicNumbers { 
         Reserve = 8
-        }; // Magic Number!
+    }; // Magic Number!
 
   public:
     nodePath ();

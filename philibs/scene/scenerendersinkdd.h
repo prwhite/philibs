@@ -37,12 +37,18 @@ class renderSinkDd
 //    renderSinkDd& operator=(renderSinkDd const& rhs);
 //    bool operator==(renderSinkDd const& rhs) const;
 
+      /// Traverse a graph of renderSinks, executing dependent rendering
+      /// operations in order so that the final composition to the target
+      /// framebuffer is correct and coherent.
     virtual void startGraph ( renderSink const* pSink, TimeType timeStamp );
 
   protected:
 
     virtual void dispatch ( renderSink const* pSink );
-    virtual void dispatch ( renderSink const* pSink, texture::ImageId imgId );
+    virtual void dispatch ( renderSink const* pSink,
+        texture::ImageId colorId,
+        texture::ImageId depthId,
+        texture::ImageId stencilId );
   
     virtual void execGraphDd ( renderSink::graphDdSpec const& spec );
   

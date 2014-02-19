@@ -37,12 +37,14 @@ class fbo :
   
     void captureDefaultFb ();
   
-    void bind ( framebuffer const* pFb );
+      /// Bind the framebuffer to gl, along with associating the correct
+      /// target drawable (e.g., default fb, texture, or texture cubemap side).
     void bind ( framebuffer const* pFb,
             framebuffer::TextureImageId colorDest,
-            framebuffer::TextureImageId depthDest = texture::NoImage,
-            framebuffer::TextureImageId stencilDest = texture::NoImage );
-    void config ( framebuffer const* pFb );
+            framebuffer::TextureImageId depthDest,
+            framebuffer::TextureImageId stencilDest );
+  
+    void discard ( framebuffer const* pFb );
 
     typedef uint32_t Handle;
 
@@ -54,9 +56,20 @@ class fbo :
 
     void init ();
     void clear ();
+
+      /// Simply bind the framebuffer to gl
+    void bind ( framebuffer const* pFb );
   
     void initBuffers ( framebuffer::spec const& spec );
     void configBuffers ( framebuffer const* pFb, framebuffer::spec const& spec );
+
+      /// Update fbo parameters... if the source fb or textures are "dirty",
+      /// then the necessary state will be rebound.  This is generally called
+      /// from getOrCreate.
+    void config ( framebuffer const* pFb );
+
+      /// @group The set of functions that will be conditionally invoked
+      /// when various fbo parameters are being changed or bound.
 
       // Read the docs in the cpp file for dispatchSpec to understand this group.
     typedef std::function< void ( size_t num ) > ColorFunc;

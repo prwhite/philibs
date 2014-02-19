@@ -19,6 +19,7 @@
 #include "philibs/scenelightpath.h"
 #include "philibs/scenetexture.h"
 #include "philibs/imgfactory.h"
+#include "philibs/scenecommon.h"
 
 #include "philibs/sceneprog.h"
 #include "philibs/sceneuniform.h"
@@ -32,6 +33,8 @@
 
 #include "philibs/sceneddogl.h"
 #include "philibs/sceneframebufferogl.h"
+#include "philibs/scenerendersink.h"
+#include "philibs/scenerendersinkdd.h"
 
 #include <iostream>
 #include <fstream>
@@ -44,7 +47,10 @@
   pni::pstd::autoRef< scene::prog > mProg;
   pni::pstd::autoRef< scene::uniform > mUniform00;
   pni::pstd::autoRef< scene::camera > mCam;
-  pni::pstd::autoRef< scene::framebufferOgl > mFb;
+
+  pni::pstd::autoRef< scene::renderSink > mMainSink;
+  pni::pstd::autoRef< scene::renderSink > mTexSink;
+
 //  scene::framebufferOgl* mFb;
   loader::factory::LoadFuture mLoadFuture;
   
@@ -54,7 +60,6 @@
 
 - (void)setupGL;
 - (void)tearDownGL;
-- (void)initScene;
 
 @end
 
@@ -69,6 +74,8 @@
   if (!self.context) {
     NSLog(@"Failed to create ES context");
   }
+  
+  self.preferredFramesPerSecond = 60;
   
   GLKView *view = (GLKView *)self.view;
   view.context = self.context;
@@ -103,6 +110,9 @@
   
   // Dispose of any resources that can be recreated.
 }
+
+#pragma mark - Setup scene rendering and scene graph
+
 
 scene::texture* loadCubemap ( std::string const& rootPath )
 {
@@ -177,16 +187,134 @@ scene::framebufferOgl* testFramebuffer ()
   return pFb;
 }
 
-- (void)setupGL
+scene::geom* buildQuad ()
 {
-  [EAGLContext setCurrentContext:self.context];
+  using namespace scene;
 
-    // Bind the GLKView's framebuffer so we can capture it for later restore.
-  GLKView* glView = ( GLKView* ) self.view;
-  [glView bindDrawable];
+  geom* pMainGeom = new geom;
 
-  self->mFb = testFramebuffer();
+  geomData* pGeomData = new geomData;
+  pGeomData->attributesOp().push_back( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, geomData::PositionComponents } );
+//  pGeomData->attributesOp().push_back ( { CommonAttributeNames[ geomData::Normal], geomData::Normal, geomData::DataType_FLOAT, geomData::NormalComponents } );
+  pGeomData->attributesOp().push_back ( { CommonAttributeNames[ geomData::TCoord00], geomData::TCoord00, geomData::DataType_FLOAT, geomData::TCoord00Components } );
+//  pGeomData->attributesOp().push_back ( { CommonAttributeNames[ geomData::TCoord01], geomData::TCoord00, geomData::DataType_FLOAT, geomData::TCoord00Components } );
+
+  pGeomData->resizeTrisWithCurrentAttributes(4, 2);
   
+  float QuadSize = 0.5f;
+  
+    /// x,y,z,u,v
+  pGeomData->getValues() = {
+    -QuadSize, -QuadSize, 0.0f,   0.0f, 0.0f,
+     QuadSize, -QuadSize, 0.0f,   1.0f, 0.0f,
+    -QuadSize,  QuadSize, 0.0f,   0.0f, 1.0f,
+     QuadSize,  QuadSize, 0.0f,   1.0f, 1.0f
+  };
+  
+  pGeomData->getIndices() = {
+    0, 1, 2, 1, 3, 2
+  };
+  
+  pMainGeom->setGeomData(pGeomData);
+  
+  return pMainGeom;
+}
+
+scene::prog* createMainProg ()
+{
+  using namespace scene;
+  
+  prog* pProg = new prog;
+  
+  pProg->setProgStr(prog::Vertex, R"(
+      attribute vec4 a_position;
+      attribute vec2 a_uv00;
+
+      varying lowp vec4 v_color;
+      varying lowp vec2 v_uv00;
+
+      uniform mat4 u_mvpMat;
+//      uniform mat3 u_normMat;
+
+      void main()
+      {
+          v_color = vec4(1.0,1.0,1.0,1.0);
+
+          v_uv00 = a_uv00;
+
+          gl_Position = u_mvpMat * a_position;
+      }
+  )");
+  pProg->setProgStr(prog::Fragment, R"(
+      varying lowp vec4 v_color;
+      varying lowp vec2 v_uv00;
+
+      uniform sampler2D u_tex00;
+
+      void main()
+      {
+        lowp vec4 tex00 = texture2D ( u_tex00, v_uv00 );
+        gl_FragColor = tex00 * v_color;
+      }
+  )");
+  
+  return pProg;
+}
+
+- (void) setupScene
+{
+  using namespace scene;
+
+  GLKView *view = (GLKView *)self.view;
+
+    // h & w swapped for landscape
+  img::base::Dim width  = (img::base::Dim)view.drawableHeight;  // self.view.frame.size.height * self.view.contentScaleFactor;
+  img::base::Dim height = (img::base::Dim)view.drawableWidth; // self.view.frame.size.width * self.view.contentScaleFactor;
+
+    ////////////////////////////////////////////////
+    // set up main scene... will just be a quad with a rt texture
+  img::base* pMainSceneImg = new img::base;
+  pMainSceneImg->setSize(width, height, width);
+  pMainSceneImg->setFormat(img::base::RGB565);
+
+  texture* pMainSceneTex = new texture;
+  pMainSceneTex->setName("tex scene dest");
+  pMainSceneTex->setImage(pMainSceneImg);
+  pMainSceneTex->setWrap(texture::ClampToEdge, texture::ClampToEdge, texture::ClampToEdge);
+
+  node* pMainGeom = buildQuad();
+  pMainGeom->setState(pMainSceneTex, state::Texture00);
+
+  camera* pMainCam = new camera;
+  pMainCam->setOrtho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
+  pMainCam->setViewport(0.0f, 0.0f, width, height);
+  pMainCam->setColorClear( { 0.2f, 0.0f, 0.0f, 1.0f } );
+  
+  prog* pMainProg = createMainProg();
+  
+  node* pMainRoot = new group;
+
+  pMainRoot->setState(pMainProg, state::Prog);
+  pMainRoot->setState(new cull, state::Cull);
+  
+  pMainRoot->addChild(pMainGeom);
+  pMainRoot->addChild(pMainCam);
+
+  framebufferOgl* pFb = new framebufferOgl;
+  pFb->captureDefaultFb();
+  pFb->specOp().mWidth = width;
+  pFb->specOp().mHeight = height;
+
+  self->mMainSink = new renderSink;
+  self->mMainSink->mDrawSpec.mDd = new ddOgl;
+  self->mMainSink->mDrawSpec.mRootNode = pMainRoot;
+  self->mMainSink->mDrawSpec.mSinkPath = pMainCam;
+  self->mMainSink->mFramebuffer = pFb;
+  self->mMainSink->mFramebuffer->setName("main");
+
+    //////////////////////////////////////////////////
+    // Now the "real" scene with the loaded file, etc.
+
     // Path to the app bundle to get the test file.
   std::string bdir ( getShellPath(BundleDir) );
   std::string fname = { bdir + "/" + "test-00b.ase" };
@@ -197,8 +325,6 @@ scene::framebufferOgl* testFramebuffer ()
     // appropriate amount.
   mLoadFuture = loader::factory::getInstance().loadAsync(fname);
 
-    // Create the GL visitor and the root group.
-  mDd = new scene::ddOgl ();
   mRoot = new scene::group ();
 
     // Add default vert and frag programs
@@ -216,21 +342,38 @@ scene::framebufferOgl* testFramebuffer ()
   
     // Create and setup the camera.
   mCam = new scene::camera ();
-  mCam->setColorClear( pni::math::vec4 ( 0.1f, 0.1f, 0.1f, 1.0f ) );
+  mCam->setColorClear( { 0.0f, 0.2f, 0.0f, 1.0f } );
   mCam->setNormalizeMode( scene::camera::Normalize );
-  mCam->setViewport( 0.0f, 0.0f, self.view.frame.size.height * self.view.contentScaleFactor, self.view.frame.size.width * self.view.contentScaleFactor );
+  mCam->setViewport( 0.0f, 0.0f, width, height );
 
   scene::cull* pCull = new scene::cull;
   mRoot->setState(pCull, scene::state::Cull);
 
   mRoot->addChild ( mCam.get () );
 
-    // Set the root -> camera path as the sink (viewer) for the scene.
-  scene::nodePath camPath ( mCam.get () );
-  mDd->setSinkPath ( camPath );
+    // setup render to texture scene
+  self->mTexSink = new renderSink;
+  self->mTexSink->mDrawSpec.mDd = new ddOgl;
+  self->mTexSink->mDrawSpec.mSinkPath = mCam.get();
+  self->mTexSink->mDrawSpec.mRootNode = mRoot.get();
+
+  self->mTexSink->mFramebuffer = new framebufferOgl;
+  framebuffer::spec& tspec = self->mTexSink->mFramebuffer->specOp();
+  tspec.mTextureTarget                  = texture::Tex2DTarget;
+  tspec.mColorType[ 0 ]                 = framebuffer::Texture;
+  tspec.mColorAttachment[ 0 ]           = framebuffer::ColorAttachmentRGB565;
+  tspec.mDepthType                      = framebuffer::Renderbuffer;
+  tspec.mDepthAttachment                = framebuffer::DepthAttachment16;
+  tspec.mDestinationBuffer              = framebuffer::Front;
+  tspec.mWidth                          = width;
+  tspec.mHeight                         = height;
+  self->mTexSink->mFramebuffer->setColorTextureTarget(0, pMainSceneTex);
+  self->mTexSink->mFramebuffer->setName("render to texture scene");
+
+  self->mMainSink->addChild(self->mTexSink.get());
 }
 
-- (void) initScene
+- (void) finalizeScene
 {
   mFile = mLoadFuture.get();
 
@@ -274,6 +417,25 @@ scene::framebufferOgl* testFramebuffer ()
   mRoot->setState ( pLightPath, scene::state::LightPath );
 }
 
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+#pragma mark - Setup and teardown GL resources
+
+- (void)setupGL
+{
+  [EAGLContext setCurrentContext:self.context];
+
+    // Bind the GLKView's framebuffer so we can capture it for later restore.
+  GLKView* glView = ( GLKView* ) self.view;
+  [glView bindDrawable];
+
+  glView.contentScaleFactor = 2.0;
+
+  [self setupScene];
+}
+
 - (void)tearDownGL
 {
   [EAGLContext setCurrentContext:self.context];
@@ -287,18 +449,12 @@ scene::framebufferOgl* testFramebuffer ()
   if ( ! mFile )
   {
     if ( mLoadFuture.wait_for( std::chrono::seconds ( 0 ) ) == std::future_status::ready )
-      [self initScene];
+      [self finalizeScene];
   }
 }
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
-#ifdef USINGCUSTOMFB
-  mFb->bind(scene::texture::Tex2DImg);
-#else
-  mFb->bind(scene::texture::NoImage);
-#endif // USINGCUSTOMFB
-
     // Very cheesy rotation animation.
   static float rot = 0.0f;
   rot += 2.0f;
@@ -309,8 +465,15 @@ scene::framebufferOgl* testFramebuffer ()
   if ( mFile )
     mFile->matrixOp().setRot(rot, axis);
     
+    // TODO: Draw sinks with sinkDd
+    // TODO: Stop drawing with graphDd
+
     // Invoke the rendering pass.
-  mDd->startGraph ( mRoot.get () );
+//  mDd->startGraph ( mRoot.get () );
+
+  scene::renderSinkDd* rsDd = new scene::renderSinkDd;
+  
+  rsDd->startGraph(mMainSink.get(), 0.0);
 }
 
 

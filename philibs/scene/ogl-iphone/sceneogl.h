@@ -17,7 +17,9 @@
 //		printf ( "gl error = 0x%x at %s:%d\n", err, file, line );
 //}
 
-#ifndef _NDEBUG
+//#define DOCHECKGLERROR
+
+#if defined DOCHECKGLERROR && defined DEBUG
 
   #define CheckGLError { checkGlError ( __FILE__, __LINE__ ); }
 

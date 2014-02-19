@@ -375,6 +375,8 @@ CheckGLError
 
   if ( pTex->getDirty () == texture::DirtyTrue )
   {
+    glLabelObjectEXT(GL_TEXTURE, mId, 0, pTex->getName().c_str());
+
     setGlTexParams ( pTex, mGlTextureTarget );
 
     // Generate mipmaps if texture is set to mipmap but only one image buffer is present.
