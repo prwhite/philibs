@@ -45,6 +45,7 @@ class texObj :
       void init ();
       void clear ();
       void configOneTextureImg ( texture const* pTex, texture::ImageId imgId, img::base const* pImg );
+      void genMipMaps ( texture const* pTex );
   
     private:
         

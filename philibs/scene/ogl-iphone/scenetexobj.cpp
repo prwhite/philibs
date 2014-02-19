@@ -353,7 +353,7 @@ CheckGLError
   bind ( pTex );
 CheckGLError
 
-  bool hasMipMaps = true;
+  bool newImageData = false;
 
   size_t end = pTex->getNumImages ();
   for ( size_t num = 0; num < end; ++num )
@@ -366,28 +366,44 @@ CheckGLError
 PNIPSTDLOG
         configOneTextureImg ( pTex, imgId, pImg );
         pImg->setDirty ( img::base::DirtyFalse );
-        if ( pImg->mBuffers.size () <= 1 )
-          hasMipMaps = false;
+        newImageData = true;
       }
     }
   }
 CheckGLError
 
-  if ( pTex->getDirty () == texture::DirtyTrue )
+    // Supposedly you need to call glGenerateMipmap twice, once to allocate,
+    // and once to actually generate.  Maybe it's bad info... but we're doing
+    // it nonetheless, only for static images, not fbo-textures.
+  if ( newImageData )
+    genMipMaps ( pTex );
+
+  if ( pTex->getDirty () & texture::DirtyTrue )
   {
     glLabelObjectEXT(GL_TEXTURE, mId, 0, pTex->getName().c_str());
 
     setGlTexParams ( pTex, mGlTextureTarget );
+  }
 
+    // Called again... see above comment.
+  genMipMaps ( pTex );
+
+  pTex->clearDirty();
+}
+
+void texObj::genMipMaps ( texture const* pTex )
+{
+  if ( pTex->getDirty () & texture::DirtyMipMaps )
+  {
+    bool hasMipMaps = pTex->getNumImages() && pTex->getImage()->mBuffers.size () > 1;
+    
     // Generate mipmaps if texture is set to mipmap but only one image buffer is present.
     // Note, the current file loader doesn't do this, so it will take action by the app to
     // get this to be invoked.
     glHint ( GL_GENERATE_MIPMAP_HINT, GL_FASTEST ); // Don't need to call this this much. :(
-    if ( pTex->getMinFilter () > texture::MinLinear && ! hasMipMaps )
+    if ( pTex->getMinFilter () >= texture::MinNearestMipNearest && ! hasMipMaps )
       glGenerateMipmap ( mGlTextureTarget );
 CheckGLError
-
-    pTex->setDirty ( texture::DirtyFalse );
   }
 }
 

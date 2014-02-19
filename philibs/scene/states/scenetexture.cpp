@@ -14,7 +14,7 @@ namespace scene {
 /////////////////////////////////////////////////////////////////////
 
 texture::texture() :
-  mDirty ( DirtyTrue ),
+  mDirty ( DirtyAll ),
   mPriority ( 0.5f ),
 //   mAnisotropy ( 0.0f ),
   mTarget ( Tex2DTarget ),

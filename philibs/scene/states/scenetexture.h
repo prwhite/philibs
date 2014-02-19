@@ -49,7 +49,12 @@ class texture :
   
     static size_t const NumCubeImgSlots = 6;
   
-    enum Dirty { DirtyFalse, DirtyTrue };
+    enum Dirty {
+      DirtyFalse = 0x00,
+      DirtyTrue = 0x01,       // Will force a reconfig of tex params
+      DirtyMipMaps = 0x02,    // Will force a regen of mipmaps
+      DirtyAll = DirtyTrue | DirtyMipMaps
+    };
     enum MinFilter { 
       MinNearest,
       MinLinear, 
@@ -85,7 +90,7 @@ class texture :
       /// Set texture to either 2D image or Cube Map via #Target enum.
     void setTarget ( Target targetIn = Tex2DTarget )
       {
-        setDirty ( DirtyTrue );
+        setDirty ( DirtyAll );
         mImgs.resize ( targetIn );
         mTarget = targetIn;
         if ( mTarget == CubeMapTarget )
@@ -99,7 +104,7 @@ class texture :
       /// Tex2D or cube map target types.
     void setImage ( img::base* pImg, ImageId which = Tex2DImg )
       {
-        setDirty ( DirtyTrue );
+        setDirty ( DirtyAll );
         setTarget ( mTarget );  // Just in case it hasn't been set.
         if ( which < mImgs.size () )
           mImgs[ which ] = pImg;
@@ -109,15 +114,21 @@ class texture :
   
     img::base* getImage ( ImageId which = Tex2DImg ) const { return mImgs[ which ].get (); }
     size_t getNumImages () const { return mImgs.size (); }
-    void resetImages () { setDirty ( DirtyTrue ); mImgs.resize ( 0 ); }
+    void resetImages () { setDirty ( DirtyAll ); mImgs.resize ( 0 ); }
 
-    // use this when texture parameters/data changes
-    // TRICKY: setDirty is const... clearing dirty occurs for const
-    // objects... blah blah blah.
-    void setDirty ( Dirty dirtyIn = DirtyTrue )const { mDirty = dirtyIn; }
+      // use this when texture parameters/data changes
+      // TRICKY: setDirty is const... clearing dirty occurs for const
+      // objects... blah blah blah.
+      // TRICKY: Also... we have a different sense of dirty for mipmaps.
+      // TRICKY: Also... since we are tracking multiple kinds of dirty,
+      // we now have to concern ourselves with or'ing dirty flags in...
+      // hence the 'combine' flag.
+    void setDirty ( Dirty dirtyIn = DirtyAll, bool combine = true ) const
+        { mDirty = ( Dirty ) ( combine ? mDirty | dirtyIn : dirtyIn ); }
     Dirty getDirty () const { return mDirty; }
+    void clearDirty () const { mDirty = DirtyFalse; }
 
-    void setMinFilter ( MinFilter minFilterIn = MinLinear ) { setDirty ( DirtyTrue ); mMinFilter = minFilterIn; }
+    void setMinFilter ( MinFilter minFilterIn = MinLinear ) { setDirty ( DirtyAll ); mMinFilter = minFilterIn; }
     MinFilter getMinFilter () const { return mMinFilter; }
 
     void setMagFilter ( MagFilter magFilterIn = MagLinear ) { setDirty ( DirtyTrue ); mMagFilter = magFilterIn; }

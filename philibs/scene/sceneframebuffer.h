@@ -154,11 +154,11 @@ class framebuffer :
     bool getDirty () const { return mDirty; }
     void clearDirty () { /* clean up state here */; setDirty ( false ); }
   
-    bool getTexturesDirty () const
+    bool getTexturesDirty ( texture::Dirty dirty = texture::DirtyTrue ) const
       {
-        return ( mColorTex[ 0 ] && mColorTex[ 0 ]->getDirty () )
-            || ( mDepthTex && mDepthTex->getDirty () )
-            || ( mStencilTex && mStencilTex->getDirty () );
+        return ( mColorTex[ 0 ] && ( mColorTex[ 0 ]->getDirty () & dirty ) )
+            || ( mDepthTex && ( mDepthTex->getDirty () & dirty ) )
+            || ( mStencilTex && ( mStencilTex->getDirty () & dirty ) );
       }
 
 

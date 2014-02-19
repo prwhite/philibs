@@ -283,6 +283,7 @@ CheckGLError
           GLenum textarget = imageIdToGlTargetParam(pTex->getTarget(), colorDest);
           pObj->bind(pTex); // just to make sure... generally done by getOrCreate
           glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, textarget, pObj->getId(), 0);
+          pTex->setDirty(texture::DirtyMipMaps); // So it will regen mipmaps after rendering
         }
       },
     [] ( size_t num ) {},
@@ -295,6 +296,7 @@ CheckGLError
           GLenum textarget = imageIdToGlTargetParam(pTex->getTarget(), depthDest);
           pObj->bind(pTex); // just to make sure... generally done by getOrCreate
           glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_OES, textarget, pObj->getId(), 0);
+          pTex->setDirty(texture::DirtyMipMaps); // So it will regen mipmaps after rendering
         }
       },
     [] () {},
@@ -307,6 +309,7 @@ CheckGLError
           GLenum textarget = imageIdToGlTargetParam(pTex->getTarget(), depthDest);
           pObj->bind(pTex); // just to make sure... generally done by getOrCreate
           glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textarget, pObj->getId(), 0);
+          pTex->setDirty(texture::DirtyMipMaps); // So it will regen mipmaps after rendering
         }
       },
     [] () {},
@@ -319,6 +322,7 @@ CheckGLError
           GLenum textarget = imageIdToGlTargetParam(pTex->getTarget(), stencilDest);
           pObj->bind(pTex); // just to make sure... generally done by getOrCreate
           glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, textarget, pObj->getId(), 0);
+          pTex->setDirty(texture::DirtyMipMaps); // So it will regen mipmaps after rendering
         }
       },
     [] () {}

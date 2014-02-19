@@ -425,8 +425,8 @@ PNIDBG
             {
               pTex->setImage ( pImg );
               
-              if ( pImg->mBuffers.size () == 1 )
-                pTex->setMinFilter ( texture::MinLinear );
+//              if ( pImg->mBuffers.size () == 1 )
+//                pTex->setMinFilter ( texture::MinLinear );
             }
 #else // ! IMGSYNCHRONOUS
             ImgFutureTuple* tuple = new ImgFutureTuple;
@@ -483,8 +483,8 @@ PNIDBG
         {
           pTex->setImage ( pImg );
 
-          if ( pImg->mBuffers.size () == 1 )
-            pTex->setMinFilter ( texture::MinLinear );
+//          if ( pImg->mBuffers.size () == 1 )
+//            pTex->setMinFilter ( texture::MinLinear );
 
           if ( pImg && pImg->hasAlpha () )
           {

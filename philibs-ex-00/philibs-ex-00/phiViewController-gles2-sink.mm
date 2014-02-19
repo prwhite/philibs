@@ -118,6 +118,8 @@ scene::texture* loadCubemap ( std::string const& rootPath )
 {
   scene::texture* pTex = new scene::texture;
   pTex->setTarget( scene::texture::CubeMapTarget );
+  pTex->setName("PalmTrees Cube Map");
+  pTex->setMinFilter( scene::texture::MinLinearMipNearest );
 
     // The order here matches the order in the ImageId enum so that
     // the cubeSide counter variable will be in the matching sequence.
@@ -154,6 +156,7 @@ scene::geom* buildQuad ()
   using namespace scene;
 
   geom* pMainGeom = new geom;
+  pMainGeom->setName("final scene quad");
 
   geomData* pGeomData = new geomData;
   pGeomData->attributesOp().push_back( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, geomData::PositionComponents } );
@@ -163,7 +166,7 @@ scene::geom* buildQuad ()
 
   pGeomData->resizeTrisWithCurrentAttributes(4, 2);
   
-  float QuadSize = 0.5f;
+  float QuadSize = 1.0f;
   
     /// x,y,z,u,v
   pGeomData->getValues() = {
@@ -189,33 +192,38 @@ scene::prog* createMainProg ()
   prog* pProg = new prog;
   
   pProg->setProgStr(prog::Vertex, R"(
+      precision lowp float;
       attribute vec4 a_position;
       attribute vec2 a_uv00;
 
-      varying lowp vec4 v_color;
-      varying lowp vec2 v_uv00;
+      varying vec2 v_uv00;
 
       uniform mat4 u_mvpMat;
 
       void main()
       {
-          v_color = vec4(1.0,1.0,1.0,1.0);
-
           v_uv00 = a_uv00;
 
           gl_Position = u_mvpMat * a_position;
       }
   )");
   pProg->setProgStr(prog::Fragment, R"(
-      varying lowp vec4 v_color;
-      varying lowp vec2 v_uv00;
+      precision lowp float;
+      varying vec2 v_uv00;
 
       uniform sampler2D u_tex00;
 
       void main()
       {
-        lowp vec4 tex00 = texture2D ( u_tex00, v_uv00 );
-        gl_FragColor = tex00 * v_color;
+        vec4 tex01 = texture2D ( u_tex00, v_uv00, 6.0 );
+        float lum = ( tex01.r + tex01.g + tex01.b ) / 3.0;
+        lum *= lum;
+//        lum *= lum;
+//        lum *= lum;
+        tex01 = vec4 ( lum, lum, lum, 1.0 );
+      
+        vec4 tex00 = texture2D ( u_tex00, v_uv00 );
+        gl_FragColor = min ( vec4 ( 1.0, 1.0, 1.0, 1.0 ), tex00 + tex01 );
       }
   )");
   
@@ -229,19 +237,25 @@ scene::prog* createMainProg ()
   GLKView *view = (GLKView *)self.view;
 
     // h & w swapped for landscape
-  img::base::Dim width  = (img::base::Dim)view.drawableHeight;  // self.view.frame.size.height * self.view.contentScaleFactor;
-  img::base::Dim height = (img::base::Dim)view.drawableWidth; // self.view.frame.size.width * self.view.contentScaleFactor;
+  img::base::Dim width  = (img::base::Dim)view.drawableHeight;
+  img::base::Dim height = (img::base::Dim)view.drawableWidth;
+
+    // For size of texture framebuffer... we are doing a mip-map trick, so we want PoT
+  img::base::Dim width2 = 2048;
+  img::base::Dim height2 = 1024;
 
     ////////////////////////////////////////////////
     // set up main scene... will just be a quad with a rt texture
   img::base* pMainSceneImg = new img::base;
-  pMainSceneImg->setSize(width, height, width);
+//  pMainSceneImg->setSize(width, height, width);
+  pMainSceneImg->setSize(width2, height2, width2);
   pMainSceneImg->setFormat(img::base::RGB565);
 
   texture* pMainSceneTex = new texture;
   pMainSceneTex->setName("tex scene dest");
   pMainSceneTex->setImage(pMainSceneImg);
   pMainSceneTex->setWrap(texture::ClampToEdge, texture::ClampToEdge, texture::ClampToEdge);
+  pMainSceneTex->setMinFilter(texture::MinLinearMipLinear);
 
   node* pMainGeom = buildQuad();
   pMainGeom->setState(pMainSceneTex, state::Texture00);
@@ -306,7 +320,7 @@ scene::prog* createMainProg ()
   mCam = new scene::camera ();
   mCam->setColorClear( { 0.0f, 0.2f, 0.0f, 1.0f } );
   mCam->setNormalizeMode( scene::camera::Normalize );
-  mCam->setViewport( 0.0f, 0.0f, width, height );
+  mCam->setViewport( 0.0f, 0.0f, width2, height2 );
 
   scene::cull* pCull = new scene::cull;
   mRoot->setState(pCull, scene::state::Cull);
@@ -327,8 +341,8 @@ scene::prog* createMainProg ()
   tspec.mDepthType                      = framebuffer::Renderbuffer;
   tspec.mDepthAttachment                = framebuffer::DepthAttachment16;
   tspec.mDestinationBuffer              = framebuffer::Front;
-  tspec.mWidth                          = width;
-  tspec.mHeight                         = height;
+  tspec.mWidth                          = width2;
+  tspec.mHeight                         = height2;
   self->mTexSink->mFramebuffer->setColorTextureTarget(0, pMainSceneTex);
   self->mTexSink->mFramebuffer->setName("render to texture scene");
 
@@ -427,7 +441,7 @@ scene::prog* createMainProg ()
   if ( mFile )
     mFile->matrixOp().setRot(rot, axis);
   
-  mMainGeom->matrixOp().setRot(rot, axis);
+//  mMainGeom->matrixOp().setRot(rot, axis);
 
     // Invoke the rendering pass.
   scene::renderSinkDd* rsDd = new scene::renderSinkDd;
