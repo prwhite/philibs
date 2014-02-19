@@ -59,11 +59,11 @@ void framebufferOgl::bind (
   pFbo->bind ( this, colorDest, depthDest, stencilDest );
 }
 
-void framebufferOgl::discard ()
+void framebufferOgl::finish ()
 {
   fbo* pFbo = fbo::getOrCreate(this);
   
-  pFbo->discard(this);
+  pFbo->finish(this);
 }
 
 bool framebufferOgl::verify ()

@@ -258,7 +258,7 @@ void fbo::bind ( framebuffer const* pFb,
     framebuffer::TextureImageId depthDest ,
     framebuffer::TextureImageId stencilDest )
 {
-  glInsertEventMarkerEXT(0, "binding framebuffer");
+  glPushGroupMarkerEXT(0, "fbo::bind (public)");
 
 CheckGLError
   bind ( pFb );
@@ -276,12 +276,11 @@ CheckGLError
   dispatchFuncs(spec, configFuncs {
     [&] ( size_t num )
       {
-        texture* pTex = pFb->getColorTextureTarget(num);
-        if ( pTex )
+        if ( texture* pTex = pFb->getColorTextureTarget(num) )
         {
           texObj* pObj = texObj::getOrCreate(pTex);
-          GLenum textarget = imageIdToGlTargetParam(pTex->getTarget(), colorDest);
           pObj->bind(pTex); // just to make sure... generally done by getOrCreate
+          GLenum textarget = imageIdToGlTargetParam(pTex->getTarget(), colorDest);
           glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, textarget, pObj->getId(), 0);
           pTex->setDirty(texture::DirtyMipMaps); // So it will regen mipmaps after rendering
         }
@@ -289,12 +288,11 @@ CheckGLError
     [] ( size_t num ) {},
     [&] ()
       {
-        texture* pTex = pFb->getDepthTextureTarget();
-        if ( pTex )
+        if ( texture* pTex = pFb->getDepthTextureTarget() )
         {
           texObj* pObj = texObj::getOrCreate(pTex);
-          GLenum textarget = imageIdToGlTargetParam(pTex->getTarget(), depthDest);
           pObj->bind(pTex); // just to make sure... generally done by getOrCreate
+          GLenum textarget = imageIdToGlTargetParam(pTex->getTarget(), depthDest);
           glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_OES, textarget, pObj->getId(), 0);
           pTex->setDirty(texture::DirtyMipMaps); // So it will regen mipmaps after rendering
         }
@@ -302,12 +300,11 @@ CheckGLError
     [] () {},
     [&] ()
       {
-        texture* pTex = pFb->getDepthTextureTarget();
-        if ( pTex )
+        if ( texture* pTex = pFb->getDepthTextureTarget() )
         {
           texObj* pObj = texObj::getOrCreate(pTex);
-          GLenum textarget = imageIdToGlTargetParam(pTex->getTarget(), depthDest);
           pObj->bind(pTex); // just to make sure... generally done by getOrCreate
+          GLenum textarget = imageIdToGlTargetParam(pTex->getTarget(), depthDest);
           glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textarget, pObj->getId(), 0);
           pTex->setDirty(texture::DirtyMipMaps); // So it will regen mipmaps after rendering
         }
@@ -315,12 +312,11 @@ CheckGLError
     [] () {},
     [&] ()
       {
-        texture* pTex = pFb->getStencilTextureTarget();
-        if ( pTex )
+        if ( texture* pTex = pFb->getStencilTextureTarget() )
         {
           texObj* pObj = texObj::getOrCreate(pTex);
-          GLenum textarget = imageIdToGlTargetParam(pTex->getTarget(), stencilDest);
           pObj->bind(pTex); // just to make sure... generally done by getOrCreate
+          GLenum textarget = imageIdToGlTargetParam(pTex->getTarget(), stencilDest);
           glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, textarget, pObj->getId(), 0);
           pTex->setDirty(texture::DirtyMipMaps); // So it will regen mipmaps after rendering
         }
@@ -336,31 +332,49 @@ CheckGLError
   glDrawBuffer ( spec.mDestinationBuffer == framebuffer::Front ? GL_FRONT : GL_BACK );
 #endif // GL_VERSION_1_0
 
+  glPopGroupMarkerEXT();
+
 CheckGLError
 }
 
-void fbo::discard ( framebuffer const* pFb )
+void fbo::finish ( framebuffer const* pFb )
 {
+  glPushGroupMarkerEXT(0, "fbo::discard start");
+
   framebuffer::spec const& spec = pFb->getSpec();
 
   dispatchFuncs(spec, configFuncs {
-    [] ( size_t num ) {},
+    [&] ( size_t num ) {
+      if ( texture* pTex = pFb->getColorTextureTarget(num) )
+        texObj::getOrCreate(pTex);  // Force mipmap generation now
+    },
     [&] ( size_t num ) {
         GLenum which = GL_COLOR_ATTACHMENT0;
         glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, &which); },
-    [] () {},
+    [&] () {
+      if ( texture* pTex = pFb->getDepthTextureTarget() )
+        texObj::getOrCreate(pTex);  // Force mipmap generation now
+    },
     [&] () {
         GLenum which = GL_DEPTH_ATTACHMENT;
         glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, &which ); },
-    [] () {},
+    [&] () {
+      if ( texture* pTex = pFb->getDepthTextureTarget() )
+        texObj::getOrCreate(pTex);  // Force mipmap generation now
+    },
     [&] () {
         GLenum which = GL_DEPTH_ATTACHMENT;
         glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, &which); },
-    [] () {},
+    [&] () {
+      if ( texture* pTex = pFb->getStencilTextureTarget() )
+        texObj::getOrCreate(pTex);  // Force mipmap generation now
+    },
     [&] () {
         GLenum which = GL_STENCIL_ATTACHMENT;
         glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, &which); }
   } );
+  
+  glPopGroupMarkerEXT();
 }
 
 void fbo::initBuffers ( framebuffer::spec const& spec )

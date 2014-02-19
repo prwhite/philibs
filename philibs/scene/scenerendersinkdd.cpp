@@ -171,7 +171,7 @@ void renderSinkDd::dispatch ( renderSink const* pSink,
       execGraphDd(iter);
   
   if(pSink->mFramebuffer)
-    pSink->mFramebuffer->discard();
+    pSink->mFramebuffer->finish();
 }
 
 void renderSinkDd::execGraphDd ( renderSink::graphDdSpec const& spec )

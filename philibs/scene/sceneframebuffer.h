@@ -174,7 +174,11 @@ class framebuffer :
       /// Purge resources associated with the framebuffer when a rendering
       /// pass is done.  This provides the h/w with an opportunity to _not_
       /// backup a vram buffer to main memory.
-    virtual void discard () = 0;
+      /// @note Also, this is where fbo textures will be finalized (and dynamic
+      /// mip maps generated).  Allowing textures to do the usual lazy eval
+      /// was causing big performance hit because mipmap generation causes
+      /// save/restore of framebuffer contents.
+    virtual void finish () = 0;
 
       /// Call this to capture the OS-specific framebuffer ID into the
       /// framebuffer's underlying implementation.  Make sure when this

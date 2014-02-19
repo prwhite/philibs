@@ -46,7 +46,7 @@ class framebufferOgl :
         framebuffer::TextureImageId depthDest,
         framebuffer::TextureImageId stencilDest );
   
-    virtual void discard ();
+    virtual void finish ();
   
   protected:
     
