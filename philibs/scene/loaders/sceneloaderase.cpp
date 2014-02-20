@@ -33,6 +33,7 @@
 #include "scenecommon.h"
 
 #include "imgfactory.h"
+#include "pnidbg.h"
 
 #include <iostream>
 #include <map>

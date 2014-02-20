@@ -35,6 +35,10 @@ class searchPath :
           mPaths.erase ( found );
       }
 
+      /// Concat paths from another searchPath object.
+    searchPath& operator += ( searchPath const& rhs );
+
+      /// Clear all paths added to this instance.
     void clearPaths () { mPaths.clear(); }
 
       /// Find fname in the added paths.
@@ -60,7 +64,7 @@ class searchPath :
 
       /// @return extension of fname ( e.g., "bar/foo.gif" => "gif" )
     static std::string ext ( std::string const& src );
-
+  
   protected:
     virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const;
 

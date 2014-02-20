@@ -14,6 +14,8 @@
 		1C53352218978BA5009525FD /* texture3.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C53351A18978BA5009525FD /* texture3.png */; };
 		1C53352318978BA5009525FD /* texture4.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C53351B18978BA5009525FD /* texture4.png */; };
 		1C53352418978BA5009525FD /* texture5.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C53351C18978BA5009525FD /* texture5.png */; };
+		1C6B1FFF18B6AEB50053277E /* gles2-sink-postproc.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 1C6B1FFB18B6AE460053277E /* gles2-sink-postproc.fsh */; };
+		1C6B200018B6AEB50053277E /* gles2-sink-postproc.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 1C6B1FFC18B6AE460053277E /* gles2-sink-postproc.vsh */; };
 		1C9AAAC218735E60001540C3 /* test-instantiaton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C9AAAC118735E60001540C3 /* test-instantiaton.cpp */; };
 		1C9E34B91891A50700E49195 /* blue-grid-512-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C9E34B71891A50700E49195 /* blue-grid-512-32.png */; };
 		1C9E34BA1891A50700E49195 /* cyclorama-00a.dae in Resources */ = {isa = PBXBuildFile; fileRef = 1C9E34B81891A50700E49195 /* cyclorama-00a.dae */; };
@@ -127,6 +129,8 @@
 		1C53351A18978BA5009525FD /* texture3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = texture3.png; sourceTree = "<group>"; };
 		1C53351B18978BA5009525FD /* texture4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = texture4.png; sourceTree = "<group>"; };
 		1C53351C18978BA5009525FD /* texture5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = texture5.png; sourceTree = "<group>"; };
+		1C6B1FFB18B6AE460053277E /* gles2-sink-postproc.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = "gles2-sink-postproc.fsh"; path = "Shaders/gles2-sink-postproc.fsh"; sourceTree = "<group>"; };
+		1C6B1FFC18B6AE460053277E /* gles2-sink-postproc.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = "gles2-sink-postproc.vsh"; path = "Shaders/gles2-sink-postproc.vsh"; sourceTree = "<group>"; };
 		1C9AAAC118735E60001540C3 /* test-instantiaton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "test-instantiaton.cpp"; sourceTree = "<group>"; };
 		1C9E34B71891A50700E49195 /* blue-grid-512-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blue-grid-512-32.png"; sourceTree = "<group>"; };
 		1C9E34B81891A50700E49195 /* cyclorama-00a.dae */ = {isa = PBXFileReference; explicitFileType = text.xml; fileEncoding = 4; name = "cyclorama-00a.dae"; path = "philibs-ex-00/Resources/cyclorama-00a.dae"; sourceTree = "<group>"; };
@@ -218,6 +222,16 @@
 			path = "philibs-ex-00/Resources/ld";
 			sourceTree = "<group>";
 		};
+		1C6B1FFA18B6AE250053277E /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				1C6B1FFB18B6AE460053277E /* gles2-sink-postproc.fsh */,
+				1C6B1FFC18B6AE460053277E /* gles2-sink-postproc.vsh */,
+			);
+			name = Shaders;
+			path = "philibs-ex-00";
+			sourceTree = "<group>";
+		};
 		1C9E34B61891A50700E49195 /* cyclorama-00a */ = {
 			isa = PBXGroup;
 			children = (
@@ -230,6 +244,7 @@
 		1CAD970F1861876300C547E1 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1C6B1FFA18B6AE250053277E /* Shaders */,
 				1CB1DFA818988C79005D3709 /* PalmTrees */,
 				1C53351518978BA5009525FD /* ld */,
 				1C9E34B61891A50700E49195 /* cyclorama-00a */,
@@ -511,6 +526,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C6B1FFF18B6AEB50053277E /* gles2-sink-postproc.fsh in Resources */,
+				1C6B200018B6AEB50053277E /* gles2-sink-postproc.vsh in Resources */,
 				1C53351F18978BA5009525FD /* texture0.png in Resources */,
 				1CDD4233185BDDC2009284F9 /* Shader.fsh in Resources */,
 				1C53352218978BA5009525FD /* texture3.png in Resources */,

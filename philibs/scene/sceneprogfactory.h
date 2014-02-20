@@ -11,8 +11,11 @@
 
 #include "scenegeom.h"
 #include "sceneprog.h"
+#include "pnithreadpool.h"
+#include "pnisearchpath.h"
 
 #include <map>
+#include <functional>
 
 /////////////////////////////////////////////////////////////////////
 
@@ -29,6 +32,9 @@ namespace scene {
 class progFactory
 {
   public:
+  
+      /// Acquire the singleton for this class.
+    static progFactory& getInstance ();
 
       /// Types of lighting.  Appropriate values for color, direction, etc.
       /// are set up with corresponding uniforms.
@@ -97,6 +103,24 @@ class progFactory
       /// Purge cache.  Will wipe any entry with only one reference (i.e., from
       /// this cache).
     void purgeCache ();
+  
+  
+      /// @group load methods
+    pni::pstd::searchPath mSearchPath;
+  
+    typedef std::future< prog* > ProgFuture;
+    typedef std::vector< std::string > Filenames;
+
+      /// @note order of filenames in string should be in order of
+      /// prog::Stage enum... e.g., Vertex first, then Fragment, etc.
+    prog* loadSync ( Filenames const& fnames );
+
+      /// @note order of filenames in string should be in order of
+      /// prog::Stage enum... e.g., Vertex first, then Fragment, etc.
+    ProgFuture loadAsync ( Filenames const& fnames );
+
+      /// @note Not implemented yet.
+    void cancel ( ProgFuture const& progFuture );
 
   protected:
 
@@ -106,6 +130,7 @@ class progFactory
   
     ProgMap mProgMap;
   
+    pni::pstd::threadPool mThreadPool { 1 };
 };
 
 /////////////////////////////////////////////////////////////////////

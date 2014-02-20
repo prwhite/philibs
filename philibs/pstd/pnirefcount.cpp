@@ -310,6 +310,7 @@ refCount&
 refCount::
 operator = ( refCount const& rhs )
 {
+    // Specifically doesn't copy rhs refcount!!!
 	return *this;
 }
 

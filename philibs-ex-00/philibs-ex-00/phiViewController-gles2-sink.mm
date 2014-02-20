@@ -18,7 +18,6 @@
 #include "philibs/scenecull.h"
 #include "philibs/scenelightpath.h"
 #include "philibs/scenetexture.h"
-#include "philibs/imgfactory.h"
 #include "philibs/scenecommon.h"
 
 #include "philibs/sceneprog.h"
@@ -27,7 +26,9 @@
 #include "philibs/pnimathstream.h"
 #include "philibs/scenedbgdd.h"
 
+#include "philibs/imgfactory.h"
 #include "philibs/sceneloaderfactory.h"
+#include "philibs/sceneprogfactory.h"
 
 #include "pniosxplatform.h"
 
@@ -114,7 +115,7 @@
 #pragma mark - Setup scene rendering and scene graph
 
 
-scene::texture* loadCubemap ( std::string const& rootPath )
+scene::texture* loadCubemap ()
 {
   scene::texture* pTex = new scene::texture;
   pTex->setTarget( scene::texture::CubeMapTarget );
@@ -132,20 +133,12 @@ scene::texture* loadCubemap ( std::string const& rootPath )
     "PalmTrees/negz.jpg",
   };
   
-  pni::pstd::searchPath spath;
-  spath.addPath(rootPath);
-  
   uint32_t cubeSide = 0;
   for ( auto iter : imgs )
   {
-    if ( spath.resolve(iter, iter) )
-    {
-      pTex->setImage(
-          img::factory::getInstance().loadSync(iter),
-          static_cast< scene::texture::ImageId > ( cubeSide++ ));
-    }
-    else
-      PNIDBGSTR("could not resolve cube map texture image file");
+    pTex->setImage(
+        img::factory::getInstance().loadSync(iter),
+        static_cast< scene::texture::ImageId > ( cubeSide++ ));
   }
   
   return pTex;
@@ -189,43 +182,10 @@ scene::prog* createMainProg ()
 {
   using namespace scene;
   
-  prog* pProg = new prog;
-  
-  pProg->setProgStr(prog::Vertex, R"(
-      precision lowp float;
-      attribute vec4 a_position;
-      attribute vec2 a_uv00;
-
-      varying vec2 v_uv00;
-
-      uniform mat4 u_mvpMat;
-
-      void main()
-      {
-          v_uv00 = a_uv00;
-
-          gl_Position = u_mvpMat * a_position;
-      }
-  )");
-  pProg->setProgStr(prog::Fragment, R"(
-      precision lowp float;
-      varying vec2 v_uv00;
-
-      uniform sampler2D u_tex00;
-
-      void main()
-      {
-        vec4 tex01 = texture2D ( u_tex00, v_uv00, 6.0 );
-        float lum = ( tex01.r + tex01.g + tex01.b ) / 3.0;
-        lum *= lum;
-//        lum *= lum;
-//        lum *= lum;
-        tex01 = vec4 ( lum, lum, lum, 1.0 );
-      
-        vec4 tex00 = texture2D ( u_tex00, v_uv00 );
-        gl_FragColor = min ( vec4 ( 1.0, 1.0, 1.0, 1.0 ), tex00 + tex01 );
-      }
-  )");
+  prog* pProg = progFactory::getInstance().loadSync({
+    "gles2-sink-postproc.vsh",
+    "gles2-sink-postproc.fsh"
+  });
   
   return pProg;
 }
@@ -233,6 +193,15 @@ scene::prog* createMainProg ()
 - (void) setupScene
 {
   using namespace scene;
+
+    // Path to the app bundle to get the test file.
+  std::string bdir ( getShellPath(BundleDir) );
+  
+    // Add the app bundle to all of the factories' search paths
+  loader::factory::getInstance().mSearchPath.addPath(bdir);
+  img::factory::getInstance().mSearchPath =
+      progFactory::getInstance().mSearchPath =
+      loader::factory::getInstance().mSearchPath;
 
   GLKView *view = (GLKView *)self.view;
 
@@ -291,15 +260,12 @@ scene::prog* createMainProg ()
     //////////////////////////////////////////////////
     // Now the "real" scene with the loaded file, etc.
 
-    // Path to the app bundle to get the test file.
-  std::string bdir ( getShellPath(BundleDir) );
-  std::string fname = { bdir + "/" + "test-00b.ase" };
-//  std::string fname = { bdir + "/" + "cyclorama-00a.dae" };
-//  std::string fname = { bdir + "/" + "ld-pod-01b-hi-icon.dae" };
-
     // Load the file, grab its bounding sphere so we can push back the camera an
     // appropriate amount.
-  mLoadFuture = loader::factory::getInstance().loadAsync(fname);
+  mLoadFuture = loader::factory::getInstance().loadAsync("test-00b.ase");
+//  mLoadFuture = loader::factory::getInstance().loadAsync("cyclorama-00a.dae");
+//  mLoadFuture = loader::factory::getInstance().loadAsync("ld-pod-01b-hi-icon.dae");
+
 
   mRoot = new scene::group ();
 
@@ -312,7 +278,7 @@ scene::prog* createMainProg ()
   scene::depth* pDepth = new scene::depth ();
   mRoot->setState(pDepth, scene::state::Depth);
   
-  scene::texture* pCubemap = loadCubemap ( bdir );
+  scene::texture* pCubemap = loadCubemap ();
   pCubemap->setOverride(true);
   mRoot->setState(pCubemap, scene::state::Texture01);
   
@@ -408,6 +374,12 @@ scene::prog* createMainProg ()
   [glView bindDrawable];
 
   glView.contentScaleFactor = 2.0;
+
+  GLubyte const* glesVer = glGetString(GL_VERSION);
+  PNIDBGSTR("GLES version is: " << glesVer);
+  
+  GLubyte const* glslVer = glGetString(GL_SHADING_LANGUAGE_VERSION);
+  PNIDBGSTR("GLSL version (for GLES 2.0) is: " << glslVer);
 
   [self setupScene];
 }

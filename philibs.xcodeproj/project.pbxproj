@@ -20,6 +20,7 @@
 		1C4BD28018810EE6000781B0 /* scenevbo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CAD971E186628EE00C547E1 /* scenevbo.h */; };
 		1C4BD2831885FD8F000781B0 /* scenecommon.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C4BD2821885FCB7000781B0 /* scenecommon.h */; };
 		1C6A02B91873526700672EF8 /* sceneuniform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C6A02B71873526700672EF8 /* sceneuniform.cpp */; };
+		1C6B1FEF18B69BEC0053277E /* pnidbg.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C6B1FEE18B69BE10053277E /* pnidbg.h */; };
 		1C88803218923B89005EAF2E /* libassimp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C88803118923B89005EAF2E /* libassimp.a */; };
 		1C94014318A998CE0011AFF0 /* sceneframebufferogl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C94014118A998CE0011AFF0 /* sceneframebufferogl.cpp */; };
 		1C9AAF0C18AAA1D90062DF8C /* scenerendersinkdd.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C2BB57D18AAA19C00938C31 /* scenerendersinkdd.h */; };
@@ -285,11 +286,12 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				1C6B1FEF18B69BEC0053277E /* pnidbg.h in CopyFiles */,
+				1C2BB57B18A9B75F00938C31 /* sceneprogfactory.h in CopyFiles */,
 				1CBBFD6718AE9AD80042CD9D /* scenerendersink.h in CopyFiles */,
 				1C2BB57818A9B75F00938C31 /* sceneframebufferogl.h in CopyFiles */,
 				1C2BB57918A9B75F00938C31 /* scenefbo.h in CopyFiles */,
 				1C2BB57A18A9B75F00938C31 /* sceneframebuffer.h in CopyFiles */,
-				1C2BB57B18A9B75F00938C31 /* sceneprogfactory.h in CopyFiles */,
 				1CC482F5188C87170029408D /* sceneloaderassimp.h in CopyFiles */,
 				1CC482ED188B91940029408D /* imgpvr.h in CopyFiles */,
 				1CC482E2188A093B0029408D /* imgcoreimage.h in CopyFiles */,
@@ -438,6 +440,7 @@
 		1C4BD2821885FCB7000781B0 /* scenecommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = scenecommon.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		1C6A02B71873526700672EF8 /* sceneuniform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneuniform.cpp; sourceTree = "<group>"; };
 		1C6A02B81873526700672EF8 /* sceneuniform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = sceneuniform.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		1C6B1FEE18B69BE10053277E /* pnidbg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pnidbg.h; sourceTree = "<group>"; };
 		1C88803118923B89005EAF2E /* libassimp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libassimp.a; path = "3p/assimp/workspaces/xcode3/build/Debug-iphoneos/libassimp.a"; sourceTree = "<group>"; };
 		1C94014118A998CE0011AFF0 /* sceneframebufferogl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneframebufferogl.cpp; sourceTree = "<group>"; };
 		1C94014218A998CE0011AFF0 /* sceneframebufferogl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneframebufferogl.h; sourceTree = "<group>"; };
@@ -934,6 +937,7 @@
 		1CDD40E7185BCAEF009284F9 /* pstd */ = {
 			isa = PBXGroup;
 			children = (
+				1C6B1FEE18B69BE10053277E /* pnidbg.h */,
 				1CC482DB1889E57A0029408D /* ThreadPool.h */,
 				1CDD40E8185BCAEF009284F9 /* pniautoref.h */,
 				1CDD40E9185BCAEF009284F9 /* pniavg.h */,

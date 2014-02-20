@@ -54,15 +54,19 @@ factory::LoadFuture factory::loadAsync ( std::string const& fname )
   return mThreadPool.enqueue( [ this ]( std::string const& fname) { return this->loadSync( fname ); }, fname );
 }
 
-scene::node* factory::loadSync ( const std::string &fname )
+scene::node* factory::loadSync (  std::string const& cfname )
 {
-  std::string extension = toLower ( pni::pstd::searchPath::ext(fname) );
+  std::string fname;
+  if ( mSearchPath.resolve(cfname, fname))
+  {
+    std::string extension = toLower ( pni::pstd::searchPath::ext(fname) );
 
-  auto found = mLoaders.find ( extension );
-  if ( found != mLoaders.end () )
-    return found->second->load ( fname );
-  else
-    return nullptr; // Temp
+    auto found = mLoaders.find ( extension );
+    if ( found != mLoaders.end () )
+      return found->second->load ( fname );
+  }
+
+  return nullptr;
 }
 
 

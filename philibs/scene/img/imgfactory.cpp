@@ -12,6 +12,7 @@
 #include "imgtarga.h"
 #include "imgcoreimage.h"
 #include "imgpvr.h"
+#include "pnidbg.h"
 
 #include <string>
 #include <algorithm>
@@ -67,15 +68,24 @@ factory::LoadFuture factory::loadAsync ( std::string const& fname )
   return mThreadPool.enqueue( [ this ]( std::string const& fname) { return this->loadSync( fname ); }, fname );
 }
 
-base* factory::loadSync ( const std::string &fname )
+base* factory::loadSync ( std::string const& cfname )
 {
-  std::string extension = toLower ( pni::pstd::searchPath::ext(fname) );
+  std::string fname;
 
-  auto found = mLoadFunctions.find ( extension );
-  if ( found != mLoadFunctions.end () )
-    return found->second ( fname );
+  if ( mSearchPath.resolve(cfname, fname))
+  {
+    std::string extension = toLower ( pni::pstd::searchPath::ext(fname) );
+
+    auto found = mLoadFunctions.find ( extension );
+    if ( found != mLoadFunctions.end () )
+      return found->second ( fname );
+    else
+      PNIDBGSTR("could not find loader for " << cfname);
+  }
   else
-    return nullptr; // Temp
+    PNIDBGSTR("could not resolve file for " << cfname);
+
+  return nullptr;
 }
 
 

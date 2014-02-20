@@ -16,6 +16,7 @@
 #define PNIPSTDLOGDISABLE
 
 #include "pnilog.h"
+#include "pnidbg.h"
 
 #include "scenevbo.h"
 #include "sceneprogobj.h"

@@ -12,6 +12,7 @@
 #include "sceneloaderbase.h"
 #include "pnithreadpool.h"
 #include "pniautoref.h"
+#include "pnisearchpath.h"
 
 #include <string>
 #include <functional>
@@ -45,11 +46,14 @@ class factory
     void addLoader ( std::string const& extension, loader::base* pLoader );
     void remLoader ( std::string const& extension );
 
+      /// Search path object for instance.
+    pni::pstd::searchPath mSearchPath;
+
   private:
     typedef pni::pstd::autoRef<loader::base> BaseRef;
     typedef std::unordered_map< std::string, BaseRef > Loaders;
 
-      // TODO: Implement a work queue thread to handle file reads.
+      // Implement a work queue thread to handle file reads.
     pni::pstd::threadPool mThreadPool { 1 };  // loader::base is currently not
                                               // re-entrant, but can run in a
                                               // separate thread.  Need to make

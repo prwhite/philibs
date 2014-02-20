@@ -101,6 +101,13 @@ bool searchPath::resolve ( std::string const& fname, std::string& ret )
   return false;
 }
 
+searchPath& searchPath::operator += ( searchPath const& rhs )
+{
+  for ( auto path : rhs.mPaths )
+    mPaths.push_back(path);
+  return *this;
+}
+
 void searchPath::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
 

@@ -20,6 +20,7 @@ http://www.rushdigital.co.nz/blog/2013/12/extseparateshaderobject-on-ios
 #define PNIPSTDLOGDISABLE
 
 #include "pnilog.h"
+#include "pnidbg.h"
 
 #include "sceneprogObj.h"
 #include "sceneprog.h"

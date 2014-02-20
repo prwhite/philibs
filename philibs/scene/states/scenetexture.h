@@ -12,6 +12,7 @@
 #include "scenestate.h"
 #include "scenestatedd.h"
 #include "imgbase.h"
+#include "pnidbg.h"
 
 #include <vector>
 

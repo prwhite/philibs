@@ -11,6 +11,7 @@
 
 #include "imgbase.h"
 #include "pnithreadpool.h"
+#include "pnisearchpath.h"
 
 #include <string>
 #include <functional>
@@ -43,6 +44,9 @@ class factory
       /// Register loaderBase instances with the extension they handle.
     void addLoader ( std::string const& extension, LoadFunction func );
     void remLoader ( std::string const& extension );
+
+      /// Manage associated search path
+    pni::pstd::searchPath mSearchPath;
 
   private:
     typedef std::unordered_map< std::string, LoadFunction > LoadFunctions;

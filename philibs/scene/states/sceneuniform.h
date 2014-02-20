@@ -12,6 +12,8 @@
 #include "scenestate.h"
 #include "scenestatedd.h"
 
+#include "pnidbg.h"
+
 /////////////////////////////////////////////////////////////////////
 
 namespace scene {
