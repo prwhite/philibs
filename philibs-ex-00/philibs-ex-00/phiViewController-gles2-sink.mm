@@ -183,8 +183,8 @@ scene::prog* createMainProg ()
   using namespace scene;
   
   prog* pProg = progFactory::getInstance().loadSync({
-    "gles2-sink-postproc.vsh",
-    "gles2-sink-postproc.fsh"
+    "Shaders/gles2-sink-postproc.vsh",
+    "Shaders/gles2-sink-postproc.fsh"
   });
   
   return pProg;
@@ -198,7 +198,7 @@ scene::prog* createMainProg ()
   std::string bdir ( getShellPath(BundleDir) );
   
     // Add the app bundle to all of the factories' search paths
-  loader::factory::getInstance().mSearchPath.addPath(bdir);
+  loader::factory::getInstance().mSearchPath += bdir;
   img::factory::getInstance().mSearchPath =
       progFactory::getInstance().mSearchPath =
       loader::factory::getInstance().mSearchPath;

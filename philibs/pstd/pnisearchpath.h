@@ -38,6 +38,9 @@ class searchPath :
       /// Concat paths from another searchPath object.
     searchPath& operator += ( searchPath const& rhs );
 
+      /// An alias for addPath
+    searchPath& operator += ( std::string const& rhs ) { addPath ( rhs ); return *this; }
+
       /// Clear all paths added to this instance.
     void clearPaths () { mPaths.clear(); }
 
