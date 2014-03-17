@@ -131,8 +131,11 @@ void renderSinkDd::dispatch ( renderSink const* pSink )
 {
   if(pSink->mFramebuffer->getSpec().mTextureTarget == texture::CubeMapTarget)
   {
-    for(texture::ImageId cur = texture::CubePosXImg; cur <= texture::CubeNegZImg; ++cur)
+    for(uint32_t uicur = texture::CubePosXImg; uicur <= texture::CubeNegZImg; ++uicur)
     {
+        // Can't increment enum types any more
+      texture::ImageId cur = ( texture::ImageId ) uicur;
+    
         // TODO: Need to set the 6 different views
       setCubemapDdMat(pSink, cur);
     

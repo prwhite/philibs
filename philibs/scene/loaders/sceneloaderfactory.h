@@ -18,7 +18,9 @@
 #include <functional>
 #include <unordered_map>
 
-class scene::node;
+namespace scene {
+  class node;
+}
 
 /////////////////////////////////////////////////////////////////////
 

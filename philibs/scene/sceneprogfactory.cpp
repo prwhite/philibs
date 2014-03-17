@@ -91,7 +91,7 @@ prog* progFactory::loadSync ( Filenames const& fnames )
       }
 
       pProg->setProgStr(stage, out);
-      stage++;
+      stage = ( prog::Stage ) ( stage + 1 );
     }
     else
     {
