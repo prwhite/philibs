@@ -27,6 +27,7 @@
 		1CAD971F186628EE00C547E1 /* scenevbo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD971D186628EE00C547E1 /* scenevbo.cpp */; };
 		1CAD9723186D72D500C547E1 /* sceneprog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9721186D72D500C547E1 /* sceneprog.cpp */; };
 		1CAD9726186E110200C547E1 /* sceneprogobj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9724186E110200C547E1 /* sceneprogobj.cpp */; };
+		1CB6BD8F18D8DBE700DC3B4B /* pniosxplatform.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CB6BD8918D8DBE500DC3B4B /* pniosxplatform.h */; };
 		1CBBFD6718AE9AD80042CD9D /* scenerendersink.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CCD165F189A3F23001F8DF1 /* scenerendersink.h */; };
 		1CC482D11888D0CD0029408D /* pnisearchpath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC482CF1888D0CD0029408D /* pnisearchpath.cpp */; };
 		1CC482D21888E7D30029408D /* pnisearchpath.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CC482D01888D0CD0029408D /* pnisearchpath.h */; };
@@ -321,6 +322,7 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				1CB6BD8F18D8DBE700DC3B4B /* pniosxplatform.h in CopyFiles */,
 				1C6B1FEF18B69BEC0053277E /* pnidbg.h in CopyFiles */,
 				1C2BB57B18A9B75F00938C31 /* sceneprogfactory.h in CopyFiles */,
 				1CBBFD6718AE9AD80042CD9D /* scenerendersink.h in CopyFiles */,
@@ -487,6 +489,7 @@
 		1CAD9722186D72D500C547E1 /* sceneprog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneprog.h; sourceTree = "<group>"; };
 		1CAD9724186E110200C547E1 /* sceneprogobj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneprogobj.cpp; sourceTree = "<group>"; };
 		1CAD9725186E110200C547E1 /* sceneprogobj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneprogobj.h; sourceTree = "<group>"; };
+		1CB6BD8918D8DBE500DC3B4B /* pniosxplatform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pniosxplatform.h; sourceTree = "<group>"; };
 		1CC482CF1888D0CD0029408D /* pnisearchpath.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pnisearchpath.cpp; sourceTree = "<group>"; };
 		1CC482D01888D0CD0029408D /* pnisearchpath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pnisearchpath.h; sourceTree = "<group>"; };
 		1CC482D3188913820029408D /* imgfactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgfactory.cpp; sourceTree = "<group>"; };
@@ -986,6 +989,7 @@
 		1CDD40E7185BCAEF009284F9 /* pstd */ = {
 			isa = PBXGroup;
 			children = (
+				1CB6BD8918D8DBE500DC3B4B /* pniosxplatform.h */,
 				1C6B1FEE18B69BE10053277E /* pnidbg.h */,
 				1CC482DB1889E57A0029408D /* ThreadPool.h */,
 				1CDD40E8185BCAEF009284F9 /* pniautoref.h */,

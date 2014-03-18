@@ -95,7 +95,6 @@
 		1C9E34B71891A50700E49195 /* blue-grid-512-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blue-grid-512-32.png"; sourceTree = "<group>"; };
 		1C9E34B81891A50700E49195 /* cyclorama-00a.dae */ = {isa = PBXFileReference; explicitFileType = text.xml; fileEncoding = 4; name = "cyclorama-00a.dae"; path = "philibs-ex-00/Resources/cyclorama-00a.dae"; sourceTree = "<group>"; };
 		1CAD97111861879B00C547E1 /* test-00.ase */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "test-00.ase"; path = "philibs-ex-00/Resources/test-00.ase"; sourceTree = "<group>"; };
-		1CAD97131861922A00C547E1 /* pniosxplatform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pniosxplatform.h; sourceTree = "<group>"; };
 		1CAD97151865580000C547E1 /* phiViewController-gles2.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = "phiViewController-gles2.mm"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		1CB1DFA918988C79005D3709 /* negx.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = negx.jpg; sourceTree = "<group>"; };
 		1CB1DFAA18988C79005D3709 /* negy.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = negy.jpg; sourceTree = "<group>"; };
@@ -278,7 +277,6 @@
 			isa = PBXGroup;
 			children = (
 				1C9AAAC118735E60001540C3 /* test-instantiaton.cpp */,
-				1CAD97131861922A00C547E1 /* pniosxplatform.h */,
 				1CDD4222185BDDC2009284F9 /* philibs-ex-00-Info.plist */,
 				1CDD4223185BDDC2009284F9 /* InfoPlist.strings */,
 				1CDD4226185BDDC2009284F9 /* main.m */,

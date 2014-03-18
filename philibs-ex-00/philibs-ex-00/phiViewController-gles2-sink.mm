@@ -30,7 +30,7 @@
 #include "philibs/sceneloaderfactory.h"
 #include "philibs/sceneprogfactory.h"
 
-#include "pniosxplatform.h"
+#include "philibs/pniosxplatform.h"
 
 #include "philibs/sceneddogl.h"
 #include "philibs/sceneframebufferogl.h"
