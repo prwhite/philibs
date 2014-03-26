@@ -564,16 +564,18 @@ void manager::update ( TimeType timeStamp )
   {
     if ( ! *cur )
       continue;
-      
-    scene::graphDd* pDd = ( *cur )->mDd;
+    
+    if ( scene::graphDd* pDd = ( *cur )->mDd )
+    {
+      pDd->setTravMask ( ( *cur )->mTravMask );
+      pDd->setSinkPath ( ( *cur)->mCamPath );
+      pDd->setTimeStamp ( timeStamp );
+      pDd->setLastTimeStamp ( lastTimeStamp );
+      pDd->startGraph ( ( *cur )->mRoot->getBaseNode () );
 
-    pDd->setTravMask ( ( *cur )->mTravMask );
-    pDd->setSinkPath ( ( *cur)->mCamPath );
-    pDd->setTimeStamp ( timeStamp );
-    pDd->setLastTimeStamp ( lastTimeStamp );
-    pDd->startGraph ( ( *cur )->mRoot->getBaseNode () );
-
-    pDd->setSinkPath ( scene::nodePath () );
+        // Reset node path to nothing
+      pDd->setSinkPath ( scene::nodePath () );
+    }
     
     if ( scene::graphDd* pSndDd = ( *cur )->mSndDd )
     {
