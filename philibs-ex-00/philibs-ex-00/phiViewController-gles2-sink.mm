@@ -271,6 +271,17 @@ scene::prog* createMainProg ()
 
     // Add default vert and frag programs
   mProg = new scene::prog;
+  
+  mProg->setFlag(scene::prog::Tex, 00);
+  mProg->setFlag(scene::prog::Uv, 00);
+  mProg->setFlag(scene::prog::Sampler2D, 00);
+
+  mProg->setFlag(scene::prog::Tex, 01);
+  mProg->setFlag(scene::prog::UvReflection, 01);
+  mProg->setFlag(scene::prog::SamplerCube, 01);
+
+  mProg->setFlag(scene::prog::Normal);
+  
   mProg->setDefaultProgs();
   mRoot->setState(mProg.get(), scene::state::Prog);
 

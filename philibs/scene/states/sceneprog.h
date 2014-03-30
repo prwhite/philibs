@@ -12,6 +12,8 @@
 #include "scenestate.h"
 #include "scenestatedd.h"
 
+#include <vector>
+
 /////////////////////////////////////////////////////////////////////
 
 namespace scene {
@@ -38,12 +40,42 @@ class prog :
       void clearDirty () const { mDirty = false; }
 
       void setDefaultProgs ();
+  
+      enum Flag
+      {
+        Tex,
+        Uv,
+        UvReflection,
+
+        Sampler2D,
+        SamplerCube,
+        
+        Color,
+        Normal,
+        
+        DefaultLight, // TODO
+      };
+  
+        /// Set an enable flag for one of the shader's functions.  If the
+        /// flag corresponds to a texture or light unit, specify the unit
+        /// in the second argument.
+        /// You must call setDefaultProgs after changing flags.
+      void setFlag ( Flag flag, uint32_t unit = -1 ) { mFlagVec.push_back( { flag, unit } ); }
+      void resetFlags () { mFlagVec.clear(); }
 
   protected:
     
   private:
+    struct flagPair
+    {
+      Flag mFlag;
+      uint32_t mUnit;
+    };
+  
+    typedef std::vector< flagPair > FlagVec;
+  
     std::string mProg[ NumStages ] = {};
-
+    FlagVec mFlagVec;
     mutable bool mDirty;
 
   // interface from state
