@@ -621,9 +621,6 @@
 		1CDD40F6185BCAEF009284F9 /* pnitimerplatform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pnitimerplatform.cpp; sourceTree = "<group>"; };
 		1CDD40F7185BCAEF009284F9 /* pnitimerprof.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pnitimerprof.cpp; sourceTree = "<group>"; };
 		1CDD40F8185BCAEF009284F9 /* pnitimerprof.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pnitimerprof.h; sourceTree = "<group>"; };
-		1CDD40FA185BCAEF009284F9 /* PVRTContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PVRTContext.h; sourceTree = "<group>"; };
-		1CDD40FB185BCAEF009284F9 /* PVRTglesExt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PVRTglesExt.cpp; sourceTree = "<group>"; };
-		1CDD40FC185BCAEF009284F9 /* PVRTglesExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PVRTglesExt.h; sourceTree = "<group>"; };
 		1CDD40FF185BCAEF009284F9 /* imgalgo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgalgo.cpp; sourceTree = "<group>"; };
 		1CDD4100185BCAEF009284F9 /* imgalgo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imgalgo.h; sourceTree = "<group>"; };
 		1CDD4101185BCAEF009284F9 /* imgbase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgbase.cpp; sourceTree = "<group>"; };
@@ -821,7 +818,6 @@
 				1CDD4048185BCAEF009284F9 /* font */,
 				1CDD4056185BCAEF009284F9 /* pnimath */,
 				1CDD40E7185BCAEF009284F9 /* pstd */,
-				1CDD40F9185BCAEF009284F9 /* pvr */,
 				1CDD40FD185BCAEF009284F9 /* scene */,
 				1CDD415E185BCAF0009284F9 /* snd */,
 				1CDD4164185BCAF0009284F9 /* ui */,
@@ -1013,16 +1009,6 @@
 				1CC482DD1889E5ED0029408D /* pnithreadpool.h */,
 			);
 			path = pstd;
-			sourceTree = "<group>";
-		};
-		1CDD40F9185BCAEF009284F9 /* pvr */ = {
-			isa = PBXGroup;
-			children = (
-				1CDD40FA185BCAEF009284F9 /* PVRTContext.h */,
-				1CDD40FB185BCAEF009284F9 /* PVRTglesExt.cpp */,
-				1CDD40FC185BCAEF009284F9 /* PVRTglesExt.h */,
-			);
-			path = pvr;
 			sourceTree = "<group>";
 		};
 		1CDD40FD185BCAEF009284F9 /* scene */ = {
