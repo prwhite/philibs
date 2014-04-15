@@ -32,6 +32,7 @@ class prog :
 
       enum Stage { Vertex, Fragment, NumStages };
 
+        /// Set the GLSL program string for the indicated stage.
       void setProgStr ( Stage stage, std::string const& str ) { mProg[ stage ] = str; setDirty (); }
       std::string const& getProgStr ( Stage stage ) const { return mProg[ stage ]; }
 
@@ -39,6 +40,8 @@ class prog :
       bool getDirty () const { return mDirty; }
       void clearDirty () const { mDirty = false; }
 
+        /// Calls setProgStr with basic rendering progs.
+        /// @note Will call equiv of applyFlags at end of setting vert/frag prog text.
       void setDefaultProgs ();
   
       enum Flag
@@ -59,16 +62,26 @@ class prog :
         /// Set an enable flag for one of the shader's functions.  If the
         /// flag corresponds to a texture or light unit, specify the unit
         /// in the second argument.
-        /// You must call setDefaultProgs after changing flags.
-      void setFlag ( Flag flag, uint32_t unit = -1 ) { mFlagVec.push_back( { flag, unit } ); }
+        /// @note You must call setDefaultProgs or applyFlags after changing flags.
+      void setFlag ( Flag flag, uint32_t unit = -1 ); // { mFlagVec.push_back( { flag, unit } ); }
+  
+        /// Set a custom define string flag.  Can combine this with custom
+        /// program text to do more than the default programs/flags.
+        /// @param flag String will be turned into "#define <flag>[<unit>]"
+        /// and prepended to program when #applyFlags is called.
+      void setFlag ( std::string const& flag, uint32_t unit = -1 );
       void resetFlags () { mFlagVec.clear(); }
+  
+        /// Apply currently set flags... i.e., apply defines determined by flags
+        /// to currently set program text.
+      void applyFlags ();
 
   protected:
     
   private:
     struct flagPair
     {
-      Flag mFlag;
+      std::string mFlag;
       uint32_t mUnit;
     };
   

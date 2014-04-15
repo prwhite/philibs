@@ -14,6 +14,34 @@ namespace scene {
   
 /////////////////////////////////////////////////////////////////////
 
+namespace
+{
+  static std::string flagTable[] =
+  {
+    "TEX",
+    "UV",
+    "UVREFLECTION",
+    "SAMPLER2D",
+    "SAMPLERCUBE",
+    "COLOR",
+    "NORMAL",
+    "DEFAULTLIGHT"
+  };
+
+  static std::string unitTable[] =
+  {
+    "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15"
+  };
+  
+  static_assert ( sizeof(flagTable)/sizeof(std::string) == prog::DefaultLight + 1, "flagTable and prog::Flag enum out of sync");
+  
+  // TODO: More statc_asserts here on size of unitTable vs texture units possible, etc.
+
+  static int32_t const units = state::Texture15 - state::Texture00 + 1;
+};
+
+/////////////////////////////////////////////////////////////////////
+
 prog::prog()
 {
   
@@ -41,51 +69,46 @@ prog::~prog()
 //   return false;
 // }
 
-namespace
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+
+void prog::setFlag ( Flag flag, uint32_t unit )
 {
-  static std::string unitTable[] =
-  {
-    "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15"
-  };
-};
+//  mFlagVec.push_back( { flag, unit } );
+  setFlag(flagTable[ flag ], unit );
+}
+
+void prog::setFlag ( std::string const& flag, uint32_t unit )
+{
+  assert(unit < units || unit == -1 );
+
+  std::string defines;
+
+  defines += "#define " + flag;
+  
+  if ( unit != -1 )
+    defines += unitTable[ unit ];
+  
+  defines += "\n";
+
+  mFlagVec.push_back( { defines,unit } );
+}
+
+void prog::applyFlags ()
+{
+  std::string defines;
+  for ( auto pair : mFlagVec )
+    defines += pair.mFlag;      // Currently not using pair.mUnit... stamped into string already, but might come in handy in future.
+
+  mProg[ Vertex ] = defines + mProg[ Vertex ];
+  mProg[ Fragment ] = defines + mProg[ Fragment ];
+}
 
 void prog::setDefaultProgs ()
 {
-  std::string defines;
-  for ( auto flag : mFlagVec )
-  {
-    switch ( flag.mFlag )
-    {
-      case Tex:
-        defines += "#define UV" + unitTable[ flag.mUnit ];
-        break;
-      case Uv:
-        defines += "#define UV" + unitTable[ flag.mUnit ];
-        break;
-      case UvReflection:
-        defines += "#define UVREFLECTION" + unitTable[ flag.mUnit ];
-        break;
-      case Sampler2D:
-        defines += "#define SAMPLER2D" + unitTable[ flag.mUnit ];
-        break;
-      case SamplerCube:
-        defines += "#define SAMPLERCUBE" + unitTable[ flag.mUnit ];
-        break;
-      case Color:
-        defines += "#define COLOR";
-        break;
-      case Normal:
-        defines += "#define NORMAL";
-        break;
-      case DefaultLight:
-        defines += "#define DEFAULTLIGHT";
-        break;
-    }
-    defines += "\n";
-  }
 
   setProgStr( Vertex,
-    defines +
     R"(
       attribute vec4 a_position;
       attribute vec3 a_normal;
@@ -140,7 +163,6 @@ void prog::setDefaultProgs ()
     )" );
 
   setProgStr( Fragment,
-    defines +
     R"(
       varying lowp vec4 v_color;
 #ifdef UV00
@@ -228,6 +250,8 @@ void prog::setDefaultProgs ()
 
       }
     )" );
+  
+  applyFlags();
 }
 
 /////////////////////////////////////////////////////////////////////
