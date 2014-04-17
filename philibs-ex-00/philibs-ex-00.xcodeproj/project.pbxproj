@@ -48,6 +48,8 @@
 		1CDD4243185BDDC2009284F9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD421A185BDDC2009284F9 /* UIKit.framework */; };
 		1CDD424B185BDDC2009284F9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1CDD4249185BDDC2009284F9 /* InfoPlist.strings */; };
 		1CDD424D185BDDC2009284F9 /* philibs_ex_00Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD424C185BDDC2009284F9 /* philibs_ex_00Tests.m */; };
+		1CE0A43518FFC016005F3FA4 /* HelveticaNeue.dfont_sdf_g8.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CE0A43318FFC016005F3FA4 /* HelveticaNeue.dfont_sdf_g8.png */; };
+		1CE0A43618FFC016005F3FA4 /* HelveticaNeue.dfont_sdf.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1CE0A43418FFC016005F3FA4 /* HelveticaNeue.dfont_sdf.txt */; };
 		1CF4DBAB185EE4C4007331F8 /* libphilibs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF4DBA8185EE4B7007331F8 /* libphilibs.a */; };
 /* End PBXBuildFile section */
 
@@ -132,6 +134,8 @@
 		1CDD4248185BDDC2009284F9 /* philibs-ex-00Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "philibs-ex-00Tests-Info.plist"; sourceTree = "<group>"; };
 		1CDD424A185BDDC2009284F9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1CDD424C185BDDC2009284F9 /* philibs_ex_00Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = philibs_ex_00Tests.m; sourceTree = "<group>"; };
+		1CE0A43318FFC016005F3FA4 /* HelveticaNeue.dfont_sdf_g8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = HelveticaNeue.dfont_sdf_g8.png; path = "philibs-ex-00/Resources/HelveticaNeue.dfont_sdf_g8.png"; sourceTree = "<group>"; };
+		1CE0A43418FFC016005F3FA4 /* HelveticaNeue.dfont_sdf.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = HelveticaNeue.dfont_sdf.txt; path = "philibs-ex-00/Resources/HelveticaNeue.dfont_sdf.txt"; sourceTree = "<group>"; };
 		1CF4DBA2185EE4B7007331F8 /* philibs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = philibs.xcodeproj; path = ../philibs.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -200,6 +204,8 @@
 				1CC482C018868F4D0029408D /* brushed-aluminum-00a.dds */,
 				1CC482C118868F4D0029408D /* test-00a.ase */,
 				1CAD97111861879B00C547E1 /* test-00.ase */,
+				1CE0A43318FFC016005F3FA4 /* HelveticaNeue.dfont_sdf_g8.png */,
+				1CE0A43418FFC016005F3FA4 /* HelveticaNeue.dfont_sdf.txt */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -422,6 +428,7 @@
 				1C53352118978BA5009525FD /* texture2.png in Resources */,
 				1CB1DFB418988C79005D3709 /* posy.jpg in Resources */,
 				1CB1DFB118988C79005D3709 /* negy.jpg in Resources */,
+				1CE0A43518FFC016005F3FA4 /* HelveticaNeue.dfont_sdf_g8.png in Resources */,
 				1CC482C218868F4D0029408D /* brushed-aluminum-00a.dds in Resources */,
 				1CB1DFB318988C79005D3709 /* posx.jpg in Resources */,
 				1C53352418978BA5009525FD /* texture5.png in Resources */,
@@ -435,6 +442,7 @@
 				1C9E34B91891A50700E49195 /* blue-grid-512-32.png in Resources */,
 				1C53351E18978BA5009525FD /* ld-pod-01b-hi-icon.dae in Resources */,
 				1CB1DFB618988C79005D3709 /* readme.txt in Resources */,
+				1CE0A43618FFC016005F3FA4 /* HelveticaNeue.dfont_sdf.txt in Resources */,
 				1CAD97121861879B00C547E1 /* test-00.ase in Resources */,
 				1CB1DFB018988C79005D3709 /* negx.jpg in Resources */,
 				1CB1DFB218988C79005D3709 /* negz.jpg in Resources */,

@@ -37,6 +37,8 @@
 #include "philibs/scenerendersink.h"
 #include "philibs/scenerendersinkdd.h"
 
+#include "philibs/fontfontfactory.h"
+
 #include <iostream>
 #include <fstream>
 
@@ -201,6 +203,7 @@ scene::prog* createMainProg ()
   loader::factory::getInstance().mSearchPath += bdir;
   img::factory::getInstance().mSearchPath =
       progFactory::getInstance().mSearchPath =
+      font::fontFactory::getInstance().mSearchPath =
       loader::factory::getInstance().mSearchPath;
 
   GLKView *view = (GLKView *)self.view;
@@ -324,6 +327,9 @@ scene::prog* createMainProg ()
   self->mTexSink->mFramebuffer->setName("render to texture scene");
 
   self->mMainSink->addChild(self->mTexSink.get());
+  
+  font::font* pFont = font::fontFactory::getInstance().load(
+      "HelveticaNeue.dfont_sdf.txt", "HelveticaNeue.dfont_sdf_g8.png");
 }
 
 - (void) finalizeScene

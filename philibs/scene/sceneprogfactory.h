@@ -128,7 +128,7 @@ class progFactory
     typedef pni::pstd::autoRef< prog > ProgRef;
     typedef std::map< progProps, ProgRef > ProgMap;
   
-    ProgMap mProgMap;
+    ProgMap mProgMap; // TODO: Needs mutex when we start using it!!!
   
     pni::pstd::threadPool mThreadPool { 1 };
 };

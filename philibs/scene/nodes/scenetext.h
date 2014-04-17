@@ -97,5 +97,3 @@ class text :
 } // end of namespace scene 
 
 #endif // scenescenetext_h
-
-

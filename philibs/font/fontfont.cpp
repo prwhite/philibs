@@ -2,6 +2,15 @@
 //
 //    file: fontfont.cpp
 //
+//    Was originally made to load AngelCode Bitmap font generator
+//    files.
+//
+//    Was then adapted to use lonesock's SDF implementation from here:
+//    http://www.gamedev.net/topic/491938-signed-distance-bitmap-font-tool/
+//
+//    The main ramification of this change is far less of the global
+//    and common info is stored in the SDF font description.  Also,
+//    kerning is not stored in this format either.
 /////////////////////////////////////////////////////////////////////
 
 #include "fontfont.h"
@@ -16,7 +25,6 @@ namespace font {
 
 font::font () :
   mLineHeight ( 0.0f ),
-  mBase ( 0.0f ),
   mNumChars ( 0 )
 {
   // TODO
@@ -48,15 +56,15 @@ font::~font ()
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
-bool font::load ( std::string const& fname )
+bool font::load ( std::string const& fname, std::string const& textureFname )
 {
   std::ifstream in ( fname.c_str () );
+  mTextureFname = textureFname;
   
   if ( in.good () )
   {
     parseCommon ( in );
     parseGlyphs ( in );
-    parseKerns ( in );    
     
     return in.good ();  // Make sure we didn't run out of data.
   }
@@ -81,40 +89,12 @@ bool font::parseCommon ( std::ifstream& in )
   in.getline ( buf, BufSize );
 
     // Read global params.
-  float size, bold, italic, unicode, stretchH, smooth, aa, 
-      pad00, pad01, pad02, pad03, spacing00, spacing01, outline;
-
-  if ( sscanf ( buf, "info face=%*s size=%f bold=%f italic=%f charset=%*s unicode=%f stretchH=%f smooth=%f aa=%f padding=%f,%f,%f,%f spacing=%f,%f outline=%f",
-      &size, &bold, &italic, &unicode, &stretchH, &smooth, &aa, 
-      &pad00, &pad01, &pad02, &pad03, &spacing00, &spacing01, &outline )
-    < 14 )
-      return false;
-
-  mPadding[ 0 ] = pad00;
-  mPadding[ 1 ] = pad01;
-  mPadding[ 2 ] = pad02;
-  mPadding[ 3 ] = pad03;
   
-  in.getline ( buf, BufSize );
+  char face[ BufSize ];
 
-    // Read common params.
-  float scaleW, scaleH, pages, packed, encoded;
-  if ( sscanf ( buf, "common lineHeight=%f base=%f scaleW=%f scaleH=%f pages=%f packed=%f encoded=%f", 
-      &mLineHeight, &mBase,
-      &scaleW, &scaleH, &pages, &packed, &encoded )
-    < 7 )
+  if ( sscanf ( buf, "info face=%s", face )
+    < 1 )
       return false;
-      
-    // Read first page... or in our case, the only page.
-  in.getline ( buf, BufSize );
-  
-  char textureFname[ BufSize ];
-  int page;
-  
-  if ( sscanf ( buf, "page id=%d file=\"%[^\"]s\"", &page, textureFname )
-    < 2 )
-      return false;
-  mTextureFname = textureFname;
   
   in.getline ( buf, BufSize );
   
@@ -160,52 +140,15 @@ bool font::parseGlyph ( std::ifstream& in )
     < 10 )
       return false;
 
+    // Cheesy way to approximate line height since this SDF format doesn't
+    // retain it.
+  if ( cur.mSize[ 1 ] > mLineHeight )
+    mLineHeight = cur.mSize[ 1 ];
+
     // By-value copy is expensive... but simple.
     // TODO: Profile this to see if it's a hotspot.
   mGlyphs[ cur.mId ] = cur;
  
-  return true;
-}
-
-/////////////////////////////////////////////////////////////////////
-
-bool font::parseKerns ( std::ifstream& in )
-{
-  bool retVal = true;
-
-  size_t const BufSize = 256;
-  char buf[ BufSize ];
-
-  in.getline ( buf, BufSize );
-  
-  if ( sscanf ( buf, "kernings count=%ld", &mNumKerns ) 
-    < 1 )
-      return false;
-  
-  for ( size_t num = 0; num < mNumKerns; ++num )
-    retVal &= parseKern ( in );
-  
-  return retVal;
-}
-
-/////////////////////////////////////////////////////////////////////
-
-bool font::parseKern ( std::ifstream& in )
-{
-  size_t const BufSize = 256;
-  char buf[ BufSize ];
-
-  in.getline ( buf, BufSize );
-
-  Kerns::key_type key;
-  float val = 0.0f;
-
-  if ( sscanf ( buf, "kerning first=%hd second=%hd amount=%f", &key.first, &key.second, &val )
-    < 3 )
-      return false;
-  
-  mKerns[ key ] = val;
-  
   return true;
 }
 
@@ -219,18 +162,6 @@ font::glyph* font::getGlyph ( Id id )
   Glyphs::iterator found = mGlyphs.find ( id );
   if ( found != mGlyphs.end () )
     return &found->second;
-  else
-    return 0;
-}
-
-/////////////////////////////////////////////////////////////////////
-
-float font::getKern ( Id first, Id second )
-{
-  Kerns::iterator found = mKerns.find ( Kerns::key_type ( first, second ) );
-  
-  if ( found != mKerns.end () )
-    return found->second;
   else
     return 0;
 }

@@ -90,7 +90,7 @@ void text::updateTexture ()
   
   assert ( pImg );
   
-  assert ( pImg->getFormat () == img::base::Alpha8 );
+  assert ( pImg->getFormat () == img::base::Gray8 );
 }
 
 /////////////////////////////////////////////////////////////////////

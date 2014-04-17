@@ -267,6 +267,9 @@
 		1CDD434B185EDBD2009284F9 /* uiscene.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4177185BCAF0009284F9 /* uiscene.h */; };
 		1CDD434D185EDBD2009284F9 /* uiwheel.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4179185BCAF0009284F9 /* uiwheel.h */; };
 		1CDD434F185EDBD2009284F9 /* uiwheelcore.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD417B185BCAF0009284F9 /* uiwheelcore.h */; };
+		1CE0A42818FFAC47005F3FA4 /* fontfont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD4051185BCAEF009284F9 /* fontfont.cpp */; };
+		1CE0A43018FFB5D4005F3FA4 /* fontfontfactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CE0A42E18FFB5D4005F3FA4 /* fontfontfactory.cpp */; };
+		1CE0A43218FFBF52005F3FA4 /* fontfontfactory.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CE0A42F18FFB5D4005F3FA4 /* fontfontfactory.h */; };
 		1CF4DB8F185EDD79007331F8 /* sceneattr.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD412C185BCAEF009284F9 /* sceneattr.h */; };
 /* End PBXBuildFile section */
 
@@ -323,6 +326,7 @@
 			dstSubfolderSpec = 16;
 			files = (
 				1CB6BD8F18D8DBE700DC3B4B /* pniosxplatform.h in CopyFiles */,
+				1CE0A43218FFBF52005F3FA4 /* fontfontfactory.h in CopyFiles */,
 				1C6B1FEF18B69BEC0053277E /* pnidbg.h in CopyFiles */,
 				1C2BB57B18A9B75F00938C31 /* sceneprogfactory.h in CopyFiles */,
 				1CBBFD6718AE9AD80042CD9D /* scenerendersink.h in CopyFiles */,
@@ -739,6 +743,8 @@
 		1CDD4179185BCAF0009284F9 /* uiwheel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uiwheel.h; sourceTree = "<group>"; };
 		1CDD417A185BCAF0009284F9 /* uiwheelcore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = uiwheelcore.cpp; sourceTree = "<group>"; };
 		1CDD417B185BCAF0009284F9 /* uiwheelcore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uiwheelcore.h; sourceTree = "<group>"; };
+		1CE0A42E18FFB5D4005F3FA4 /* fontfontfactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fontfontfactory.cpp; sourceTree = "<group>"; };
+		1CE0A42F18FFB5D4005F3FA4 /* fontfontfactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fontfontfactory.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -896,6 +902,8 @@
 		1CDD4048185BCAEF009284F9 /* font */ = {
 			isa = PBXGroup;
 			children = (
+				1CE0A42E18FFB5D4005F3FA4 /* fontfontfactory.cpp */,
+				1CE0A42F18FFB5D4005F3FA4 /* fontfontfactory.h */,
 				1CDD4051185BCAEF009284F9 /* fontfont.cpp */,
 				1CDD4052185BCAEF009284F9 /* fontfont.h */,
 			);
@@ -1400,6 +1408,7 @@
 				1CDD41F6185BCAF0009284F9 /* scenelightpath.cpp in Sources */,
 				1CDD417D185BCAF0009284F9 /* animbgmusicfader.cpp in Sources */,
 				1CDD41BB185BCAF0009284F9 /* pnimath.cpp in Sources */,
+				1CE0A43018FFB5D4005F3FA4 /* fontfontfactory.cpp in Sources */,
 				1CDD41D4185BCAF0009284F9 /* imgtarga.cpp in Sources */,
 				1CDD4182185BCAF0009284F9 /* animscenenoderotaxis.cpp in Sources */,
 				1CDD41EB185BCAF0009284F9 /* scenenode.cpp in Sources */,
@@ -1407,6 +1416,7 @@
 				1CDD41D2185BCAF0009284F9 /* imgbase.cpp in Sources */,
 				1CDD41E2185BCAF0009284F9 /* sceneddogllist.cpp in Sources */,
 				1CDD41FE185BCAF0009284F9 /* sndengine.cpp in Sources */,
+				1CE0A42818FFAC47005F3FA4 /* fontfont.cpp in Sources */,
 				1CDD4186185BCAF0009284F9 /* animtrans.cpp in Sources */,
 				1CAD9723186D72D500C547E1 /* sceneprog.cpp in Sources */,
 				1CDD4188185BCAF0009284F9 /* animuibasescale.cpp in Sources */,

@@ -24,6 +24,9 @@
 ## 
 ## To build, type the following:
 ## 	make sdfont
+## 
+## Targets:
+## 
 
 help:
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
@@ -40,8 +43,20 @@ LDLIBS += -lfreetype
 
 LD := $(CXX)
 
+sdfont: ## Make the sdfont executable
 $(TARGET): $(DEPS)
 	$(CXX) $(LDFLAGS) $(DEPS) $(LDLIBS) -o $@
 
+clean:  ## Clean all executables and intermediate files
 clean:
 	rm $(DEPS) $(TARGET)
+
+gen:    ## This target will create an 8-bit grayscale image for
+        ## the ttf variable provided on the command line.  E.g:
+        ##     make gen ttf=automati.ttf
+gen: sdf=$(ttf)_sdf.png
+gen: out=$(ttf)_sdf_g8.png
+gen:
+	@echo generating file $(out)
+	$(TARGET) $(ttf)
+	gm convert $(sdf) -colorspace GRAY +matte $(out)
