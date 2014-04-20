@@ -11,6 +11,7 @@
 
 #include <string>
 #include "scenegeom.h"
+#include "sceneuniform.h"
 
 /////////////////////////////////////////////////////////////////////
 
@@ -75,6 +76,11 @@ enum CommmonUniformIds : uint16_t
   UniformTex13,
   UniformTex14,
   UniformTex15,
+  
+  UniformTextMin,
+  UniformTextMax,
+  UniformTextColor,
+  
   CommonUniformIdsCount
 };
 
@@ -103,10 +109,32 @@ char const* const CommonUniformNames[]= {
   "u_tex12",
   "u_tex13",
   "u_tex14",
-  "u_tex15"
+  "u_tex15",
+  
+  "u_textMin",
+  "u_textMax",
+  "u_textColor"
 };
 
 static_assert ( ( sizeof ( CommonUniformNames ) / sizeof ( CommonUniformNames[ 0 ] ) ) == CommonUniformIdsCount, "foo" );
+
+  // Whoa... this does a hard cast... can lead to buffer overruns...
+  // don't do careless stuff with this.
+
+  /// Get uniform storage as specified type.  Beware this includes a hard
+  /// cast that could cause overruns, etc.
+  /// There is /some/ protection for buffer overruns now, but still exercise care.
+template< class Type >
+Type&
+commonUniformOp ( uniform* pUniform, CommmonUniformIds id )
+{
+  assert ( pUniform->uniformOp ( CommonUniformNames[ id ] ).getStorageSize() == sizeof ( Type ) );
+
+  float* fp = pUniform->uniformOp ( CommonUniformNames[ id ] ).getFloats();
+  Type& ret = * ( Type* ) ( fp );
+  return ret;
+}
+
 
 /////////////////////////////////////////////////////////////////////
 

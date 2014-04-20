@@ -25,66 +25,36 @@ class text :
     public geom
 {
     public:
-        text();
+        //text();
         //virtual ~text();
         //text(text const& rhs);
         //text& operator=(text const& rhs);
         //bool operator==(text const& rhs) const;
       
-      void setFont ( font::font* val );
+      void setFont ( font::font* val ) { mFont = val;  doLayout(); }
       font::font* getFont () const { return mFont.get (); }
-      
-      typedef font::font::Id Id;
-      
-      struct layout
-      {
-        layout () :
-          mId ( 0 ),
-          mScale ( 1.0f, 1.0f ),
-          mRot ( 0.0f ),
-          mColor ( 1.0f, 1.0f, 1.0f, 1.0f )
-            {}
-      
-        Id mId;
-      
-        pni::math::vec3 mPos;
-        pni::math::vec2 mScale;
-        float mRot;               // Rot around y axis.
-        pni::math::vec4 mColor;
-      };
-      
-      typedef std::vector< layout > Layouts;
-      
-      Layouts& getPosVec () { return mPosVec; }
-      Layouts const& getPosVec () const { return mPosVec; }
-      Layouts& posVecOp () { setDirty (); return mPosVec; }
-      
-      void update ();
-      
+  
+      void setText ( std::string const& txt ) { mTxt = txt; doLayout(); }
+      std::string const& getText () const { return mTxt; }
+  
+
     protected:
-      typedef pni::pstd::autoRef< font::font > FontRef;
-      
-      
+      using Id = font::font::Id;
+      using FontRef = pni::pstd::autoRef< font::font >;
+  
       FontRef mFont;
-      Layouts mPosVec;
-      bool mDirty;
-      
-      void setDirty ( bool val = true );
-      void doLayout ();
-      void updateTexture ();
-      
-      
-      void collectRefs ( Refs& refs )
-          {
-            geom::collectRefs ( refs );
-            
-            refs.push_back ( mFont.get () );
-          }
+      std::string mTxt;
+  
+      virtual void doLayout ();
+  
+    /// @group interface from refCount
+	public:
+      virtual void collectRefs ( Refs& refs ) const;
       
     private:
         
 
-	// interface from geom
+    // @group interface from geom
 	public:
 		
 	protected:

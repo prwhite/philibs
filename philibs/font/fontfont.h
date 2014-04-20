@@ -11,6 +11,8 @@
 
 #include "pnirefcount.h"
 
+#include "imgbase.h"
+
 #include "pnivec2.h"
 #include "pnivec4.h"
 
@@ -34,13 +36,22 @@ class font :
     //font& operator= ( font const& rhs );
     //bool operator== ( font const& rhs ) const;
     
-    typedef unsigned short Id;
+    using Id = unsigned short;
+    using ImgRef = pni::pstd::autoRef<img::base>;
       
     virtual bool load ( std::string const& fname, std::string const& textureFname );
 
     std::string const& getTextureFname () const { return mTextureFname; }
+  
+    void setImage ( img::base* pImg ) { mImg = pImg; }
+    img::base* getImage () const { return mImg.get(); }
 
-    float mLineHeight;
+    float getLineHeight () const { return mLineHeight; }
+    float getMaxCharHeight () const { return mMaxCharHeight; }
+  
+    float getBase () const { return mBase; }
+    pni::math::vec4 const& getPadding () const { return mPadding; }
+
     struct glyph
     {
       Id mId = 0;
@@ -49,6 +60,8 @@ class font :
       pni::math::vec2 mSize;
       pni::math::vec2 mOffset;
       pni::math::vec2 mAdvance;
+      pni::math::vec2 mUv00;
+      pni::math::vec2 mUv01;
     };
     
     glyph* getGlyph ( Id id );
@@ -59,13 +72,19 @@ class font :
     bool parseCommon ( std::ifstream& in );
     bool parseGlyphs ( std::ifstream& in );
     bool parseGlyph ( std::ifstream& in );
+    bool loadImg ();
 
     typedef std::map< Id, glyph > Glyphs;
 
     std::string mTextureFname;
     Glyphs mGlyphs;
-
-    size_t mNumChars;
+    ImgRef mImg;
+    pni::math::vec2 mImgSize;
+    float mMaxCharHeight = 0.0f;
+    size_t mNumChars = 0;
+    float mBase = 0.0f;
+    float mLineHeight = 0.0f;
+    pni::math::vec4 mPadding; // T, R, B, L ???
 
   private:
 
@@ -74,10 +93,7 @@ class font :
   public:
 
   protected:
-		void collectRefs ( Refs& refs ) const
-		    {
-		    
-		    }
+		virtual void collectRefs ( Refs& refs ) const;
 
 };
 

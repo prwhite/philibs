@@ -48,9 +48,9 @@ fontFactory& fontFactory::getInstance ()
   return *pFactory;
 }
 
-font* fontFactory::load ( std::string const& fname, std::string const& textureFname )
+font* fontFactory::loadSync ( std::string const& fname, std::string const& textureFname )
 {
-  std::lock_guard<std::mutex> guard ( mFontMapMutex );
+  std::lock_guard<std::recursive_mutex> guard ( mFontMapMutex );
 
   auto found = mFontMap.find ( fname );
   
@@ -85,12 +85,12 @@ font* fontFactory::load ( std::string const& fname, std::string const& textureFn
 
 fontFactory::FontFuture fontFactory::loadAsync ( std::string const& fname, std::string const& textureFname )
 {
-  return mThreadPool.enqueue([&]() { return load(fname, textureFname); } );
+  return mThreadPool.enqueue([&]() { return loadSync(fname, textureFname); } );
 }
   
 void fontFactory::unload ( std::string const& fname )
 {
-  std::lock_guard<std::mutex> guard ( mFontMapMutex );
+  std::lock_guard<std::recursive_mutex> guard ( mFontMapMutex );
   mFontMap.erase(fname);
 }
 

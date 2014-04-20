@@ -102,6 +102,8 @@ class PNIMATHAPI vec4
 
 		void projectOnto ( const ThisType& target );
 		
+    void copyToArray ( ValueType* dst ) const;
+  
 	protected:
 		ValueType vec[ 4 ];
 				

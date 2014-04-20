@@ -1,0 +1,25 @@
+font.name=Helvetica Neue
+font.size=48
+font.bold=false
+font.italic=false
+
+pad.top=4
+pad.right=4
+pad.bottom=4
+pad.left=4
+pad.advance.x=-8
+pad.advance.y=-8
+
+glyph.native.rendering=false
+glyph.page.width=512
+glyph.page.height=512
+glyph.text=ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz\n1234567890\n"!`?'.,;:()[]{}<>|/@\^$-%+=#_&~*Áª£¢°¤¦¥»¼ÚÛÜİŞßà¡áâÑĞ±­ÏÎ·ã«¨ä ÿ´ç¬ö¿¯¹¸ÒÓÔÕÇÈŒ§ê¶ëì©ıúîÆïûğÂñÉò¾®½üÅş‚Ã×õº÷÷µø²ù³ÀÖ
+
+effect.class=com.badlogic.gdx.tools.hiero.unicodefont.effects.ColorEffect
+effect.Color=ffffff
+
+effect.class=com.badlogic.gdx.tools.hiero.unicodefont.effects.DistanceFieldEffect
+effect.Color=ffffff
+effect.Scale=8
+effect.Spread=6.0
+

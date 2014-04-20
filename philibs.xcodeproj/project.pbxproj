@@ -31,16 +31,10 @@
 		1CBBFD6718AE9AD80042CD9D /* scenerendersink.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CCD165F189A3F23001F8DF1 /* scenerendersink.h */; };
 		1CC482D11888D0CD0029408D /* pnisearchpath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC482CF1888D0CD0029408D /* pnisearchpath.cpp */; };
 		1CC482D21888E7D30029408D /* pnisearchpath.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CC482D01888D0CD0029408D /* pnisearchpath.h */; };
-		1CC482D7188913820029408D /* imgfactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC482D3188913820029408D /* imgfactory.cpp */; };
-		1CC482D91889139C0029408D /* imgfactory.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CC482D4188913820029408D /* imgfactory.h */; };
 		1CC482DC1889E59C0029408D /* ThreadPool.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CC482DB1889E57A0029408D /* ThreadPool.h */; };
 		1CC482DE1889E6DF0029408D /* pnithreadpool.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CC482DD1889E5ED0029408D /* pnithreadpool.h */; };
-		1CC482E1188A07C90029408D /* imgcoreimage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1CC482E0188A07C90029408D /* imgcoreimage.mm */; };
-		1CC482E2188A093B0029408D /* imgcoreimage.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CC482DF188A07C90029408D /* imgcoreimage.h */; };
 		1CC482E8188A3FB00029408D /* sceneloaderfactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC482E6188A3FB00029408D /* sceneloaderfactory.cpp */; };
 		1CC482E9188A68BF0029408D /* sceneloaderfactory.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CC482E7188A3FB00029408D /* sceneloaderfactory.h */; };
-		1CC482EC188B916A0029408D /* imgpvr.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1CC482EB188B916A0029408D /* imgpvr.mm */; };
-		1CC482ED188B91940029408D /* imgpvr.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CC482EA188B916A0029408D /* imgpvr.h */; };
 		1CC482F4188C87020029408D /* sceneloaderassimp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC482F2188C87020029408D /* sceneloaderassimp.cpp */; };
 		1CC482F5188C87170029408D /* sceneloaderassimp.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CC482F3188C87020029408D /* sceneloaderassimp.h */; };
 		1CCD1660189A3F23001F8DF1 /* scenerendersink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CCD165E189A3F23001F8DF1 /* scenerendersink.cpp */; };
@@ -94,10 +88,6 @@
 		1CDD41CC185BCAF0009284F9 /* pnitimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD40F3185BCAEF009284F9 /* pnitimer.cpp */; };
 		1CDD41CE185BCAF0009284F9 /* pnitimerplatform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD40F6185BCAEF009284F9 /* pnitimerplatform.cpp */; };
 		1CDD41CF185BCAF0009284F9 /* pnitimerprof.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD40F7185BCAEF009284F9 /* pnitimerprof.cpp */; };
-		1CDD41D1185BCAF0009284F9 /* imgalgo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD40FF185BCAEF009284F9 /* imgalgo.cpp */; };
-		1CDD41D2185BCAF0009284F9 /* imgbase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD4101185BCAEF009284F9 /* imgbase.cpp */; };
-		1CDD41D3185BCAF0009284F9 /* imgdds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD4103185BCAEF009284F9 /* imgdds.cpp */; };
-		1CDD41D4185BCAF0009284F9 /* imgtarga.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD4105185BCAEF009284F9 /* imgtarga.cpp */; };
 		1CDD41D5185BCAF0009284F9 /* sceneaseparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD4108185BCAEF009284F9 /* sceneaseparser.cpp */; };
 		1CDD41D6185BCAF0009284F9 /* sceneloaderase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD410A185BCAEF009284F9 /* sceneloaderase.cpp */; };
 		1CDD41D7185BCAF0009284F9 /* sceneloaderbase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD410C185BCAEF009284F9 /* sceneloaderbase.cpp */; };
@@ -207,10 +197,6 @@
 		1CDD42D0185EDBD1009284F9 /* pnitimer.cpp in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40F3185BCAEF009284F9 /* pnitimer.cpp */; };
 		1CDD42D1185EDBD1009284F9 /* pnitimer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40F4185BCAEF009284F9 /* pnitimer.h */; };
 		1CDD42D5185EDBD1009284F9 /* pnitimerprof.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD40F8185BCAEF009284F9 /* pnitimerprof.h */; };
-		1CDD42DA185EDBD1009284F9 /* imgalgo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4100185BCAEF009284F9 /* imgalgo.h */; };
-		1CDD42DC185EDBD1009284F9 /* imgbase.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4102185BCAEF009284F9 /* imgbase.h */; };
-		1CDD42DE185EDBD1009284F9 /* imgdds.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4104185BCAEF009284F9 /* imgdds.h */; };
-		1CDD42E0185EDBD1009284F9 /* imgtarga.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4106185BCAEF009284F9 /* imgtarga.h */; };
 		1CDD42E2185EDBD1009284F9 /* sceneaseparser.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4109185BCAEF009284F9 /* sceneaseparser.h */; };
 		1CDD42E4185EDBD1009284F9 /* sceneloaderase.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD410B185BCAEF009284F9 /* sceneloaderase.h */; };
 		1CDD42E6185EDBD1009284F9 /* sceneloaderbase.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD410D185BCAEF009284F9 /* sceneloaderbase.h */; };
@@ -270,6 +256,22 @@
 		1CE0A42818FFAC47005F3FA4 /* fontfont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD4051185BCAEF009284F9 /* fontfont.cpp */; };
 		1CE0A43018FFB5D4005F3FA4 /* fontfontfactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CE0A42E18FFB5D4005F3FA4 /* fontfontfactory.cpp */; };
 		1CE0A43218FFBF52005F3FA4 /* fontfontfactory.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CE0A42F18FFB5D4005F3FA4 /* fontfontfactory.h */; };
+		1CE0A4401900A7EB005F3FA4 /* scenetextfactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CE0A43E1900A7EB005F3FA4 /* scenetextfactory.cpp */; };
+		1CE0A44F1900A98E005F3FA4 /* imgdds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CE0A4411900A98E005F3FA4 /* imgdds.cpp */; };
+		1CE0A4501900A98E005F3FA4 /* imgcoreimage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1CE0A4421900A98E005F3FA4 /* imgcoreimage.mm */; };
+		1CE0A4511900A98E005F3FA4 /* imgfactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CE0A4431900A98E005F3FA4 /* imgfactory.cpp */; };
+		1CE0A4521900A98E005F3FA4 /* imgbase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CE0A4451900A98E005F3FA4 /* imgbase.cpp */; };
+		1CE0A4531900A98E005F3FA4 /* imgpvr.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1CE0A4491900A98E005F3FA4 /* imgpvr.mm */; };
+		1CE0A4541900A98E005F3FA4 /* imgtarga.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CE0A44D1900A98E005F3FA4 /* imgtarga.cpp */; };
+		1CE0A4551900A98E005F3FA4 /* imgalgo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CE0A44E1900A98E005F3FA4 /* imgalgo.cpp */; };
+		1CE0A4561900A9BB005F3FA4 /* imgfactory.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CE0A4441900A98E005F3FA4 /* imgfactory.h */; };
+		1CE0A4571900A9BB005F3FA4 /* imgbase.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CE0A4461900A98E005F3FA4 /* imgbase.h */; };
+		1CE0A4581900A9BB005F3FA4 /* imgcoreimage.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CE0A4471900A98E005F3FA4 /* imgcoreimage.h */; };
+		1CE0A4591900A9BB005F3FA4 /* imgpvr.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CE0A4481900A98E005F3FA4 /* imgpvr.h */; };
+		1CE0A45A1900A9BB005F3FA4 /* imgtarga.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CE0A44A1900A98E005F3FA4 /* imgtarga.h */; };
+		1CE0A45B1900A9BB005F3FA4 /* imgalgo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CE0A44B1900A98E005F3FA4 /* imgalgo.h */; };
+		1CE0A45C1900A9BB005F3FA4 /* imgdds.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CE0A44C1900A98E005F3FA4 /* imgdds.h */; };
+		1CE0A45D1900F38F005F3FA4 /* scenetextfactory.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CE0A43F1900A7EB005F3FA4 /* scenetextfactory.h */; };
 		1CF4DB8F185EDD79007331F8 /* sceneattr.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD412C185BCAEF009284F9 /* sceneattr.h */; };
 /* End PBXBuildFile section */
 
@@ -326,6 +328,13 @@
 			dstSubfolderSpec = 16;
 			files = (
 				1CB6BD8F18D8DBE700DC3B4B /* pniosxplatform.h in CopyFiles */,
+				1CE0A4561900A9BB005F3FA4 /* imgfactory.h in CopyFiles */,
+				1CE0A4571900A9BB005F3FA4 /* imgbase.h in CopyFiles */,
+				1CE0A4581900A9BB005F3FA4 /* imgcoreimage.h in CopyFiles */,
+				1CE0A4591900A9BB005F3FA4 /* imgpvr.h in CopyFiles */,
+				1CE0A45A1900A9BB005F3FA4 /* imgtarga.h in CopyFiles */,
+				1CE0A45B1900A9BB005F3FA4 /* imgalgo.h in CopyFiles */,
+				1CE0A45C1900A9BB005F3FA4 /* imgdds.h in CopyFiles */,
 				1CE0A43218FFBF52005F3FA4 /* fontfontfactory.h in CopyFiles */,
 				1C6B1FEF18B69BEC0053277E /* pnidbg.h in CopyFiles */,
 				1C2BB57B18A9B75F00938C31 /* sceneprogfactory.h in CopyFiles */,
@@ -334,12 +343,10 @@
 				1C2BB57918A9B75F00938C31 /* scenefbo.h in CopyFiles */,
 				1C2BB57A18A9B75F00938C31 /* sceneframebuffer.h in CopyFiles */,
 				1CC482F5188C87170029408D /* sceneloaderassimp.h in CopyFiles */,
-				1CC482ED188B91940029408D /* imgpvr.h in CopyFiles */,
-				1CC482E2188A093B0029408D /* imgcoreimage.h in CopyFiles */,
+				1CE0A45D1900F38F005F3FA4 /* scenetextfactory.h in CopyFiles */,
 				1CC482DE1889E6DF0029408D /* pnithreadpool.h in CopyFiles */,
 				1CC482DC1889E59C0029408D /* ThreadPool.h in CopyFiles */,
 				1CC482D21888E7D30029408D /* pnisearchpath.h in CopyFiles */,
-				1CC482D91889139C0029408D /* imgfactory.h in CopyFiles */,
 				1C4BD2831885FD8F000781B0 /* scenecommon.h in CopyFiles */,
 				1C4BD27D18810EE6000781B0 /* sceneuniform.h in CopyFiles */,
 				1C4BD27E18810EE6000781B0 /* sceneprog.h in CopyFiles */,
@@ -404,10 +411,6 @@
 				1CDD42D0185EDBD1009284F9 /* pnitimer.cpp in CopyFiles */,
 				1CDD42D1185EDBD1009284F9 /* pnitimer.h in CopyFiles */,
 				1CDD42D5185EDBD1009284F9 /* pnitimerprof.h in CopyFiles */,
-				1CDD42DA185EDBD1009284F9 /* imgalgo.h in CopyFiles */,
-				1CDD42DC185EDBD1009284F9 /* imgbase.h in CopyFiles */,
-				1CDD42DE185EDBD1009284F9 /* imgdds.h in CopyFiles */,
-				1CDD42E0185EDBD1009284F9 /* imgtarga.h in CopyFiles */,
 				1CDD42E2185EDBD1009284F9 /* sceneaseparser.h in CopyFiles */,
 				1CDD42E4185EDBD1009284F9 /* sceneloaderase.h in CopyFiles */,
 				1CDD42E6185EDBD1009284F9 /* sceneloaderbase.h in CopyFiles */,
@@ -496,16 +499,10 @@
 		1CB6BD8918D8DBE500DC3B4B /* pniosxplatform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pniosxplatform.h; sourceTree = "<group>"; };
 		1CC482CF1888D0CD0029408D /* pnisearchpath.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pnisearchpath.cpp; sourceTree = "<group>"; };
 		1CC482D01888D0CD0029408D /* pnisearchpath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pnisearchpath.h; sourceTree = "<group>"; };
-		1CC482D3188913820029408D /* imgfactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgfactory.cpp; sourceTree = "<group>"; };
-		1CC482D4188913820029408D /* imgfactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imgfactory.h; sourceTree = "<group>"; };
 		1CC482DB1889E57A0029408D /* ThreadPool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ThreadPool.h; sourceTree = "<group>"; };
 		1CC482DD1889E5ED0029408D /* pnithreadpool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pnithreadpool.h; sourceTree = "<group>"; };
-		1CC482DF188A07C90029408D /* imgcoreimage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imgcoreimage.h; sourceTree = "<group>"; };
-		1CC482E0188A07C90029408D /* imgcoreimage.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = imgcoreimage.mm; sourceTree = "<group>"; };
 		1CC482E6188A3FB00029408D /* sceneloaderfactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneloaderfactory.cpp; sourceTree = "<group>"; };
 		1CC482E7188A3FB00029408D /* sceneloaderfactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneloaderfactory.h; sourceTree = "<group>"; };
-		1CC482EA188B916A0029408D /* imgpvr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imgpvr.h; sourceTree = "<group>"; };
-		1CC482EB188B916A0029408D /* imgpvr.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = imgpvr.mm; sourceTree = "<group>"; };
 		1CC482F0188C82380029408D /* assimp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = assimp.a; path = 3p/assimp/lib/ios/assimp.a; sourceTree = "<group>"; };
 		1CC482F2188C87020029408D /* sceneloaderassimp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneloaderassimp.cpp; sourceTree = "<group>"; };
 		1CC482F3188C87020029408D /* sceneloaderassimp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneloaderassimp.h; sourceTree = "<group>"; };
@@ -625,14 +622,6 @@
 		1CDD40F6185BCAEF009284F9 /* pnitimerplatform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pnitimerplatform.cpp; sourceTree = "<group>"; };
 		1CDD40F7185BCAEF009284F9 /* pnitimerprof.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pnitimerprof.cpp; sourceTree = "<group>"; };
 		1CDD40F8185BCAEF009284F9 /* pnitimerprof.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pnitimerprof.h; sourceTree = "<group>"; };
-		1CDD40FF185BCAEF009284F9 /* imgalgo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgalgo.cpp; sourceTree = "<group>"; };
-		1CDD4100185BCAEF009284F9 /* imgalgo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imgalgo.h; sourceTree = "<group>"; };
-		1CDD4101185BCAEF009284F9 /* imgbase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgbase.cpp; sourceTree = "<group>"; };
-		1CDD4102185BCAEF009284F9 /* imgbase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imgbase.h; sourceTree = "<group>"; };
-		1CDD4103185BCAEF009284F9 /* imgdds.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgdds.cpp; sourceTree = "<group>"; };
-		1CDD4104185BCAEF009284F9 /* imgdds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imgdds.h; sourceTree = "<group>"; };
-		1CDD4105185BCAEF009284F9 /* imgtarga.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgtarga.cpp; sourceTree = "<group>"; };
-		1CDD4106185BCAEF009284F9 /* imgtarga.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imgtarga.h; sourceTree = "<group>"; };
 		1CDD4108185BCAEF009284F9 /* sceneaseparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneaseparser.cpp; sourceTree = "<group>"; };
 		1CDD4109185BCAEF009284F9 /* sceneaseparser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneaseparser.h; sourceTree = "<group>"; };
 		1CDD410A185BCAEF009284F9 /* sceneloaderase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = sceneloaderase.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
@@ -745,6 +734,22 @@
 		1CDD417B185BCAF0009284F9 /* uiwheelcore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uiwheelcore.h; sourceTree = "<group>"; };
 		1CE0A42E18FFB5D4005F3FA4 /* fontfontfactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fontfontfactory.cpp; sourceTree = "<group>"; };
 		1CE0A42F18FFB5D4005F3FA4 /* fontfontfactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fontfontfactory.h; sourceTree = "<group>"; };
+		1CE0A43E1900A7EB005F3FA4 /* scenetextfactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scenetextfactory.cpp; sourceTree = "<group>"; };
+		1CE0A43F1900A7EB005F3FA4 /* scenetextfactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenetextfactory.h; sourceTree = "<group>"; };
+		1CE0A4411900A98E005F3FA4 /* imgdds.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = imgdds.cpp; path = philibs/img/imgdds.cpp; sourceTree = SOURCE_ROOT; };
+		1CE0A4421900A98E005F3FA4 /* imgcoreimage.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = imgcoreimage.mm; path = philibs/img/imgcoreimage.mm; sourceTree = SOURCE_ROOT; };
+		1CE0A4431900A98E005F3FA4 /* imgfactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = imgfactory.cpp; path = philibs/img/imgfactory.cpp; sourceTree = SOURCE_ROOT; };
+		1CE0A4441900A98E005F3FA4 /* imgfactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = imgfactory.h; path = philibs/img/imgfactory.h; sourceTree = SOURCE_ROOT; };
+		1CE0A4451900A98E005F3FA4 /* imgbase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = imgbase.cpp; path = philibs/img/imgbase.cpp; sourceTree = SOURCE_ROOT; };
+		1CE0A4461900A98E005F3FA4 /* imgbase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = imgbase.h; path = philibs/img/imgbase.h; sourceTree = SOURCE_ROOT; };
+		1CE0A4471900A98E005F3FA4 /* imgcoreimage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = imgcoreimage.h; path = philibs/img/imgcoreimage.h; sourceTree = SOURCE_ROOT; };
+		1CE0A4481900A98E005F3FA4 /* imgpvr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = imgpvr.h; path = philibs/img/imgpvr.h; sourceTree = SOURCE_ROOT; };
+		1CE0A4491900A98E005F3FA4 /* imgpvr.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = imgpvr.mm; path = philibs/img/imgpvr.mm; sourceTree = SOURCE_ROOT; };
+		1CE0A44A1900A98E005F3FA4 /* imgtarga.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = imgtarga.h; path = philibs/img/imgtarga.h; sourceTree = SOURCE_ROOT; };
+		1CE0A44B1900A98E005F3FA4 /* imgalgo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = imgalgo.h; path = philibs/img/imgalgo.h; sourceTree = SOURCE_ROOT; };
+		1CE0A44C1900A98E005F3FA4 /* imgdds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = imgdds.h; path = philibs/img/imgdds.h; sourceTree = SOURCE_ROOT; };
+		1CE0A44D1900A98E005F3FA4 /* imgtarga.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = imgtarga.cpp; path = philibs/img/imgtarga.cpp; sourceTree = SOURCE_ROOT; };
+		1CE0A44E1900A98E005F3FA4 /* imgalgo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = imgalgo.cpp; path = philibs/img/imgalgo.cpp; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -820,6 +825,7 @@
 		1CDD3FFB185BC965009284F9 /* philibs */ = {
 			isa = PBXGroup;
 			children = (
+				1CDD40FE185BCAEF009284F9 /* img */,
 				1CDD4027185BCAEF009284F9 /* anim */,
 				1CDD4048185BCAEF009284F9 /* font */,
 				1CDD4056185BCAEF009284F9 /* pnimath */,
@@ -1022,7 +1028,6 @@
 		1CDD40FD185BCAEF009284F9 /* scene */ = {
 			isa = PBXGroup;
 			children = (
-				1CDD40FE185BCAEF009284F9 /* img */,
 				1CDD4107185BCAEF009284F9 /* loaders */,
 				1CDD410E185BCAEF009284F9 /* nodes */,
 				1CDD4147185BCAF0009284F9 /* states */,
@@ -1063,6 +1068,8 @@
 				1CDD4144185BCAF0009284F9 /* scenestatedd.h */,
 				1CDD4145185BCAF0009284F9 /* scenetypes.cpp */,
 				1CDD4146185BCAF0009284F9 /* scenetypes.h */,
+				1CE0A43E1900A7EB005F3FA4 /* scenetextfactory.cpp */,
+				1CE0A43F1900A7EB005F3FA4 /* scenetextfactory.h */,
 			);
 			path = scene;
 			sourceTree = "<group>";
@@ -1070,22 +1077,23 @@
 		1CDD40FE185BCAEF009284F9 /* img */ = {
 			isa = PBXGroup;
 			children = (
-				1CC482EA188B916A0029408D /* imgpvr.h */,
-				1CC482EB188B916A0029408D /* imgpvr.mm */,
-				1CC482DF188A07C90029408D /* imgcoreimage.h */,
-				1CC482E0188A07C90029408D /* imgcoreimage.mm */,
-				1CC482D3188913820029408D /* imgfactory.cpp */,
-				1CC482D4188913820029408D /* imgfactory.h */,
-				1CDD40FF185BCAEF009284F9 /* imgalgo.cpp */,
-				1CDD4100185BCAEF009284F9 /* imgalgo.h */,
-				1CDD4101185BCAEF009284F9 /* imgbase.cpp */,
-				1CDD4102185BCAEF009284F9 /* imgbase.h */,
-				1CDD4103185BCAEF009284F9 /* imgdds.cpp */,
-				1CDD4104185BCAEF009284F9 /* imgdds.h */,
-				1CDD4105185BCAEF009284F9 /* imgtarga.cpp */,
-				1CDD4106185BCAEF009284F9 /* imgtarga.h */,
+				1CE0A4411900A98E005F3FA4 /* imgdds.cpp */,
+				1CE0A4421900A98E005F3FA4 /* imgcoreimage.mm */,
+				1CE0A4431900A98E005F3FA4 /* imgfactory.cpp */,
+				1CE0A4441900A98E005F3FA4 /* imgfactory.h */,
+				1CE0A4451900A98E005F3FA4 /* imgbase.cpp */,
+				1CE0A4461900A98E005F3FA4 /* imgbase.h */,
+				1CE0A4471900A98E005F3FA4 /* imgcoreimage.h */,
+				1CE0A4481900A98E005F3FA4 /* imgpvr.h */,
+				1CE0A4491900A98E005F3FA4 /* imgpvr.mm */,
+				1CE0A44A1900A98E005F3FA4 /* imgtarga.h */,
+				1CE0A44B1900A98E005F3FA4 /* imgalgo.h */,
+				1CE0A44C1900A98E005F3FA4 /* imgdds.h */,
+				1CE0A44D1900A98E005F3FA4 /* imgtarga.cpp */,
+				1CE0A44E1900A98E005F3FA4 /* imgalgo.cpp */,
 			);
-			path = img;
+			name = img;
+			path = scene/img;
 			sourceTree = "<group>";
 		};
 		1CDD4107185BCAEF009284F9 /* loaders */ = {
@@ -1362,8 +1370,10 @@
 				1CDD417E185BCAF0009284F9 /* animgroup.cpp in Sources */,
 				1CDD41FF185BCAF0009284F9 /* SoundEngine.cpp in Sources */,
 				1CDD41D6185BCAF0009284F9 /* sceneloaderase.cpp in Sources */,
+				1CE0A4521900A98E005F3FA4 /* imgbase.cpp in Sources */,
 				1CDD4204185BCAF0009284F9 /* uiframe.cpp in Sources */,
 				1C38744E1894CF0D0055DE2A /* sceneprogfactory.cpp in Sources */,
+				1CE0A4501900A98E005F3FA4 /* imgcoreimage.mm in Sources */,
 				1CCD1666189CF6F4001F8DF1 /* sceneframebuffer.cpp in Sources */,
 				1CDD41F0185BCAF0009284F9 /* scenestatedd.cpp in Sources */,
 				1CDD41ED185BCAF0009284F9 /* scenesndeffect.cpp in Sources */,
@@ -1372,10 +1382,11 @@
 				1CDD41BD185BCAF0009284F9 /* pnimatrix4.cpp in Sources */,
 				1CDD417F185BCAF0009284F9 /* animmanager.cpp in Sources */,
 				1CC482E8188A3FB00029408D /* sceneloaderfactory.cpp in Sources */,
-				1CC482E1188A07C90029408D /* imgcoreimage.mm in Sources */,
 				1CC482D11888D0CD0029408D /* pnisearchpath.cpp in Sources */,
 				1CDD41C6185BCAF0009284F9 /* pnivec3.cpp in Sources */,
 				1CDD4183185BCAF0009284F9 /* animscenenodescale.cpp in Sources */,
+				1CE0A4401900A7EB005F3FA4 /* scenetextfactory.cpp in Sources */,
+				1CE0A4511900A98E005F3FA4 /* imgfactory.cpp in Sources */,
 				1CDD41C5185BCAF0009284F9 /* pnivec2.cpp in Sources */,
 				1CDD41FC185BCAF0009284F9 /* scenetexturexform.cpp in Sources */,
 				1CDD41FB185BCAF0009284F9 /* scenetexture.cpp in Sources */,
@@ -1393,9 +1404,11 @@
 				1CDD41F1185BCAF0009284F9 /* scenetypes.cpp in Sources */,
 				1CCD1663189A400E001F8DF1 /* scenefbo.cpp in Sources */,
 				1CDD41EE185BCAF0009284F9 /* scenesndlistener.cpp in Sources */,
+				1CE0A4541900A98E005F3FA4 /* imgtarga.cpp in Sources */,
 				1CDD41BE185BCAF0009284F9 /* pnimatstack.cpp in Sources */,
 				1CDD41EF185BCAF0009284F9 /* scenestate.cpp in Sources */,
 				1CDD41F3185BCAF0009284F9 /* scenecull.cpp in Sources */,
+				1CE0A44F1900A98E005F3FA4 /* imgdds.cpp in Sources */,
 				1CDD4184185BCAF0009284F9 /* animscenenodetrans.cpp in Sources */,
 				1CDD4201185BCAF0009284F9 /* uibase.cpp in Sources */,
 				1CDD41E3185BCAF0009284F9 /* scenesnddd.cpp in Sources */,
@@ -1409,13 +1422,12 @@
 				1CDD417D185BCAF0009284F9 /* animbgmusicfader.cpp in Sources */,
 				1CDD41BB185BCAF0009284F9 /* pnimath.cpp in Sources */,
 				1CE0A43018FFB5D4005F3FA4 /* fontfontfactory.cpp in Sources */,
-				1CDD41D4185BCAF0009284F9 /* imgtarga.cpp in Sources */,
 				1CDD4182185BCAF0009284F9 /* animscenenoderotaxis.cpp in Sources */,
 				1CDD41EB185BCAF0009284F9 /* scenenode.cpp in Sources */,
 				1CDD41CB185BCAF0009284F9 /* pnirefcount.cpp in Sources */,
-				1CDD41D2185BCAF0009284F9 /* imgbase.cpp in Sources */,
 				1CDD41E2185BCAF0009284F9 /* sceneddogllist.cpp in Sources */,
 				1CDD41FE185BCAF0009284F9 /* sndengine.cpp in Sources */,
+				1CE0A4531900A98E005F3FA4 /* imgpvr.mm in Sources */,
 				1CE0A42818FFAC47005F3FA4 /* fontfont.cpp in Sources */,
 				1CDD4186185BCAF0009284F9 /* animtrans.cpp in Sources */,
 				1CAD9723186D72D500C547E1 /* sceneprog.cpp in Sources */,
@@ -1424,7 +1436,6 @@
 				1CDD4200185BCAF0009284F9 /* uiactions.cpp in Sources */,
 				1CDD4001185BC965009284F9 /* philibs.m in Sources */,
 				1CDD41D9185BCAF0009284F9 /* scenegeom.cpp in Sources */,
-				1CC482EC188B916A0029408D /* imgpvr.mm in Sources */,
 				1C2BB57E18AAA19C00938C31 /* scenerendersinkdd.cpp in Sources */,
 				1CDD41B4185BCAF0009284F9 /* pnibox2.cpp in Sources */,
 				1CDD41F4185BCAF0009284F9 /* scenedepth.cpp in Sources */,
@@ -1452,12 +1463,12 @@
 				1CDD41D5185BCAF0009284F9 /* sceneaseparser.cpp in Sources */,
 				1CDD417C185BCAF0009284F9 /* animbase.cpp in Sources */,
 				1CDD4205185BCAF0009284F9 /* uilabel.cpp in Sources */,
+				1CE0A4551900A98E005F3FA4 /* imgalgo.cpp in Sources */,
 				1CDD41F9185BCAF0009284F9 /* scenetexenv.cpp in Sources */,
 				1CAD971F186628EE00C547E1 /* scenevbo.cpp in Sources */,
 				1CDD4180185BCAF0009284F9 /* animmatrixhelper.cpp in Sources */,
 				1CDD41DA185BCAF0009284F9 /* scenegeomfx.cpp in Sources */,
 				1CDD41E4185BCAF0009284F9 /* scenetexobj.cpp in Sources */,
-				1CDD41D1185BCAF0009284F9 /* imgalgo.cpp in Sources */,
 				1CDD41CC185BCAF0009284F9 /* pnitimer.cpp in Sources */,
 				1CDD41B6185BCAF0009284F9 /* pnicylinder.cpp in Sources */,
 				1CDD41BC185BCAF0009284F9 /* pnimathstream.cpp in Sources */,
@@ -1466,8 +1477,6 @@
 				1CDD41F2185BCAF0009284F9 /* sceneblend.cpp in Sources */,
 				1CDD41E7185BCAF0009284F9 /* scenedupdd.cpp in Sources */,
 				1CDD41CE185BCAF0009284F9 /* pnitimerplatform.cpp in Sources */,
-				1CDD41D3185BCAF0009284F9 /* imgdds.cpp in Sources */,
-				1CC482D7188913820029408D /* imgfactory.cpp in Sources */,
 				1CDD4187185BCAF0009284F9 /* animuibaserotaxis.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

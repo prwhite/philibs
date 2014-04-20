@@ -529,16 +529,16 @@ getCorner ( vec2& dst, Corners xaxis, Corners yaxis ) const
 //	extendBy ( cur );
 //}
 
-inline static
-void
-conv ( vec2& dst, const vec3& src )
-{
-	dst[ 0 ] = src[ 0 ];
-	dst[ 1 ] = src[ 1 ];
-	dst[ 2 ] = src[ 2 ];
-	
-	dst /= src[ 3 ];
-}
+//inline static
+//void
+//conv ( vec2& dst, const vec3& src )
+//{
+//	dst[ 0 ] = src[ 0 ];
+//	dst[ 1 ] = src[ 1 ];
+//	dst[ 2 ] = src[ 2 ];
+//	
+//	dst /= src[ 3 ];
+//}
 
 #ifdef BOXCONV3TO4NEEDED
 inline static

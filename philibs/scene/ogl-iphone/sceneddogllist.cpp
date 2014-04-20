@@ -1249,7 +1249,10 @@ CheckGLError
 	{
     // GOTCHA: Only support 2D texture now in OES.
     // TODO: Support cube map extension.
+#ifdef PNIGLES1REMOVED
+      // Handled through uniforms now.
 		glDisable ( GL_TEXTURE_2D );
+#endif // PNIGLES1REMOVED
 	}  
 }
 

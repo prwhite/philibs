@@ -60,3 +60,6 @@ gen:
 	@echo generating file $(out)
 	$(TARGET) $(ttf)
 	gm convert $(sdf) -colorspace GRAY +matte $(out)
+
+
+

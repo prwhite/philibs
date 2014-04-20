@@ -73,6 +73,8 @@ class uniform :
       
         size_t size () const { return mVals.size (); }
       
+        size_t getStorageSize () const { return mVals.size () * sizeof ( IntType ); }
+      
       private:
       
         void resize ()
@@ -107,7 +109,6 @@ class uniform :
         Xform mXform = None;
         size_t mCount = 1;
     };
-
 
       // Now on to uniform's public members
 

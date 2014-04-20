@@ -35,15 +35,14 @@ class fontFactory :
 //    fontFactory& operator=(fontFactory const& rhs);
 //    bool operator==(fontFactory const& rhs) const;
 
+    using FontFuture = std::future< font* >;
+  
     static fontFactory& getInstance ();
   
       /// The fontFactory not only loads fonts, it's also a cache for fonts.
       /// The load method will put successfully loaded fonts in its cache.
-    font* load ( std::string const& fname, std::string const& textureFname );
-  
-    using FontFuture = std::future< font* >;
-  
-  
+    font* loadSync ( std::string const& fname, std::string const& textureFname );
+      /// Load a font asynchronously.  Calls #load from a worker thread.
     FontFuture loadAsync ( std::string const& fname, std::string const& textureFname );
   
       /// The unload method will purge the named font from its cache.
@@ -62,7 +61,7 @@ class fontFactory :
   
     FontMap mFontMap;
     pni::pstd::threadPool mThreadPool { 1 };
-    std::mutex mFontMapMutex;
+    std::recursive_mutex mFontMapMutex;
     
     // interface from pni::pstd::refCount
   public:

@@ -38,6 +38,8 @@
 #include "philibs/scenerendersinkdd.h"
 
 #include "philibs/fontfontfactory.h"
+#include "philibs/scenetext.h"
+#include "philibs/scenetextfactory.h"
 
 #include <iostream>
 #include <fstream>
@@ -327,9 +329,34 @@ scene::prog* createMainProg ()
   self->mTexSink->mFramebuffer->setName("render to texture scene");
 
   self->mMainSink->addChild(self->mTexSink.get());
+ 
+//  font::font* pFont = font::fontFactory::getInstance().loadSync(
+//        "HelveticaNeue.dfont_sdf.txt", "HelveticaNeue.dfont_sdf_g8.png");
+ 
+  font::font* pFont = font::fontFactory::getInstance().loadSync(
+      "Helvetica_Neue.fnt", "Helvetica_Neue.png_g8.png");
   
-  font::font* pFont = font::fontFactory::getInstance().load(
-      "HelveticaNeue.dfont_sdf.txt", "HelveticaNeue.dfont_sdf_g8.png");
+  text* pText = textFactory::getInstance ().newText(pFont);
+  
+  uniform* pUniform = ( uniform* ) pText->getState(state::Uniform00);
+
+  commonUniformOp< float > ( pUniform, UniformTextMin ) = 0.45f;
+  commonUniformOp< float > ( pUniform, UniformTextMax ) = 0.65f;
+  commonUniformOp< pni::math::vec4 > ( pUniform, UniformTextColor ).set (
+    1.0f, 0.0f, 0.0f, 1.0f );
+  
+  pText->setText("this is text");
+  
+  scene::depth* pNoDepth = new scene::depth;
+  pNoDepth->setEnable(false);
+  pText->setState(pNoDepth, state::Depth);
+  
+  pText->matrixOp().setTrans(0.0f, 0.0f, -125.0f);
+  
+  float const scale = 16.0f;
+  pText->matrixOp().preScale(scale, scale, scale);
+  
+  mRoot->addChild(pText);
 }
 
 - (void) finalizeScene

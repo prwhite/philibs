@@ -172,6 +172,16 @@ projectOnto ( const ThisType& target )
 	set ( factor * target[0], factor * target[1], factor * target[2], factor * target[3] );
 }
 
+void
+vec4::
+copyToArray ( ValueType* dst ) const
+{
+  dst[ 0 ] = vec[ 0 ];
+  dst[ 1 ] = vec[ 1 ];
+  dst[ 2 ] = vec[ 2 ];
+  dst[ 3 ] = vec[ 3 ];
+}
+
 
 /////////////////////////////////////////////////////////////////////
 

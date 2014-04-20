@@ -50,6 +50,8 @@
 		1CDD424D185BDDC2009284F9 /* philibs_ex_00Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD424C185BDDC2009284F9 /* philibs_ex_00Tests.m */; };
 		1CE0A43518FFC016005F3FA4 /* HelveticaNeue.dfont_sdf_g8.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CE0A43318FFC016005F3FA4 /* HelveticaNeue.dfont_sdf_g8.png */; };
 		1CE0A43618FFC016005F3FA4 /* HelveticaNeue.dfont_sdf.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1CE0A43418FFC016005F3FA4 /* HelveticaNeue.dfont_sdf.txt */; };
+		1CE0A460190319BA005F3FA4 /* Helvetica_Neue.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 1CE0A45E190319BA005F3FA4 /* Helvetica_Neue.fnt */; };
+		1CE0A461190319BA005F3FA4 /* Helvetica_Neue.png_g8.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CE0A45F190319BA005F3FA4 /* Helvetica_Neue.png_g8.png */; };
 		1CF4DBAB185EE4C4007331F8 /* libphilibs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF4DBA8185EE4B7007331F8 /* libphilibs.a */; };
 /* End PBXBuildFile section */
 
@@ -136,6 +138,8 @@
 		1CDD424C185BDDC2009284F9 /* philibs_ex_00Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = philibs_ex_00Tests.m; sourceTree = "<group>"; };
 		1CE0A43318FFC016005F3FA4 /* HelveticaNeue.dfont_sdf_g8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = HelveticaNeue.dfont_sdf_g8.png; path = "philibs-ex-00/Resources/HelveticaNeue.dfont_sdf_g8.png"; sourceTree = "<group>"; };
 		1CE0A43418FFC016005F3FA4 /* HelveticaNeue.dfont_sdf.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = HelveticaNeue.dfont_sdf.txt; path = "philibs-ex-00/Resources/HelveticaNeue.dfont_sdf.txt"; sourceTree = "<group>"; };
+		1CE0A45E190319BA005F3FA4 /* Helvetica_Neue.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Helvetica_Neue.fnt; path = "philibs-ex-00/Resources/Helvetica_Neue.fnt"; sourceTree = "<group>"; };
+		1CE0A45F190319BA005F3FA4 /* Helvetica_Neue.png_g8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Helvetica_Neue.png_g8.png; path = "philibs-ex-00/Resources/Helvetica_Neue.png_g8.png"; sourceTree = "<group>"; };
 		1CF4DBA2185EE4B7007331F8 /* philibs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = philibs.xcodeproj; path = ../philibs.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -204,6 +208,8 @@
 				1CC482C018868F4D0029408D /* brushed-aluminum-00a.dds */,
 				1CC482C118868F4D0029408D /* test-00a.ase */,
 				1CAD97111861879B00C547E1 /* test-00.ase */,
+				1CE0A45E190319BA005F3FA4 /* Helvetica_Neue.fnt */,
+				1CE0A45F190319BA005F3FA4 /* Helvetica_Neue.png_g8.png */,
 				1CE0A43318FFC016005F3FA4 /* HelveticaNeue.dfont_sdf_g8.png */,
 				1CE0A43418FFC016005F3FA4 /* HelveticaNeue.dfont_sdf.txt */,
 			);
@@ -436,11 +442,13 @@
 				1CDD422E185BDDC2009284F9 /* Main_iPhone.storyboard in Resources */,
 				1CDD423A185BDDC2009284F9 /* Images.xcassets in Resources */,
 				1CDD4225185BDDC2009284F9 /* InfoPlist.strings in Resources */,
+				1CE0A461190319BA005F3FA4 /* Helvetica_Neue.png_g8.png in Resources */,
 				1C9E34BA1891A50700E49195 /* cyclorama-00a.dae in Resources */,
 				1C53352018978BA5009525FD /* texture1.png in Resources */,
 				1CC482C6188694AC0029408D /* test-00b.ase in Resources */,
 				1C9E34B91891A50700E49195 /* blue-grid-512-32.png in Resources */,
 				1C53351E18978BA5009525FD /* ld-pod-01b-hi-icon.dae in Resources */,
+				1CE0A460190319BA005F3FA4 /* Helvetica_Neue.fnt in Resources */,
 				1CB1DFB618988C79005D3709 /* readme.txt in Resources */,
 				1CE0A43618FFC016005F3FA4 /* HelveticaNeue.dfont_sdf.txt in Resources */,
 				1CAD97121861879B00C547E1 /* test-00.ase in Resources */,
