@@ -7,19 +7,19 @@ This library supports 3D rendering of a 'scene' described in memory as a '[scene
 
 ### Current features include:
 
-* Hierarchical scene management, ray-based scene picking with culling, multi-texture, GLES state management, linear algebra library, particle system, sprites, and more.
+* Hierarchical scene management, ray-based scene picking with culling, multi-texture, GLES state management, linear algebra library, particle system, sprites, extensible programmable pipeline, SDF texture-based text, generalized framebuffer object management and rendering order evaluation, and more.
 
-### Half-ass'd features include:
+### Partial features include:
 
 * Programmable pipeline support is in, and relatively generalized, but I need to build up more high-level concepts around it, including a lighting model and shaders that are conditional on light and texture binding, etc.
 
-* Key-frame animation system, UI system, bitmap font node, deformable height-mapped terrain, spatialized sound, 2d image and 3d file format loaders, view frustum culling
+* Key-frame animation system, UI system, deformable height-mapped terrain, spatialized sound, 2d image and 3d file format loaders, view frustum culling
 
-In many cases, these half-ass'd features are built around proper abstractions allowing future extensibility, but tend to lack a wide range of implementations and implementation details.  E.g., an image loading abstraction exists, but the DDS image loader doesn't currently support compressed textures, and a PVR loader has not been implemented based on this abstraction yet.
+In many cases, these incomplete features are built around proper abstractions allowing future extensibility, but tend to lack a wide range of implementations and implementation details.  E.g., an image loading abstraction exists, but the DDS image loader doesn't currently support compressed textures, and a PVR is implemented but not fully vetted.
 
 ### Really missing:
 
-* Parallelism/thread safety strategy
+* Parallelism/thread safety strategy.  This is evolving now though, largely based on C++11 mechanisms and thread pools used by everything that does I/O.
 * A ton of other things
 
 ### Short-term feature goals:
@@ -34,9 +34,19 @@ Check out the source, then open, build, and run the project file `philibs-ex-00/
 
 A _version_ of this code has been used in an iOS title [(LD50)](http://labs.prehiti.com/ld50/).  But, this code has not been used in its current incarnation as a stand-alone library, _yet_.
 
+2014/04/22
+
+Recent feature additions include:
+
+* SDF (signed distance field) texture-based text.  Currently only using one texture page and limited to ASCII.  Would not be much of a stretch to move to `std::wstring`... but a bit harder to actually put in the texture page logic.
+* Evolving support for conditional compilation of shader text.  A set of flags have been introduced for the current default programs, and this mechanism extends generally to any program text.  Use the methods `scene::prog::setFlag` and `scene::prog::applyFlags`.
+* Added additional factories for shader program I/O and font file I/O.  Note `progFactory` is still WIP.  All factories _mostly_ adhere to a common interface (though this is not through inheritance).  This means all factories have two loading methods, `loadSync` and `loadAsync`.  Some of the factories implement an additional caching layer, which is reflected in the class documentation.
+* Fully generalized FBO (framebuffer object) management.  FBO objects are managed in a graph of `scene::renderSink`s that implies their rendering order.  Thus, framebuffers that generate textures for later passes are properly evaluated in order.  The current example program sets up a simple framebuffer post-process to generate a subtle glow around lighting highlights.
+* Added texture cube map support.  Realtime cubemaps should work with the new FBO management system, but has not been tested.
+
 2014/01/27
 
-Merged assimp branch to master.  This includes the [Assimp](http://assimp.sourceforge.net/) library for 3D file importing.  Currently this is set up to load DAE, STL, OBJ, and PLY files.  Imported material colors are currently ignored (which matches the default shader functionality).  I'm keeping a fork of Assimp with a more up-to-date xcode project... I'll probably clean this part up and submit as a pull request.
+Merged assimp branch to master.  This includes the [Assimp](http://assimp.sourceforge.net/) library for 3D file importing.  Currently this is set up to load DAE, STL, OBJ, and PLY files.  Imported material colors are currently ignored (which matches the default shader functionality).  I'm keeping a fork of Assimp with a more up-to-date Xcode project... I'll probably clean this part up and submit as a pull request.
 
 2014/01/18
 
