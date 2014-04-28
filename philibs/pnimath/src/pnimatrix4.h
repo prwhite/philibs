@@ -150,8 +150,14 @@ class PNIMATHAPI matrix4 {
 		void setPerspective ( ValueType fovy, ValueType aspect, ValueType nearVal, ValueType farVal );
 		void setViewport ( ValueType xorig, ValueType yorig, ValueType width, ValueType height );
 		
-		//! error if from == to or up isn't normlized
-		void setLookat ( const vec3& from, const vec3& to, const vec3& up );
+      /// Will set the matrix to a new coordinate system that
+      /// points the -z axis in the direction of from -> to.
+      /// This is due to the general use of this to set camera direction,
+      /// which typically orients toward the -z axis.
+      /// To get the lookat to orient to the +z axis, set the last optional
+      /// arg to false.
+      /// @note undefined or inaccurate  if from == to or up isn't normlized
+		void setLookat ( const vec3& from, const vec3& to, const vec3& up, bool useNegZ = true );
 
 		//! get/set rows of the matrix
 		void setRow ( int row, ValueType v0, ValueType v1, ValueType v2, ValueType v3 );

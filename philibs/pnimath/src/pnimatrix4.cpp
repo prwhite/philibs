@@ -402,7 +402,7 @@ matrix4::
 setEuler ( ValueType hval, ValueType pval, ValueType rval )
 { 
 	setIdentity ();
-#define ZISUPNOTOUT				// ADDTOTRAIT
+//#define ZISUPNOTOUT				// ADDTOTRAIT
 #ifdef ZISUPNOTOUT
 	// performer convention: h-z p-x r-y
 	postRot ( rval, Yaxis );
@@ -720,24 +720,34 @@ setViewport ( ValueType xorig, ValueType yorig, ValueType width, ValueType heigh
 	postTrans ( vec3 ( xorig, yorig, TraitType::zeroVal ) );
 }
 
-void
-matrix4::
-setLookat ( const vec3& from, const vec3& to, const vec3& up )
-{
-	vec3 jvec ( to );
-	jvec -= from;
-	jvec.normalize ();
-
-	vec3 ivec ( vec3::NoInit );
-	ivec.cross ( jvec, up );
-
-	vec3 kvec ( vec3::NoInit );
-	kvec.cross ( ivec, jvec );
-
 	// AJT: The cross product of 2 normalized vectors is not guaranteed to be normalized
 	// so we need to normalize these to prevent scale from leaking into the matrix.
-	ivec.normalize ();
+void
+matrix4::
+setLookat ( const vec3& from, const vec3& to, const vec3& up, bool useNegZ )
+{
+    // from - to because we want to look down -z, not +z
+  vec3 kvec ( vec3::NoInit );
+  if ( useNegZ )
+  {
+    kvec = from;
+    kvec -= to;
+  }
+  else
+  {
+    kvec = to;
+    kvec -= from;
+  }
+  
 	kvec.normalize ();
+
+	vec3 ivec ( vec3::NoInit );
+	ivec.cross ( up, kvec );
+	ivec.normalize ();
+
+	vec3 jvec ( vec3::NoInit );
+	jvec.cross ( kvec, ivec );
+	jvec.normalize ();
 
 	setRow ( 0, ivec[ 0 ], ivec[ 1 ], ivec[ 2 ], 0.0f );
 	setRow ( 1, jvec[ 0 ], jvec[ 1 ], jvec[ 2 ], 0.0f );

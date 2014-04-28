@@ -94,9 +94,7 @@ struct mouseEvent :
         memset ( mMousePointers, 0, sizeof ( mMousePointers ) );
       }
 
-  enum Vals {
-    NumPointers = 10
-  };
+  static size_t const NumPointers = 10;
 
   mousePointer mMousePointers[ NumPointers ];
   unsigned char mActive;
