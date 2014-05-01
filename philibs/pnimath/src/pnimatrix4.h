@@ -150,6 +150,9 @@ class PNIMATHAPI matrix4 {
 		void setPerspective ( ValueType fovy, ValueType aspect, ValueType nearVal, ValueType farVal );
 		void setViewport ( ValueType xorig, ValueType yorig, ValueType width, ValueType height );
 		
+      /// Generate a matrix that reflects all input about the specified plane
+    void setMirror ( plane const& pl );
+  
       /// Will set the matrix to a new coordinate system that
       /// points the -z axis in the direction of from -> to.
       /// This is due to the general use of this to set camera direction,

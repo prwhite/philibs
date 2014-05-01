@@ -11,6 +11,7 @@
 #include "pnivec3.h"
 #include "pnivec4.h"
 #include "pniquat.h"
+#include "pniplane.h"
 
 /////////////////////////////////////////////////////////////////////
 
@@ -450,12 +451,14 @@ getEuler ( ValueType& hval, ValueType& pval, ValueType& rval ) const
 { 
 #ifdef ZISUPNOTOUT
     hval = TraitType::r2d ( TraitType::atan2 ( -mat[1][0] , mat[1][1] ) );
-    pval = TraitType::r2d ( TraitType::asin (  mat[1][2] ) );
+    pval = TraitType::r2d ( TraitType::asin  (  mat[1][2] ) );
     rval = TraitType::r2d ( TraitType::atan2 ( -mat[0][2] , mat[2][2] ) );
 #else
-    hval = TraitType::r2d ( TraitType::atan2 ( mat[2][0] , mat[2][2] ) );
-    pval = TraitType::r2d ( -TraitType::oneVal * TraitType::asin (  mat[2][1] ) );
-    rval = TraitType::r2d ( TraitType::atan2 ( mat[0][1] , mat[1][1] ) );
+  // DANGER: This is potentially wrong... it's working for some existing cases,
+  // but it's currently not based on analytical certitude.
+    pval = TraitType::r2d (  TraitType::atan2 ( mat[2][0] , mat[2][2] ) );
+    hval = TraitType::r2d ( -TraitType::asin  ( mat[2][1] ) );
+    rval = TraitType::r2d (  TraitType::atan2 ( mat[0][1] , mat[1][1] ) );
 #endif
 		
 	return true;
@@ -718,6 +721,40 @@ setViewport ( ValueType xorig, ValueType yorig, ValueType width, ValueType heigh
 	setTrans ( vec3 ( TraitType::oneVal, TraitType::oneVal, TraitType::zeroVal ) );
 	postScale ( vec3 ( width * ( ( ValueType ) 0.5 ), height * ( ( ValueType ) 0.5 ), TraitType::oneVal ) );
 	postTrans ( vec3 ( xorig, yorig, TraitType::zeroVal ) );
+}
+
+// From here: http://ami.ektf.hu/uploads/papers/finalpdf/AMI_40_from175to186.pdf (page 10)
+// From here: http://msdn.microsoft.com/en-us/library/windows/desktop/bb205356(v=vs.85).aspx
+// For the rotation part (i.e., not including the translation to a point on the plane):
+//P = normalize(Plane);
+//-2 * P.a * P.a + 1  -2 * P.b * P.a      -2 * P.c * P.a        0
+//-2 * P.a * P.b      -2 * P.b * P.b + 1  -2 * P.c * P.b        0
+//-2 * P.a * P.c      -2 * P.b * P.c      -2 * P.c * P.c + 1    0
+//-2 * P.a * P.d      -2 * P.b * P.d      -2 * P.c * P.d        1
+
+// NON-OPTIMAL
+//  Pretty optimal itself, but relies on currently non-optimal postTrans and preTrans
+
+void matrix4::setMirror ( plane const& pl )
+{
+  vec3 norm ( vec3::NoInit );
+  float offset;
+  
+  pl.get ( norm, offset );
+
+  set (
+    1.0f - 2.0f * norm[ 0 ] * norm[ 0 ],      - 2.0f * norm[ 0 ] * norm[ 1 ],      - 2.0f * norm[ 0 ] * norm[ 2 ], 0.0f,
+         - 2.0f * norm[ 1 ] * norm[ 0 ], 1.0f - 2.0f * norm[ 1 ] * norm[ 1 ],      - 2.0f * norm[ 1 ] * norm[ 2 ], 0.0f,
+         - 2.0f * norm[ 2 ] * norm[ 0 ],      - 2.0f * norm[ 2 ] * norm[ 1 ], 1.0f - 2.0f * norm[ 2 ] * norm[ 2 ], 0.0f,
+           0.0f,                                0.0f,                                0.0f,                      1.0f
+  );
+
+    // Now pre and post mult the translate to the origin and back out to a
+    // point on the plane (p0)
+  vec3 p0 = norm * offset;
+  postTrans(p0);
+  p0.negate();
+  preTrans(p0);
 }
 
 	// AJT: The cross product of 2 normalized vectors is not guaranteed to be normalized

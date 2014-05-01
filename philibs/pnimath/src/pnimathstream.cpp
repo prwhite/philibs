@@ -19,6 +19,19 @@
 #include "pnivec4.h"
 #include "pnibox2.h"
 
+#include <iomanip>
+
+static size_t const defPrecision = 3;
+static size_t const defWidth = 8;
+
+#define PUSHFORMAT(str) \
+  size_t pr = str.precision(defPrecision);
+
+#define POPFORMAT(str) \
+  str.precision(pr);
+
+#define SETW std::setw(defWidth)
+
 /////////////////////////////////////////////////////////////////////
 // box
 
@@ -31,6 +44,7 @@ operator << ( PNIMATHSTD(ostream)& streamIn, const pni::math::box3& box )
 	streamIn << tmp << PNIMATHSTD(endl);
 	box.getMax ( tmp );
 	streamIn << tmp << PNIMATHSTD(endl);
+  
 	return streamIn;
 } 
 
@@ -43,7 +57,7 @@ operator >> ( PNIMATHSTD(istream)& streamIn, pni::math::box3& box )
 	streamIn >> tmax;
 
 	box.set ( tmin, tmax );
-
+  
 	return streamIn;
 } 
 
@@ -59,6 +73,7 @@ operator << ( PNIMATHSTD(ostream)& streamIn, const pni::math::box2& box )
 	streamIn << tmp << PNIMATHSTD(endl);
 	box.getMax ( tmp );
 	streamIn << tmp << PNIMATHSTD(endl);
+  
 	return streamIn;
 } 
 
@@ -71,7 +86,7 @@ operator >> ( PNIMATHSTD(istream)& streamIn, pni::math::box2& box )
 	streamIn >> tmax;
 
 	box.set ( tmin, tmax );
-
+  
 	return streamIn;
 } 
 
@@ -82,6 +97,8 @@ operator >> ( PNIMATHSTD(istream)& streamIn, pni::math::box2& box )
 PNIMATHSTD(ostream)&
 operator << ( PNIMATHSTD(ostream)& streamIn, const pni::math::cylinder& cyl )
 {
+  PUSHFORMAT(streamIn);
+
 	pni::math::vec3 tmp;
 	pni::math::cylinder::ValueType ftmp;
 
@@ -89,14 +106,16 @@ operator << ( PNIMATHSTD(ostream)& streamIn, const pni::math::cylinder& cyl )
 	streamIn << tmp << PNIMATHSTD(endl);
 
 	ftmp = cyl.getRadius ();
-	streamIn << ftmp << PNIMATHSTD(endl);
+	streamIn << SETW << ftmp << PNIMATHSTD(endl);
 
 	cyl.getAxis ( tmp );
 	streamIn << tmp << PNIMATHSTD(endl);
 
 	ftmp = cyl.getHalfLength ();
-	streamIn << ftmp << PNIMATHSTD(endl);
+	streamIn << SETW << ftmp << PNIMATHSTD(endl);
 
+  POPFORMAT(streamIn);
+  
 	return streamIn;
 } 
 
@@ -117,7 +136,7 @@ operator >> ( PNIMATHSTD(istream)& streamIn, pni::math::cylinder& cyl )
 
 	streamIn >> ftmp;
 	cyl.setHalfLength ( ftmp );
-
+  
 	return streamIn;
 }
 
@@ -127,13 +146,18 @@ operator >> ( PNIMATHSTD(istream)& streamIn, pni::math::cylinder& cyl )
 PNIMATHSTD(ostream)&
 operator << ( PNIMATHSTD(ostream)& streamIn, const pni::math::plane& plane )
 {
+  PUSHFORMAT(streamIn);
+
 	pni::math::vec3 tmp;
 	pni::math::plane::ValueType ftmp;
 
 	plane.get ( tmp, ftmp );
 
 	streamIn <<	tmp << PNIMATHSTD(endl) <<
-			ftmp << PNIMATHSTD(endl);
+			SETW << ftmp << PNIMATHSTD(endl);
+
+  POPFORMAT(streamIn);
+  
 	return streamIn;
 } 
 
@@ -146,7 +170,7 @@ operator >> ( PNIMATHSTD(istream)& streamIn, pni::math::plane& plane )
 	streamIn >> tmp >> ftmp;
 
 	plane.set ( tmp, ftmp );
-
+  
 	return streamIn;
 }
 
@@ -169,7 +193,7 @@ operator << ( PNIMATHSTD(ostream)& str, const pni::math::matrix4& mat )
 
 	mat.getRow ( 3, tmp );
 	str << tmp << PNIMATHSTD(endl);
-		
+  
 	return str;
 }
 
@@ -200,6 +224,8 @@ operator >> ( PNIMATHSTD(istream)& str, pni::math::matrix4& mat )
 PNIMATHSTD(ostream)&
 operator << ( PNIMATHSTD(ostream)& streamIn, const pni::math::seg& seg )
 {
+  PUSHFORMAT(streamIn);
+
 	pni::math::vec3 tmp;
 	pni::math::seg::ValueType ftmp;
 
@@ -209,8 +235,10 @@ operator << ( PNIMATHSTD(ostream)& streamIn, const pni::math::seg& seg )
 	seg.getPos ( tmp );
 	ftmp = seg.getLength ();
 	streamIn << tmp << PNIMATHSTD(endl) <<
-			ftmp << PNIMATHSTD(endl);
+			SETW << ftmp << PNIMATHSTD(endl);
 
+  POPFORMAT(streamIn);
+  
 	return streamIn;
 } 
 
@@ -232,13 +260,18 @@ operator >> ( PNIMATHSTD(istream)& streamIn, pni::math::seg& seg )
 PNIMATHSTD(ostream)&
 operator << ( PNIMATHSTD(ostream)& streamIn, const pni::math::sphere& sphere )
 {
+  PUSHFORMAT(streamIn);
+
 	pni::math::vec3 tmp;
 	pni::math::sphere::ValueType ftmp;
 
 	sphere.get ( tmp, ftmp );
 
 	streamIn <<	tmp << PNIMATHSTD(endl) <<
-			ftmp << PNIMATHSTD(endl);
+			SETW << ftmp << PNIMATHSTD(endl);
+
+  POPFORMAT(streamIn);
+  
 	return streamIn;
 } 
 
@@ -251,7 +284,7 @@ operator >> ( PNIMATHSTD(istream)& streamIn, pni::math::sphere& sphere )
 	streamIn >> tmp >> ftmp;
 
 	sphere.set ( tmp, ftmp );
-
+  
 	return streamIn;
 }
 
@@ -261,8 +294,12 @@ operator >> ( PNIMATHSTD(istream)& streamIn, pni::math::sphere& sphere )
 PNIMATHSTD(ostream)&
 operator << ( PNIMATHSTD(ostream)& streamIn, const pni::math::vec2& vec )
 {
-	streamIn <<	vec[ 0 ] << ", " <<
-				vec[ 1 ]; 
+  PUSHFORMAT(streamIn);
+
+	streamIn <<	SETW << vec[ 0 ] << ", " <<
+				SETW << vec[ 1 ];
+  POPFORMAT(streamIn);
+  
 	return streamIn;
 } 
 
@@ -283,11 +320,16 @@ operator >> ( PNIMATHSTD(istream)& streamIn, pni::math::vec2& vec )
 PNIMATHSTD(ostream)&
 operator << ( PNIMATHSTD(ostream)& streamIn, const pni::math::vec3& vec )
 {
-	streamIn <<	vec[ 0 ] << ", " <<
-				vec[ 1 ] << ", " <<
-				vec[ 2 ]; 
+  PUSHFORMAT(streamIn);
+
+	streamIn <<	SETW << vec[ 0 ] << ", " <<
+				SETW << vec[ 1 ] << ", " <<
+				SETW << vec[ 2 ];
+
+  POPFORMAT(streamIn);
+  
 	return streamIn;
-} 
+}
 
 PNIMATHSTD(istream)&
 operator >> ( PNIMATHSTD(istream)& streamIn, pni::math::vec3& vec )
@@ -306,10 +348,15 @@ operator >> ( PNIMATHSTD(istream)& streamIn, pni::math::vec3& vec )
 PNIMATHSTD(ostream)&
 operator << ( PNIMATHSTD(ostream)& streamIn, const pni::math::vec4& vec )
 {
-	streamIn <<	vec[ 0 ] << ", " <<
-				vec[ 1 ] << ", " <<
-				vec[ 2 ] << ", " <<
-				vec[ 3 ]; 
+  PUSHFORMAT(streamIn);
+
+	streamIn <<	SETW << vec[ 0 ] << ", " <<
+				SETW << vec[ 1 ] << ", " <<
+				SETW << vec[ 2 ] << ", " <<
+				SETW << vec[ 3 ]; 
+
+  POPFORMAT(streamIn);
+  
 	return streamIn;
 } 
 

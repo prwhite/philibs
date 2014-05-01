@@ -85,7 +85,7 @@ class PNIMATHAPI plane
 		void displace ( ValueType howFar );
 		void displace ( const vec3& pt );
 		
-		// get the closest point to pt in the primative
+		// get the closest point to pt in the primitive
 		// args in different order than pfplanes!!!
 		bool closestPtIn ( vec3& dest, 
 				ValueType xval, ValueType yval, ValueType zval ) const;
@@ -101,6 +101,10 @@ class PNIMATHAPI plane
 		ValueType distToPtSigned ( ValueType xval, ValueType yval, ValueType zval ) const;
 		ValueType distToPtSigned ( const vec3& pt ) const;
 		
+      /// Mirror point across this plane
+      /// @note Not a reflection 'bouncing' off the plane.
+    void mirror ( vec3& dest, vec3 const& src );
+  
 		// extendBy methods
 		void extendBy ( const vec3& pt );
 		void extendBy ( const box3& boxIn );

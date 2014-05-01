@@ -106,9 +106,9 @@ setPts ( const vec3& pt1, const vec3& pt2, const vec3& pt3 )
 	normal.cross ( v2, v1 );
 	normal.normalize ();
 	
-	// the following code is a dup of setNormPt which doesn't resdundantly
+	// the following code is a dup of setNormPt which doesn't redundantly
 	// set the normal
-	// setNormPtsetNormPt ( normal, pt1 );
+	// setNormPt ( normal, pt1 );
 
 	offset = normal.dot ( pt1 );
 }
@@ -387,6 +387,14 @@ contains ( const cylinder& cyl ) const
 	return containsResult::NoneIn;
 }
 
+
+  // From http://mathworld.wolfram.com/Reflection.html
+void plane::mirror ( vec3& dest, vec3 const& src )
+{
+  ValueType d = distToPtSigned(src);
+  
+  dest = src - normal * 2.0f * d;
+}
 
 /////////////////////////////////////////////////////////////////////
 // xform methods
