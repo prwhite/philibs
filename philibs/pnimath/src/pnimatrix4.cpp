@@ -454,10 +454,8 @@ getEuler ( ValueType& hval, ValueType& pval, ValueType& rval ) const
     pval = TraitType::r2d ( TraitType::asin  (  mat[1][2] ) );
     rval = TraitType::r2d ( TraitType::atan2 ( -mat[0][2] , mat[2][2] ) );
 #else
-  // DANGER: This is potentially wrong... it's working for some existing cases,
-  // but it's currently not based on analytical certitude.
-    pval = TraitType::r2d (  TraitType::atan2 ( mat[2][0] , mat[2][2] ) );
-    hval = TraitType::r2d ( -TraitType::asin  ( mat[2][1] ) );
+    hval = TraitType::r2d (  TraitType::atan2 ( mat[2][0] , mat[2][2] ) );
+    pval = TraitType::r2d ( -TraitType::asin  ( mat[2][1] ) );
     rval = TraitType::r2d (  TraitType::atan2 ( mat[0][1] , mat[1][1] ) );
 #endif
 		
