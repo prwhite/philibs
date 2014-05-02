@@ -30,6 +30,9 @@ LD = c++ -std=c++11
 
 # TARGET RULES
 
+testq: $(TARGET)
+	@$(TARGET) 2>&1 | fgrep -B 3 -i failed | cat
+
 test: $(TARGET)
 	$(TARGET)
 

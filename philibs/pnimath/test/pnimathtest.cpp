@@ -86,7 +86,6 @@ void frustumTest ( const testType& testObj )
 void scaleTest ()
 {
   std::cout << "begin scale test" << std::endl;
-  std::cout << "FIXME: THIS TEST IS CURRENTLY BOGUS!!!" << std::endl;
 
   matrix4 m4;
 
@@ -95,6 +94,8 @@ void scaleTest ()
     m4.setIdentity ();
     vec3 v3 ( getTheRand () );
     vec3 eul ( getTheRand () );
+
+    v3 += 1.0f; // Make sure the scale is way bigger than epsilon
 
     // scale and rotate a few times
     m4.postScale ( v3 * 2.0f );
@@ -114,8 +115,10 @@ void scaleTest ()
     // get scale back out and make sure it was properly cancelled out
     m4.getScale ( v3 );
 
+    std::cout << "v3 = " << v3 << std::endl;
+
       // Temp removed because the test isn't set up correctly currently
-    // QUNIT_IS_TRUE ( v3.equal ( vec3 ( 1, 1, 1 ) ) );
+    QUNIT_IS_TRUE ( v3.equal ( vec3 ( 1, 1, 1 ), 0.001f ) );  // Bigger epsilon because this stuff is fp messy
   }
 
   std::cout << "end scale test" << std::endl;
@@ -453,6 +456,8 @@ main ( int argc, char* argv[] )
   sphereExtendByVecTest2 ();
 
   testMirror();
+
+  std::cout << "\n\n\n" << std::endl;
 
   return 0;
 }
