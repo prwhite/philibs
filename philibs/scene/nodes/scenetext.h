@@ -34,9 +34,13 @@ class text :
       void setFont ( font::font* val ) { mFont = val;  doLayout(); }
       font::font* getFont () const { return mFont.get (); }
   
+        /// @param txt ASCII or UTF8
       void setText ( std::string const& txt ) { mTxt = txt; doLayout(); }
       std::string const& getText () const { return mTxt; }
   
+        // TODO: Allow more layout engines.
+        //   E.g., setLayout ( textLayout* pLayout )
+        //   And then define the current layout as a default instance
 
     protected:
       using Id = font::font::Id;

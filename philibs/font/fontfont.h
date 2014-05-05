@@ -36,7 +36,7 @@ class font :
     //font& operator= ( font const& rhs );
     //bool operator== ( font const& rhs ) const;
     
-    using Id = unsigned short;
+    using Id = unsigned short;    // UCS2
     using ImgRef = pni::pstd::autoRef<img::base>;
       
     virtual bool load ( std::string const& fname, std::string const& textureFname );

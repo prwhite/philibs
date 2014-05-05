@@ -10,6 +10,8 @@
 #include "imgbase.h"
 
 #include <cassert>
+#include <locale>
+#include <codecvt>
 
 /////////////////////////////////////////////////////////////////////
 
@@ -62,7 +64,10 @@ void text::doLayout ()
     setGeomData(pData);
   }
 
-  size_t numGoodChars = mTxt.size();
+  std::wstring_convert<std::codecvt_utf8<char16_t>,char16_t> cvt;
+  std::u16string uTxt = cvt.from_bytes(mTxt);
+
+  size_t numGoodChars = uTxt.size();
 
   pData->resizeTrisWithCurrentAttributes(numGoodChars * 4, numGoodChars * 2);
 
@@ -73,7 +78,7 @@ void text::doLayout ()
   float* pAttr = pData->getAttributePtr(geomData::Position);
   SizeType* pInd = pData->getIndicesPtr();
 
-  for ( auto iter : mTxt )
+  for ( auto iter : uTxt )
   {
     if ( font::font::glyph* pGlyph = mFont->getGlyph(iter) )
     {
