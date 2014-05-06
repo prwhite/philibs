@@ -88,6 +88,9 @@ class PNIMATHAPI vec2
 		ValueType dot ( const ThisType& vecIn ) const;
 
 		void projectOnto ( const ThisType& target );
+
+    void copyToArray ( ValueType* dst )
+        { dst[ 0 ] = vec[ 0 ]; dst[ 1 ] = vec[ 1 ]; }
 		
 //		void cross ( const ThisType& aa, const ThisType& bb );
 //		void xformVec ( const ThisType&, const matrix4& );

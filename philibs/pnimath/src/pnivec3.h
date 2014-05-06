@@ -104,6 +104,9 @@ class PNIMATHAPI vec3
 		ValueType getAxisAngle ( const ThisType& v1, const ThisType& v2 );
 
 		void projectOnto ( const ThisType& target );
+  
+    void copyToArray ( ValueType* dst )
+        { dst[ 0 ] = vec[ 0 ]; dst[ 1 ] = vec[ 1 ]; dst[ 2 ] = vec[ 2 ]; }
 		
 	protected:
 		ValueType vec[ 3 ];
