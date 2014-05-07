@@ -453,6 +453,7 @@ testSphereExtendBy ()
   sphere sp2 ( { 4.0f, 0.0f, 0.0f }, 2.0f );
   sphere sp3 ( { 1.0f, 0.0f, 0.0f }, 2.0f );
   sphere sp4 ( { 1.0f, 0.0f, 0.0f }, 1.0f );
+  sphere sp5 ( { 4.0f, 0.0f, 0.0f }, 6.0f );
   
     // Test extend by identical sphere
   sp0.extendBy(sp1);
@@ -475,6 +476,12 @@ testSphereExtendBy ()
   sp0.extendBy(sp4);
   QUNIT_IS_EQUAL(sp0.getCenter(), vec3( 0.0f, 0.0f, 0.0f));
   QUNIT_IS_EQUAL(sp0.getRadius(), 2.0f);
+
+    // Other sphere completely contains this sphere
+  sp0.set( { 0.0f, 0.0f, 0.0f }, 2.0f);
+  sp0.extendBy(sp5);
+  QUNIT_IS_EQUAL(sp0.getCenter(), vec3( 4.0f, 0.0f, 0.0f));
+  QUNIT_IS_EQUAL(sp0.getRadius(), 6.0f);
   
   cout << "testSphereExtendBy end" << std::endl;
 }
