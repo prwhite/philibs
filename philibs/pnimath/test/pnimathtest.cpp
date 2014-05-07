@@ -28,7 +28,7 @@ using namespace pni;
 using namespace pni::math;
 
 // Just a quick Euler angle / quaternion conversion test.
-void eularQuatTest ()
+void eulerQuatTest ()
 {
   quat quaternion;
 
@@ -440,11 +440,50 @@ testMirror()
   cout << "testMirror end" << endl;
 }
 
+void
+testSphereExtendBy ()
+{
+  using namespace std;
+  using namespace pni::math;
+  
+  cout << "testSphereExtendBy beg" << std::endl;
+  
+  sphere sp0 ( { 0.0f, 0.0f, 0.0f }, 2.0f );
+  sphere sp1 ( { 0.0f, 0.0f, 0.0f }, 2.0f );
+  sphere sp2 ( { 4.0f, 0.0f, 0.0f }, 2.0f );
+  sphere sp3 ( { 1.0f, 0.0f, 0.0f }, 2.0f );
+  sphere sp4 ( { 1.0f, 0.0f, 0.0f }, 1.0f );
+  
+    // Test extend by identical sphere
+  sp0.extendBy(sp1);
+  QUNIT_IS_EQUAL(sp0, sp1);
+  
+    // Test extend by non-interscectng sphere
+  sp0.set( { 0.0f, 0.0f, 0.0f }, 2.0f);
+  sp0.extendBy(sp2);
+  QUNIT_IS_EQUAL(sp0.getCenter(), vec3( 2.0f, 0.0f, 0.0f));
+  QUNIT_IS_EQUAL(sp0.getRadius(), 8.0f / 2.0f);
+  
+    // Overlapping spheres
+  sp0.set( { 0.0f, 0.0f, 0.0f }, 2.0f);
+  sp0.extendBy(sp3);
+  QUNIT_IS_EQUAL(sp0.getCenter(), vec3( 0.5f, 0.0f, 0.0f));
+  QUNIT_IS_EQUAL(sp0.getRadius(), 5.0f / 2.0f);
+
+    // Sphere completely contains other sphere
+  sp0.set( { 0.0f, 0.0f, 0.0f }, 2.0f);
+  sp0.extendBy(sp4);
+  QUNIT_IS_EQUAL(sp0.getCenter(), vec3( 0.0f, 0.0f, 0.0f));
+  QUNIT_IS_EQUAL(sp0.getRadius(), 2.0f);
+  
+  cout << "testSphereExtendBy end" << std::endl;
+}
+
 
 int
 main ( int argc, char* argv[] )
 {
-  eularQuatTest ();
+  eulerQuatTest ();
   projectOntoTest ();
   scaleTest ();
   matStackTest ();
@@ -454,6 +493,7 @@ main ( int argc, char* argv[] )
   sphereExtendByVecTest ();
   sphereExtendBySphereTest ();
   sphereExtendByVecTest2 ();
+  testSphereExtendBy();
 
   testMirror();
 

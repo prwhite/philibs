@@ -57,6 +57,7 @@ class PNIMATHAPI sphere
 		// get methods
 		void get ( vec3& centerOut, ValueType& radiusOut ) const;
 		void getCenter ( vec3& centerOut ) const;
+    vec3 const& getCenter () const { return center; }
 		ValueType getRadius () const;
 
 		// equality methods

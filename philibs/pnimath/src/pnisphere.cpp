@@ -300,12 +300,96 @@ extendBy ( const vec3& pt )
 
 // NON-OPTIMAL
 
+// From http://www.geometrictools.com/LibMathematics/Containment/Wm5ContSphere3.cpp
+/*   With annotations by PRW
+
+template <typename Real>
+Sphere3<Real> MergeSpheres (const Sphere3<Real>& sphere0,
+    const Sphere3<Real>& sphere1)
+{
+      // dist sqr between sphere centers
+    Vector3<Real> cenDiff = sphere1.Center - sphere0.Center;
+    Real lenSqr = cenDiff.SquaredLength();
+    
+      // dist sqr of sphere radii
+    Real rDiff = sphere1.Radius - sphere0.Radius;
+    Real rDiffSqr = rDiff*rDiff;
+
+      // If radii are bigger than distance, then they overlap...
+      // but I think the assumption that that means that one or the other
+      // spheres completely encompasses the other is bogus.
+    if (rDiffSqr >= lenSqr)
+    {
+        return (rDiff >= (Real)0 ? sphere1 : sphere0);
+    }
+
+    Real length = Math<Real>::Sqrt(lenSqr);
+    Sphere3<Real> sphere;
+
+      // If the distance between spheres is greater than epsilon
+    if (length > Math<Real>::ZERO_TOLERANCE)
+    {
+          // make the sphere center something averaged between the distance
+          // and the radius "distance" offset from sphere0
+        Real coeff = (length + rDiff)/(((Real)2)*length);
+        sphere.Center = sphere0.Center + coeff*cenDiff;
+    }
+    else
+    {
+          // sphere0 encompasses sphere1, so just use its center
+        sphere.Center = sphere0.Center;
+    }
+
+      // Calc new sphere radius as half of the dist between centers plus
+      // the two radii
+      // This is no good for
+    sphere.Radius = ((Real)0.5)*(length + sphere0.Radius + sphere1.Radius);
+
+    return sphere;
+}
+
+From Ogre: http://www.ogre3d.org/docs/api/1.9/OgreSphere_8h_source.html
+
+         void merge(const Sphere& oth)
+  101         {
+  102             Vector3 diff = oth.getCenter() - mCenter;
+  103             Real lengthSq = diff.squaredLength();
+  104             Real radiusDiff = oth.getRadius() - mRadius;
+  105             
+  106             // Early-out
+  107             if (Math::Sqr(radiusDiff) >= lengthSq) 
+  108             {
+  109                 // One fully contains the other
+  110                 if (radiusDiff <= 0.0f) 
+  111                     return; // no change
+  112                 else 
+  113                 {
+  114                     mCenter = oth.getCenter();
+  115                     mRadius = oth.getRadius();
+  116                     return;
+  117                 }
+  118             }
+  119 
+  120             Real length = Math::Sqrt(lengthSq);
+  121             Real t = (length + radiusDiff) / (2.0f * length);
+  122             mCenter = mCenter + diff * t;
+  123             mRadius = 0.5f * (length + mRadius + oth.getRadius());
+  124         }
+  125
+
+
+*/
+
+  // So... we do a somewhat different thing than the algorithms above...
+  // doesn't seem to be wrong (unit tests, analytically) and is potentially
+  // less cases and less computation.  Really don't get how these two
+  // implementations are so similar, yet not objectively good.  Hmmm...
+  // does make me wonder about this algo, but moving on for now. PRW
+
 void
 sphere::
 extendBy ( const sphere& sphere )
 {
-	PNIMATHUNTESTED;
-
 	if ( this == &sphere )
 		return;					// no extend by self.
 
@@ -318,10 +402,10 @@ extendBy ( const sphere& sphere )
 	}
 	else
 	{
-		// this finds the vector seperating this and sphere and add to
-		// the length the radius of the other sphere to get a point on
-		// the far side of sphere... it then calls extendBy with the
-		// calculated point
+      // this finds the vector seperating this and sphere and add to
+      // the length the radius of the other sphere to get a point on
+      // the far side of sphere... it then calls extendBy with the
+      // calculated point
 
 		vec3 diff ( sphere.center );
 		diff -= center;
@@ -339,6 +423,7 @@ extendBy ( const sphere& sphere )
 		extendBy ( diff );
 	}
 }
+
 
 // NON-OPTIMAL
 
