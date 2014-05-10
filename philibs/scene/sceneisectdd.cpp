@@ -561,7 +561,7 @@ void isectDd::isecTravDataFlat ( geom const* pGeom, seg const& aSeg, hit& aHit )
       IndIter indEnd = partCur->mIndices.end ();
       for ( IndIter indCur = partCur->mIndices.begin (); indCur != indEnd; )
       {
-        geomData::SizeType startInd = *indCur;
+        size_t startInd = *indCur;
         
         pni::math::vec3 vert0 ( tIter ( *indCur ) );
         ++indCur;
@@ -621,7 +621,7 @@ void isectDd::isectTravDataTreePartition ( geom const* pGeom,
       IndIter indEnd = part.mIndices.end ();
       for ( IndIter indCur = part.mIndices.begin (); indCur != indEnd; )
       {
-        geomData::SizeType startInd = *indCur;
+        size_t startInd = *indCur;
         
         pni::math::vec3 vert0 ( tIter ( *indCur ) );
         ++indCur;
@@ -669,7 +669,7 @@ void isectDd::isectTravDataTreeLeaf ( geom const* pGeom,
   IndIter indEnd = part.mIndices.end ();
   for ( IndIter indCur = part.mIndices.begin (); indCur != indEnd; )
   {
-    geomData::SizeType startInd = *indCur;
+    size_t startInd = *indCur;
     
     pni::math::vec3 vert0 ( tIter ( *indCur ) );
     ++indCur;

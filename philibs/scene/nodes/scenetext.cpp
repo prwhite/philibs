@@ -73,10 +73,10 @@ void text::doLayout ()
 
   float xPos = 0.0f;
   float yPos = 0.0f;
-  SizeType curVert = 0;
+  size_t curVert = 0;
 
   float* pAttr = pData->getAttributePtr(geomData::Position);
-  SizeType* pInd = pData->getIndicesPtr();
+  geomData::IndexType* pInd = pData->getIndicesPtr();
 
   for ( auto iter : uTxt )
   {

@@ -286,7 +286,7 @@ class helper
           size_t const NumIndices = numFaces * NumVertsPerTri;
           size_t const MaxIndexNum = UINT16_MAX;
           
-          static_assert (sizeof(geomData::SizeType) == sizeof(uint16_t), "geomData::SizeType should be 2 bytes, but isn't!" ); // Make sure we're only using shorts.
+          static_assert (sizeof(geomData::IndexType) == sizeof(uint16_t), "geomData::IndexType should be 2 bytes, but isn't!" ); // Make sure we're only using shorts.
 
           assert(dstIndices.size() == NumIndices);
           assert(maxVert < MaxIndexNum); // Make sure we don't overflow uint16_t

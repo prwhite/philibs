@@ -114,7 +114,7 @@ void sprites::doDepthSort ( graphDd::fxUpdate const& update,
   
   size_t const stride = mData.getStride ();
   float* pPos = mData.getBindingPtr ( Position );
-  for ( SizeType cur = 0;
+  for ( geomData::IndexType cur = 0;
       cur != end; 
       ++cur, pPos += stride )
   {
@@ -141,7 +141,7 @@ void assignUvToFloatPtr ( float* pFloat, pni::math::vec2 const& src )
   pFloat[ 1 ] = src[ 1 ];
 }
 
-inline void sprites::addSpriteToGeom ( SizeType dst, SizeType src )
+inline void sprites::addSpriteToGeom ( geomData::IndexType dst, geomData::IndexType src )
 {
   //sprite const& curItem = mItems[ src ];
     // Non-optimal... there's a few extra mults due to
@@ -179,7 +179,7 @@ inline void sprites::addSpriteToGeom ( SizeType dst, SizeType src )
     // Offset to the beginning of the vert and set up the
     // four unique verts.
     // Possibly NON-OPTIMAL due to using lots of temporaries.
-  SizeType valDst = dst * 4;
+  geomData::IndexType valDst = dst * 4;
   viter += valDst;
     // tr = 0
   vec3* posPtr = reinterpret_cast< vec3* > ( &viter  );
@@ -215,7 +215,7 @@ inline void sprites::addSpriteToGeom ( SizeType dst, SizeType src )
 
     // Now index to the verts in non-stripped, tri-strip order.
   geomData::Indices& inds = mGeomData->getIndices ();
-  SizeType indDst = dst * 6;
+  geomData::IndexType indDst = dst * 6;
   inds[ indDst++ ] = valDst + 3;
   inds[ indDst++ ] = valDst + 1;
   inds[ indDst++ ] = valDst + 2;
@@ -283,10 +283,10 @@ void sprites::update ( graphDd::fxUpdate const& update )
 
     // Iterate over items creating corresponding sprite tri pairs.    
   if ( mDoDepthSort )
-    for ( SizeType num = 0; num < elemCount; ++num )
+    for ( geomData::IndexType num = 0; num < elemCount; ++num )
       addSpriteToGeom ( num, sorters[ num ].mIndex );
   else
-    for ( SizeType num = 0; num < elemCount; ++num )
+    for ( geomData::IndexType num = 0; num < elemCount; ++num )
       addSpriteToGeom ( num, num );
 
     // Set bounds dirty.

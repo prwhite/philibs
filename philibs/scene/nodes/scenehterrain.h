@@ -27,6 +27,9 @@ namespace scene {
     
 /////////////////////////////////////////////////////////////////////
 
+// TODO: hterrain makes inappropriate use of geomData::IndexType...
+// should generally be replaced with size_t.
+
 class hterrain :
   public scene::geom
 {
@@ -121,7 +124,7 @@ class hterrain :
     void clipPointToImg ( img::base* pImg, int& xPos, int& yPos );
     void rebuildGeom ( Dim xs, Dim ys, Dim xe, Dim ye );
     float calcHeightDz ();
-    geomData::SizeType xyToGeomValueIndex ( Dim xVal, Dim yVal );
+    geomData::IndexType xyToGeomValueIndex ( Dim xVal, Dim yVal );
 
     struct genHeightStack
     {

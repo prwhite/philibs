@@ -430,22 +430,22 @@ PNIPSTDLOG
     Dim xEndInd = xEnd - xStart;
     Dim yEndInd = yEnd - yStart;
     
-    geomData::SizeType numVals = ( xEnd - xStart ) * ( yEnd - yStart );
-    geomData::SizeType numInds = ( xEndInd - xStart ) * ( yEndInd - yStart ) * 6;
+    geomData::IndexType numVals = ( xEnd - xStart ) * ( yEnd - yStart );
+    geomData::IndexType numInds = ( xEndInd - xStart ) * ( yEndInd - yStart ) * 6;
 
-    geomData::SizeType tmpValueStride = mGeomData->getAttributes ().getValueStride ();
+    geomData::IndexType tmpValueStride = mGeomData->getAttributes ().getValueStride ();
     mGeomData->resize ( numVals * tmpValueStride, numInds );
     
       // Now fill in indices.  These only change when the image size
       // changes, and we're not going to allow that for now.
     geomData::Indices& ind = mGeomData->getIndices ();
-    geomData::SizeType* pInd = &ind[ 0 ];
+    geomData::IndexType* pInd = &ind[ 0 ];
 
     for ( Dim cury = xStart; cury < yEndInd; ++cury )
     {
       for ( Dim curx = yStart; curx < xEndInd; ++curx )
       {
-        geomData::SizeType val = 
+        geomData::IndexType val = 
             ( cury - yStart ) * valuePitch + ( curx - xStart );
         *pInd++ = val;
         *pInd++ = val + 1;
@@ -458,7 +458,7 @@ PNIPSTDLOG
     }
   }
 
-  geomData::SizeType valueStride = mGeomData->getAttributes ().getValueStride ();
+  geomData::IndexType valueStride = mGeomData->getAttributes ().getValueStride ();
 
 PNIPSTDLOG
 
@@ -531,7 +531,7 @@ void hterrain::generateGeomBounds () const
   // out starting index of verts in tris to be binned in collision
   // optimization partitions.
   // GOTCHA: Currently no bounds checking!!!
-geomData::SizeType hterrain::xyToGeomValueIndex ( Dim xVal, Dim yVal )
+geomData::IndexType hterrain::xyToGeomValueIndex ( Dim xVal, Dim yVal )
 {
 //  size_t const DataStride = mGeomData->getValueStride ();
   Dim const xStart = 1;
@@ -545,11 +545,11 @@ geomData::SizeType hterrain::xyToGeomValueIndex ( Dim xVal, Dim yVal )
   xVal -= xStart;
   yVal -= yStart;
   
-  //geomData::SizeType ret = 
-      //( geomData::SizeType ) ( yVal * DataPitch + xVal * DataStride );
+  //geomData::IndexType ret = 
+      //( geomData::IndexType ) ( yVal * DataPitch + xVal * DataStride );
   
-  geomData::SizeType ret = 
-      ( geomData::SizeType ) ( ( yVal * xStride + xVal ) * TrisPerCell );
+  geomData::IndexType ret = 
+      ( geomData::IndexType ) ( ( yVal * xStride + xVal ) * TrisPerCell );
   
   return ret;
 }
@@ -578,7 +578,7 @@ void hterrain::generateGeomPartition () const
   size_t const TrisPerBin = TotalTris / NumBins;
   size_t const VertsPerBin = TrisPerBin * 3;
   
-  geomData::SizeType ind = 0;
+  geomData::IndexType ind = 0;
   size_t count = 0;
   
   pParts->mPartitions.resize ( 1 );

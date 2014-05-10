@@ -509,7 +509,7 @@ PNIDBG
 						return;
 PNIDBG
           geomData* pGdata = pGeom->geometryOp ();
-          geomData::SizeType stride = pGdata->getAttributes ().getValueStride ();
+          size_t stride = pGdata->getAttributes ().getValueStride ();
 //          const unsigned int vertOffset = 0;    // Always zero.
 //           const unsigned int normOffset = pGdata->getValueOffset ( geomData::Normals );
 
@@ -519,9 +519,9 @@ PNIDBG
 				
           float* verts = &pGdata->getValues ()[ 0 ];
           
-          geomData::SizeType end = pGdata->getValueCount ();
+          size_t end = pGdata->getValueCount ();
           
-          for ( geomData::SizeType num = 0; num < end; num += stride, verts += stride )
+          for ( size_t num = 0; num < end; num += stride, verts += stride )
           {
             pni::math::vec3 tmp ( verts );
             tmp.xformPt ( tmp, mat );
@@ -874,8 +874,8 @@ PNIDBG
         {
           typedef std::vector< float > VertVals;
           geomData* pGdata = pGeom->geometryOp ();
-          geomData::SizeType stride = pGdata->getAttributes ().getValueStride ();
-          geomData::SizeType offset = pGdata->getAttributes ().getValueOffset ( geomData::Normal );
+          size_t stride = pGdata->getAttributes ().getValueStride ();
+          size_t offset = pGdata->getAttributes ().getValueOffset ( geomData::Normal );
           const unsigned int TypeStride = 3;
           
           if ( ::ase::node const* pVerts = pSrc->findNode ( "MESH_NORMALS" ) )
@@ -906,10 +906,10 @@ PNIDBG
             
             // Copy out of the vector of floats into geomData.
             geomData::Values& values = pGdata->getValues ();
-            for ( geomData::SizeType num = 0; num < ind.mSize; ++num )
+            for ( size_t num = 0; num < ind.mSize; ++num )
             {
-              geomData::SizeType dst = ind.mVerts[ num ].mInd  * stride + offset;
-              geomData::SizeType src = ind.mVerts[ num ].mNorm * TypeStride;
+              size_t dst = ind.mVerts[ num ].mInd  * stride + offset;
+              size_t src = ind.mVerts[ num ].mNorm * TypeStride;
 // cout << "num,  mNorm = " << num << ", " << ind.mVerts[ num ].mNorm << endl;
 // cout << "dst, src " << dst << ", " << src << endl;
 // cout << " norm 2 = " << vertVals[ src ] << ", " << vertVals[ src + 1 ]

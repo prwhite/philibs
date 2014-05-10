@@ -40,7 +40,7 @@ class geomData :
   public:
 
     typedef float ValueType;
-    typedef uint16_t SizeType;
+    typedef uint16_t IndexType;
 
     geomData () {}
 
@@ -138,12 +138,20 @@ class geomData :
 
       /** Struct that indicates specific geometry attribute names, types, and
           sizes for driving the VBO setup process during GL evaluation. */
-    struct AttributeVal final
+    struct AttributeVal
       {
         std::string mName;        /// Only needed for user-defined attributes to match with vertex prog
         AttributeType mType;      /// From AttributeType enum
         DataType mDataType;       /// Data type of values in attribute from DataType
-        size_t mComponents;     /// Number of floats for this attribute
+        size_t mComponents;       /// Number of floats for this attribute
+        
+        bool operator == ( AttributeVal const& rhs ) const
+          {
+            return mName == rhs.mName &&
+                   mType == rhs.mType &&
+                   mDataType == rhs.mDataType &&
+                   mComponents == rhs.mComponents;
+          }
       };
 
     // Attributes:
@@ -162,6 +170,8 @@ class geomData :
           typedef std::vector< AttributeVal > Base;
 
         public:
+            /// Number of floats in vertex.
+            /// @note will be pretty invalid when we support bytes, shorts, etc.
           size_t getValueStride () const
             {
               size_t ret = 0;
@@ -174,6 +184,7 @@ class geomData :
               return ret;
             }
 
+            /// Number of bytes in a vertex.
           size_t getValueStrideBytes () const
             {
                 // Opt: We could cache stride with a little more work in the
@@ -241,15 +252,15 @@ class geomData :
 
       // This is a cheap convention hack... all classes in phi start with a
       // lower case, but typedefs upper... so this gets us consistent in
-      // both ways in this class.
+      // both ways (hah) in this class.
     typedef attributes Attributes;
 
     /////////////////////////////////////////////////////////////////
       /** The vector that contains indices for the geomData object */
     class indexVec :
-      public std::vector< SizeType >
+      public std::vector< IndexType >
     {
-        typedef std::vector< SizeType > Base;
+        typedef std::vector< IndexType > Base;
         enum { Buff = 0 };
         
       public:
@@ -291,6 +302,9 @@ class geomData :
           mIndices.resize ( newSize );
           setDirty ();
         }
+  
+    size_t getVertCount () const
+        { return mValues.size() / mAttributes.getValueStride(); }
         
     size_t getValueCount () const
         { return mValues.size (); }
@@ -302,7 +316,7 @@ class geomData :
         { return mIndices.size (); }
         
     size_t getIndexSizeBytes () const
-        { return mIndices.size () * sizeof ( SizeType ); }
+        { return mIndices.size () * sizeof ( IndexType ); }
   
     size_t getTriCount () const
         { return getIndexCount () / 3; }
@@ -313,13 +327,19 @@ class geomData :
     Values const& getValues () const { return mValues; }
     ValueType* getValuesPtr () { return &mValues[ 0 ]; }
     ValueType const* getValuesPtr () const { return &mValues[ 0 ]; }
+    ValueType* getValuesPtr ( size_t index ) { return &mValues[ 0 ] + index * mAttributes.getValueStride(); }
+    ValueType const* getValuesPtr ( size_t index ) const { return &mValues[ 0 ] + index * mAttributes.getValueStride(); }
+  
     ValueType* getAttributePtr ( geomData::AttributeType which ) { return getValuesPtr() + mAttributes.getValueOffset ( which ); }
     ValueType const* getAttributePtr ( geomData::AttributeType which ) const { return getValuesPtr() + mAttributes.getValueOffset ( which ); }
+    ValueType* getAttributePtr ( geomData::AttributeType which, size_t index ) { return getValuesPtr() + mAttributes.getValueOffset ( which ) + index * mAttributes.getValueStride(); }
+    ValueType const* getAttributePtr ( geomData::AttributeType which, size_t index ) const { return getValuesPtr() + mAttributes.getValueOffset ( which ) + index * mAttributes.getValueStride(); }
+
 
     Indices& getIndices () { return mIndices; }
     Indices const& getIndices () const { return mIndices; }
-    SizeType* getIndicesPtr () { return & mIndices[ 0 ]; }
-    SizeType const* getIndicesPtr () const { return & mIndices[ 0 ]; }
+    IndexType* getIndicesPtr () { return & mIndices[ 0 ]; }
+    IndexType const* getIndicesPtr () const { return & mIndices[ 0 ]; }
 
     void setDirty ( bool dirty = true ) { mDirty = dirty; } // Used to invalidate GL-side objects like VBOs during rendering pass.
     bool getDirty () const { return mDirty; }
@@ -334,9 +354,42 @@ class geomData :
     Attributes const& getAttributes () const { return mAttributes; }
     Attributes& attributesOp () { setDirty (); mAttributes.setDirty(); return mAttributes; }
 
-      /** @methodgroup Debugging Methods */
+      /// @group helper methods
+
+      /// @note Will create normal attribute if it isn't set, and realloc values if
+      /// necessary.
+      /// @note angle is currently not implemented.
+      /// @param angle Breaking angle that determines if normals are blended together
+      /// or create a crease.
+    void generateNormals ( float degrees );
+  
+      /// Uniquifies any verts that are shared.  E.g., the index list will point
+      /// at completely unique verts after this is done.
+    void unshareVerts ();
+  
+      /// Share verts that have identical values.  E.g, this is handy after
+      /// generating new normals, which will allow for more efficient storage
+      /// of verts than a non-smooth mesh.
+    void shareVerts ();
+  
+      /// Realloc the value array to hold more attributes without losing current values.
+      /// @note Currently only handles growing the attribute list... shrinking will
+      /// cause all kinds of problems right now.
+    void reallocWithAttributes ( attributes const& newAttributes );
+  
+      /// Swap all members, including attributes, values, indices, and bounds
+      /// with rhs.  This is analogous to STL swap routines.  Dirty flag will
+      /// be set true for both this and rhs.
+    void swap ( geomData* rhs );
+
+      /// Affects certain geometry operations, such as shareVerts and generateNormals.
+      /// @note Default is pni::math::Trait::fuzzVal, which is generally FLT_EPSILON.
+    void setEpsilon ( ValueType val ) { mFuzz = val; }
+    ValueType getEpsilon () const { return mFuzz; }
+
+      /// @methodgroup Debugging Methods
     void dbg ( std::ostream& ostr = std::cout ) const;
-    
+  
   protected:
     virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const {}
   
@@ -350,6 +403,7 @@ class geomData :
       Values mValues;
       Indices mIndices;
       mutable box3 mBounds;
+      ValueType mFuzz = pni::math::Trait::fuzzVal;
       mutable bool mDirty = true;
 };
 
@@ -367,7 +421,6 @@ class geom :
     typedef geomData::AttributeComponents AttributeComponents;
     typedef geomData::AttributeVal AttributeVal;
     typedef geomData::Attributes Attributes;
-    typedef geomData::SizeType SizeType;
   
      geom();
 //     virtual ~geom();
@@ -442,7 +495,6 @@ class geom :
 
 class vertIter
 {
-    typedef geomData::SizeType SizeType;
     typedef geomData::ValueType ValueType;
 
     geom::GeomDataRef mGdata;
@@ -479,14 +531,14 @@ class vertIter
     ValueType& operator[] ( size_t val ) const { return mCur[ val ]; }
     ValueType* operator () ( size_t val ) const { return &mCur[ val * mStride ]; }
 
-      // Increments to next full vertex (i.e., stride), not next float value.
+      /// Increments to next full vertex (i.e., stride), not next float value.
     vertIter& operator++ ()
         {
           mCur += mStride;
           return *this;
         }
 
-      // Increments to next full vertex (i.e., stride), not next float value.
+      /// Increments to next full vertex (i.e., stride), not next float value.
     vertIter& operator+= ( size_t val )
         {
           mCur += mStride * val;
@@ -506,7 +558,6 @@ class vertIter
 
 class triIter
 {
-    typedef geomData::SizeType SizeType;
     typedef geomData::ValueType ValueType;
     
     geom::GeomDataRef mGdata;
@@ -542,13 +593,16 @@ class triIter
     ValueType& operator* () const { return *mPtr; }
     ValueType& operator[] ( size_t val ) const { return mPtr[ val ]; }
     
-    // Relative vertex address operator.  If mCur is 3, calling this with 2 
-    // will give the starting pointer for vertex 5.
+    /// Relative vertex address operator.  If mCur is 3, calling this with 2
+    /// will give the starting pointer for vertex 5.
     ValueType* operator () () const { return mPtr; }
     ValueType* operator () ( size_t val ) const { return getPtr ( mCur + val ); }
 
-    // Increments to next full vertex (i.e., stride), not next float value.
-    // Apps need to keep track of their own mod 3 arithmetic.
+    /// Get the current index into the indices array.
+    geomData::IndexType getCurIndex () const { return mCur; }
+
+    /// Increments to next full vertex (i.e., stride), not next float value.
+    /// Apps need to keep track of their own mod 3 arithmetic.
     triIter& operator++ ()
         {
           mCur++;
@@ -556,8 +610,8 @@ class triIter
           return *this;
         }
 
-    // Increments to next full vertex (i.e., stride), not next float value.
-    // Apps need to keep track of their own mod 3 arithmetic.
+    /// Increments to next full vertex (i.e., stride), not next float value.
+    /// Apps need to keep track of their own mod 3 arithmetic.
     triIter& operator+= ( size_t val )
         {
           mCur += val;

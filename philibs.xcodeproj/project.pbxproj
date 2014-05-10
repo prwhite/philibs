@@ -48,7 +48,7 @@
 		1CDD400B185BC965009284F9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD400A185BC965009284F9 /* UIKit.framework */; };
 		1CDD400E185BC965009284F9 /* libphilibs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD3FF6185BC965009284F9 /* libphilibs.a */; };
 		1CDD4014185BC965009284F9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1CDD4012185BC965009284F9 /* InfoPlist.strings */; };
-		1CDD4016185BC965009284F9 /* philibsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD4015185BC965009284F9 /* philibsTests.m */; };
+		1CDD4016185BC965009284F9 /* philibsGeomDataTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD4015185BC965009284F9 /* philibsGeomDataTests.mm */; };
 		1CDD417C185BCAF0009284F9 /* animbase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD4028185BCAEF009284F9 /* animbase.cpp */; };
 		1CDD417D185BCAF0009284F9 /* animbgmusicfader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD402A185BCAEF009284F9 /* animbgmusicfader.cpp */; };
 		1CDD417E185BCAF0009284F9 /* animgroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD402F185BCAEF009284F9 /* animgroup.cpp */; };
@@ -522,7 +522,7 @@
 		1CDD400A185BC965009284F9 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		1CDD4011185BC965009284F9 /* philibsTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "philibsTests-Info.plist"; sourceTree = "<group>"; };
 		1CDD4013185BC965009284F9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		1CDD4015185BC965009284F9 /* philibsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = philibsTests.m; sourceTree = "<group>"; };
+		1CDD4015185BC965009284F9 /* philibsGeomDataTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = philibsGeomDataTests.mm; sourceTree = "<group>"; };
 		1CDD4028185BCAEF009284F9 /* animbase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = animbase.cpp; sourceTree = "<group>"; };
 		1CDD4029185BCAEF009284F9 /* animbase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = animbase.h; sourceTree = "<group>"; };
 		1CDD402A185BCAEF009284F9 /* animbgmusicfader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = animbgmusicfader.cpp; sourceTree = "<group>"; };
@@ -851,7 +851,7 @@
 		1CDD400F185BC965009284F9 /* philibsTests */ = {
 			isa = PBXGroup;
 			children = (
-				1CDD4015185BC965009284F9 /* philibsTests.m */,
+				1CDD4015185BC965009284F9 /* philibsGeomDataTests.mm */,
 				1CDD4010185BC965009284F9 /* Supporting Files */,
 			);
 			path = philibsTests;
@@ -1485,7 +1485,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1CDD4016185BC965009284F9 /* philibsTests.m in Sources */,
+				1CDD4016185BC965009284F9 /* philibsGeomDataTests.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

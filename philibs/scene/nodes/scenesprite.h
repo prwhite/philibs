@@ -289,7 +289,7 @@ class sprites :
 
     struct sorter
         {
-          sorter ( SizeType index, float distSqr ) :
+          sorter ( geomData::IndexType index, float distSqr ) :
             mIndex ( index ), mDistSqr ( distSqr )
               {}
           
@@ -300,7 +300,7 @@ class sprites :
                 return mDistSqr > rhs.mDistSqr;
               }
               
-          SizeType mIndex;
+          geomData::IndexType mIndex;
           float mDistSqr;
         };
 
@@ -311,7 +311,7 @@ class sprites :
     void calcXYvecs ( pni::math::matrix4 const& mat );
     void doDepthSort ( graphDd::fxUpdate const& update,
         Sorters& sorters );
-    void addSpriteToGeom ( SizeType dst, SizeType src );
+    void addSpriteToGeom ( geomData::IndexType dst, geomData::IndexType src );
   
     pni::math::vec3 mXvec;  // Used internally during update calculations
     pni::math::vec3 mYvec;  // Used internally during update calculations

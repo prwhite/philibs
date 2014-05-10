@@ -100,7 +100,7 @@ void dbgDd::doTotals ()
       geomDataMemTotal += pData->getValues ().size () * 
           sizeof ( float );
       geomDataMemTotal += pData->getIndices ().size () * 
-          sizeof( geomData::SizeType );
+          sizeof( geomData::IndexType );
     }
   }
 
