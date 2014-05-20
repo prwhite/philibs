@@ -15,6 +15,7 @@
 #include "pnimatstack.h"
 #include "pniplane.h"
 #include "pnisphere.h"
+#include "pniseg.h"
 #include "pnirand.h"
 #include "pnifrustum.h"
 
@@ -487,6 +488,25 @@ testSphereExtendBy ()
 }
 
 
+void testSegIsectSeg ()
+{
+  using namespace pni::math;
+
+  seg seg0 ( { 0, 0, 0 }, { 1, 0, 0 } );
+  seg seg1 ( { 0, 0, 0 }, { 0, 2, 0 } );
+  seg seg2 ( { 3, 1, 0 }, { -3, 1, 0 } );
+
+  vec3 dst;
+  
+  QUNIT_IS_TRUE(seg0.isect(seg1, dst));
+  QUNIT_IS_TRUE(dst.equal({0,0,0}));
+
+  QUNIT_IS_TRUE(seg1.isect(seg2, dst));
+  QUNIT_IS_TRUE(dst.equal({0,1,0}));
+
+  QUNIT_IS_FALSE(seg0.isect(seg2, dst));
+}
+
 int
 main ( int argc, char* argv[] )
 {
@@ -504,8 +524,16 @@ main ( int argc, char* argv[] )
 
   testMirror();
 
+  testSegIsectSeg();
+
   std::cout << "\n\n\n" << std::endl;
 
   return 0;
 }
+
+
+
+
+
+
 

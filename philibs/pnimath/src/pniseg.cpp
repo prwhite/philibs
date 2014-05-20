@@ -5,6 +5,7 @@
 /////////////////////////////////////////////////////////////////////
 
 #include "pniseg.h"
+#include "pnivec2.h"
 #include "pnimatrix4.h"
 #include "pnicontains.h"
 
@@ -199,7 +200,51 @@ extendBy ( const vec3& pt )
 	return true;
 }
 
+// References:
+//   http://geomalgorithms.com/a05-_intersect-1.html
 
+bool seg::isect ( ThisType const& rhs, vec3& dst ) const
+{
+  Trait::ValueType dot = dir.dot(rhs.dir);
+  
+    // Check if parallel... we say false if they are parallel, even if they
+    // are coincident... which isn't exactly true, but for practical
+    // purposes it's fine.
+    // TODO: Do something sensible with overlapping segments with the same dir.
+  if ( Trait::equal(dot, 1.0f) || Trait::equal(dot,-1.0f) )
+    return false;
+
+    // Do next step in 2D, as the projection of a 3D line to 2D will still
+    // cross at a given parametric value... which can then be extended back
+    // into 3D.
+  vec2 u2 { -dir[ 1 ], dir[ 0 ] };  // right-handed perpendicular
+  vec2 v2 = { rhs.dir[ 0 ], rhs.dir[ 1 ] };
+  vec2 w2 = { pos[ 0 ] - rhs.pos[ 0 ], pos[ 1 ] - rhs.pos[ 1 ] };
+  Trait::ValueType denom = u2.dot ( v2 );
+  
+    // Calc tu, the distance the isect happens on rhs seg
+  Trait::ValueType tv = u2.dot ( w2 ) / denom;
+  
+    // Isect doesn't happen on rhs segment
+  if ( tv < Trait::zeroVal || tv > rhs.length )
+    return false;
+  
+    // Calc tv, the distance the isect happens on this seg
+    // website says this should be -vperp, but vperp tests out correctly,
+    // so maybe our sense of negative is out of whack.
+    // TODO: verify analytically
+  v2.set ( -rhs.dir[ 1 ], rhs.dir[ 0 ] ); // rh perp, * -1.0
+  
+  Trait::ValueType tu = v2.dot(w2) / denom;
+  
+    // Isect doesn't happen on this segment
+  if ( tu < Trait::zeroVal || tu > length )
+    return false;
+  
+  lerp ( dst, tu / length );
+  
+  return true;
+}
 
 
 

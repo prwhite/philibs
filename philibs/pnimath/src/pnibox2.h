@@ -79,7 +79,7 @@ class PNIMATHAPI box2 {
 		//void extendBy ( const polytope& ptopeIn );
 
 		// intersect methods
-		void intersect( const box2& boxIn );
+		void isect( const box2& boxIn );
 		
 		// get the closest point to pt in the primative
 		bool closestPtIn ( vec2& dest, 

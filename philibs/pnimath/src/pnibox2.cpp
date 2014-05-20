@@ -105,7 +105,7 @@ extendBy ( ValueType xval, ValueType yval )
 
 void
 box2::
-intersect( const box2& boxIn )
+isect( const box2& boxIn )
 {
 		// check for empty boxes first
 		// empty boxes may become valid by below algorithm

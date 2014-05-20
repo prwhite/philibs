@@ -103,6 +103,9 @@ class PNIMATHAPI vec3
 		
 		ValueType getAxisAngle ( const ThisType& v1, const ThisType& v2 );
 
+      /// Project this as a vector onto target as a vector (as opposed to
+      /// representations of points, naturally).
+      /// @note http://en.wikipedia.org/wiki/Vector_projection
 		void projectOnto ( const ThisType& target );
   
     void copyToArray ( ValueType* dst )

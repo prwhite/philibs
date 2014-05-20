@@ -1,24 +1,33 @@
-/////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////
 //
 //	class: seg
 //
-/////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////
 
 
 #ifndef pniseg_h
 #define pniseg_h
 
-/////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////
 
 #include "pnimath.h"
 #include "pnivec3.h"
 
-/////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////
 
 namespace pni {
 	namespace math {
 
-/////////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////
+
+/**
+  The seg is a representation of a line with a beginning and end point.
+  It is stored as the origin (vec3) of the segment, the normalized direction 
+  (vec3) the segment points in, and the length (float).  
+  @note This internal representation differs from another common representation 
+  which has a non-normalized direction and  a length which can be treated as
+  a paramemtric value ranging from 0 to 1.
+*/
 
 class PNIMATHAPI seg 
 {
@@ -78,6 +87,8 @@ class PNIMATHAPI seg
 		bool extendBy ( const vec3& pt );
 			//mtcl: mtcl_end_ignore
 
+      /// Find intersection of two segs, or none.
+    bool isect ( ThisType const& rhs, vec3& dst ) const;
 
 		// simple point interp method
 		// this interpolates along the segment given the range [0,1]
@@ -90,8 +101,8 @@ class PNIMATHAPI seg
 
 	protected:
 		vec3	pos;
-		vec3	dir;
-		ValueType	length;
+		vec3	dir;          /// Always normalized
+		ValueType	length;   /// Actual length, not 0 <= length <= 1
 
 	private:
 

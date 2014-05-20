@@ -11,6 +11,7 @@
 #include "scenegeom.h"
 #include "scenecommon.h"
 #include "pnimathstream.h"
+#include "pniseg.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -221,6 +222,26 @@ GeomDataRef pData00 = 0;
   XCTAssertEqual(pData00->getValues().size(), 6 * pData00->getAttributes().getValueStride(), @"Wrong number of values");
   XCTAssertEqual(pData00->getIndices().size(), 6, @"Wrong number of indices");
   XCTAssertEqual(pData00->getAttributes().getValueStride(), 6, @"Wrong value stride");
+}
+
+- (void)testSegIsectSeg
+{
+  using namespace pni::math;
+
+  seg s0 ( { 0, 0, 0 }, { 1, 0, 0 } );
+  seg s1 ( { 0, 0, 0 }, { 0, 2, 0 } );
+  seg s2 ( { 3, 1, 0 }, { -3, 1, 0 } );
+
+  vec3 dst;
+  
+  XCTAssertTrue(s0.isect(s1, dst), "no isect for s0 s1");
+  XCTAssertTrue(dst.equal({0,0,0}));
+
+  XCTAssertTrue(s1.isect(s2, dst), "no isect for s1 s2");
+  XCTAssertTrue(dst.equal({0,1,0}));
+
+  XCTAssertFalse(s0.isect(s2, dst), "isect for s0 s2, but shouldn't be");
+
 }
 
 
