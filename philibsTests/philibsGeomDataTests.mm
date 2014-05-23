@@ -283,6 +283,17 @@ GeomDataRef pData00 = 0;
   v3[ 0 ] = 69.0f;
   XCTAssertEqual(*pData->getElementPtr<float>(0, LinePosition), 69.0f, "overlayed vector didn't write correctly to values array");
 
+  lineData::Binding newBinding;
+  newBinding.push_back ( { {}, LinePosition, LineFloat, sizeof(float), 3 } );
+  newBinding.push_back ( { {}, LineColor, LineFloat, sizeof(float), 4 } );
+    // Thickness removed/missing
+  
+  pData->migrate(newBinding);
+  
+  XCTAssertEqual(pData->size(), 10, "calculated size is wrong after migrate");
+  XCTAssertEqual(pData->mBinding.getValueStrideBytes() * 10, pData->sizeBytes(),
+      "byte size of storage not correct after migrate" );
+
   lines* pLines = new lines;
   
   

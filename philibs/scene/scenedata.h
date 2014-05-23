@@ -132,23 +132,24 @@ struct basicBindingItem
   
   bool operator == ( basicBindingItem const& rhs ) const
     {
-      return ( mName = rhs.mName &&
-          mName = rhs.mName &&
-          mSemanticType = rhs.mSemanticType &&
-          mDataType = rhs.mDataType &&
-          mSize = rhs.mSize &&
-          mCount = rhs.mCount &&
-          mIndex = rhs.mIndex );
+      return ( mName == rhs.mName &&
+          mName == rhs.mName &&
+          mSemanticType == rhs.mSemanticType &&
+          mDataType == rhs.mDataType &&
+          mSize == rhs.mSize &&
+          mCount == rhs.mCount &&
+          mIndex == rhs.mIndex );
     }
 };
 
 // ///////////////////////////////////////////////////////////////////
 
-template< class BindingItem >
+template< class BindingItem_ >
 class basicBinding :
-  public std::vector< BindingItem >
+  public std::vector< BindingItem_ >
 {
   public:
+    using BindingItem = BindingItem_;
     using SemanticType = typename BindingItem::SemanticType;
     using DataType = typename BindingItem::DataType;
   
@@ -218,10 +219,11 @@ class basicBinding :
   as you fill in elements.
 */
 
-template< class Binding >
+template< class Binding_ >
 class data 
 {
   public:
+    using Binding = Binding_;
 
       // Public data!!!
       /// The binding object.  Use mBinding.push_back to add binding objects
@@ -230,19 +232,24 @@ class data
 
     template< typename Type >
     Type* getElementPtr ( size_t count, typename Binding::SemanticType which, size_t index = 0 )
-      { return ( mValues.empty() ? 0 :
-        reinterpret_cast<Type*>(mValues.data() + mBinding.getValueStrideBytes () * count + mBinding.getValueOffsetBytes ( which, index ) ) ); }
+      {
+          auto ptr = getPtr< ValueType > ();
+          return ( reinterpret_cast< Type* > (
+              ptr ?
+              ptr + mBinding.getValueStrideBytes () * count + mBinding.getValueOffsetBytes ( which, index ) : nullptr ) );
+      }
     template< typename Type >
     Type const* getElementPtr ( size_t count, typename Binding::SemanticType which, size_t index = 0 ) const
-      { return ( mValues.empty() ? 0 :
-        reinterpret_cast<Type*>(mValues.data() + mBinding.getValueStrideBytes () * count + mBinding.getValueOffsetBytes ( which, index ) ) ); }
+      {
+          auto ptr = getPtr< ValueType > ();
+          return ( reinterpret_cast< Type* > (
+              ptr ?
+              ptr + mBinding.getValueStrideBytes () * count + mBinding.getValueOffsetBytes ( which, index ) : nullptr ) );
+      }
 
       /// Resize the data with the given number of elements.
       /// @param elements The new number of elements... NOT the byte size.
-    void resize ( size_t elements )
-      {
-        mValues.resize ( mBinding.getValueStrideBytes () * elements );
-      }
+    void resize ( size_t elements ) { mValues.resize ( mBinding.getValueStrideBytes () * elements ); }
       /// Get count of elements in values.
     size_t size () const { return mValues.size() / mBinding.getValueStrideBytes (); }
       /// Get size in bytes of values storage.
@@ -250,15 +257,23 @@ class data
   
       /// Shrink the internal storage to exactly fit the current size.
     void shrink () { mValues.shrink_to_fit(); }
+  
+      /// Swap storage members to rhs a la STL collection swap.
+    void swap ( data& rhs ) { mBinding.swap ( rhs.mBinding ); mValues.swap ( rhs.mValues ); }
+  
+      /// Change the layout of the packed elements.  Maintain values in
+      /// bindings that aren't removed and create new space in each element
+      /// for new bindings.
+    void migrate ( Binding const& rhs );
 
   protected:
 
       // I don't think we need these... the getElementPtr functions are as
       // general as we need, and the base pointer isn't all that useful by itself.
     template< typename Type >
-    Type* getPtr () { return ( mValues.empty() ? 0 : reinterpret_cast<Type*>(mValues.data()) ); }
+    Type* getPtr () { return ( mValues.empty() ? nullptr : reinterpret_cast<Type*>(mValues.data()) ); }
     template< typename Type >
-    Type const* getPtr () const { return ( mValues.empty() ? 0 : reinterpret_cast<Type*>(mValues.data()) ); }
+    Type const* getPtr () const { return ( mValues.empty() ? nullptr : reinterpret_cast<Type*>(mValues.data()) ); }
   
   private:
   
@@ -270,7 +285,9 @@ class data
 // ///////////////////////////////////////////////////////////////////
 /**
   A class to manage values for packed, interleaved data.  Building
-  on the #data class, adds a
+  on the #data class, adds a vector of indices of the specified type
+  to facilitate things like indexing for GLES glDrawElements, for a
+  line rendering primitive length list, etc.
 */
 template< class Binding, typename IndexType_ = uint16_t >
 class dataIndexed :
@@ -288,11 +305,10 @@ class dataIndexed :
     IndexType const* getIndicesPtr () const { return mIndices.data (); }
   
     void resize ( size_t elements ) = delete;
-    void resize ( size_t elements, size_t indices )
-      {
-        Base::resize ( elements );
-        mIndices.resize ( indices );
-      }
+    void resize ( size_t elements, size_t indices ) { Base::resize ( elements ); mIndices.resize ( indices ); }
+  
+    void swap ( Base& rhs ) = delete;
+    void swap ( dataIndexed& rhs ) { Base::swap ( rhs ); mIndices.swap ( rhs.mIndices ); }
   
   private:
   
@@ -303,6 +319,60 @@ class dataIndexed :
 
 using dataBasic =        data<        basicBinding< basicBindingItem< BasicSemanticTypes, BasicDataTypes > > >;
 using dataIndexedBasic = dataIndexed< basicBinding< basicBindingItem< BasicSemanticTypes, BasicDataTypes > > >;
+
+// ///////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////
+// Out of line definitions to keep declarations tidy.
+
+template< class Binding >
+void  data< Binding >::migrate ( Binding const& rhs )
+{
+  assert ( ! mBinding.empty () );
+  assert ( ! rhs.empty () );
+  
+  if ( mBinding == rhs )
+    return;
+  
+  size_t const elements = size ();  // not byte size
+  size_t const lastElement = elements - 1;
+  
+    // Tricky... resize storage to _new_ binding size.
+  mValues.resize ( rhs.getValueStrideBytes () * elements );
+  
+  size_t const srcStride = mBinding.getValueStrideBytes ();
+  size_t const dstStride = rhs.getValueStrideBytes ();
+  bool const growing = mBinding.getValueStrideBytes () < rhs.getValueStrideBytes ();
+  
+  for ( auto const& binding : mBinding )
+  {
+    if ( rhs.hasBinding ( binding.mSemanticType, binding.mIndex ) )
+    {
+      size_t const srcOffset = mBinding.getValueOffsetBytes ( binding.mSemanticType, binding.mIndex);
+      size_t const dstOffset = rhs.getValueOffsetBytes ( binding.mSemanticType, binding.mIndex);
+      size_t const componentSize = binding.mSize * binding.mCount;
+      
+      if ( growing )
+      {
+        ValueType* src = getPtr< ValueType >() + srcOffset + srcStride * lastElement;
+        ValueType* dst = getPtr< ValueType >() + dstOffset + dstStride * lastElement;
+
+        for ( size_t num = 0; num < elements; ++num, src -= srcStride, dst -= dstStride )
+          memcpy ( dst, src, componentSize );
+      }
+      else
+      {
+        ValueType* src = getPtr< ValueType >() + srcOffset;
+        ValueType* dst = getPtr< ValueType >() + srcOffset;
+
+        for ( size_t num = 0; num < elements; ++num, src += srcStride, dst += dstStride )
+          memcpy ( dst, src, componentSize );
+      }
+    }
+  }
+  mBinding = rhs;
+}
+
 
 // ///////////////////////////////////////////////////////////////////
 // ///////////////////////////////////////////////////////////////////
