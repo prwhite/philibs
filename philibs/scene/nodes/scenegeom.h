@@ -140,7 +140,7 @@ class geomData :
           sizes for driving the VBO setup process during GL evaluation. */
     struct AttributeVal
       {
-        std::string mName;        /// Only needed for user-defined attributes to match with vertex prog
+        std::string mName;        /// Needed for attributes to match with vertex prog
         AttributeType mType;      /// From AttributeType enum
         DataType mDataType;       /// Data type of values in attribute from DataType
         size_t mComponents;       /// Number of floats for this attribute
@@ -255,35 +255,13 @@ class geomData :
       // both ways (hah) in this class.
     typedef attributes Attributes;
 
-    /////////////////////////////////////////////////////////////////
-      /** The vector that contains indices for the geomData object */
-    class indexVec :
-      public std::vector< IndexType >
-    {
-        typedef std::vector< IndexType > Base;
-        enum { Buff = 0 };
-        
-      public:
-          // Forward all std::vector constructors.
-        using vector::vector;
-      
-        void resize ( size_type size, size_t val = 0 )
-            {
-              Base::resize ( size + Buff, val );
-            }
-        
-        void reserve ( size_type val ) { Base::reserve ( val + Buff ); }
-            
-        size_type size () const { return Base::size () - Buff; }
-        
-        bool empty () const { return Base::size () - Buff == 0; }
-    };
-
-      /** The values type for storing vertex attribute data.  It's always all
-          floats */
+      /// The values type for storing vertex attribute data.  It's always all
+      ///    floats
     typedef std::vector< ValueType > Values;
-    typedef indexVec Indices;
-    
+      /// The indices for stringing together primitives.  It's currently always
+      /// uint16_t as that's what GLES deals best with.
+    typedef std::vector< IndexType > Indices;
+  
       /** Note: numValues is count of floats, not count of verts.
           Generally it is numVerts * sizeof ( vert ) / sizeof ( float ). */
     void resize ( size_t numValues, size_t numIndices )

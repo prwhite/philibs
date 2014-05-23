@@ -56,47 +56,6 @@ sprites::sprites () :
 
 /////////////////////////////////////////////////////////////////////
 
-void sprites::calcRotMat ( graphDd::fxUpdate const& update,
-    pni::math::matrix4& mat )
-{
-    // Get cam -> world matrix to come up with screen-aligned
-    // vectors in this node's frame.
-    // Invert because the converter gives us world to cam, not
-    // cam to world.
-  scene::converter conv;
-  conv.getWorldToCamMatrix ( mat, update.mCamPath, update.mNodePath );
-  mat.invert ();
-  
-    // Get rid of translate/projection.
-    // In some cases losing the projection could be a problem,
-    // but in the most likely cases it's no thing at all.
-  mat.set3x3Mat ( mat );  // TRICKY: Set to self.  Should be OK.
-}
-
-/////////////////////////////////////////////////////////////////////
-
-void sprites::calcXYvecs ( pni::math::matrix4 const& mat )
-{
-    // The rows represent the transformed i, j and k vectors.
-    // So we don't need to do a mult, we just grab them directly.
-#ifndef _WIN32
-  mat.getRow ( 0, mXvec );
-  mat.getRow ( 1, mYvec );
-#else
-  mat.getRow ( 0, mYvec );
-  mat.getRow ( 1, mXvec );
-  mYvec *= -1.0f;
-#endif
-    // Kinda normalize them so that they are unit length in the target frame.
-    // We make them half unit length because we will be adding them
-    // in each direction from the center of the sprite.
-  mXvec /= 2.0f * mXvec.length ();
-  mYvec /= 2.0f * mYvec.length ();
-}
-
-
-/////////////////////////////////////////////////////////////////////
-
 void sprites::doDepthSort ( graphDd::fxUpdate const& update,
     Sorters& sorters )
 {
@@ -255,8 +214,8 @@ void sprites::update ( graphDd::fxUpdate const& update )
     // and values passed in 'update'.
     // Using a member for rotation matrix makes this non-reentrant.
   pni::math::matrix4 rotMat;
-  calcRotMat ( update, rotMat );
-  calcXYvecs ( rotMat );
+  calcCamToWorldRotMat ( update, rotMat );
+  calcXYHalfVecs ( mXvec, mYvec, rotMat );
     
     // Do depth sort using a temporary index list.
     // TODO: Consider caching the sorters for next time...

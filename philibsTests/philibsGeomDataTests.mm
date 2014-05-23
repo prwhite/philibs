@@ -12,6 +12,8 @@
 #include "scenecommon.h"
 #include "pnimathstream.h"
 #include "pniseg.h"
+#include "scenedata.h"
+#include "scenelines.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -244,6 +246,47 @@ GeomDataRef pData00 = 0;
 
 }
 
+- (void)testSceneData
+{
+  using namespace pni::math;
+
+  scene::dataBasic testData;
+  scene::dataIndexedBasic testDataIndexed;
+
+}
+
+- (void)testSceneLines
+{
+  lineData* pData = new lineData;
+  
+  pData->mBinding.push_back ( { {}, LinePosition, LineFloat, sizeof(float), 3 } );
+  pData->mBinding.push_back ( { {}, LineColor, LineFloat, sizeof(float), 4 } );
+  pData->mBinding.push_back ( { {}, LineThickness, LineFloat, sizeof(float), 1 } );
+
+  pData->resize(10,3);
+
+  XCTAssertEqual(pData->mBinding.size(), 3, "wrong size for binding after 3 inserts");
+  XCTAssertEqual(pData->mBinding.getValueStrideBytes(), ( 3 + 4 + 1 ) * sizeof ( float ), "wrong size for stride bytes");
+  XCTAssertEqual(pData->size(), 10, "wrong size for number of elements");
+  XCTAssertEqual(pData->sizeBytes(), 10 * pData->mBinding.getValueStrideBytes(), "wrong byte size values storage");
+
+  XCTAssertEqual(
+      pData->getElementPtr<char>(0, LinePosition) + pData->mBinding.getValueStrideBytes(),
+      pData->getElementPtr<char>(1, LinePosition),
+      "actual stride doesn't match calculated stride");
+  XCTAssertEqual(
+      pData->getElementPtr<char>(0, LinePosition) + 3 * sizeof(float),
+      pData->getElementPtr<char>(0, LineColor),
+      "offset of LineColor not correct" );
+
+  auto& v3 = *pData->getElementPtr< pni::math::vec3 >(0, LinePosition);
+  v3[ 0 ] = 69.0f;
+  XCTAssertEqual(*pData->getElementPtr<float>(0, LinePosition), 69.0f, "overlayed vector didn't write correctly to values array");
+
+  lines* pLines = new lines;
+  
+  
+}
 
 
 @end
