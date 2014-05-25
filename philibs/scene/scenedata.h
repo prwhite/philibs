@@ -119,29 +119,30 @@ struct basicBindingItem
     mCount ( count ),
     mIndex ( index ) {}
   
-    /// @group Operators
+    /// @group Relational Operators
   bool operator < ( basicBindingItem const& rhs ) const
     {
         // Optimization... change order to hint towards early return.
         // TODO: Optimization... skip things that "don't matter"
       SCENEDATALTCOMPAREHELPER(mSemanticType, rhs.mSemanticType);
       SCENEDATALTCOMPAREHELPER(mIndex, rhs.mIndex);
-      SCENEDATALTCOMPAREHELPER(mDataType, rhs.mDataType);
-      SCENEDATALTCOMPAREHELPER(mSize, rhs.mSize);
-      SCENEDATALTCOMPAREHELPER(mCount, rhs.mCount);
-      SCENEDATALTCOMPAREHELPER(mName, rhs.mName);
+//      SCENEDATALTCOMPAREHELPER(mDataType, rhs.mDataType);
+//      SCENEDATALTCOMPAREHELPER(mSize, rhs.mSize);
+//      SCENEDATALTCOMPAREHELPER(mCount, rhs.mCount);
+//      SCENEDATALTCOMPAREHELPER(mName, rhs.mName);
       return false;
     }
   
   bool operator == ( basicBindingItem const& rhs ) const
     {
-      return ( mName == rhs.mName &&
-          mName == rhs.mName &&
+      return (
           mSemanticType == rhs.mSemanticType &&
-          mDataType == rhs.mDataType &&
-          mSize == rhs.mSize &&
-          mCount == rhs.mCount &&
-          mIndex == rhs.mIndex );
+          mIndex == rhs.mIndex // &&
+//          mDataType == rhs.mDataType &&
+//          mSize == rhs.mSize &&
+//          mCount == rhs.mCount &&
+//          mName == rhs.mName
+      );
     }
 };
 
@@ -167,12 +168,12 @@ class basicBinding :
   
       /// @warning Only useful if each Type can only be entered in the binding
       /// list at most one time.
-    size_t getValueOffsetBytes ( SemanticType which, size_t index = 0 ) const
+    size_t getValueOffsetBytes ( SemanticType stype, size_t index = 0 ) const
       {
         size_t ret = 0;
         for ( auto binding : *this )
         {
-          if ( binding.mSemanticType == which && binding.mIndex == index )
+          if ( binding.mSemanticType == stype && binding.mIndex == index )
             break;
           ret += binding.mSize * binding.mCount;
         }
@@ -193,10 +194,10 @@ class basicBinding :
         return ret;
       }
 
-    bool hasBinding ( SemanticType which, size_t index = 0 ) const
+    bool hasBinding ( SemanticType stype, size_t index = 0 ) const
       {
         for ( auto binding : *this )
-          if ( binding.mSemanticType == which && binding.mIndex == index )
+          if ( binding.mSemanticType == stype && binding.mIndex == index )
             return true;
         return false;
       }
@@ -278,8 +279,11 @@ using dataIndexedString = dataIndexed< basicBinding< basicBindingItem< std::stri
 template< class Binding_ >
 class data 
 {
+    using ValueType = uint8_t;
+
   public:
     using Binding = Binding_;
+    using SemanticType = typename Binding::SemanticType;
 
       // Public data!!!
       /// The binding object.  Use mBinding.push_back to add binding objects
@@ -292,21 +296,116 @@ class data
       /// @param which The semantic type of binding to access.
       /// @param index The index to access (if applicable, e.g., texture unit)
     template< typename Type >
-    Type* getElementPtr ( size_t count, typename Binding::SemanticType which, size_t index = 0 )
+    Type* getElementPtr ( size_t element, SemanticType const& stype, size_t index = 0 )
       {
           auto ptr = getPtr< ValueType > ();
           return ( reinterpret_cast< Type* > (
               ptr ?
-              ptr + mBinding.getValueStrideBytes () * count + mBinding.getValueOffsetBytes ( which, index ) : nullptr ) );
+              ptr + mBinding.getValueStrideBytes () * element + mBinding.getValueOffsetBytes ( stype, index ) : nullptr ) );
       }
     template< typename Type >
-    Type const* getElementPtr ( size_t count, typename Binding::SemanticType which, size_t index = 0 ) const
+    Type const* getElementPtr ( size_t element, SemanticType const& stype, size_t index = 0 ) const
       {
           auto ptr = getPtr< ValueType > ();
-          return ( reinterpret_cast< Type* > (
+          return ( reinterpret_cast< Type const* > (
               ptr ?
-              ptr + mBinding.getValueStrideBytes () * count + mBinding.getValueOffsetBytes ( which, index ) : nullptr ) );
+              ptr + mBinding.getValueStrideBytes () * element + mBinding.getValueOffsetBytes ( stype, index ) : nullptr ) );
       }
+  
+    class iterator
+    {
+        ValueType* mPtr;
+        size_t mStride;
+      
+        friend class data;
+
+        iterator ( ValueType* ptr, size_t stride ) :
+          mPtr ( ptr ), mStride( stride ) {}
+      
+      public:
+      
+        iterator ( iterator const& rhs ) = default;
+        iterator& operator = ( iterator const& rhs ) = default;
+
+        iterator operator + ( size_t count ) const { return iterator ( mPtr + count * mStride, mStride ); }
+        iterator& operator += ( size_t count ) { mPtr += count * mStride; return *this; }
+        iterator& operator ++ () { mPtr += mStride; return *this; }
+        iterator operator - ( size_t count ) const { return iterator ( mPtr - count * mStride, mStride ); }
+        iterator& operator -= ( size_t count ) { mPtr -= count * mStride; return *this; }
+        iterator& operator -- () { mPtr -= mStride; return *this; }
+
+        bool operator < ( iterator const& rhs ) const { return mPtr < rhs.mPtr; }
+        bool operator == ( iterator const& rhs ) const { return mPtr == rhs.mPtr; }
+      
+        template< typename Ret >
+        operator Ret* () { return reinterpret_cast<Ret*>(mPtr); }
+        template< typename Ret >
+        operator Ret const* () const { return reinterpret_cast<Ret const*>(mPtr); }
+      
+        bool good () const { return mPtr != nullptr; }
+    };
+
+    class const_iterator
+    {
+        ValueType const* mPtr;
+        size_t mStride;
+      
+        friend class data;
+
+        const_iterator ( ValueType const* ptr, size_t stride ) :
+          mPtr ( ptr ), mStride( stride ) {}
+      
+      public:
+      
+        const_iterator ( const_iterator const& rhs ) = default;
+        const_iterator& operator = ( const_iterator const& rhs ) = default;
+
+        const_iterator operator + ( size_t count ) const { return const_iterator ( mPtr + count * mStride, mStride ); }
+        const_iterator& operator += ( size_t count ) { mPtr += count * mStride; return *this; }
+        const_iterator& operator ++ () { mPtr += mStride; return *this; }
+        const_iterator operator - ( size_t count ) const { return const_iterator ( mPtr - count * mStride, mStride ); }
+        const_iterator& operator -= ( size_t count ) { mPtr -= count * mStride; return *this; }
+        const_iterator& operator -- () { mPtr -= mStride; return *this; }
+
+        bool operator < ( const_iterator const& rhs ) const { return mPtr < rhs.mPtr; }
+        bool operator == ( const_iterator const& rhs ) const { return mPtr == rhs.mPtr; }
+      
+        template< typename Ret >
+        operator Ret const* () const { return reinterpret_cast<Ret const*>(mPtr); }
+      
+        bool good () const { return mPtr != nullptr; }
+    };
+  
+    iterator begin ( SemanticType stype, size_t index = 0 )
+      {
+        ValueType* ptr = getElementPtr < ValueType >( 0, stype, index );
+        size_t stride = mBinding.getValueStrideBytes ();
+        return iterator ( ptr, stride );
+      }
+
+    iterator end ( SemanticType stype, size_t index = 0 )
+      {
+        iterator tmp = begin ( stype, index );
+        tmp += size ();
+        return tmp;
+      }
+
+    const_iterator begin ( SemanticType stype, size_t index = 0 ) const
+      {
+        ValueType const* ptr = getElementPtr < ValueType const >( 0, stype, index );
+        size_t stride = mBinding.getValueStrideBytes ();
+        return const_iterator ( ptr, stride );
+      }
+
+    const_iterator end ( SemanticType stype, size_t index = 0 ) const
+      {
+        const_iterator tmp = begin ( stype, index );
+        tmp += size ();
+        return tmp;
+      }
+
+      // TODO: Need const begin and end, with corresponding const_iterator a la STL.
+
 
       /// Resize the data with the given number of elements.
       /// @param elements The new number of elements... NOT the byte size.
@@ -334,11 +433,10 @@ class data
     template< typename Type >
     Type* getPtr () { return ( mValues.empty() ? nullptr : reinterpret_cast<Type*>(mValues.data()) ); }
     template< typename Type >
-    Type const* getPtr () const { return ( mValues.empty() ? nullptr : reinterpret_cast<Type*>(mValues.data()) ); }
+    Type const* getPtr () const { return ( mValues.empty() ? nullptr : reinterpret_cast<Type const*>(mValues.data()) ); }
   
   private:
   
-    using ValueType = uint8_t;
     using Values = std::vector< ValueType >;
     Values mValues;
 };

@@ -267,6 +267,16 @@ GeomDataRef pData00 = 0;
 
   pData->resize(10,3);
 
+  lineData const* pConstData = pData;
+  
+  auto beg = pConstData->begin(lineData::Position);
+  auto end = pConstData->end(lineData::Position);
+
+  for ( size_t num = 0; num < 10; ++num )
+    ++beg;
+  
+  XCTAssertTrue(beg == end, "begin didn't correctly increment to end");
+
   XCTAssertEqual(pData->mBinding.size(), 3, "wrong size for binding after 3 inserts");
   XCTAssertEqual(pData->mBinding.getValueStrideBytes(), ( 3 + 4 + 1 ) * sizeof ( float ), "wrong size for stride bytes");
   XCTAssertEqual(pData->size(), 10, "wrong size for number of elements");

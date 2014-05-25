@@ -20,13 +20,19 @@ namespace scene {
 
 struct lineNamespace {
   enum SemanticTypes {
-    Position,
-    Color,
-    Thickness
+    Position,   // vec3
+    Color,      // vec4
+    Thickness,  // float
+    MiterStyle  // uint8_t  ... but this should be padded out to 4 bytes
   };
   enum DataTypes {
     Float,
     Uint32
+  };
+  enum MiterStyles {
+    None,
+    Extension,
+    Rounded
   };
 };
 
