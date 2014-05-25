@@ -12,6 +12,9 @@
 #include <vector>
 #include <cassert>
 #include <string>
+#include <unordered_map>
+#include <unordered_set>
+#include "pnipstd.h"
 
 // ///////////////////////////////////////////////////////////////////
 
@@ -148,6 +151,7 @@ template< class BindingItem_ >
 class basicBinding :
   public std::vector< BindingItem_ >
 {
+    using Base = std::vector< BindingItem_ >;
   public:
     using BindingItem = BindingItem_;
     using SemanticType = typename BindingItem::SemanticType;
@@ -163,7 +167,7 @@ class basicBinding :
   
       /// @warning Only useful if each Type can only be entered in the binding
       /// list at most one time.
-    size_t getValueOffsetBytes ( SemanticType which, size_t index ) const
+    size_t getValueOffsetBytes ( SemanticType which, size_t index = 0 ) const
       {
         size_t ret = 0;
         for ( auto binding : *this )
@@ -177,7 +181,7 @@ class basicBinding :
 
       /// @warning Only useful if a name can only be entered in the binding
       /// list at most one time.
-    size_t getValueOffsetBytes ( std::string const& name, size_t index ) const
+    size_t getValueOffsetBytesByName ( std::string const& name, size_t index = 0 ) const
       {
         size_t ret = 0;
         for ( auto binding : *this )
@@ -197,26 +201,78 @@ class basicBinding :
         return false;
       }
   
-    bool hasBinding ( std::string const& which, size_t index = 0 ) const
+    bool hasBindingByName ( std::string const& which, size_t index = 0 ) const
       {
         for ( auto binding : *this )
           if ( binding.mName == which && binding.mIndex == index )
             return true;
         return false;
       }
+
+#ifdef SCENEDATABINDINGSARECACHED
+      // Cached lookups seemed like a good optimzation, but it benched out ~40%
+      // slower on x86.  Potentially, the pnipstd.h std::hash_combine could be
+      // optimized to reduce arithmetic, but the simple iterations above are
+      // likely always to be a win for bindings with < 5 entries.
+
+      /// Set internal dirty state so that we can lazily eval internal caches.
+    void setDirty ( bool val = true ) { mDirty = val; }
+
+      // Hides base class version from std::vector... we need a side-effect when adding.
+    void push_back ( typename Base::value_type const& val ) { setDirty (); Base::push_back ( val ); }
   
   private:
+
+      // TRICKY: These maps are invalidated pretty much any time the bindings are
+      // changed (due to vector realloc, or order changes).  That's why these
+      // must be regenerated each time the bindings are changed.
   
-      // TODO: Track "dirty" state to optimize #hasBinding queries.
+    using OffsetMap = std::unordered_map< std::pair< SemanticType, size_t >, size_t >;
+//    using ExistSet = std::unordered_set< std::pair< SemanticType, size_t > >;
+  
+    mutable OffsetMap mOffsets; // mutable for lazy updates
+  
+    void updateMaps () const
+      {
+        mOffsets.clear();
+        size_t ret = 0;
+        for ( auto binding : *this )
+        {
+          mOffsets[ std::make_pair( binding.mSemanticType, binding.mIndex ) ] = ret;
+          ret += binding.mSize * binding.mCount;
+        }
+      }
+  
+    void clearDirty () const
+      {
+          if ( mDirty )
+          {
+            updateMaps();
+            mDirty = false;
+          }
+      }
+  
+    mutable bool mDirty = true;
+#endif // SCENEDATABINDINGSARECACHED
 };
 
 // ///////////////////////////////////////////////////////////////////
+
 /**
   A class to manage values for packed, interleaved data, designed for
   things like vertex attributes, particle systems, uniforms, etc.
   Usage is 1) Add bindings to the #mBinding member, 2) #resize based on
   number of elements, 3) get pointers to values and stride through data
   as you fill in elements.
+  @code
+// Example usage of data, etc:
+
+using dataBasic =        data<        basicBinding< basicBindingItem< BasicSemanticTypes, BasicDataTypes > > >;
+using dataIndexedBasic = dataIndexed< basicBinding< basicBindingItem< BasicSemanticTypes, BasicDataTypes > > >;
+
+  // see if we can use a std::string for the semantic type... yup... seems to work fine.
+using dataIndexedString = dataIndexed< basicBinding< basicBindingItem< std::string, BasicDataTypes > > >;
+  @endcode
 */
 
 template< class Binding_ >
@@ -230,6 +286,11 @@ class data
       /// to this data object.
     Binding mBinding;
 
+      /// Get the pointer to value storage for the specified binding and index.
+      /// Return type is determined by the explicit invocation template type.
+      /// @param count Which element to access.
+      /// @param which The semantic type of binding to access.
+      /// @param index The index to access (if applicable, e.g., texture unit)
     template< typename Type >
     Type* getElementPtr ( size_t count, typename Binding::SemanticType which, size_t index = 0 )
       {
@@ -317,8 +378,14 @@ class dataIndexed :
 
 // ///////////////////////////////////////////////////////////////////
 
+// Example usage of data, etc:
+
 using dataBasic =        data<        basicBinding< basicBindingItem< BasicSemanticTypes, BasicDataTypes > > >;
 using dataIndexedBasic = dataIndexed< basicBinding< basicBindingItem< BasicSemanticTypes, BasicDataTypes > > >;
+
+  // see if we can use a std::string for the semantic type... yup... seems to work fine.
+using dataIndexedString = dataIndexed< basicBinding< basicBindingItem< std::string, BasicDataTypes > > >;
+
 
 // ///////////////////////////////////////////////////////////////////
 // ///////////////////////////////////////////////////////////////////

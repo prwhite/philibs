@@ -18,14 +18,16 @@ namespace scene {
     
 // ///////////////////////////////////////////////////////////////////
 
-enum LineSemanticTypes {
-  LinePosition,
-  LineColor,
-  LineThickness
-};
-enum LineDataTypes {
-  LineFloat,
-  LineUint32
+struct lineNamespace {
+  enum SemanticTypes {
+    Position,
+    Color,
+    Thickness
+  };
+  enum DataTypes {
+    Float,
+    Uint32
+  };
 };
 
 /**
@@ -44,8 +46,9 @@ enum LineDataTypes {
 */
 
 class lineData :
+  public lineNamespace,
   public pni::pstd::refCount,
-  public dataIndexed< basicBinding< basicBindingItem<LineSemanticTypes, LineDataTypes>>>
+  public dataIndexed< basicBinding< basicBindingItem<lineNamespace::SemanticTypes, lineNamespace::DataTypes>>>
 {
   public:
     virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const {}
@@ -82,5 +85,18 @@ class lines :
 // ///////////////////////////////////////////////////////////////////
 
 } // end of namespace scene 
+
+  // Create a specialization for hashing lineData::SemanticTypes
+namespace std
+{
+  template<>
+  struct hash<scene::lineData::SemanticTypes>
+  {
+    size_t operator () ( scene::lineData::SemanticTypes val ) const
+    {
+      return std::hash< int > () ( val );
+    }
+  };
+}
 
 #endif // scenelines_h

@@ -41,6 +41,7 @@
 		1CC482F5188C87170029408D /* sceneloaderassimp.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CC482F3188C87020029408D /* sceneloaderassimp.h */; };
 		1CCBCF14192F3D1800D0153A /* scenedata.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C82A2AE192D2FBC009FFDA7 /* scenedata.h */; };
 		1CCBCF15192F3D2A00D0153A /* scenelines.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C82A2A6192C7AE9009FFDA7 /* scenelines.h */; };
+		1CCBCF1819319CB900D0153A /* pnipstd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CCBCF1619319CB900D0153A /* pnipstd.cpp */; };
 		1CCD1660189A3F23001F8DF1 /* scenerendersink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CCD165E189A3F23001F8DF1 /* scenerendersink.cpp */; };
 		1CCD1663189A400E001F8DF1 /* scenefbo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CCD1661189A400E001F8DF1 /* scenefbo.cpp */; };
 		1CCD1666189CF6F4001F8DF1 /* sceneframebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CCD1664189CF6F4001F8DF1 /* sceneframebuffer.cpp */; };
@@ -516,6 +517,8 @@
 		1CC482F0188C82380029408D /* assimp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = assimp.a; path = 3p/assimp/lib/ios/assimp.a; sourceTree = "<group>"; };
 		1CC482F2188C87020029408D /* sceneloaderassimp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneloaderassimp.cpp; sourceTree = "<group>"; };
 		1CC482F3188C87020029408D /* sceneloaderassimp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneloaderassimp.h; sourceTree = "<group>"; };
+		1CCBCF1619319CB900D0153A /* pnipstd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pnipstd.cpp; sourceTree = "<group>"; };
+		1CCBCF1719319CB900D0153A /* pnipstd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pnipstd.h; sourceTree = "<group>"; };
 		1CCD165E189A3F23001F8DF1 /* scenerendersink.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scenerendersink.cpp; sourceTree = "<group>"; };
 		1CCD165F189A3F23001F8DF1 /* scenerendersink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenerendersink.h; sourceTree = "<group>"; };
 		1CCD1661189A400E001F8DF1 /* scenefbo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scenefbo.cpp; sourceTree = "<group>"; };
@@ -1031,6 +1034,8 @@
 				1CC482CF1888D0CD0029408D /* pnisearchpath.cpp */,
 				1CC482D01888D0CD0029408D /* pnisearchpath.h */,
 				1CC482DD1889E5ED0029408D /* pnithreadpool.h */,
+				1CCBCF1619319CB900D0153A /* pnipstd.cpp */,
+				1CCBCF1719319CB900D0153A /* pnipstd.h */,
 			);
 			path = pstd;
 			sourceTree = "<group>";
@@ -1471,6 +1476,7 @@
 				1CDD41CF185BCAF0009284F9 /* pnitimerprof.cpp in Sources */,
 				1C6A02B91873526700672EF8 /* sceneuniform.cpp in Sources */,
 				1CDD4189185BCAF0009284F9 /* animuibasetrans.cpp in Sources */,
+				1CCBCF1819319CB900D0153A /* pnipstd.cpp in Sources */,
 				1CDD41C3185BCAF0009284F9 /* pniseg.cpp in Sources */,
 				1CDD41E0185BCAF0009284F9 /* scenetext.cpp in Sources */,
 				1CDD41DB185BCAF0009284F9 /* scenegroup.cpp in Sources */,

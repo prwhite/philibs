@@ -15,6 +15,8 @@
 #include "scenedata.h"
 #include "scenelines.h"
 
+#include <chrono>
+
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -259,9 +261,9 @@ GeomDataRef pData00 = 0;
 {
   lineData* pData = new lineData;
   
-  pData->mBinding.push_back ( { {}, LinePosition, LineFloat, sizeof(float), 3 } );
-  pData->mBinding.push_back ( { {}, LineColor, LineFloat, sizeof(float), 4 } );
-  pData->mBinding.push_back ( { {}, LineThickness, LineFloat, sizeof(float), 1 } );
+  pData->mBinding.push_back ( { {}, lineData::Position, lineData::Float, sizeof(float), 3 } );
+  pData->mBinding.push_back ( { {}, lineData::Color, lineData::Float, sizeof(float), 4 } );
+  pData->mBinding.push_back ( { {}, lineData::Thickness, lineData::Float, sizeof(float), 1 } );
 
   pData->resize(10,3);
 
@@ -271,21 +273,21 @@ GeomDataRef pData00 = 0;
   XCTAssertEqual(pData->sizeBytes(), 10 * pData->mBinding.getValueStrideBytes(), "wrong byte size values storage");
 
   XCTAssertEqual(
-      pData->getElementPtr<char>(0, LinePosition) + pData->mBinding.getValueStrideBytes(),
-      pData->getElementPtr<char>(1, LinePosition),
+      pData->getElementPtr<char>(0, lineData::Position) + pData->mBinding.getValueStrideBytes(),
+      pData->getElementPtr<char>(1, lineData::Position),
       "actual stride doesn't match calculated stride");
   XCTAssertEqual(
-      pData->getElementPtr<char>(0, LinePosition) + 3 * sizeof(float),
-      pData->getElementPtr<char>(0, LineColor),
+      pData->getElementPtr<char>(0, lineData::Position) + 3 * sizeof(float),
+      pData->getElementPtr<char>(0, lineData::Color),
       "offset of LineColor not correct" );
 
-  auto& v3 = *pData->getElementPtr< pni::math::vec3 >(0, LinePosition);
+  auto& v3 = *pData->getElementPtr< pni::math::vec3 >(0, lineData::Position);
   v3[ 0 ] = 69.0f;
-  XCTAssertEqual(*pData->getElementPtr<float>(0, LinePosition), 69.0f, "overlayed vector didn't write correctly to values array");
+  XCTAssertEqual(*pData->getElementPtr<float>(0, lineData::Position), 69.0f, "overlayed vector didn't write correctly to values array");
 
   lineData::Binding newBinding;
-  newBinding.push_back ( { {}, LinePosition, LineFloat, sizeof(float), 3 } );
-  newBinding.push_back ( { {}, LineColor, LineFloat, sizeof(float), 4 } );
+  newBinding.push_back ( { {}, lineData::Position, lineData::Float, sizeof(float), 3 } );
+  newBinding.push_back ( { {}, lineData::Color, lineData::Float, sizeof(float), 4 } );
     // Thickness removed/missing
   
   pData->migrate(newBinding);
@@ -296,7 +298,15 @@ GeomDataRef pData00 = 0;
 
   lines* pLines = new lines;
   
-  
+  dataIndexedString testInstantiation;
+  testInstantiation.mBinding.push_back( { "name0", "stype0", scene::type_float_32_t, 4, 1 } );
+  testInstantiation.mBinding.push_back( { "name1", "stype1", scene::type_float_32_t, 4, 1 } );
+
+  size_t nameOffset = testInstantiation.mBinding.getValueOffsetBytesByName("name1");
+  size_t stypeOffset = testInstantiation.mBinding.getValueOffsetBytes("stype1");
+
+  XCTAssertEqual(nameOffset, stypeOffset, "offset lookups don't match");
+
 }
 
 
