@@ -19,6 +19,7 @@
 #include "philibs/scenelightpath.h"
 #include "philibs/scenetexture.h"
 #include "philibs/scenecommon.h"
+#include "philibs/scenelines.h"
 
 #include "philibs/sceneprog.h"
 #include "philibs/sceneuniform.h"
@@ -357,6 +358,37 @@ scene::prog* createMainProg ()
   pText->matrixOp().preScale(scale, scale, scale);
   
   mRoot->addChild(pText);
+  
+  lines* pLines = new lines;
+  lineData* pLineData = new lineData;
+  pLines->setLineData( pLineData );
+  
+  pLineData->mBinding.push_back ( { {}, lineData::Position, lineData::Float, sizeof(float), 3 } );
+  pLineData->mBinding.push_back ( { {}, lineData::Color, lineData::Float, sizeof(float), 4 } );
+  pLineData->mBinding.push_back ( { {}, lineData::Thickness, lineData::Float, sizeof(float), 1 } );
+
+  pLineData->resize(2, 1);
+  
+  auto pos = pLineData->begin< pni::math::vec3 >(lineData::Position);
+  auto col = pLineData->begin< pni::math::vec4 >(lineData::Color);
+  auto thk = pLineData->begin< float > (lineData::Thickness);
+  
+  pos->set(0.0f, 0.0f, 0.0f);
+  col->set(0.0f, 0.0f, 0.0f, 1.0f);
+  *thk = 0.1f;
+  
+  ++pos; ++col; ++thk;
+  
+  pos->set(50.0f, 50.0f, 50.0f);
+  col->set(0.0f, 0.0f, 0.0f, 1.0f);
+  *thk = 0.2f;
+  
+  pLineData->getIndices()[ 0 ] = 2;
+
+  prog* pLineProg = progFactory::getInstance().loadSync( { "gles2-line.vsh", "gles2-line.fsh" } );
+  pLines->setState(pLineProg, scene::state::Prog);
+  
+  mRoot->addChild(pLines);
 }
 
 - (void) finalizeScene

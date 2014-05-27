@@ -312,6 +312,7 @@ class data
               ptr + mBinding.getValueStrideBytes () * element + mBinding.getValueOffsetBytes ( stype, index ) : nullptr ) );
       }
   
+    template< class Ret >
     class iterator
     {
         ValueType* mPtr;
@@ -337,14 +338,15 @@ class data
         bool operator < ( iterator const& rhs ) const { return mPtr < rhs.mPtr; }
         bool operator == ( iterator const& rhs ) const { return mPtr == rhs.mPtr; }
       
-        template< typename Ret >
-        operator Ret* () { return reinterpret_cast<Ret*>(mPtr); }
-        template< typename Ret >
-        operator Ret const* () const { return reinterpret_cast<Ret const*>(mPtr); }
+        Ret* operator-> () { return reinterpret_cast<Ret*>(mPtr); }
+        Ret const* operator-> () const { return reinterpret_cast<Ret*>(mPtr); }
+        Ret& operator* () { return *reinterpret_cast<Ret*>(mPtr); }
+        Ret const& operator* () const { return *reinterpret_cast<Ret*>(mPtr); }
       
         bool good () const { return mPtr != nullptr; }
     };
 
+    template< class Ret >
     class const_iterator
     {
         ValueType const* mPtr;
@@ -370,36 +372,40 @@ class data
         bool operator < ( const_iterator const& rhs ) const { return mPtr < rhs.mPtr; }
         bool operator == ( const_iterator const& rhs ) const { return mPtr == rhs.mPtr; }
       
-        template< typename Ret >
-        operator Ret const* () const { return reinterpret_cast<Ret const*>(mPtr); }
+        Ret const* operator-> () const { return reinterpret_cast<Ret*>(mPtr); }
+        Ret const& operator* () const { return *reinterpret_cast<Ret*>(mPtr); }
       
         bool good () const { return mPtr != nullptr; }
     };
   
-    iterator begin ( SemanticType stype, size_t index = 0 )
+    template< class Ret >
+    iterator< Ret > begin ( SemanticType stype, size_t index = 0 )
       {
         ValueType* ptr = getElementPtr < ValueType >( 0, stype, index );
         size_t stride = mBinding.getValueStrideBytes ();
-        return iterator ( ptr, stride );
+        return iterator< Ret > ( ptr, stride );
       }
 
-    iterator end ( SemanticType stype, size_t index = 0 )
+    template< class Ret >
+    iterator< Ret > end ( SemanticType stype, size_t index = 0 )
       {
-        iterator tmp = begin ( stype, index );
+        iterator< Ret > tmp = begin< Ret > ( stype, index );
         tmp += size ();
         return tmp;
       }
 
-    const_iterator begin ( SemanticType stype, size_t index = 0 ) const
+    template< class Ret >
+    const_iterator< Ret > begin ( SemanticType stype, size_t index = 0 ) const
       {
         ValueType const* ptr = getElementPtr < ValueType const >( 0, stype, index );
         size_t stride = mBinding.getValueStrideBytes ();
-        return const_iterator ( ptr, stride );
+        return const_iterator< Ret > ( ptr, stride );
       }
 
-    const_iterator end ( SemanticType stype, size_t index = 0 ) const
+    template< class Ret >
+    const_iterator< Ret > end ( SemanticType stype, size_t index = 0 ) const
       {
-        const_iterator tmp = begin ( stype, index );
+        const_iterator< Ret > tmp = begin< Ret > ( stype, index );
         tmp += size ();
         return tmp;
       }
@@ -426,14 +432,15 @@ class data
       /// for new bindings.
     void migrate ( Binding const& rhs );
 
-  protected:
-
-      // I don't think we need these... the getElementPtr functions are as
+      // I don't think we need these in public... the getElementPtr functions are as
       // general as we need, and the base pointer isn't all that useful by itself.
     template< typename Type >
     Type* getPtr () { return ( mValues.empty() ? nullptr : reinterpret_cast<Type*>(mValues.data()) ); }
     template< typename Type >
     Type const* getPtr () const { return ( mValues.empty() ? nullptr : reinterpret_cast<Type const*>(mValues.data()) ); }
+
+  protected:
+
   
   private:
   

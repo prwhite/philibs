@@ -32,6 +32,8 @@
 		1CC482C6188694AC0029408D /* test-00b.ase in Resources */ = {isa = PBXBuildFile; fileRef = 1CC482C5188694AC0029408D /* test-00b.ase */; };
 		1CC482C8188776650029408D /* test-00c.ase in Resources */ = {isa = PBXBuildFile; fileRef = 1CC482C7188776650029408D /* test-00c.ase */; };
 		1CC482E4188A0EC30029408D /* brushed-aluminum-00a.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1CC482E3188A0EC30029408D /* brushed-aluminum-00a.jpg */; };
+		1CCBCF1A193469D100D0153A /* gles2-line.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 1CCBCF19193469D100D0153A /* gles2-line.vsh */; };
+		1CCBCF1D193469E900D0153A /* gles2-line.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 1CCBCF1C193469E900D0153A /* gles2-line.fsh */; };
 		1CDD4217185BDDC2009284F9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD4216185BDDC2009284F9 /* Foundation.framework */; };
 		1CDD4219185BDDC2009284F9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD4218185BDDC2009284F9 /* CoreGraphics.framework */; };
 		1CDD421B185BDDC2009284F9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD421A185BDDC2009284F9 /* UIKit.framework */; };
@@ -114,6 +116,8 @@
 		1CC482C7188776650029408D /* test-00c.ase */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "test-00c.ase"; path = "philibs-ex-00/Resources/test-00c.ase"; sourceTree = "<group>"; };
 		1CC482E3188A0EC30029408D /* brushed-aluminum-00a.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "brushed-aluminum-00a.jpg"; path = "philibs-ex-00/Resources/brushed-aluminum-00a.jpg"; sourceTree = "<group>"; };
 		1CC4B9041860D22700169CF6 /* phiViewController-gles1.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "phiViewController-gles1.mm"; sourceTree = "<group>"; };
+		1CCBCF19193469D100D0153A /* gles2-line.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = "gles2-line.vsh"; path = "philibs-ex-00/Shaders/gles2-line.vsh"; sourceTree = "<group>"; };
+		1CCBCF1C193469E900D0153A /* gles2-line.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = "gles2-line.fsh"; path = "philibs-ex-00/Shaders/gles2-line.fsh"; sourceTree = "<group>"; };
 		1CDD4213185BDDC2009284F9 /* philibs-ex-00.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "philibs-ex-00.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CDD4216185BDDC2009284F9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1CDD4218185BDDC2009284F9 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -234,6 +238,8 @@
 		1CDD420A185BDDC2009284F9 = {
 			isa = PBXGroup;
 			children = (
+				1CCBCF1C193469E900D0153A /* gles2-line.fsh */,
+				1CCBCF19193469D100D0153A /* gles2-line.vsh */,
 				1CF4DBA2185EE4B7007331F8 /* philibs.xcodeproj */,
 				1CDD4220185BDDC2009284F9 /* philibs-ex-00 */,
 				1CDD4246185BDDC2009284F9 /* philibs-ex-00Tests */,
@@ -431,6 +437,7 @@
 				1C6B200B18B6C9970053277E /* Shaders in Resources */,
 				1C53351F18978BA5009525FD /* texture0.png in Resources */,
 				1C53352218978BA5009525FD /* texture3.png in Resources */,
+				1CCBCF1D193469E900D0153A /* gles2-line.fsh in Resources */,
 				1C53352118978BA5009525FD /* texture2.png in Resources */,
 				1CB1DFB418988C79005D3709 /* posy.jpg in Resources */,
 				1CB1DFB118988C79005D3709 /* negy.jpg in Resources */,
@@ -459,6 +466,7 @@
 				1CC482C8188776650029408D /* test-00c.ase in Resources */,
 				1CC482C318868F4D0029408D /* test-00a.ase in Resources */,
 				1CC482E4188A0EC30029408D /* brushed-aluminum-00a.jpg in Resources */,
+				1CCBCF1A193469D100D0153A /* gles2-line.vsh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -259,6 +259,8 @@ GeomDataRef pData00 = 0;
 
 - (void)testSceneLines
 {
+  using namespace pni::math;
+
   lineData* pData = new lineData;
   
   pData->mBinding.push_back ( { {}, lineData::Position, lineData::Float, sizeof(float), 3 } );
@@ -269,8 +271,8 @@ GeomDataRef pData00 = 0;
 
   lineData const* pConstData = pData;
   
-  auto beg = pConstData->begin(lineData::Position);
-  auto end = pConstData->end(lineData::Position);
+  auto beg = pConstData->begin< vec3 >(lineData::Position);
+  auto end = pConstData->end< vec3 >(lineData::Position);
 
   for ( size_t num = 0; num < 10; ++num )
     ++beg;
@@ -305,8 +307,6 @@ GeomDataRef pData00 = 0;
   XCTAssertEqual(pData->size(), 10, "calculated size is wrong after migrate");
   XCTAssertEqual(pData->mBinding.getValueStrideBytes() * 10, pData->sizeBytes(),
       "byte size of storage not correct after migrate" );
-
-  lines* pLines = new lines;
   
   dataIndexedString testInstantiation;
   testInstantiation.mBinding.push_back( { "name0", "stype0", scene::type_float_32_t, 4, 1 } );
@@ -316,6 +316,44 @@ GeomDataRef pData00 = 0;
   size_t stypeOffset = testInstantiation.mBinding.getValueOffsetBytes("stype1");
 
   XCTAssertEqual(nameOffset, stypeOffset, "offset lookups don't match");
+
+    // Do the whole deal, including generating output verts
+  lines* pLines = new lines;
+  lineData* pLineData = new lineData;
+  
+  pLines->setLineData( pLineData );
+  
+  pLineData->mBinding.push_back ( { {}, lineData::Position, lineData::Float, sizeof(float), 3 } );
+  pLineData->mBinding.push_back ( { {}, lineData::Color, lineData::Float, sizeof(float), 4 } );
+  pLineData->mBinding.push_back ( { {}, lineData::Thickness, lineData::Float, sizeof(float), 1 } );
+
+  pLineData->resize(2, 1);
+  
+  auto pos = pLineData->begin< vec3 >(lineData::Position);
+  auto col = pLineData->begin< vec4 >(lineData::Color);
+  auto thk = pLineData->begin< float > (lineData::Thickness);
+  
+  pos->set(0.0f, 1.0f, 2.0f);
+  col->set(3.0f, 4.0f, 5.0f, 6.0f);
+  *thk = 7.0f;
+  
+  ++pos; ++col; ++thk;
+  
+  pos->set(8.0f, 9.0f, 10.0f);
+  col->set(11.0f, 12.0f, 13.0f, 14.0f);
+  *thk = 15.0f;
+  
+  pLineData->getIndices()[ 0 ] = 2;
+  
+  pLines->test();
+  
+  XCTAssertEqual(pLines->getGeomData()->getValues().size(), 48, "geom has wrong vert count after lines::test");
+  XCTAssertEqual(pLines->getGeomData()->getIndices().size(), 6, "geom has wrong index count after lines::test");
+
+  float* pFloats = pLineData->getPtr<float>();
+  for ( size_t val = 0; val < 16; ++val )
+    XCTAssertEqual(pFloats[ val ], ( float ) val, "line values not expected");
+
 
 }
 

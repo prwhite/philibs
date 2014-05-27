@@ -68,6 +68,7 @@ class lines :
   public:
   
   
+    void test ();
     virtual void update ( graphDd::fxUpdate const& update ) override;
   
     void setLineData ( lineData* pData ) { mLineData = pData; }
