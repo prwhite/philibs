@@ -164,6 +164,9 @@ ddOglList::ddOglList() :
   uniform::binding& normMat = mBuiltins->uniformOp(CommonUniformNames[ UniformNormalMatrix ]);
   normMat.set(uniform::binding::Vertex, uniform::binding::Matrix3, 1);
 
+  uniform::binding& vpSize = mBuiltins->uniformOp(CommonUniformNames[ UniformViewportSize ]);
+  vpSize.set(uniform::binding::Vertex, uniform::binding::Float2, 1);
+
   uniform::binding& tex00 = mBuiltins->uniformOp(CommonUniformNames[ UniformTex00 ]);
   tex00.set(uniform::binding::Fragment, uniform::binding::Int1, 1);
 
@@ -437,17 +440,27 @@ void ddOglList::execBuiltins ()
   mModelViewProjectionMat.preMult(mModelViewMat);
 
   mModelViewProjectionMat.copyTo4x4(mBuiltins->uniformOp(CommonUniformNames[ UniformModelViewProjMatrix ]).getFloats());
-  
+
     // Handle non-uniform scaling... with inverse transpose.
     // Use camera->getNormalizeMode.
   camera const* pCam = static_cast< camera const*>(mSinkPath.getLeaf());
-  if ( pCam->getNormalizeMode() != camera::NoNormalize)
+  if ( pCam && pCam->getNormalizeMode() != camera::NoNormalize)
   {
     mModelViewMat.invert();
     mModelViewMat.transpose();
   }
 
   mModelViewMat.copyTo3x3(mBuiltins->uniformOp(CommonUniformNames[ UniformNormalMatrix ]).getFloats());
+
+  if ( pCam )
+  {
+    float vpl, vpb, vpw, vph;
+    pCam->getViewport(vpl, vpb, vpw, vph);
+
+    float* dst = mBuiltins->uniformOp(CommonUniformNames[ UniformViewportSize ]).getFloats();
+    dst[ 0 ] = vpw;
+    dst[ 1 ] = vph;
+  }
   
   this->dispatch(mBuiltins.get());
 }

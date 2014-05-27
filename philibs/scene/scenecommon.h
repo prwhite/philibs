@@ -60,6 +60,7 @@ enum CommmonUniformIds : uint16_t
 {
   UniformModelViewProjMatrix,
   UniformNormalMatrix,
+  UniformViewportSize,
   UniformTex00,
   UniformTex01,
   UniformTex02,
@@ -94,6 +95,7 @@ enum CommmonUniformIds : uint16_t
 char const* const CommonUniformNames[]= {
   "u_mvpMat",
   "u_normMat",
+  "u_vpSize",
   "u_tex00",
   "u_tex01",
   "u_tex02",
