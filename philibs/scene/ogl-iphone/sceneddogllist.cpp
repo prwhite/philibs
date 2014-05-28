@@ -158,19 +158,19 @@ ddOglList::ddOglList() :
   
   mBuiltins = new scene::uniform;
   
-  uniform::binding& mvpMat = mBuiltins->uniformOp(CommonUniformNames[ UniformModelViewProjMatrix ]);
+  uniform::binding& mvpMat = mBuiltins->bindingOp(CommonUniformNames[ UniformModelViewProjMatrix ]);
   mvpMat.set(uniform::binding::Vertex, uniform::binding::Matrix4, 1);
   
-  uniform::binding& normMat = mBuiltins->uniformOp(CommonUniformNames[ UniformNormalMatrix ]);
+  uniform::binding& normMat = mBuiltins->bindingOp(CommonUniformNames[ UniformNormalMatrix ]);
   normMat.set(uniform::binding::Vertex, uniform::binding::Matrix3, 1);
 
-  uniform::binding& vpSize = mBuiltins->uniformOp(CommonUniformNames[ UniformViewportSize ]);
+  uniform::binding& vpSize = mBuiltins->bindingOp(CommonUniformNames[ UniformViewportSize ]);
   vpSize.set(uniform::binding::Vertex, uniform::binding::Float2, 1);
 
-  uniform::binding& tex00 = mBuiltins->uniformOp(CommonUniformNames[ UniformTex00 ]);
+  uniform::binding& tex00 = mBuiltins->bindingOp(CommonUniformNames[ UniformTex00 ]);
   tex00.set(uniform::binding::Fragment, uniform::binding::Int1, 1);
 
-  uniform::binding& tex01 = mBuiltins->uniformOp(CommonUniformNames[ UniformTex01 ]);
+  uniform::binding& tex01 = mBuiltins->bindingOp(CommonUniformNames[ UniformTex01 ]);
   tex01.set(uniform::binding::Fragment, uniform::binding::Int1, 1);
 }
 
@@ -439,7 +439,7 @@ void ddOglList::execBuiltins ()
   mModelViewProjectionMat = mProjMat;
   mModelViewProjectionMat.preMult(mModelViewMat);
 
-  mModelViewProjectionMat.copyTo4x4(mBuiltins->uniformOp(CommonUniformNames[ UniformModelViewProjMatrix ]).getFloats());
+  mModelViewProjectionMat.copyTo4x4(mBuiltins->bindingOp(CommonUniformNames[ UniformModelViewProjMatrix ]).getFloats());
 
     // Handle non-uniform scaling... with inverse transpose.
     // Use camera->getNormalizeMode.
@@ -450,14 +450,14 @@ void ddOglList::execBuiltins ()
     mModelViewMat.transpose();
   }
 
-  mModelViewMat.copyTo3x3(mBuiltins->uniformOp(CommonUniformNames[ UniformNormalMatrix ]).getFloats());
+  mModelViewMat.copyTo3x3(mBuiltins->bindingOp(CommonUniformNames[ UniformNormalMatrix ]).getFloats());
 
   if ( pCam )
   {
     float vpl, vpb, vpw, vph;
     pCam->getViewport(vpl, vpb, vpw, vph);
 
-    float* dst = mBuiltins->uniformOp(CommonUniformNames[ UniformViewportSize ]).getFloats();
+    float* dst = mBuiltins->bindingOp(CommonUniformNames[ UniformViewportSize ]).getFloats();
     dst[ 0 ] = vpw;
     dst[ 1 ] = vph;
   }
@@ -1252,7 +1252,7 @@ CheckGLError
     // Is this the right place to do this?  Can it just be done once, rather
     // than for every texture bind (probably not once we switch to GLES3
     // with sampler objects).
-  *( mBuiltins->uniformOp( CommonUniformNames[ UniformTex00 + texUnit ] ).getInts() ) = texUnit;
+  *( mBuiltins->bindingOp( CommonUniformNames[ UniformTex00 + texUnit ] ).getInts() ) = texUnit;
 
 	if ( pState->getEnable () )
 	{

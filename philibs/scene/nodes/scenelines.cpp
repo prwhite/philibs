@@ -20,13 +20,13 @@ namespace scene {
     
 // ///////////////////////////////////////////////////////////////////
 
-
 void lines::update ( graphDd::fxUpdate const& update )
 {
-  test();
+  mLineData.clearDirty();
+  mUniform.clearDirty();
 }
 
-void lines::test ()
+void lines::rebuildLines()
 {
   assert(mLineData);
   assert(mLineData->mBinding.hasBinding(lineData::Position));
@@ -36,12 +36,12 @@ void lines::test ()
   auto curColor = mLineData->begin< vec4 >(lineData::Color);
   auto curThickness = mLineData->begin< float >(lineData::Thickness);
 
-    // Make sure the geomData matches the number of lines and bindings.
   if ( ! getGeomData() )
     setGeomData( new geomData );
   
   geomData* pGeomData = geometryOp();
   
+    // Make sure the geomData matches the number of lines and bindings.
   size_t points = mLineData->size();
   size_t segs = points - mLineData->getIndices().size();
   size_t verts = segs * 4;
@@ -76,9 +76,9 @@ void lines::test ()
     for ( size_t cur = 0; cur < end; ++cur )
     {
         // Position
-      vec3& curPosVec = *curPos;
+      vec3 const& curPosVec = *curPos;
       ++curPos;
-      vec3& nextPosVec = *curPos;
+      vec3 const& nextPosVec = *curPos;
 
       curPosVec.copyToArray( pPos ); pPos += stride;
       curPosVec.copyToArray( pPos ); pPos += stride;
@@ -87,9 +87,9 @@ void lines::test ()
       
       if ( curColor.good () )
       {
-        vec4& curColorVec = *curColor;
+        vec4 const& curColorVec = *curColor;
         ++curColor;
-        vec4& nextColorVec = *curColor;
+        vec4 const& nextColorVec = *curColor;
         
         curColorVec.copyToArray( pColor ); pColor += stride;
         curColorVec.copyToArray( pColor ); pColor += stride;
@@ -104,9 +104,9 @@ void lines::test ()
       
       if ( curThickness.good () )
       {
-        float& curThicknessFloat = *curThickness;
+        float const& curThicknessFloat = *curThickness;
         ++curThickness;
-        float& nextThicknessFloat = *curThickness;
+        float const& nextThicknessFloat = *curThickness;
         
         curThicknessVal = curThicknessFloat;
         nextThicknessVal = nextThicknessFloat;
@@ -167,7 +167,15 @@ void lines::test ()
     if ( curColor.good () ) ++curColor;
     if ( curThickness.good () ) ++curThickness;
   }
-  
+}
+
+void lines::rebuildUniform ()
+{
+  uniform::binding& binding = mUniform.op()->bindingOp("u_vpSizeTarget");
+  binding.set(uniform::binding::Vertex, uniform::binding::Float2);
+  float* pFloats = binding.getFloats();
+//  pFloats[ 0 ] = mVpSizeTarget[ 0 ];
+//  pFloats[ 1 ] = mVpSizeTarget[ 1 ];
 }
 
 // ///////////////////////////////////////////////////////////////////

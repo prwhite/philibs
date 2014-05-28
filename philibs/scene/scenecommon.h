@@ -130,9 +130,9 @@ template< class Type >
 Type&
 commonUniformOp ( uniform* pUniform, CommmonUniformIds id )
 {
-  assert ( pUniform->uniformOp ( CommonUniformNames[ id ] ).getStorageSize() == sizeof ( Type ) );
+  assert ( pUniform->bindingOp ( CommonUniformNames[ id ] ).getStorageSize() == sizeof ( Type ) );
 
-  float* fp = pUniform->uniformOp ( CommonUniformNames[ id ] ).getFloats();
+  float* fp = pUniform->bindingOp ( CommonUniformNames[ id ] ).getFloats();
   Type& ret = * ( Type* ) ( fp );
   return ret;
 }

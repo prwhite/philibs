@@ -446,7 +446,7 @@ scene::prog* createMainProg ()
 
   lines* pLines = new lines;
   lineData* pLineData = new lineData;
-  pLines->setLineData( pLineData );
+  pLines->mLineData.set ( pLineData );
   
   pLineData->mBinding.push_back ( { {}, lineData::Position, lineData::Float, sizeof(float), 3 } );
   pLineData->mBinding.push_back ( { {}, lineData::Color, lineData::Float, sizeof(float), 4 } );

@@ -345,7 +345,7 @@ GeomDataRef pData00 = 0;
   
   pLineData->getIndices()[ 0 ] = 2;
   
-  pLines->test();
+  pLines->mLineData().clearDirty();
   
   XCTAssertEqual(pLines->getGeomData()->getValues().size(), 48, "geom has wrong vert count after lines::test");
   XCTAssertEqual(pLines->getGeomData()->getIndices().size(), 6, "geom has wrong index count after lines::test");

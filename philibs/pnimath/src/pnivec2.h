@@ -89,7 +89,7 @@ class PNIMATHAPI vec2
 
 		void projectOnto ( const ThisType& target );
 
-    void copyToArray ( ValueType* dst )
+    void copyToArray ( ValueType* dst ) const
         { dst[ 0 ] = vec[ 0 ]; dst[ 1 ] = vec[ 1 ]; }
 		
 //		void cross ( const ThisType& aa, const ThisType& bb );

@@ -41,11 +41,11 @@ class uniform :
 
         binding () { resize (); }
 
-        IntType* getInts () { return ( IntType* ) ( &mVals[ 0 ] ); }
-        IntType const* getInts () const { return ( IntType const* ) ( &mVals[ 0 ] ); }
+        IntType* getInts () { return ( IntType* ) ( mVals.data() ); }
+        IntType const* getInts () const { return ( IntType const* ) ( mVals.data() ); }
       
-        FloatType* getFloats () { return ( FloatType * ) ( &mVals[ 0 ] ); }
-        FloatType const* getFloats () const { return ( FloatType * ) ( &mVals[ 0 ] ); }
+        FloatType* getFloats () { return ( FloatType * ) ( mVals.data() ); }
+        FloatType const* getFloats () const { return ( FloatType * ) ( mVals.data () ); }
 
           /// Data type constants for bindings.
           /// @note Not currently doing unsigned types.
@@ -126,7 +126,7 @@ class uniform :
           state.  Dirty state means any gl-cached objects should be regen'd
           and clearDirty should be called. Currently, there is no gl-side
           cache for uniforms, so this is just good practice */
-    binding& uniformOp ( std::string const& which ) { setDirty (); return mBindings[ which ]; }
+    binding& bindingOp ( std::string const& which ) { setDirty (); return mBindings[ which ]; }
 
     void setDirty ( bool val = true ) const { mDirty = val; }
     bool getDirty () const { return mDirty; }

@@ -121,13 +121,13 @@ void textFactory::initDefaults()
       )");
   
   mDefUniform = new uniform;
-  mDefUniform->uniformOp(CommonUniformNames[ UniformTextMin ])
+  mDefUniform->bindingOp(CommonUniformNames[ UniformTextMin ])
       .set(uniform::binding::Fragment,uniform::binding::Float1, 1);
 
-  mDefUniform->uniformOp(CommonUniformNames[ UniformTextMax ])
+  mDefUniform->bindingOp(CommonUniformNames[ UniformTextMax ])
       .set(uniform::binding::Fragment,uniform::binding::Float1, 1);
 
-  mDefUniform->uniformOp(CommonUniformNames[ UniformTextColor ])
+  mDefUniform->bindingOp(CommonUniformNames[ UniformTextColor ])
       .set(uniform::binding::Fragment,uniform::binding::Float4, 1);
 
   setUniformDefaults(mMinVal, mMaxVal, mColor);
@@ -143,13 +143,13 @@ void textFactory::setUniformDefaults ( float minVal, float maxVal, pni::math::ve
 
   if ( mDefUniform )
   {
-    *(mDefUniform->uniformOp(CommonUniformNames[ UniformTextMin ])
+    *(mDefUniform->bindingOp(CommonUniformNames[ UniformTextMin ])
         .getFloats()) = minVal;
 
-    *(mDefUniform->uniformOp(CommonUniformNames[ UniformTextMax ])
+    *(mDefUniform->bindingOp(CommonUniformNames[ UniformTextMax ])
         .getFloats()) = maxVal;
 
-    color.copyToArray (mDefUniform->uniformOp(CommonUniformNames[ UniformTextMin ])
+    color.copyToArray (mDefUniform->bindingOp(CommonUniformNames[ UniformTextMin ])
         .getFloats());
   }
   else

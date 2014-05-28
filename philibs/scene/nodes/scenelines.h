@@ -11,6 +11,8 @@
 
 #include "scenegeomfx.h"
 #include "scenedata.h"
+#include "sceneuniform.h"
+#include "scenedirty.h"
 
 // ///////////////////////////////////////////////////////////////////
 
@@ -59,33 +61,33 @@ class lineData :
   public:
     virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const {}
   
-
 };
+
 
 class lines :
   public scene::geomFx
 {
   public:
   
-  
-    void test ();
     virtual void update ( graphDd::fxUpdate const& update ) override;
   
-    void setLineData ( lineData* pData ) { mLineData = pData; }
-    lineData* getLineData () { return mLineData.get(); }
-    lineData const* getLineData () const { return mLineData.get(); }
-    lineData* lineOp () { setBoundsDirty (); return mLineData.get(); }
-  
+    dirty< pni::pstd::autoRef< lineData > > mLineData {
+      [&] () { this->rebuildLines(); }
+    };
+
+    dirty< pni::pstd::autoRef< uniform > > mUniform {
+      new uniform,
+      [&] () { this->rebuildUniform(); }
+    };
+
     virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const
-        { refs.push_back(mLineData.get()); }
+        { refs.push_back(mLineData.get()); refs.push_back(mUniform.get()); }
   
   protected:
-
-    using LineDataRef = pni::pstd::autoRef< lineData >;
+    void rebuildLines ();
+    void rebuildUniform ();
   
   private:
-
-      LineDataRef mLineData;
 
 };
 

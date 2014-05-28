@@ -108,7 +108,7 @@ class PNIMATHAPI vec3
       /// @note http://en.wikipedia.org/wiki/Vector_projection
 		void projectOnto ( const ThisType& target );
   
-    void copyToArray ( ValueType* dst )
+    void copyToArray ( ValueType* dst ) const
         { dst[ 0 ] = vec[ 0 ]; dst[ 1 ] = vec[ 1 ]; dst[ 2 ] = vec[ 2 ]; }
 		
 	protected:
