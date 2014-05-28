@@ -26,7 +26,7 @@ void lines::update ( graphDd::fxUpdate const& update )
   mUniform.clearDirty();
 }
 
-void lines::rebuildLines()
+void lines::rebuildLines ()
 {
   assert(mLineData);
   assert(mLineData->mBinding.hasBinding(lineData::Position));
@@ -43,8 +43,9 @@ void lines::rebuildLines()
   
     // Make sure the geomData matches the number of lines and bindings.
   size_t points = mLineData->size();
-  size_t segs = points - mLineData->getIndices().size();
-  size_t verts = segs * 4;
+  size_t prims = mLineData->getIndices().size();
+  size_t segs = points - prims;
+  size_t verts = segs * 2 + prims * 2; // sharing verts, plus the end verts for each prim
   size_t tris = segs * 2;
 
   geomData::Attributes attrs;
@@ -70,54 +71,62 @@ void lines::rebuildLines()
     // Iterate through all line sigments
   for ( auto segNum : mLineData->getIndices() )
   {
-    size_t end = segNum - 1;
+    size_t end = segNum;
+    
+    vec3 lastPosVec;
+    float lenTotal = 0.0f;
 
       // Iterate through all points in each segment
     for ( size_t cur = 0; cur < end; ++cur )
     {
-        // Position
+      bool first = ( cur == 0 );
+      bool last = ( cur == ( end - 1 ) );
+    
+        // Position... we need last and next for normal mitering below.
       vec3 const& curPosVec = *curPos;
       ++curPos;
-      vec3 const& nextPosVec = *curPos;
+      if ( first )
+        lastPosVec = curPosVec;         // Repeat first pos as last
+        // Repeat cur pos as next if at end
+      vec3 const& nextPosVec = last ? curPosVec : *curPos;
 
       curPosVec.copyToArray( pPos ); pPos += stride;
       curPosVec.copyToArray( pPos ); pPos += stride;
-      nextPosVec.copyToArray( pPos ); pPos += stride;
-      nextPosVec.copyToArray( pPos ); pPos += stride;
       
+        // Color
       if ( curColor.good () )
       {
         vec4 const& curColorVec = *curColor;
         ++curColor;
-        vec4 const& nextColorVec = *curColor;
-        
         curColorVec.copyToArray( pColor ); pColor += stride;
         curColorVec.copyToArray( pColor ); pColor += stride;
-        nextColorVec.copyToArray( pColor ); pColor += stride;
-        nextColorVec.copyToArray( pColor ); pColor += stride;
       }
       
         // Default thickness, and then fill in real thickness values if they
         // are spec'd per-point.
       float curThicknessVal = 1.0f;
-      float nextThicknessVal = 1.0f;
-      
       if ( curThickness.good () )
       {
         float const& curThicknessFloat = *curThickness;
         ++curThickness;
-        float const& nextThicknessFloat = *curThickness;
-        
         curThicknessVal = curThicknessFloat;
-        nextThicknessVal = nextThicknessFloat;
       }
 
         // Set normals that are actually the vec from cur to next, multiplied
         // by the point's thickness.
         // TODO: Make next points diff based on next next point, except at the
         // end of a line seg where it will be equal to next (as it is now).
-      vec3 diff = nextPosVec;
-      diff -= curPosVec;
+      vec3 diff ( vec3::NoInit );
+      if ( ! last )
+      {
+        diff = nextPosVec;
+        diff -= curPosVec;
+      }
+      else // Re-use diff of prev seg (for now)
+      {
+        diff = curPosVec;
+        diff -= lastPosVec;
+      }
       
       float len = diff.length();
       diff /= len;  // normalize
@@ -128,46 +137,38 @@ void lines::rebuildLines()
       diff.copyToArray( pNorm ); pNorm += stride;
       diff.negate();
       diff.copyToArray( pNorm ); pNorm += stride;
-
-        // Set next point's normals, inverting in order to change which side
-        // of the line it will describe in the vertex shader.
-      diff *= nextThicknessVal / curThicknessVal;
-      diff.negate();
-      diff.copyToArray( pNorm ); pNorm += stride;
-      diff.negate();
-      diff.copyToArray( pNorm ); pNorm += stride;
       
         // Fill in UVs... this is probably temporary.  We'll have more
         // sophisticated UVs when we switch to SDF and dash support.
       vec2 uv;
-      uv.set ( 0.0f, 0.0f );
+      uv.set ( lenTotal, 0.0f );
       uv.copyToArray( pUv ); pUv += stride;
-      uv.set ( 0.0f, 1.0f );
-      uv.copyToArray( pUv ); pUv += stride;
-      uv.set ( len,  0.0f );
-      uv.copyToArray( pUv ); pUv += stride;
-      uv.set ( len,  1.0f );
+      uv.set ( lenTotal, 1.0f );
       uv.copyToArray( pUv ); pUv += stride;
       
         // Set indices and increment vert count
         // Verts are laid out like so:
-        // 1 --- 3
-        // | '-. |
-        // 0 --- 2
-      *pInd++ = vNum + 0;
-      *pInd++ = vNum + 2;
-      *pInd++ = vNum + 1;
-      *pInd++ = vNum + 1;
-      *pInd++ = vNum + 2;
-      *pInd++ = vNum + 3;
-      vNum += 4;
+        // 1 --- 3 --- 5
+        // | '-. | '-. |
+        // 0 --- 2 --- 4
+      if ( ! first )
+      {
+        *pInd++ = vNum + 0;
+        *pInd++ = vNum + 2;
+        *pInd++ = vNum + 1;
+        *pInd++ = vNum + 1;
+        *pInd++ = vNum + 2;
+        *pInd++ = vNum + 3;
+        vNum += 2;
+      }
+      
+      lastPosVec = curPosVec;
+      lenTotal += len;
     }
-    
-    ++curPos;
-    if ( curColor.good () ) ++curColor;
-    if ( curThickness.good () ) ++curThickness;
+    vNum += 2;
   }
 }
+
 
 void lines::rebuildUniform ()
 {

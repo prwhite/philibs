@@ -452,12 +452,13 @@ scene::prog* createMainProg ()
   pLineData->mBinding.push_back ( { {}, lineData::Color, lineData::Float, sizeof(float), 4 } );
   pLineData->mBinding.push_back ( { {}, lineData::Thickness, lineData::Float, sizeof(float), 1 } );
 
-  pLineData->resize(4, 2);
+  pLineData->resize(6, 2);
   
   auto pos = pLineData->begin< pni::math::vec3 >(lineData::Position);
   auto col = pLineData->begin< pni::math::vec4 >(lineData::Color);
   auto thk = pLineData->begin< float > (lineData::Thickness);
-  
+
+    // First line prim
   pos->set(0.0f, 2.0f, 0.1f);
   col->set(0.0f, 1.0f, 0.0f, 1.0f);
   *thk = 10.0f;
@@ -466,10 +467,17 @@ scene::prog* createMainProg ()
   
   pos->set(2.0f, 2.0f, 0.1f);
   col->set(0.0f, 0.0f, 1.0f, 1.0f);
-  *thk = 100.0f;
+  *thk = 125.0f;
 
   ++pos; ++col; ++thk;
 
+  pos->set(3.0f, 3.0f, 0.1f);
+  col->set(1.0f, 0.0f, 1.0f, 1.0f);
+  *thk = 50.0f;
+
+  ++pos; ++col; ++thk;
+  
+    // Second line prim
   pos->set(2.0f, 0.0f, 0.1f);
   col->set(1.0f, 0.0f, 0.0f, 1.0f);
   *thk = 10.0f;
@@ -478,10 +486,18 @@ scene::prog* createMainProg ()
   
   pos->set(2.0f, 2.0f, 0.1f);
   col->set(0.0f, 1.0f, 1.0f, 1.0f);
-  *thk = 100.0f;
+  *thk = 20.0f;
+
+  ++pos; ++col; ++thk;
   
-  pLineData->getIndices()[ 0 ] = 2;
-  pLineData->getIndices()[ 1 ] = 2;
+  pos->set(1.0f, 3.0f, 0.1f);
+  col->set(1.0f, 1.0f, 1.0f, 1.0f);
+  *thk = 40.0f;
+
+  ++pos; ++col; ++thk;
+  
+  pLineData->getIndices()[ 0 ] = 3;
+  pLineData->getIndices()[ 1 ] = 3;
 
   prog* pLineProg = progFactory::getInstance().loadSync( { "gles2-line.vsh", "gles2-line.fsh" } );
   pLines->setState(pLineProg, scene::state::Prog);
@@ -540,7 +556,7 @@ scene::prog* createMainProg ()
 {
     // Very cheesy rotation animation.
   static float rot = 0.0f;
-  rot += 2.0f;
+  rot += 0.2f;
 
   pni::math::vec3 axis { 0.25f, 0.5f, 1.0f };
   axis.normalize();
