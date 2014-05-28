@@ -258,7 +258,7 @@ void sprites::update ( graphDd::fxUpdate const& update )
 
 void sprites::generateGeomBounds () const
 {
-    // TODO: Optimize this by iterating over the point array 
+    // Optimize this by iterating over the point array
     // rather than the geoms like in geomFx::updateBounds.
     // Then, grow the bounds in each dimension by half the maxVal of
     // the largest x/y sprite size.

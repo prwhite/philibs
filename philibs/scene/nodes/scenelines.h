@@ -72,6 +72,8 @@ class lines :
     virtual void update ( graphDd::fxUpdate const& update ) override;
   
     dirty< pni::pstd::autoRef< lineData > > mLineData {
+      0,
+      [&] () { this->setGeomBoundsDirty(); },
       [&] () { this->rebuildLines(); }
     };
 
@@ -88,6 +90,10 @@ class lines :
     void rebuildUniform ();
   
   private:
+
+    // From geomFx, geom
+  
+  virtual void generateGeomBounds () const override;
 
 };
 

@@ -178,6 +178,35 @@ void lines::rebuildUniform ()
 //  pFloats[ 1 ] = mVpSizeTarget[ 1 ];
 }
 
+void lines:: generateGeomBounds () const
+{
+#define OPTIMIZEDFORLINES
+#ifdef OPTIMIZEDFORLINES
+    // Note that the bounds only represents the points, not including the
+    // thickness of the lines.  This means things hitting screen edge
+    // could cull early, but in practice this will be rare and visually
+    // minor.
+  assert(mLineData);
+  assert(mLineData->mBinding.hasBinding(lineData::Position));
+  assert(mLineData->size());
+
+  mBounds.setEmpty();
+
+  auto cur = mLineData->begin< vec3 >(lineData::Position);
+  auto end = mLineData->end< vec3 >(lineData::Position);
+  
+  while ( cur != end )
+  {
+    mBounds.extendBy(*cur);
+    
+    ++cur;
+  }
+
+#else
+  geomFx::generateGeomBounds();
+#endif // OPTIMIZEDFORLINES
+}
+
 // ///////////////////////////////////////////////////////////////////
 
 

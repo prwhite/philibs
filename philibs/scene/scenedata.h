@@ -337,6 +337,7 @@ class data
 
         bool operator < ( iterator const& rhs ) const { return mPtr < rhs.mPtr; }
         bool operator == ( iterator const& rhs ) const { return mPtr == rhs.mPtr; }
+        bool operator != ( iterator const& rhs ) const { return mPtr != rhs.mPtr; }
       
         Ret* operator-> () { return reinterpret_cast<Ret*>(mPtr); }
         Ret const* operator-> () const { return reinterpret_cast<Ret const*>(mPtr); }
@@ -371,6 +372,7 @@ class data
 
         bool operator < ( const_iterator const& rhs ) const { return mPtr < rhs.mPtr; }
         bool operator == ( const_iterator const& rhs ) const { return mPtr == rhs.mPtr; }
+        bool operator != ( const_iterator const& rhs ) const { return mPtr != rhs.mPtr; }
       
         Ret const* operator-> () const { return reinterpret_cast<Ret const*>(mPtr); }
         Ret const& operator* () const { return *reinterpret_cast<Ret const*>(mPtr); }

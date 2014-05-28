@@ -26,16 +26,28 @@ class dirtyBase
 {
   public:
     dirtyBase () = default;
-    dirtyBase ( Type const& val, std::function< void () > const& cb ) : mClearDirtyFunc { cb }, mVal { val } {}
-    dirtyBase ( Type const& val ) : dirtyBase { val, [](){} } {}
-    dirtyBase ( std::function< void () > const& cb ) : dirtyBase { {}, cb } {}
+    dirtyBase (
+        Type const& val,
+        std::function< void () > const& setFunc,
+        std::function< void () > const& clearFunc ) :
+      mSetDirtyFunc { setFunc },
+      mClearDirtyFunc { clearFunc },
+      mVal { val }
+      {}
+    dirtyBase ( Type const& val ) :
+        dirtyBase { val, [](){}, [](){} } {}
+    dirtyBase ( std::function< void () > const& clearFunc ) :
+        dirtyBase { {},  [](){}, clearFunc } {}
+    dirtyBase ( Type const& val, std::function< void () > const& clearFunc ) :
+        dirtyBase { val,  [](){}, clearFunc } {}
   
   public:
-    void setDirty ( bool val = true ) { mDirty = val; }
+    void setDirty ( bool val = true ) { mSetDirtyFunc(); mDirty = val; }
     bool getDirty () const { return mDirty; }
     void clearDirty () const { if ( mDirty ) mClearDirtyFunc(); mDirty = false; }
   
   protected:
+    std::function<void()> mSetDirtyFunc = [](){};
     std::function<void()> mClearDirtyFunc = [](){};
     Type mVal {};
 
@@ -49,10 +61,23 @@ class dirtyBase
   state will be cleaned up when #clearDirty is explicitly called, typically in a
   lazy fashion in the owning class.  The function object provided at construction
   will be called back any time clearDirty determines state needs to be updated,
-  otherwise it no-ops.
+  otherwise it no-ops.  Additionally, a #setDirty callback can be specified to
+  further allow the owning instance to customize behavior.  As an example,
+  use the #setFunc to invalidate bounds when setting the #geomeData on a #geom
+  instance.
+ 
   This class acts like a smart pointer, but all of the usual deref ops are
-  const.  To mutate a la operator ->, use #op, which returns a ref/ptr as
-  you would expect from non-const operator ->.
+  const.  To mutate a la operator->, use #op, which returns a ref/ptr as
+  you would expect from non-const operator->.
+ 
+  Finally, another way of understanding this class is that it is a property with
+  lazy update behavior.  The class that contains an instance can specify the 
+  hooks for set dirty and clear dirty behavior.
+  
+  @note The clearDirty method is only called explicitly by external code. Thus,
+  this class updates its state only when that is called, not as a side effect
+  of calling one of the dereference methods.  E.g., #set, #operator==,
+  and #operator-> do not call #clearDirty.
 */
 
 template< class Type, size_t uniquifier = 0 >
