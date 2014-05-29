@@ -69,9 +69,9 @@ void lines::rebuildLines ()
   size_t vNum = 0;
 
     // Iterate through all line sigments
-  for ( auto segNum : mLineData->getIndices() )
+  for ( auto segPoints : mLineData->getIndices() )
   {
-    size_t end = segNum;
+    size_t end = segPoints;
     
     vec3 lastPosVec;
     float lenTotal = 0.0f;
@@ -116,21 +116,42 @@ void lines::rebuildLines ()
         // by the point's thickness.
         // TODO: Make next points diff based on next next point, except at the
         // end of a line seg where it will be equal to next (as it is now).
-      vec3 diff ( vec3::NoInit );
-      if ( ! last )
+      vec3 lastDiff ( vec3::NoInit );
+      vec3 nextDiff ( vec3::NoInit );
+      
+      if ( first && last )
       {
-        diff = nextPosVec;
-        diff -= curPosVec;
+        assert(0);
       }
-      else // Re-use diff of prev seg (for now)
+      else if ( first )
       {
-        diff = curPosVec;
-        diff -= lastPosVec;
+        nextDiff = nextPosVec - curPosVec;
+        nextDiff.normalize();
+        lastDiff = nextDiff;
+      }
+      else if ( last )
+      {
+        lastDiff = curPosVec - lastPosVec;
+        lastDiff.normalize();
+        nextDiff = lastDiff;
+      }
+      else
+      {
+        lastDiff = curPosVec - lastPosVec;
+        lastDiff.normalize();
+        nextDiff = nextPosVec - curPosVec;
+        nextDiff.normalize();
       }
       
+        // "tangent" or average of last and next segments
+      vec3 diff = ( nextDiff + lastDiff ) / 2.0f;
       float len = diff.length();
       diff /= len;  // normalize
-      diff *= curThicknessVal;
+
+        // From https://forum.libcinder.org/topic/smooth-thick-lines-using-geometry-shader
+        // Now figure out the right length for the miter edge
+      float newLen = curThicknessVal / diff.dot ( lastDiff );
+      diff *= newLen;
       
         // Set cur point's normals, inverting in order to change which side
         // of the line it will describe in the vertex shader.

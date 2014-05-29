@@ -203,6 +203,8 @@ extendBy ( const vec3& pt )
 // References:
 //   http://geomalgorithms.com/a05-_intersect-1.html
 
+// PNIMATHUNTESTED
+
 bool seg::isect ( ThisType const& rhs, vec3& dst ) const
 {
   Trait::ValueType dot = dir.dot(rhs.dir);
@@ -217,12 +219,18 @@ bool seg::isect ( ThisType const& rhs, vec3& dst ) const
     // Do next step in 2D, as the projection of a 3D line to 2D will still
     // cross at a given parametric value... which can then be extended back
     // into 3D.
+    // WARNING: It's possible that projecting into 2D space loses key
+    // info (e.g., the 3D lines are in yz plane, so throwing away z info
+    // causes the solution to be overlapping lines, rather than a single
+    // intersection point.  :(
   vec2 u2 { -dir[ 1 ], dir[ 0 ] };  // right-handed perpendicular
   vec2 v2 = { rhs.dir[ 0 ], rhs.dir[ 1 ] };
   vec2 w2 = { pos[ 0 ] - rhs.pos[ 0 ], pos[ 1 ] - rhs.pos[ 1 ] };
   Trait::ValueType denom = u2.dot ( v2 );
   
     // Calc tu, the distance the isect happens on rhs seg
+    // TODO: We don't need tv... just test tu, and then lerp
+    // with that.
   Trait::ValueType tv = u2.dot ( w2 ) / denom;
   
     // Isect doesn't happen on rhs segment
