@@ -13,6 +13,7 @@
 #include "scenedata.h"
 #include "sceneuniform.h"
 #include "scenedirty.h"
+#include "pnivec2.h"
 
 // ///////////////////////////////////////////////////////////////////
 
@@ -70,6 +71,7 @@ class lines :
   public:
   
     virtual void update ( graphDd::fxUpdate const& update ) override;
+    void updateTest ( graphDd::fxUpdate const& update );
   
     dirty< pni::pstd::autoRef< lineData > > mLineData {
       0,
@@ -85,11 +87,20 @@ class lines :
     virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const
         { refs.push_back(mLineData.get()); refs.push_back(mUniform.get()); }
   
+      // Set this if your destination framebuffer has non square pixels...
+      // e.g., rendering in a framebuffer that will be stretched non-
+      // uniformly when finally composed.
+    void setViewportSizeRatio ( pni::math::vec2 const& val )
+      { mVpSizeRatio = val; mUniform->setDirty(); }
+    pni::math::vec2 const& getViewportSizeRatio () const { return mVpSizeRatio; }
+  
   protected:
     void rebuildLines ();
     void rebuildUniform ();
   
   private:
+  
+    pni::math::vec2 mVpSizeRatio { 1.0f, 1.0f };
 
     // From geomFx, geom
   

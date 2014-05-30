@@ -109,6 +109,7 @@ class dirty< pni::pstd::autoRef< Type >, uniquifier > :
 
     dirty& operator = ( value_type* val ) { this->setDirty(); this->mVal = val; return *this; }
     void set ( value_type* pVal ) { *this = pVal; } // delegates to operator =
+    value_type* get () { return this->mVal.get(); } // need no const... careful with it though
     value_type const* get () const { return this->mVal.get(); }
     value_type* op () { this->setDirty (); return this->mVal.get(); }
     operator bool () const { return static_cast< bool > ( this->mVal ); }

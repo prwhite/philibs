@@ -498,6 +498,8 @@ scene::prog* createMainProg ()
   
   pLineData->getIndices()[ 0 ] = 3;
   pLineData->getIndices()[ 1 ] = 3;
+  
+  pLines->setViewportSizeRatio( { 1.0, 1024.0 / 1536.0 } );
 
   prog* pLineProg = progFactory::getInstance().loadSync( { "gles2-line.vsh", "gles2-line.fsh" } );
   pLines->setState(pLineProg, scene::state::Prog);

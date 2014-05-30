@@ -27,16 +27,21 @@ namespace scene {
     
 // ///////////////////////////////////////////////////////////////////
 
-void lines::update ( graphDd::fxUpdate const& update )
+void lines::updateTest ( graphDd::fxUpdate const& update )
 {
-  mLineData.clearDirty();
-  mUniform.clearDirty();
-
   // Used to figure out if vertex shader is doing something unexpected...
   // so far, looks like "yes".  The vs is calculating normw as 0 sometimes
   // while the cpu version is not.  Matrices and vertex points have been
   // verified to match in this simulation of the vs.  It all goes wrong in
   // the vs when transforming norm (after norm += pos) by the mvpMat.
+  // Ah... so the problem was that the norm added to pos was out of range
+  // in some way for the vs after tranformation by mvpMat.  Fixed it by
+  // normalizing norm after storing its length away for later.  It's a scary
+  // fix as it may indicate there will be other range/precision issues, or that
+  // this created a situation where things were behind the near view plane
+  // causing a singularity to be hit or some such.  Will continue to watch for
+  // this.
+//#define TESTINGVS
 #ifdef TESTINGVS
   camera const* pCam = static_cast< camera const*>(update.mCamPath.getLeaf());
 
@@ -69,6 +74,7 @@ void lines::update ( graphDd::fxUpdate const& update )
     vec4 norm ( pNorm[ 0 ], pNorm[ 1 ], pNorm[ 2 ], 0.0f );
 
       // norm is a position, not a vector now
+      // MEGA: problem in vs was that norm needed to be... uh... normalized
     norm += pos;
 
       // now go in clip space
@@ -88,6 +94,16 @@ void lines::update ( graphDd::fxUpdate const& update )
     }
     ++viter;
   }
+#endif // TESTINGVS
+}
+
+void lines::update ( graphDd::fxUpdate const& update )
+{
+  mLineData.clearDirty();
+  mUniform.clearDirty();
+
+#ifdef TESTINGVS
+  updateTest(update);
 #endif // TESTINGVS
 }
 
@@ -261,11 +277,13 @@ void lines::rebuildLines ()
 
 void lines::rebuildUniform ()
 {
-  uniform::binding& binding = mUniform.op()->bindingOp("u_vpSizeTarget");
+  uniform::binding& binding = mUniform.op()->bindingOp("u_vpSizeRatio");
   binding.set(uniform::binding::Vertex, uniform::binding::Float2);
   float* pFloats = binding.getFloats();
-//  pFloats[ 0 ] = mVpSizeTarget[ 0 ];
-//  pFloats[ 1 ] = mVpSizeTarget[ 1 ];
+  pFloats[ 0 ] = mVpSizeRatio[ 0 ];
+  pFloats[ 1 ] = mVpSizeRatio[ 1 ];
+  
+  setState(mUniform.get(), state::Uniform00);
 }
 
 void lines:: generateGeomBounds () const
