@@ -459,40 +459,40 @@ scene::prog* createMainProg ()
   auto thk = pLineData->begin< float > (lineData::Thickness);
 
     // First line prim
-  pos->set(0.0f, 2.0f, 0.1f);
+  pos->set(0.0f, 2.0f, 0.0f);
   col->set(0.0f, 1.0f, 0.0f, 1.0f);
-  *thk = 10.0f;
+  *thk = 20.0f;
   
   ++pos; ++col; ++thk;
   
-  pos->set(2.0f, 2.0f, 0.1f);
+  pos->set(1.0f, 2.0f, 0.0f);
   col->set(0.0f, 0.0f, 1.0f, 1.0f);
-  *thk = 125.0f;
+  *thk = 20.0f;
 
   ++pos; ++col; ++thk;
 
-  pos->set(3.0f, 3.0f, 0.1f);
+  pos->set(2.0f, 3.0f, 0.0f);
   col->set(1.0f, 0.0f, 1.0f, 1.0f);
-  *thk = 50.0f;
-
-  ++pos; ++col; ++thk;
-  
-    // Second line prim
-  pos->set(2.0f, 0.0f, 0.1f);
-  col->set(1.0f, 0.0f, 0.0f, 1.0f);
-  *thk = 10.0f;
-  
-  ++pos; ++col; ++thk;
-  
-  pos->set(2.0f, 2.0f, 0.1f);
-  col->set(0.0f, 1.0f, 1.0f, 1.0f);
   *thk = 20.0f;
 
   ++pos; ++col; ++thk;
   
-  pos->set(1.0f, 3.0f, 0.1f);
+    // Second line prim
+  pos->set(2.0f, 0.0f, 0.0f);
+  col->set(1.0f, 0.0f, 0.0f, 1.0f);
+  *thk = 50.0f;
+  
+  ++pos; ++col; ++thk;
+  
+  pos->set(2.0f, 1.0f, 0.0f);
+  col->set(0.0f, 1.0f, 1.0f, 1.0f);
+  *thk = 50.0f;
+
+  ++pos; ++col; ++thk;
+  
+  pos->set(1.0f, 2.0f, 0.0f);
   col->set(1.0f, 1.0f, 1.0f, 1.0f);
-  *thk = 40.0f;
+  *thk = 50.0f;
 
   ++pos; ++col; ++thk;
   

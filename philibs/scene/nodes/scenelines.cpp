@@ -12,6 +12,13 @@
 
 #include <cassert>
 
+//#define TESTINGVS
+#ifdef TESTINGVS
+#include "pnimatrix4.h"
+#include "scenecamera.h"
+#include "pnimathstream.h"
+#endif // TESTINGVS
+
 // ///////////////////////////////////////////////////////////////////
 
 using namespace pni::math;
@@ -24,6 +31,64 @@ void lines::update ( graphDd::fxUpdate const& update )
 {
   mLineData.clearDirty();
   mUniform.clearDirty();
+
+  // Used to figure out if vertex shader is doing something unexpected...
+  // so far, looks like "yes".  The vs is calculating normw as 0 sometimes
+  // while the cpu version is not.  Matrices and vertex points have been
+  // verified to match in this simulation of the vs.  It all goes wrong in
+  // the vs when transforming norm (after norm += pos) by the mvpMat.
+#ifdef TESTINGVS
+  camera const* pCam = static_cast< camera const*>(update.mCamPath.getLeaf());
+
+  pni::math::matrix4 viewMat;
+  update.mCamPath.calcInverseXform( viewMat );
+  
+  pni::math::matrix4 modelMat;
+  update.mNodePath.calcXform( modelMat );
+  
+  pni::math::matrix4 projMat = pCam->getProjectionMatrix();
+  
+  pni::math::matrix4 mvpMat;
+  
+  mvpMat.preMult(projMat);
+  mvpMat.preMult(viewMat);
+  mvpMat.preMult(modelMat);
+  
+//  PNIDBGSTR("mvpMat = \n" << mvpMat);
+  
+  vertIter viter ( getGeomData() );
+  size_t posOff = mGeomData->getAttributes().getValueOffset(geomData::Position);
+  size_t normOff = mGeomData->getAttributes().getValueOffset(geomData::Normal);
+  
+  while ( viter )
+  {
+    float const* pPos = viter ( posOff );
+    float const* pNorm = viter ( normOff );
+
+    vec4 pos ( pPos[ 0 ], pPos[ 1 ], pPos[ 2 ], 1.0f );
+    vec4 norm ( pNorm[ 0 ], pNorm[ 1 ], pNorm[ 2 ], 0.0f );
+
+      // norm is a position, not a vector now
+    norm += pos;
+
+      // now go in clip space
+    pos.xformPt(pos, mvpMat);
+    norm.xformPt(norm, mvpMat);
+    
+      // now go in ndc
+    float posw = pos[ 3 ];
+    float normw = norm[ 3 ];
+    
+    pos /= posw;
+    norm /= normw;
+    
+    if ( Trait::equal(normw, 0.0f, 0.1f ) )
+    {
+      PNIDBGSTR( "how is normw 0-ish?" );
+    }
+    ++viter;
+  }
+#endif // TESTINGVS
 }
 
 void lines::rebuildLines ()
@@ -118,7 +183,10 @@ void lines::rebuildLines ()
         // end of a line seg where it will be equal to next (as it is now).
       vec3 lastDiff ( vec3::NoInit );
       vec3 nextDiff ( vec3::NoInit );
-      
+      vec3 tangent ( vec3::NoInit );
+      float len = 0.0f;
+
+        // TODO: Optimize
       if ( first && last )
       {
         assert(0);
@@ -126,32 +194,32 @@ void lines::rebuildLines ()
       else if ( first )
       {
         nextDiff = nextPosVec - curPosVec;
-        nextDiff.normalize();
+        len = nextDiff.length();
+        nextDiff /= len;
         lastDiff = nextDiff;
+        tangent = nextDiff;
       }
       else if ( last )
       {
         lastDiff = curPosVec - lastPosVec;
         lastDiff.normalize();
         nextDiff = lastDiff;
+        tangent = lastDiff;
       }
       else
       {
         lastDiff = curPosVec - lastPosVec;
         lastDiff.normalize();
         nextDiff = nextPosVec - curPosVec;
-        nextDiff.normalize();
+        len = nextDiff.length();
+        nextDiff /= len;
+        tangent = ( nextDiff + lastDiff ) / 2.0f;
       }
       
-        // "tangent" or average of last and next segments
-      vec3 diff = ( nextDiff + lastDiff ) / 2.0f;
-      float len = diff.length();
-      diff /= len;  // normalize
-
         // From https://forum.libcinder.org/topic/smooth-thick-lines-using-geometry-shader
         // Now figure out the right length for the miter edge
-      float newLen = curThicknessVal / diff.dot ( lastDiff );
-      diff *= newLen;
+      float newLen = curThicknessVal / tangent.dot ( lastDiff );
+      vec3 diff =  tangent * newLen;
       
         // Set cur point's normals, inverting in order to change which side
         // of the line it will describe in the vertex shader.
