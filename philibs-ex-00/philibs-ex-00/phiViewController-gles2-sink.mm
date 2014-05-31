@@ -42,6 +42,7 @@
 #include "philibs/scenetext.h"
 #include "philibs/scenetextfactory.h"
 
+#include "philibs/pnidbg.h"
 #include <iostream>
 #include <fstream>
 
@@ -53,6 +54,7 @@
   pni::pstd::autoRef< scene::prog > mProg;
   pni::pstd::autoRef< scene::uniform > mUniform00;
   pni::pstd::autoRef< scene::camera > mCam;
+  pni::pstd::autoRef< scene::lines > mLines;
 
   pni::pstd::autoRef< scene::renderSink > mMainSink;
   pni::pstd::autoRef< scene::renderSink > mTexSink;
@@ -182,44 +184,6 @@ scene::geom* buildQuad ()
   
   return pMainGeom;
 }
-
-scene::geom* buildLineQuad ()
-{
-  using namespace scene;
-
-  geom* pMainGeom = new geom;
-  pMainGeom->setName("quasi line quad");
-
-  geomData* pGeomData = new geomData;
-  pGeomData->attributesOp().push_back( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, geomData::PositionComponents } );
-//  pGeomData->attributesOp().push_back ( { CommonAttributeNames[ geomData::Normal], geomData::Normal, geomData::DataType_FLOAT, geomData::NormalComponents } );
-  pGeomData->attributesOp().push_back ( { CommonAttributeNames[ geomData::TCoord00], geomData::TCoord00, geomData::DataType_FLOAT, geomData::TCoord00Components } );
-//  pGeomData->attributesOp().push_back ( { CommonAttributeNames[ geomData::TCoord01], geomData::TCoord00, geomData::DataType_FLOAT, geomData::TCoord00Components } );
-
-  pGeomData->resizeTrisWithCurrentAttributes(4, 2);
-  
-  float const st = 0.01f;
-  float const et = 1.0f;
-  float const ll = 1.2f;
-  float const off = 2.0f;
-  
-    /// x,y,z,u,v
-  pGeomData->getValues() = {
-    0.0f, -st + off, 0.0f,   0.0f, 0.0f,
-     ll, -et + off, 0.0f,   1.0f, 0.0f,
-    0.0f,  st + off, 0.0f,   0.0f, 1.0f,
-     ll,  et + off, 0.0f,   1.0f, 1.0f
-  };
-  
-  pGeomData->getIndices() = {
-    0, 1, 2, 1, 3, 2
-  };
-  
-  pMainGeom->setGeomData(pGeomData);
-  
-  return pMainGeom;
-}
-
 
 scene::prog* createMainProg ()
 {
@@ -443,8 +407,10 @@ scene::prog* createMainProg ()
   pLightPath->setLight ( pLight, 0 );
   mRoot->setState ( pLightPath, scene::state::LightPath );
 
-
+    // Lines
   lines* pLines = new lines;
+  mLines = pLines;
+  
   lineData* pLineData = new lineData;
   pLines->mLineData.set ( pLineData );
   
@@ -452,53 +418,8 @@ scene::prog* createMainProg ()
   pLineData->mBinding.push_back ( { {}, lineData::Color, lineData::Float, sizeof(float), 4 } );
   pLineData->mBinding.push_back ( { {}, lineData::Thickness, lineData::Float, sizeof(float), 1 } );
 
-  pLineData->resize(6, 2);
-  
-  auto pos = pLineData->begin< pni::math::vec3 >(lineData::Position);
-  auto col = pLineData->begin< pni::math::vec4 >(lineData::Color);
-  auto thk = pLineData->begin< float > (lineData::Thickness);
+  pLineData->resize(0,0);
 
-    // First line prim
-  pos->set(0.0f, 2.0f, 0.0f);
-  col->set(0.0f, 1.0f, 0.0f, 1.0f);
-  *thk = 20.0f;
-  
-  ++pos; ++col; ++thk;
-  
-  pos->set(1.0f, 2.0f, 0.0f);
-  col->set(0.0f, 0.0f, 1.0f, 1.0f);
-  *thk = 20.0f;
-
-  ++pos; ++col; ++thk;
-
-  pos->set(2.0f, 3.0f, 0.0f);
-  col->set(1.0f, 0.0f, 1.0f, 1.0f);
-  *thk = 20.0f;
-
-  ++pos; ++col; ++thk;
-  
-    // Second line prim
-  pos->set(2.0f, 0.0f, 0.0f);
-  col->set(1.0f, 0.0f, 0.0f, 1.0f);
-  *thk = 50.0f;
-  
-  ++pos; ++col; ++thk;
-  
-  pos->set(2.0f, 1.0f, 0.0f);
-  col->set(0.0f, 1.0f, 1.0f, 1.0f);
-  *thk = 50.0f;
-
-  ++pos; ++col; ++thk;
-  
-  pos->set(1.0f, 2.0f, 0.0f);
-  col->set(1.0f, 1.0f, 1.0f, 1.0f);
-  *thk = 50.0f;
-
-  ++pos; ++col; ++thk;
-  
-  pLineData->getIndices()[ 0 ] = 3;
-  pLineData->getIndices()[ 1 ] = 3;
-  
   pLines->setViewportSizeRatio( { 1.0, 1024.0 / 1536.0 } );
 
   prog* pLineProg = progFactory::getInstance().loadSync( { "gles2-line.vsh", "gles2-line.fsh" } );
@@ -507,9 +428,6 @@ scene::prog* createMainProg ()
   pLines->setName("line test");
   
   mFile->addChild(pLines);
-  
-  mFile->addChild(buildLineQuad());
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -573,5 +491,121 @@ scene::prog* createMainProg ()
   rsDd->startGraph(mMainSink.get(), 0.0);
 }
 
+struct linePanData
+{
+  pni::math::vec2 mLastPos;
+  
+  pni::math::vec2 cg2pt ( UIPanGestureRecognizer* gr )
+    {
+      pni::math::vec2 ret;
+      
+      CGPoint pt = [gr locationInView:gr.view];
+      
+      ret.set ( pt.x, pt.y );
+      
+      pni::math::vec2 vpSize ( gr.view.frame.size.width, gr.view.frame.size.height);
+
+      ret[ 0 ] = vpSize[ 0 ] - ret[ 0 ]; // flip y
+
+      ret /= vpSize;
+      
+      ret = ret * 4.0f - 2.0f;  // Scale it up around the origin.
+      
+      return ret;
+    }
+};
+
+- (IBAction)onPan:(id)sender
+{
+  using namespace scene;
+
+  float const ThickStart = 35.0f;
+  float const ThickEnd = ThickStart / 10.0f;
+  float const DistMin = ThickStart / 1024.0f; // Every five pixels
+  float const ZOff = 1.125f;
+  float const ThickMax = DistMin * 5.0f;
+
+  static linePanData lpd;
+
+  UIPanGestureRecognizer* pr = ( UIPanGestureRecognizer* ) sender;
+
+  lineData* pLineData = mLines->mLineData.get();
+
+  switch ( pr.state )
+  {
+    case UIGestureRecognizerStateBegan:
+      {
+        lpd.mLastPos = lpd.cg2pt ( pr );
+        
+//        mLines->mLineData.setDirty();
+        pLineData->resize ( 1, 1 );
+
+        auto pos = pLineData->begin< pni::math::vec3 >(lineData::Position);
+        auto col = pLineData->begin< pni::math::vec4 >(lineData::Color);
+        auto thk = pLineData->begin< float > (lineData::Thickness);
+        
+        pos->set ( lpd.mLastPos[ 0 ], lpd.mLastPos[ 1 ], ZOff );
+        col->set ( 0.0f, 0.0f, 0.0f, 1.0f );
+        *thk = ThickStart;
+      }
+    break;
+    case UIGestureRecognizerStateChanged:
+      {
+        pni::math::vec2 nextPos = lpd.cg2pt ( pr );
+        
+        float dist = nextPos.dist(lpd.mLastPos);
+        
+        if ( dist > DistMin )
+        {
+          lpd.mLastPos = nextPos;
+          
+          mLines->mLineData.setDirty();
+          
+          size_t last = pLineData->getIndices()[ 0 ];
+          pLineData->getIndices()[ 0 ]++;
+          pLineData->resize ( pLineData->getIndices()[ 0 ], 1 );
+
+          auto pos = pLineData->begin< pni::math::vec3 >(lineData::Position);
+          auto col = pLineData->begin< pni::math::vec4 >(lineData::Color);
+          auto thk = pLineData->begin< float > (lineData::Thickness);
+
+          pos += last; col += last; thk += last;
+
+          pos->set ( lpd.mLastPos[ 0 ], lpd.mLastPos[ 1 ], ZOff );
+          col->set ( 0.0f, 0.0f, 0.0f, 1.0f );
+          
+          dist -= DistMin;
+          float thkOut = ThickStart * ( ThickMax - dist ) / ThickMax;
+          
+          if ( thkOut < ThickEnd ) thkOut = ThickEnd;
+          
+          *thk = thkOut;
+        }
+      }
+      break;
+    default:
+      {
+        lpd.mLastPos = lpd.cg2pt ( pr );
+        
+        mLines->mLineData.setDirty();
+
+        size_t last = pLineData->getIndices()[ 0 ];
+        pLineData->getIndices()[ 0 ]++;
+        pLineData->resize ( pLineData->getIndices()[ 0 ], 1 );
+
+        auto pos = pLineData->begin< pni::math::vec3 >(lineData::Position);
+        auto col = pLineData->begin< pni::math::vec4 >(lineData::Color);
+        auto thk = pLineData->begin< float > (lineData::Thickness);
+
+        pos += last; col += last; thk += last;
+
+        pos->set ( lpd.mLastPos[ 0 ], lpd.mLastPos[ 1 ], ZOff );
+        col->set ( 0.0f, 0.0f, 0.0f, 1.0f );
+        
+        *thk = ThickEnd;
+      }
+      break;
+  }
+}
 
 @end

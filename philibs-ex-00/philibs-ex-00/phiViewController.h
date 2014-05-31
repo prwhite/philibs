@@ -11,4 +11,7 @@
 
 @interface phiViewController : GLKViewController
 
+
+- (IBAction)onPan:(id)sender;
+
 @end

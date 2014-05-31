@@ -111,7 +111,10 @@ void lines::rebuildLines ()
 {
   assert(mLineData);
   assert(mLineData->mBinding.hasBinding(lineData::Position));
-  assert(mLineData->size());
+//  assert(mLineData->size());
+
+  if ( mLineData->size() == 0 )
+    return; // Early return!!!
 
   auto curPos = mLineData->begin< vec3 >(lineData::Position);
   auto curColor = mLineData->begin< vec4 >(lineData::Color);
@@ -205,7 +208,7 @@ void lines::rebuildLines ()
         // TODO: Optimize
       if ( first && last )
       {
-        assert(0);
+//        assert(0);
       }
       else if ( first )
       {
@@ -296,7 +299,7 @@ void lines:: generateGeomBounds () const
     // minor.
   assert(mLineData);
   assert(mLineData->mBinding.hasBinding(lineData::Position));
-  assert(mLineData->size());
+//  assert(mLineData->size());
 
   mBounds.setEmpty();
 
