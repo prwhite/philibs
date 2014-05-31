@@ -249,7 +249,7 @@ void lines::rebuildLines ()
         // Fill in UVs... this is probably temporary.  We'll have more
         // sophisticated UVs when we switch to SDF and dash support.
       vec2 uv;
-      uv.set ( lenTotal, 0.0f );
+      uv.set ( lenTotal, -1.0f );
       uv.copyToArray( pUv ); pUv += stride;
       uv.set ( lenTotal, 1.0f );
       uv.copyToArray( pUv ); pUv += stride;

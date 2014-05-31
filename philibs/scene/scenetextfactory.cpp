@@ -114,8 +114,6 @@ void textFactory::initDefaults()
             // Use grayscale image data to fill alpha of output.
 //          tex00.r *=  * 0.8 + 0.2;
           gl_FragColor = vec4 ( u_textColor.rgb, tex00.r);
-          
-
         }
       
       )");

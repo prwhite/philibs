@@ -425,6 +425,12 @@ scene::prog* createMainProg ()
   prog* pLineProg = progFactory::getInstance().loadSync( { "gles2-line.vsh", "gles2-line.fsh" } );
   pLines->setState(pLineProg, scene::state::Prog);
   
+  pLines->setState ( new blend, scene::state::Blend );
+  
+  depth* pDepth = new depth;
+  pDepth->setDepthFunc ( scene::depth::LEqual );
+  pLines->setState ( pDepth, scene::state::Depth );
+  
   pLines->setName("line test");
   
   mFile->addChild(pLines);
@@ -521,7 +527,7 @@ struct linePanData
 
   float const ThickStart = 35.0f;
   float const ThickEnd = ThickStart / 10.0f;
-  float const DistMin = ThickStart / 1024.0f; // Every five pixels
+  float const DistMin = ThickStart / 1024.0f;
   float const ZOff = 1.125f;
   float const ThickMax = DistMin * 5.0f;
 
