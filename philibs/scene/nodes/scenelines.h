@@ -70,18 +70,41 @@ class lines :
 {
   public:
   
+    struct style
+    {
+      style () {}
+    
+      pni::math::vec2 mEdgeRange { 0.5f, 0.15f };         // { middle alpha, range }
+      pni::math::vec4 mDashRange { 0.1f, 0.05f, 30.0f, 0.0f };  // { middle alpha, range, period/length, phase/offset }
+      float mAlphaRef { 0.1f };                           // Discard threshold
+      uint32_t mDashEnable { 1 };                         // Turn dashes on/off
+    };
+  
     virtual void update ( graphDd::fxUpdate const& update ) override;
     void updateTest ( graphDd::fxUpdate const& update );
   
+      /// mLineData
     dirty< pni::pstd::autoRef< lineData > > mLineData {
       0,
       [&] () { this->setGeomBoundsDirty(); },
       [&] () { this->rebuildLines(); }
     };
 
+      /// mUniform
     dirty< pni::pstd::autoRef< uniform > > mUniform {
       new uniform,
       [&] () { this->rebuildUniform(); }
+    };
+  
+    dirty< size_t > mTest {
+      0
+    };
+  
+      /// mStyle
+    dirty< style > mStyle {
+      {},
+      [&] () { this->rebuildStyle(); },
+      [&] () {}
     };
 
     virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const
@@ -97,6 +120,8 @@ class lines :
   protected:
     void rebuildLines ();
     void rebuildUniform ();
+    void rebuildStyle ();
+    float preCalcLength ();
   
   private:
   

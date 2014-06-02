@@ -113,7 +113,7 @@ void textFactory::initDefaults()
           tex00.r = smoothstep ( u_textMin, u_textMax, tex00.r );
             // Use grayscale image data to fill alpha of output.
 //          tex00.r *=  * 0.8 + 0.2;
-          gl_FragColor = vec4 ( u_textColor.rgb, tex00.r);
+          gl_FragColor = vec4 ( u_textColor.rgb, tex00.r * u_textColor.a);
         }
       
       )");

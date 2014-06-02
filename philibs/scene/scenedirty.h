@@ -92,7 +92,7 @@ class dirty :
     Type const& get () const { return this->mVal; }
     Type& op () { this->setDirty (); return this->mVal; }
 //    operator bool () const { return static_cast< bool > ( this->mVal ); } // Doesn't make sense for non-specialized version
-    Type* operator -> () const { return &this->mVal; }
+    Type const* operator -> () const { return &this->mVal; }
     bool operator == ( dirty const& rhs ) { return this->mVal == rhs.mVal; }
 };
 

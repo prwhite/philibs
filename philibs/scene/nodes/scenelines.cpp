@@ -158,7 +158,25 @@ void lines::rebuildLines ()
     size_t end = segPoints;
     
     vec3 lastPosVec;
-    float lenTotal = 0.0f;
+    auto lastThickness = curThickness;
+    lastThickness += segPoints - 1;
+
+    float lenTotal = 0.0f;   // start before 0 to give room for start cap
+
+      // TODO: Need to stretch first and last segments by cur and last
+      // thickness so that end caps (depending on style) are centered on
+      // the point, rather than starting at the point.  For the time
+      // being, our line is not the right length, but we use lenRatio
+      // to make sure the end UV matches what would be the proper length.
+      // When we do make the geometry longer, we can drop use of lenRatio
+      // below.  With lenRatio, our caps will be a little compressed.
+      // TODO: Need to make lenFull, and the start/end thicknesses uniforms
+      // because they're needed in the fs.
+//    float lenTotal = - *curThickness;   // start before 0 to give room for start cap
+//    float const lenFull = preCalcLength();
+//    float const lenWithCaps = lenFull + *curThickness + *lastThickness;
+//    float const lenRatio = lenWithCaps / lenFull;
+    
 
       // Iterate through all points in each segment
     for ( size_t cur = 0; cur < end; ++cur )
@@ -277,16 +295,87 @@ void lines::rebuildLines ()
   }
 }
 
+float lines::preCalcLength()
+{
+  auto cur = mLineData->begin< pni::math::vec3 >( lineData::Position );
+  auto end = mLineData->end< pni::math::vec3 >( lineData::Position );
+  
+  float ret = 0.0;
+  
+  if ( ! ( cur == end ) )
+  {
+    pni::math::vec3 lastPos = *cur;
+    ++cur;
+    
+    while ( cur != end )
+    {
+      auto const& curPos = *cur;
+      ret += curPos.dist(lastPos);
+      lastPos = curPos;
+    
+      ++cur;
+    }
+  }
+  
+  return ret;
+}
+
+  // From lines::style
+//      pni::math::vec2 mEdgeRange { 0.5f, 0.15f }; // [0] = middle alpha, [1] = +- range
+//      pni::math::vec2 mDashRange { 0.3f, 0.05f }; // [0] = middle alpha, [1] = +- range
+//      float mAlphaRef { 0.1f };                   // Discard threshold
+//      uint32_t mDashEnable { 0 };                 // Turn dashes on/off
+
 
 void lines::rebuildUniform ()
 {
-  uniform::binding& binding = mUniform.op()->bindingOp("u_vpSizeRatio");
-  binding.set(uniform::binding::Vertex, uniform::binding::Float2);
-  float* pFloats = binding.getFloats();
-  pFloats[ 0 ] = mVpSizeRatio[ 0 ];
-  pFloats[ 1 ] = mVpSizeRatio[ 1 ];
+  {
+    uniform::binding& binding = mUniform.op()->bindingOp("u_vpSizeRatio");
+    binding.set(uniform::binding::Vertex, uniform::binding::Float2);
+    float* pFloats = binding.getFloats();
+    pFloats[ 0 ] = mVpSizeRatio[ 0 ];
+    pFloats[ 1 ] = mVpSizeRatio[ 1 ];
+  }
+
+  {
+    uniform::binding& binding = mUniform.op()->bindingOp("u_edgeRange");
+    binding.set(uniform::binding::Fragment, uniform::binding::Float2);
+    float* pFloats = binding.getFloats();
+    pFloats[ 0 ] = mStyle->mEdgeRange[ 0 ];
+    pFloats[ 1 ] = mStyle->mEdgeRange[ 1 ];
+  }
+
+  {
+    uniform::binding& binding = mUniform.op()->bindingOp("u_dashRange");
+    binding.set(uniform::binding::Fragment, uniform::binding::Float4);
+    float* pFloats = binding.getFloats();
+    pFloats[ 0 ] = mStyle->mDashRange[ 0 ];
+    pFloats[ 1 ] = mStyle->mDashRange[ 1 ];
+    pFloats[ 2 ] = mStyle->mDashRange[ 2 ];
+    pFloats[ 3 ] = mStyle->mDashRange[ 3 ];
+  }
+
+  {
+    uniform::binding& binding = mUniform.op()->bindingOp("u_alphaRef");
+    binding.set(uniform::binding::Fragment, uniform::binding::Float1);
+    float* pFloats = binding.getFloats();
+    pFloats[ 0 ] = mStyle->mAlphaRef;
+  }
+  
+  {
+    uniform::binding& binding = mUniform.op()->bindingOp("u_dashEnable");
+    binding.set(uniform::binding::Fragment, uniform::binding::Int1);
+    int* pInts = binding.getInts();
+    pInts[ 0 ] = mStyle->mDashEnable;
+  }
   
   setState(mUniform.get(), state::Uniform00);
+}
+
+
+void lines::rebuildStyle ()
+{
+  mUniform.setDirty();
 }
 
 void lines:: generateGeomBounds () const

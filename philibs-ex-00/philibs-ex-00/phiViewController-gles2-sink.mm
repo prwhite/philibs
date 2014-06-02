@@ -303,7 +303,7 @@ scene::prog* createMainProg ()
   
     // Create and setup the camera.
   mCam = new scene::camera ();
-  mCam->setColorClear( { 0.0f, 0.2f, 0.0f, 1.0f } );
+  mCam->setColorClear( { 0.2f, 0.2f, 0.3f, 1.0f } );
   mCam->setNormalizeMode( scene::camera::Normalize );
   mCam->setViewport( 0.0f, 0.0f, width2, height2 );
 
@@ -346,15 +346,17 @@ scene::prog* createMainProg ()
   commonUniformOp< float > ( pUniform, UniformTextMin ) = 0.45f;
   commonUniformOp< float > ( pUniform, UniformTextMax ) = 0.65f;
   commonUniformOp< pni::math::vec4 > ( pUniform, UniformTextColor ).set (
-    1.0f, 0.0f, 0.0f, 1.0f );
+    0.5f, 0.5f, 1.0f, 0.25f );
   
-  pText->setText("this is text");
+  pText->setText("©PHI");
   
   scene::depth* pNoDepth = new scene::depth;
   pNoDepth->setEnable(false);
   pText->setState(pNoDepth, state::Depth);
   
-  pText->matrixOp().setTrans(0.0f, 0.0f, -125.0f);
+  pText->setState(new blend, state::Blend);
+  
+  pText->matrixOp().setTrans(75.0f, -70.0f, -125.0f);
   
   float const scale = 16.0f;
   pText->matrixOp().preScale(scale, scale, scale);
@@ -486,6 +488,13 @@ scene::prog* createMainProg ()
 
   pni::math::vec3 axis { 0.25f, 0.5f, 1.0f };
   axis.normalize();
+  
+  float const Incr = 0.5f;
+  if ( mLines )
+    mLines->mStyle.op().mDashRange[ 3 ] =
+      mLines->mStyle.op().mDashRange[ 3 ] > pni::math::Trait::d2r( 360.0f ) ?
+        mLines->mStyle.op().mDashRange[ 3 ] - pni::math::Trait::d2r( 360.0f ) + Incr :
+        mLines->mStyle.op().mDashRange[ 3 ] + Incr;
 
   if ( mFile )
     mFile->matrixOp().setRot(rot, axis);
@@ -496,6 +505,10 @@ scene::prog* createMainProg ()
   scene::renderSinkDd* rsDd = new scene::renderSinkDd;
   rsDd->startGraph(mMainSink.get(), 0.0);
 }
+
+// ///////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////
+// ///////////////////////////////////////////////////////////////////
 
 struct linePanData
 {
