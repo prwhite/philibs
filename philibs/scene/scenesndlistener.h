@@ -70,7 +70,7 @@ class sndListener :
     // interface from node
   public:
   
-    virtual node* dup () const { return new sndListener ( *this ); }
+    virtual sndListener* dup () const { return new sndListener ( *this ); }
     virtual void accept ( graphDd* pDd ) const { pDd->dispatch ( this ); }
 
   protected:

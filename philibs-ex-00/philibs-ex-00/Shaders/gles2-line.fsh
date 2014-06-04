@@ -35,11 +35,10 @@ void main()
   {
     highp float up = 1.0;
 
-      // Use sin func to give us smooth low and high points based on u coord
+      // Use triangle wave func to give us low and high points based on u coord
       // that we can pick out with smoothstep to get longer/shorter dashes.
       // u_dashRange[ 2 ] changes overall period.
-    up = sin ( v_uv00[ 0 ] * u_dashRange[ 2 ] + u_dashRange[ 3 ] );
-    up = up * 0.5 + 0.5;  // get in range [0,1]
+    up = abs ( mod ( v_uv00[ 0 ] / u_dashRange[ 2 ] + u_dashRange[ 3 ], 2.0 ) - 1.0 );
     
       // relate these to the earlier ranges for the edge (?) or do more uniforms
     up = smoothstep ( u_dashRange[ 0 ] - u_dashRange[ 1 ], u_dashRange[ 0 ] + u_dashRange[ 1 ], up );

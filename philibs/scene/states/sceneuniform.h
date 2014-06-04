@@ -141,7 +141,7 @@ class uniform :
 
   // interface from state
   public:
-    virtual state* dup () const { return new uniform ( *this ); }
+    virtual uniform* dup () const { return new uniform ( *this ); }
     virtual void accept ( stateDd* dd ) const { dd->dispatch ( this ); }
     
   protected:

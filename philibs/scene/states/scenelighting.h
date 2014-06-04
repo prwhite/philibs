@@ -51,7 +51,7 @@ class lighting :
 
   // interface from state
   public:
-    virtual state* dup () const { return new lighting ( *this ); }
+    virtual lighting* dup () const { return new lighting ( *this ); }
     virtual void accept ( stateDd* dd ) const { dd->dispatch ( this ); }
     
   protected:

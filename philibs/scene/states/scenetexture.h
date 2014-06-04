@@ -197,7 +197,7 @@ class texture :
   // interface from state
   public:
     virtual void accept ( stateDd* pDd ) const { pDd->dispatch ( this ); }
-    virtual state* dup () const { return new texture ( *this ); }
+    virtual texture* dup () const { return new texture ( *this ); }
     
   protected:
     virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const;

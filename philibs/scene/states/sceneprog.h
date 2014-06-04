@@ -93,7 +93,7 @@ class prog :
 
   // interface from state
   public:
-    virtual state* dup () const { return new prog ( *this ); }
+    virtual prog* dup () const { return new prog ( *this ); }
     virtual void accept ( stateDd* dd ) const { dd->dispatch ( this ); }
     
   protected:

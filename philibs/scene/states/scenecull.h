@@ -49,7 +49,7 @@ class cull :
 
   // interface from state
   public:
-    virtual state* dup () const { return new cull ( *this ); }
+    virtual cull* dup () const { return new cull ( *this ); }
     virtual void accept ( stateDd* dd ) const { dd->dispatch ( this ); }
     
   protected:

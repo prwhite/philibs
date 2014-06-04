@@ -54,6 +54,7 @@ class text :
     /// @group interface from refCount
 	public:
       virtual void collectRefs ( Refs& refs ) const;
+      virtual text* dup () const { return new text ( *this ); }
       
     private:
         

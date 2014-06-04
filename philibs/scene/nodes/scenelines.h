@@ -70,14 +70,28 @@ class lines :
 {
   public:
   
+      // TODO: Change the values/names to something much closer to their semantic usage
     struct style
     {
       style () {}
-    
-      pni::math::vec2 mEdgeRange { 0.5f, 0.15f };         // { middle alpha, range }
-      pni::math::vec4 mDashRange { 0.1f, 0.05f, 30.0f, 0.0f };  // { middle alpha, range, period/length, phase/offset }
-      float mAlphaRef { 0.1f };                           // Discard threshold
-      uint32_t mDashEnable { 1 };                         // Turn dashes on/off
+      
+      float mEdgeMiddle = 0.2f;         // Middle of antialiasing range for edge
+      float mEdgeRange = 0.1f;          // Falloff of antialiasing range for edge
+      
+      float mDashMiddle = 0.2f;         // Middle of antialiasing range for dash
+      float mDashRange = 0.1f;          // Falloff of antialiasing range for dash
+      float mDashPeriod = 0.1f;         // "Length" of dash, 1 is len = thickness
+      float mDashPhase = 0.0f;          // Offset of dashes in u direction
+
+      float mAlphaRef { 0.1f };         // Discard threshold
+      
+      enum EnableFlags
+      {
+        None = 0x00,
+        Dash00 = 0x01                   // Enable dashed line strategy 00 (simple)
+      };
+      
+      uint32_t mEnableFlags { None }; // Turn shader on/off
     };
   
     virtual void update ( graphDd::fxUpdate const& update ) override;
@@ -107,9 +121,6 @@ class lines :
       [&] () {}
     };
 
-    virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const
-        { refs.push_back(mLineData.get()); refs.push_back(mUniform.get()); }
-  
       // Set this if your destination framebuffer has non square pixels...
       // e.g., rendering in a framebuffer that will be stretched non-
       // uniformly when finally composed.
@@ -128,8 +139,18 @@ class lines :
     pni::math::vec2 mVpSizeRatio { 1.0f, 1.0f };
 
     // From geomFx, geom
-  
-  virtual void generateGeomBounds () const override;
+  public:
+    virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const
+      {
+        refs.push_back(mLineData.get());
+        refs.push_back(mUniform.get());
+      }
+    virtual lines* dup () const override { return new lines ( *this ); }
+
+  protected:
+    virtual void generateGeomBounds () const override;
+
+
 
 };
 

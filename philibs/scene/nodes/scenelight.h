@@ -84,7 +84,7 @@ class light :
 
   // interface from node
   public:
-    virtual node* dup () const { return new light ( *this ); }
+    virtual light* dup () const { return new light ( *this ); }
     virtual void accept ( graphDd* pDd ) const { pDd->dispatch ( this ); }
     
   protected:

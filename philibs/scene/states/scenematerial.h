@@ -71,7 +71,7 @@ class material :
 
   // interface from state
   public:
-    virtual state* dup () const { return new material ( *this ); }
+    virtual material* dup () const { return new material ( *this ); }
     virtual void accept ( stateDd* dd ) const { dd->dispatch ( this ); }
     
   protected:

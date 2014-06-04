@@ -408,7 +408,7 @@ class geom :
 
       // Node framework methods.      
     virtual void accept ( graphDd* pDd ) const { pDd->dispatch ( this ); }
-    virtual node* dup () const { return new geom ( *this ); }
+    virtual geom* dup () const { return new geom ( *this ); }
 
     
     typedef pni::pstd::autoRef< geomData > GeomDataRef;

@@ -86,7 +86,7 @@ class texEnv :
 
   // interface from state
   public:
-    virtual state* dup () const { return new texEnv ( *this ); }
+    virtual texEnv* dup () const { return new texEnv ( *this ); }
     virtual void accept ( stateDd* dd ) const { dd->dispatch ( this ); }
     
   protected:

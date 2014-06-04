@@ -36,7 +36,7 @@ class group :
 //      bool operator==(group const& rhs) const;
     
         virtual void accept ( graphDd* pDd ) const { pDd->dispatch ( this ); }
-        virtual node* dup () const { return new group ( *this ); }
+        virtual group* dup () const { return new group ( *this ); }
 
   protected:
     

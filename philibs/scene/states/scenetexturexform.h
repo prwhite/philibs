@@ -39,7 +39,7 @@ class textureXform :
 
   // interface from state
   public:
-    virtual state* dup () const { return new textureXform ( *this ); }
+    virtual textureXform* dup () const { return new textureXform ( *this ); }
     virtual void accept ( stateDd* dd ) const { dd->dispatch ( this ); }
     
   protected:

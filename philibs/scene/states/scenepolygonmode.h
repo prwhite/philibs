@@ -41,7 +41,7 @@ class polygonMode :
 
   // interface from state
   public:
-    virtual state* dup () const { return new polygonMode ( *this ); }
+    virtual polygonMode* dup () const { return new polygonMode ( *this ); }
     virtual void accept ( stateDd* dd ) const { dd->dispatch ( this ); }
     
   protected:

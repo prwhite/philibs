@@ -341,18 +341,18 @@ void lines::rebuildUniform ()
     uniform::binding& binding = mUniform.op()->bindingOp("u_edgeRange");
     binding.set(uniform::binding::Fragment, uniform::binding::Float2);
     float* pFloats = binding.getFloats();
-    pFloats[ 0 ] = mStyle->mEdgeRange[ 0 ];
-    pFloats[ 1 ] = mStyle->mEdgeRange[ 1 ];
+    pFloats[ 0 ] = mStyle->mEdgeMiddle;
+    pFloats[ 1 ] = mStyle->mEdgeRange;
   }
 
   {
     uniform::binding& binding = mUniform.op()->bindingOp("u_dashRange");
     binding.set(uniform::binding::Fragment, uniform::binding::Float4);
     float* pFloats = binding.getFloats();
-    pFloats[ 0 ] = mStyle->mDashRange[ 0 ];
-    pFloats[ 1 ] = mStyle->mDashRange[ 1 ];
-    pFloats[ 2 ] = mStyle->mDashRange[ 2 ];
-    pFloats[ 3 ] = mStyle->mDashRange[ 3 ];
+    pFloats[ 0 ] = mStyle->mDashMiddle;
+    pFloats[ 1 ] = mStyle->mDashRange;
+    pFloats[ 2 ] = mStyle->mDashPeriod;
+    pFloats[ 3 ] = mStyle->mDashPhase;
   }
 
   {
@@ -366,7 +366,7 @@ void lines::rebuildUniform ()
     uniform::binding& binding = mUniform.op()->bindingOp("u_dashEnable");
     binding.set(uniform::binding::Fragment, uniform::binding::Int1);
     int* pInts = binding.getInts();
-    pInts[ 0 ] = mStyle->mDashEnable;
+    pInts[ 0 ] = mStyle->mEnableFlags;
   }
   
   setState(mUniform.get(), state::Uniform00);

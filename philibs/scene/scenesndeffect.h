@@ -98,7 +98,7 @@ class sndEffect :
 
     // interface from node
   public:
-    virtual node* dup () const { return new sndEffect ( *this ); }
+    virtual sndEffect* dup () const { return new sndEffect ( *this ); }
     virtual void accept ( graphDd* pDd ) const { pDd->dispatch ( this ); }
 
   protected:

@@ -197,6 +197,81 @@ scene::prog* createMainProg ()
   return pProg;
 }
 
+void buildLines ( scene::node* pRoot )
+{
+  using namespace scene;
+  using namespace pni::math;
+  
+  float const Zoff = 1.25f;
+  
+  lineData* pLineData = new lineData;
+  
+  pLineData->mBinding.push_back ( { {}, lineData::Position, lineData::Float, sizeof(float), 3 } );
+  pLineData->mBinding.push_back ( { {}, lineData::Color, lineData::Float, sizeof(float), 4 } );
+  pLineData->mBinding.push_back ( { {}, lineData::Thickness, lineData::Float, sizeof(float), 1 } );
+  
+    // Create a half circle
+  for ( float degree = 0.0f; degree < 180.0f; degree += 5.0f )
+  {
+    vec3 pt { 1.0f, 0.0f, Zoff };
+    pni::math::matrix4 mat;
+    
+    mat.setRot(degree, 0.0f, 0.0f, 1.0f);
+    pt.xformPt(pt, mat);
+    pt[ 0 ] *= 0.1f;
+    
+    size_t oldSize = pLineData->size();
+    size_t newSize = oldSize + 1;
+    pLineData->resize(newSize, 1);
+    pLineData->getIndices()[ 0 ] = newSize;
+    
+    auto pos = pLineData->begin< pni::math::vec3 >(lineData::Position);
+    auto col = pLineData->begin< pni::math::vec4 >(lineData::Color);
+    auto thk = pLineData->begin< float > (lineData::Thickness);
+
+    pos += oldSize; col += oldSize; thk += oldSize;
+
+    *pos = pt;
+    col->set ( 0.0f, 0.0f, 0.0f, 1.0f );
+    *thk = 10.0f;
+  }
+  
+    // Put in end point below half circle
+  {
+    size_t oldSize = pLineData->size();
+    size_t newSize = oldSize + 1;
+    pLineData->resize(newSize, 1);
+    pLineData->getIndices()[ 0 ] = newSize;
+
+    auto pos = pLineData->begin< pni::math::vec3 >(lineData::Position);
+    auto col = pLineData->begin< pni::math::vec4 >(lineData::Color);
+    auto thk = pLineData->begin< float > (lineData::Thickness);
+
+    pos += oldSize; col += oldSize; thk += oldSize;
+
+    pos->set ( 0.0f, -1.0f, Zoff );
+    col->set ( 0.0f, 0.0f, 0.0f, 1.0f );
+    *thk = 10.0f;
+  }
+  
+    // Default style
+  lines* pLines = new lines;
+  pLines->mLineData = pLineData;
+  pLines->setViewportSizeRatio( { 1.0, 1024.0 / 1536.0 } );
+  prog* pLineProg = progFactory::getInstance().loadSync( { "gles2-line.vsh", "gles2-line.fsh" } );
+  pLines->setState(pLineProg, scene::state::Prog);
+  pLines->matrixOp().setTrans(-2.0f, 0.0f, 0.0f);
+  pLines->setName("aa");
+  pRoot->addChild ( pLines );
+  
+  pLines = pLines->dup();
+  pLines->mUniform = pLines->mUniform->dup();
+  pLines->matrixOp().setTrans(-1.5f, 0.0f, 0.0f);
+  pLines->setName("bb");
+  pRoot->addChild ( pLines );
+
+}
+
 - (void) setupScene
 {
   using namespace scene;
@@ -409,9 +484,12 @@ scene::prog* createMainProg ()
   pLightPath->setLight ( pLight, 0 );
   mRoot->setState ( pLightPath, scene::state::LightPath );
 
+    ////////////////////////////////////////////////////////////////////////////
     // Lines
   lines* pLines = new lines;
   mLines = pLines;
+  
+  mLines->mStyle.op().mEnableFlags = lines::style::Dash00;
   
   lineData* pLineData = new lineData;
   pLines->mLineData.set ( pLineData );
@@ -434,6 +512,8 @@ scene::prog* createMainProg ()
   pLines->setState ( pDepth, scene::state::Depth );
   
   pLines->setName("line test");
+  
+  buildLines(mRoot.get());
   
   mFile->addChild(pLines);
 }
@@ -489,12 +569,12 @@ scene::prog* createMainProg ()
   pni::math::vec3 axis { 0.25f, 0.5f, 1.0f };
   axis.normalize();
   
-  float const Incr = 0.5f;
+  float const Incr = 0.1f;
   if ( mLines )
-    mLines->mStyle.op().mDashRange[ 3 ] =
-      mLines->mStyle.op().mDashRange[ 3 ] > pni::math::Trait::d2r( 360.0f ) ?
-        mLines->mStyle.op().mDashRange[ 3 ] - pni::math::Trait::d2r( 360.0f ) + Incr :
-        mLines->mStyle.op().mDashRange[ 3 ] + Incr;
+    mLines->mStyle.op().mDashPhase =
+      mLines->mStyle.op().mDashPhase > pni::math::Trait::d2r( 2.0 ) ?
+        mLines->mStyle.op().mDashPhase - pni::math::Trait::d2r( 2.0 ) + Incr :
+        mLines->mStyle.op().mDashPhase + Incr;
 
   if ( mFile )
     mFile->matrixOp().setRot(rot, axis);

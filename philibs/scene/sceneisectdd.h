@@ -39,7 +39,7 @@ class isectSimplePartition :
   public attr
 {
   public:
-    virtual attr* dup () const { return 0; }
+    virtual isectSimplePartition* dup () const { return 0; }
   
   
     typedef geomData::Indices Indices;

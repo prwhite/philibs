@@ -58,7 +58,7 @@ class depth :
 
   // interface from state
   public:
-    virtual state* dup () const { return new depth ( *this ); }
+    virtual depth* dup () const { return new depth ( *this ); }
     virtual void accept ( stateDd* dd ) const { dd->dispatch ( this ); }
     
   protected:

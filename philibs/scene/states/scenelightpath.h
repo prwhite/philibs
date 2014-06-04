@@ -76,7 +76,7 @@ class lightPath :
 
   // interface from state
   public:
-    virtual state* dup () const { return new lightPath ( *this ); }
+    virtual lightPath* dup () const { return new lightPath ( *this ); }
     virtual void accept ( stateDd* dd ) const { dd->dispatch ( this ); }
     
   protected:

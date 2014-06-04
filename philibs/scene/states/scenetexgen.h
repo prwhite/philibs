@@ -52,7 +52,7 @@ class texGen :
 
   // interface from state
   public:
-    virtual state* dup () const { return new texGen ( *this ); }
+    virtual texGen* dup () const { return new texGen ( *this ); }
     virtual void accept ( stateDd* dd ) const { dd->dispatch ( this ); }
     
   protected:

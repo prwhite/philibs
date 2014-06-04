@@ -312,6 +312,7 @@ class data
               ptr + mBinding.getValueStrideBytes () * element + mBinding.getValueOffsetBytes ( stype, index ) : nullptr ) );
       }
   
+      /// Iterator Definitions
     template< class Ret >
     class iterator
     {
@@ -380,6 +381,7 @@ class data
         bool good () const { return mPtr != nullptr; }
     };
   
+      /// @group Iterators Accessors
     template< class Ret >
     iterator< Ret > begin ( SemanticType stype, size_t index = 0 )
       {
@@ -415,8 +417,9 @@ class data
       // TODO: Need const begin and end, with corresponding const_iterator a la STL.
 
 
-      /// Resize the data with the given number of elements.
+      /// Resize storage for elements, reflecting current binding settings.
       /// @param elements The new number of elements... NOT the byte size.
+      /// @warning Invalidates any iterators.
     void resize ( size_t elements ) { mValues.resize ( mBinding.getValueStrideBytes () * elements ); }
       /// Get count of elements in values.
     size_t size () const { return mValues.size() / mBinding.getValueStrideBytes (); }
@@ -473,6 +476,9 @@ class dataIndexed :
     IndexType const* getIndicesPtr () const { return mIndices.data (); }
   
     void resize ( size_t elements ) = delete;
+      /// Resize storage for both elements and indices, reflecting current
+      /// binding settings.
+      /// @warning Invalidates any iterators.
     void resize ( size_t elements, size_t indices ) { Base::resize ( elements ); mIndices.resize ( indices ); }
   
     void swap ( Base& rhs ) = delete;

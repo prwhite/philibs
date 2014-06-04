@@ -91,7 +91,7 @@ class blend :
 
   // interface from state
   public:
-    virtual state* dup () const { return new blend ( *this ); }
+    virtual blend* dup () const { return new blend ( *this ); }
     virtual void accept ( stateDd* dd ) const { dd->dispatch ( this ); }
     
   protected:

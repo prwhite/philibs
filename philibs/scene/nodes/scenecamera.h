@@ -207,7 +207,7 @@ class camera :
 
   // interface from node
   public:
-    virtual node* dup () const { return new camera ( *this ); }
+    virtual camera* dup () const { return new camera ( *this ); }
     virtual void accept ( graphDd* pDd ) const { pDd->dispatch ( this ); }
 
   protected:
