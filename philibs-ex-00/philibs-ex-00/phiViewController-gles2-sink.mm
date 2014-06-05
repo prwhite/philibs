@@ -203,6 +203,7 @@ void buildLines ( scene::node* pRoot )
   using namespace pni::math;
   
   float const Zoff = 1.25f;
+  float const Thick = 10.0f;
   
   lineData* pLineData = new lineData;
   
@@ -233,7 +234,7 @@ void buildLines ( scene::node* pRoot )
 
     *pos = pt;
     col->set ( 0.0f, 0.0f, 0.0f, 1.0f );
-    *thk = 10.0f;
+    *thk = Thick;
   }
   
     // Put in end point below half circle
@@ -251,24 +252,126 @@ void buildLines ( scene::node* pRoot )
 
     pos->set ( 0.0f, -1.0f, Zoff );
     col->set ( 0.0f, 0.0f, 0.0f, 1.0f );
-    *thk = 10.0f;
+    *thk = Thick;
   }
   
     // Default style
   lines* pLines = new lines;
-  pLines->mLineData = pLineData;
+  pLines->lineDataProp() = pLineData;
   pLines->setViewportSizeRatio( { 1.0, 1024.0 / 1536.0 } );
   prog* pLineProg = progFactory::getInstance().loadSync( { "gles2-line.vsh", "gles2-line.fsh" } );
   pLines->setState(pLineProg, scene::state::Prog);
+  pLines->setState(new scene::blend, state::Blend);
   pLines->matrixOp().setTrans(-2.0f, 0.0f, 0.0f);
+  pLines->lineStyleProp().op().mEdgeRange = 0.3f;
   pLines->setName("aa");
   pRoot->addChild ( pLines );
   
+    // Thinner lines
   pLines = pLines->dup();
-  pLines->mUniform = pLines->mUniform->dup();
+  pLines->uniformProp() = pLines->uniformProp()->dup();
   pLines->matrixOp().setTrans(-1.5f, 0.0f, 0.0f);
   pLines->setName("bb");
+  pLines->lineStyleProp().op().mEdgeMiddle = 0.5f;
+  pLines->lineStyleProp().op().mEdgeRange = 0.25f;
   pRoot->addChild ( pLines );
+
+    // Very thin lines
+  pLines = pLines->dup();
+  pLines->uniformProp() = pLines->uniformProp()->dup();
+  pLines->matrixOp().setTrans(-1.0f, 0.0f, 0.0f);
+  pLines->setName("cc");
+  pLines->lineStyleProp().op().mEdgeMiddle = 0.8f;
+  pLines->lineStyleProp().op().mEdgeRange = 0.2f;
+  pRoot->addChild ( pLines );
+
+
+    // Default thickness dashed lines
+  pLines = pLines->dup();
+  pLines->uniformProp() = pLines->uniformProp()->dup();
+  pLines->matrixOp().setTrans(2.0f, 0.0f, 0.0f);
+  pLines->setName("cc");
+  pLines->lineStyleProp().op().mEdgeMiddle = 0.2f;
+  pLines->lineStyleProp().op().mEdgeRange = 0.3f;
+  pLines->lineStyleProp().op().mEnableFlags = lineStyle::Dash00;
+  pRoot->addChild ( pLines );
+  
+    // Thinner lines
+  pLines = pLines->dup();
+  pLines->uniformProp() = pLines->uniformProp()->dup();
+  pLines->matrixOp().setTrans(1.5f, 0.0f, 0.0f);
+  pLines->setName("ee");
+  pLines->lineStyleProp().op().mEdgeMiddle = 0.5f;
+  pLines->lineStyleProp().op().mEdgeRange = 0.25f;
+  pRoot->addChild ( pLines );
+
+    // Very thin lines
+  pLines = pLines->dup();
+  pLines->uniformProp() = pLines->uniformProp()->dup();
+  pLines->matrixOp().setTrans(1.0f, 0.0f, 0.0f);
+  pLines->setName("ff");
+  pLines->lineStyleProp().op().mEdgeMiddle = 0.8f;
+  pLines->lineStyleProp().op().mEdgeRange = 0.2f;
+  pRoot->addChild ( pLines );
+
+    // Thinner lines, shorter dashes
+  pLines = pLines->dup();
+  pLines->uniformProp() = pLines->uniformProp()->dup();
+  pLines->matrixOp().setTrans(0.5f, 0.0f, 0.0f);
+  pLines->setName("gg");
+  pLines->lineStyleProp().op().mEdgeMiddle = 0.25f;
+  pLines->lineStyleProp().op().mEdgeRange = 0.1f;
+  pLines->lineStyleProp().op().mDashMiddle = 0.5f;
+  pLines->lineStyleProp().op().mDashRange = 0.1f;
+  pLines->lineStyleProp().op().mDashPeriod = 0.025f;
+  pRoot->addChild ( pLines );
+
+    // Very thin lines, round-ish soft dashes
+  pLines = pLines->dup();
+  pLines->uniformProp() = pLines->uniformProp()->dup();
+  pLines->matrixOp().setTrans(0.0f, 0.0f, 0.0f);
+  pLines->setName("hh");
+  pLines->lineStyleProp().op().mEdgeMiddle = 0.4f;
+  pLines->lineStyleProp().op().mEdgeRange = 0.4f;
+  pLines->lineStyleProp().op().mDashMiddle = 0.5f;
+  pLines->lineStyleProp().op().mDashRange = 0.4f;
+  pLines->lineStyleProp().op().mDashPeriod = 0.0125f;
+  pRoot->addChild ( pLines );
+
+    // Wavy, multi-colored
+  pLines = pLines->dup();
+  pLines->uniformProp() = pLines->uniformProp()->dup();
+  pLines->matrixOp().setTrans(-0.5f, 0.0f, 0.0f);
+  pLines->setName("ii");
+  pLines->lineStyleProp().op() = {};
+  pLines->lineStyleProp().op().mEnableFlags = lineStyle::Dash00;
+  pLines->lineStyleProp().op().mDashMiddle = 0.5f;
+  pLines->lineStyleProp().op().mDashRange = 0.1f;
+  pLines->lineStyleProp().op().mDashPeriod = 0.025f;
+  pLines->lineDataProp().set ( new lineData ( *pLines->lineDataProp().get() ) );
+  pRoot->addChild ( pLines );
+
+    // Change the line metadata
+  pLineData = pLines->lineDataProp().op();
+
+  pni::math::vec4 const colors [] = { { 1, 0, 0, 1 }, { 1, 1, 0, 1 }, { 0, 1, 0, 1 }, { 0, 1, 1, 1 }, { 0, 0, 1, 1 }, { 1, 0, 1, 1 } };
+  size_t const numColors = sizeof ( colors ) / sizeof ( decltype(colors[0]));
+  static_assert ( numColors == 6, "unexpected number of colors calculated" );
+  float thicknii [] = { 1.0f, 1.25, 1.4, 1.3, 1.1, 0.8, 0.75, 1.0, 1.5, 2.0, 1.25, 0.7f };
+  size_t const numThicknii = sizeof ( thicknii ) / sizeof ( decltype(thicknii[0]));
+  static_assert ( numThicknii == 12, "unexpected number of thicknii calculated" );
+
+  size_t end = pLineData->size();
+  for ( int num = 0; num < end; ++num )
+  {
+    auto citer = pLineData->begin< pni::math::vec4 >( lineData::Color );
+    auto titer = pLineData->begin< float >( lineData::Thickness );
+  
+    citer += num; titer += num;
+    
+    *citer = colors[ num % numColors ];
+    *titer = thicknii[ num % numThicknii] * Thick;
+  }
 
 }
 
@@ -489,10 +592,10 @@ void buildLines ( scene::node* pRoot )
   lines* pLines = new lines;
   mLines = pLines;
   
-  mLines->mStyle.op().mEnableFlags = lines::style::Dash00;
+  mLines->lineStyleProp().op().mEnableFlags = lines::style::Dash00;
   
   lineData* pLineData = new lineData;
-  pLines->mLineData.set ( pLineData );
+  pLines->lineDataProp().set ( pLineData );
   
   pLineData->mBinding.push_back ( { {}, lineData::Position, lineData::Float, sizeof(float), 3 } );
   pLineData->mBinding.push_back ( { {}, lineData::Color, lineData::Float, sizeof(float), 4 } );
@@ -568,13 +671,13 @@ void buildLines ( scene::node* pRoot )
 
   pni::math::vec3 axis { 0.25f, 0.5f, 1.0f };
   axis.normalize();
-  
+
   float const Incr = 0.1f;
   if ( mLines )
-    mLines->mStyle.op().mDashPhase =
-      mLines->mStyle.op().mDashPhase > pni::math::Trait::d2r( 2.0 ) ?
-        mLines->mStyle.op().mDashPhase - pni::math::Trait::d2r( 2.0 ) + Incr :
-        mLines->mStyle.op().mDashPhase + Incr;
+    mLines->lineStyleProp().op().mDashPhase =
+      mLines->lineStyleProp()->mDashPhase > pni::math::Trait::d2r( 2.0 ) ?
+        mLines->lineStyleProp()->mDashPhase - pni::math::Trait::d2r( 2.0 ) + Incr :
+        mLines->lineStyleProp()->mDashPhase + Incr;
 
   if ( mFile )
     mFile->matrixOp().setRot(rot, axis);
@@ -628,7 +731,7 @@ struct linePanData
 
   UIPanGestureRecognizer* pr = ( UIPanGestureRecognizer* ) sender;
 
-  lineData* pLineData = mLines->mLineData.get();
+  lineData* pLineData = mLines->lineDataProp().get();
 
   switch ( pr.state )
   {
@@ -658,7 +761,7 @@ struct linePanData
         {
           lpd.mLastPos = nextPos;
           
-          mLines->mLineData.setDirty();
+          mLines->lineDataProp().setDirty();
           
           size_t last = pLineData->getIndices()[ 0 ];
           pLineData->getIndices()[ 0 ]++;
@@ -686,7 +789,7 @@ struct linePanData
       {
         lpd.mLastPos = lpd.cg2pt ( pr );
         
-        mLines->mLineData.setDirty();
+        mLines->lineDataProp().setDirty();
 
         size_t last = pLineData->getIndices()[ 0 ];
         pLineData->getIndices()[ 0 ]++;

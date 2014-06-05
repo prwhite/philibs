@@ -378,6 +378,9 @@ class data
         Ret const* operator-> () const { return reinterpret_cast<Ret const*>(mPtr); }
         Ret const& operator* () const { return *reinterpret_cast<Ret const*>(mPtr); }
       
+          /// @return bool Indicates if iterator is 'good', which means its internal
+          /// pointer is valid, but will also turn true for iterators after #end,
+          /// so it's not a termination predecate.
         bool good () const { return mPtr != nullptr; }
     };
   

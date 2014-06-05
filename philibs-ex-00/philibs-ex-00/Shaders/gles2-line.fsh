@@ -16,7 +16,12 @@ void main()
 {
     // Calc alpha for edges based on v coord
   float alpha = v_uv00[ 1 ];
+// #define QUADRATIC
+#ifdef QUADRATIC
   alpha *= alpha;   // from [-1,1] to [1,1] through zero
+#else // triangle wave
+  alpha = abs ( alpha );
+#endif // QUADRATIC
   
     // Add uniform that determines if we do this... i.e., a scalar for v direction
     // this will allow us to do double/triple lines, etc.

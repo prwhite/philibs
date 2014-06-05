@@ -99,8 +99,8 @@ void lines::updateTest ( graphDd::fxUpdate const& update )
 
 void lines::update ( graphDd::fxUpdate const& update )
 {
-  mLineData.clearDirty();
-  mUniform.clearDirty();
+  lineDataProp().clearDirty();
+  uniformProp().clearDirty();
 
 #ifdef TESTINGVS
   updateTest(update);
@@ -109,16 +109,18 @@ void lines::update ( graphDd::fxUpdate const& update )
 
 void lines::rebuildLines ()
 {
-  assert(mLineData);
-  assert(mLineData->mBinding.hasBinding(lineData::Position));
+  lineData const* pLineData = lineDataProp().get ();
+  
+  assert(pLineData);
+  assert(pLineData->mBinding.hasBinding(lineData::Position));
 //  assert(mLineData->size());
 
-  if ( mLineData->size() == 0 )
+  if ( pLineData->size() == 0 )
     return; // Early return!!!
 
-  auto curPos = mLineData->begin< vec3 >(lineData::Position);
-  auto curColor = mLineData->begin< vec4 >(lineData::Color);
-  auto curThickness = mLineData->begin< float >(lineData::Thickness);
+  auto curPos = pLineData->begin< vec3 >(lineData::Position);
+  auto curColor = pLineData->begin< vec4 >(lineData::Color);
+  auto curThickness = pLineData->begin< float >(lineData::Thickness);
 
   if ( ! getGeomData() )
     setGeomData( new geomData );
@@ -126,8 +128,8 @@ void lines::rebuildLines ()
   geomData* pGeomData = geometryOp();
   
     // Make sure the geomData matches the number of lines and bindings.
-  size_t points = mLineData->size();
-  size_t prims = mLineData->getIndices().size();
+  size_t points = pLineData->size();
+  size_t prims = pLineData->getIndices().size();
   size_t segs = points - prims;
   size_t verts = segs * 2 + prims * 2; // sharing verts, plus the end verts for each prim
   size_t tris = segs * 2;
@@ -153,7 +155,7 @@ void lines::rebuildLines ()
   size_t vNum = 0;
 
     // Iterate through all line sigments
-  for ( auto segPoints : mLineData->getIndices() )
+  for ( auto segPoints : pLineData->getIndices() )
   {
     size_t end = segPoints;
     
@@ -297,8 +299,8 @@ void lines::rebuildLines ()
 
 float lines::preCalcLength()
 {
-  auto cur = mLineData->begin< pni::math::vec3 >( lineData::Position );
-  auto end = mLineData->end< pni::math::vec3 >( lineData::Position );
+  auto cur = lineDataProp()->begin< pni::math::vec3 >( lineData::Position );
+  auto end = lineDataProp()->end< pni::math::vec3 >( lineData::Position );
   
   float ret = 0.0;
   
@@ -320,6 +322,8 @@ float lines::preCalcLength()
   return ret;
 }
 
+
+
   // From lines::style
 //      pni::math::vec2 mEdgeRange { 0.5f, 0.15f }; // [0] = middle alpha, [1] = +- range
 //      pni::math::vec2 mDashRange { 0.3f, 0.05f }; // [0] = middle alpha, [1] = +- range
@@ -329,8 +333,11 @@ float lines::preCalcLength()
 
 void lines::rebuildUniform ()
 {
+  uniform* pUniform = uniformProp().op();
+  lineStyle const& style = lineStyleProp().get();
+
   {
-    uniform::binding& binding = mUniform.op()->bindingOp("u_vpSizeRatio");
+    uniform::binding& binding = pUniform->bindingOp("u_vpSizeRatio");
     binding.set(uniform::binding::Vertex, uniform::binding::Float2);
     float* pFloats = binding.getFloats();
     pFloats[ 0 ] = mVpSizeRatio[ 0 ];
@@ -338,44 +345,44 @@ void lines::rebuildUniform ()
   }
 
   {
-    uniform::binding& binding = mUniform.op()->bindingOp("u_edgeRange");
+    uniform::binding& binding = pUniform->bindingOp("u_edgeRange");
     binding.set(uniform::binding::Fragment, uniform::binding::Float2);
     float* pFloats = binding.getFloats();
-    pFloats[ 0 ] = mStyle->mEdgeMiddle;
-    pFloats[ 1 ] = mStyle->mEdgeRange;
+    pFloats[ 0 ] = style.mEdgeMiddle;
+    pFloats[ 1 ] = style.mEdgeRange;
   }
 
   {
-    uniform::binding& binding = mUniform.op()->bindingOp("u_dashRange");
+    uniform::binding& binding = pUniform->bindingOp("u_dashRange");
     binding.set(uniform::binding::Fragment, uniform::binding::Float4);
     float* pFloats = binding.getFloats();
-    pFloats[ 0 ] = mStyle->mDashMiddle;
-    pFloats[ 1 ] = mStyle->mDashRange;
-    pFloats[ 2 ] = mStyle->mDashPeriod;
-    pFloats[ 3 ] = mStyle->mDashPhase;
+    pFloats[ 0 ] = style.mDashMiddle;
+    pFloats[ 1 ] = style.mDashRange;
+    pFloats[ 2 ] = style.mDashPeriod;
+    pFloats[ 3 ] = style.mDashPhase;
   }
 
   {
-    uniform::binding& binding = mUniform.op()->bindingOp("u_alphaRef");
+    uniform::binding& binding = pUniform->bindingOp("u_alphaRef");
     binding.set(uniform::binding::Fragment, uniform::binding::Float1);
     float* pFloats = binding.getFloats();
-    pFloats[ 0 ] = mStyle->mAlphaRef;
+    pFloats[ 0 ] = style.mAlphaRef;
   }
   
   {
-    uniform::binding& binding = mUniform.op()->bindingOp("u_dashEnable");
+    uniform::binding& binding = pUniform->bindingOp("u_dashEnable");
     binding.set(uniform::binding::Fragment, uniform::binding::Int1);
     int* pInts = binding.getInts();
-    pInts[ 0 ] = mStyle->mEnableFlags;
+    pInts[ 0 ] = style.mEnableFlags;
   }
   
-  setState(mUniform.get(), state::Uniform00);
+  setState(pUniform, state::Uniform00);
 }
 
 
 void lines::rebuildStyle ()
 {
-  mUniform.setDirty();
+  uniformProp().setDirty();
 }
 
 void lines:: generateGeomBounds () const
@@ -386,14 +393,14 @@ void lines:: generateGeomBounds () const
     // thickness of the lines.  This means things hitting screen edge
     // could cull early, but in practice this will be rare and visually
     // minor.
-  assert(mLineData);
-  assert(mLineData->mBinding.hasBinding(lineData::Position));
+  assert(lineDataProp().get());
+  assert(lineDataProp()->mBinding.hasBinding(lineData::Position));
 //  assert(mLineData->size());
 
   mBounds.setEmpty();
 
-  auto cur = mLineData->begin< vec3 >(lineData::Position);
-  auto end = mLineData->end< vec3 >(lineData::Position);
+  auto cur = lineDataProp()->begin< vec3 >(lineData::Position);
+  auto end = lineDataProp()->end< vec3 >(lineData::Position);
   
   while ( cur != end )
   {
@@ -408,7 +415,6 @@ void lines:: generateGeomBounds () const
 }
 
 // ///////////////////////////////////////////////////////////////////
-
 
 } // end of namespace scene 
 
