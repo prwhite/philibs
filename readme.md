@@ -7,7 +7,7 @@ This library supports 3D rendering of a 'scene' described in memory as a '[scene
 
 ### Current features include:
 
-* Hierarchical scene management, ray-based scene picking with culling, multi-texture, GLES state management, linear algebra library, particle system, sprites, extensible programmable pipeline, SDF texture-based text, generalized framebuffer object management and rendering order evaluation, and more.
+* Hierarchical scene management, ray-based scene picking with culling, multi-texture, GLES state management, linear algebra library, particle system, sprites, extensible programmable pipeline, SDF texture-based text, high-quality antialiased lines, generalized framebuffer object management and rendering order evaluation, and more.
 
 ### Partial features include:
 
@@ -20,7 +20,7 @@ In many cases, these incomplete features are built around proper abstractions al
 ### Really missing:
 
 * Parallelism/thread safety strategy.  This is evolving now though, largely based on C++11 mechanisms and thread pools used by everything that does I/O.
-* A ton of other things
+* A ton of other things.
 
 ### Short-term feature goals:
 
@@ -33,6 +33,16 @@ Check out the source, then open, build, and run the project file `philibs-ex-00/
 ## Status
 
 A _version_ of this code has been used in an iOS title [(LD50)](http://labs.prehiti.com/ld50/).  But, this code has not been used in its current incarnation as a stand-alone library, _yet_.
+
+2014/06/05
+
+Recent feature additions include:
+
+* Added antialiased 3D line drawing via [`scene::lines`](https://github.com/prwhite/philibs/blob/master/philibs/scene/nodes/scenelines.h).  Lines are drawn in 3D, but pseudo-projected to screen space to have a uniform screen-space line-thickness (even when rendering into a non-square-pixel texture before final composition).  Lines are configurable in a number of ways, including per-point thickness and color, as well as global fragment processing directives like how fast the alpha should fall off on line edges and whether the line is dashed, and what the dash pattern looks like.
+* Scene infrastructure: Added [`scene::data`](https://github.com/prwhite/philibs/blob/master/philibs/scene/scenedata.h) class to encapsulate the common pattern that is used by `geomData`, `lineData`, `uniforms`, `particles` and `sprites` for storing packed verts/points/attributes which are driven by a set of bindings (i.e. variant-record) and striding through the data with convenient iterators, a la STL.  Also added [`scene::dirty`](https://github.com/prwhite/philibs/blob/master/philibs/scene/scenedirty.h), which encapsulates the recurring property-like pattern of member access with callbacks to the owning class.  Unique about this class is the inherent lazy-cleanup logic, which means that a value will be invalidated on any mutation, but won't be re-created as valid until accessed for use.  This pattern is used on things like `geomData` to update bounding boxes only when necessary, and is now implemented using the `scene::dirty` class in `scene::lines`.  Next up is to refactor other classes that use this pattern in an ad hoc fashion to the common implementation. 
+* Geometry: Added vert sharing and soft-shading normal generation to scene::geom.
+* Text: Added UTF8->UCS2 conversion just before scene::text glyphs are generated.  All text rendering is now *much more* i18n-friendly
+* Math: Cleaned up some linear algebra pin::math routines, including getting ruler-related functions consistent with z-out and adding plane and matrix mirror routines.
 
 2014/04/22
 
