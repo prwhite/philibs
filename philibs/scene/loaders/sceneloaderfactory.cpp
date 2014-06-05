@@ -29,8 +29,6 @@ namespace loader {
 
 factory::factory ()
 {
-//  addLoader("dds", [] ( std::string const& fname ) { return dds::loadHelper ( fname ); } );
-
   addLoader ( "ase", new loader::ase );
 
   loader::assimp* pAssimp = new loader::assimp;
@@ -51,7 +49,7 @@ factory& factory::getInstance ()
 
 factory::LoadFuture factory::loadAsync ( std::string const& fname )
 {
-  return mThreadPool.enqueue( [ this ]( std::string const& fname) { return this->loadSync( fname ); }, fname );
+  return mThreadPool.enqueue( [=]() { return this->loadSync( fname ); } );
 }
 
 scene::node* factory::loadSync (  std::string const& cfname )

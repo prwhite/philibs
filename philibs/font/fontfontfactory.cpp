@@ -85,7 +85,7 @@ font* fontFactory::loadSync ( std::string const& fname, std::string const& textu
 
 fontFactory::FontFuture fontFactory::loadAsync ( std::string const& fname, std::string const& textureFname )
 {
-  return mThreadPool.enqueue([&]() { return loadSync(fname, textureFname); } );
+  return mThreadPool.enqueue([=]() { return loadSync(fname, textureFname); } );
 }
   
 void fontFactory::unload ( std::string const& fname )

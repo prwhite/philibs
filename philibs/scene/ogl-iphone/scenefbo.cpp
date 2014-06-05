@@ -274,7 +274,7 @@ CheckGLError
 
 
   dispatchFuncs(spec, configFuncs {
-    [&] ( size_t num )
+    [pFb, colorDest] ( size_t num )
       {
         if ( texture* pTex = pFb->getColorTextureTarget(num) )
         {
@@ -286,7 +286,7 @@ CheckGLError
         }
       },
     [] ( size_t num ) {},
-    [&] ()
+    [pFb, depthDest] ()
       {
         if ( texture* pTex = pFb->getDepthTextureTarget() )
         {
@@ -298,7 +298,7 @@ CheckGLError
         }
       },
     [] () {},
-    [&] ()
+    [pFb, depthDest] ()
       {
         if ( texture* pTex = pFb->getDepthTextureTarget() )
         {
@@ -310,7 +310,7 @@ CheckGLError
         }
       },
     [] () {},
-    [&] ()
+    [pFb, stencilDest] ()
       {
         if ( texture* pTex = pFb->getStencilTextureTarget() )
         {
@@ -344,32 +344,32 @@ void fbo::finish ( framebuffer const* pFb )
   framebuffer::spec const& spec = pFb->getSpec();
 
   dispatchFuncs(spec, configFuncs {
-    [&] ( size_t num ) {
+    [pFb] ( size_t num ) {
       if ( texture* pTex = pFb->getColorTextureTarget(num) )
         texObj::getOrCreate(pTex);  // Force mipmap generation now
     },
-    [&] ( size_t num ) {
+    [pFb] ( size_t num ) {
         GLenum which = GL_COLOR_ATTACHMENT0;
         glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, &which); },
-    [&] () {
+    [pFb] () {
       if ( texture* pTex = pFb->getDepthTextureTarget() )
         texObj::getOrCreate(pTex);  // Force mipmap generation now
     },
-    [&] () {
+    [pFb] () {
         GLenum which = GL_DEPTH_ATTACHMENT;
         glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, &which ); },
-    [&] () {
+    [pFb] () {
       if ( texture* pTex = pFb->getDepthTextureTarget() )
         texObj::getOrCreate(pTex);  // Force mipmap generation now
     },
-    [&] () {
+    [pFb] () {
         GLenum which = GL_DEPTH_ATTACHMENT;
         glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, &which); },
-    [&] () {
+    [pFb] () {
       if ( texture* pTex = pFb->getStencilTextureTarget() )
         texObj::getOrCreate(pTex);  // Force mipmap generation now
     },
-    [&] () {
+    [pFb] () {
         GLenum which = GL_STENCIL_ATTACHMENT;
         glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, &which); }
   } );
