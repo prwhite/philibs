@@ -23,11 +23,11 @@ void main()
   alpha = abs ( alpha );
 #endif // QUADRATIC
   
-    // Add uniform that determines if we do this... i.e., a scalar for v direction
-    // this will allow us to do double/triple lines, etc.
+    // MAYBE: Add uniform that determines if/how we do this... i.e., a scalar for v direction
+    // this will allow us to do double/triple stroke lines, etc.
   alpha = 1.0 - alpha;
   
-    // Externalize one or two of these as uniforms for fs line thickness
+    // to do line thickness/antialising fidelity, the top and bottom of the smoothstep
   float bottom = u_edgeRange[ 0 ] - u_edgeRange[ 1 ];
   float top = u_edgeRange[ 0 ] + u_edgeRange[ 1 ];
 
@@ -42,10 +42,10 @@ void main()
 
       // Use triangle wave func to give us low and high points based on u coord
       // that we can pick out with smoothstep to get longer/shorter dashes.
-      // u_dashRange[ 2 ] changes overall period.
+      // u_dashRange[ 2 ] changes overall period and u_dashRange[ 3 ] changes phase.
     up = abs ( mod ( v_uv00[ 0 ] / u_dashRange[ 2 ] + u_dashRange[ 3 ], 2.0 ) - 1.0 );
-    
-      // relate these to the earlier ranges for the edge (?) or do more uniforms
+
+      // apply upper lower bounds for smoothstep
     up = smoothstep ( u_dashRange[ 0 ] - u_dashRange[ 1 ], u_dashRange[ 0 ] + u_dashRange[ 1 ], up );
 
     alpha *= up;

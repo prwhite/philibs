@@ -27,9 +27,6 @@ class dirtyBase
     using SetDirtyFuncType = void ( ThisType::* ) ();
     using ClearDirtyFuncType = void ( ThisType::* ) ();
 
-//    using SetDirtyFuncType = std::function < void ( ThisType* ) >;
-//    using ClearDirtyFuncType = std::function < void ( ThisType* ) >;
-
   public:
     dirtyBase () = default;
     dirtyBase (
