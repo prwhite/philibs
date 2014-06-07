@@ -103,6 +103,8 @@ void prog::applyFlags ()
 
   mProg[ Vertex ] = defines + mProg[ Vertex ];
   mProg[ Fragment ] = defines + mProg[ Fragment ];
+  
+  setDirty();
 }
 
 void prog::setDefaultProgs ()

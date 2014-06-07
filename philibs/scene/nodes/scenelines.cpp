@@ -9,6 +9,7 @@
 #include "pnivec2.h"
 #include "pnivec3.h"
 #include "pnivec4.h"
+#include "sceneprog.h"
 
 #include <cassert>
 
@@ -344,22 +345,54 @@ void lines::rebuildUniform ()
     pFloats[ 1 ] = mVpSizeRatio[ 1 ];
   }
 
+  if ( ( style.mEnableFlags & lineStyle::Tex00 ) == 0 )
   {
-    uniform::binding& binding = pUniform->bindingOp("u_edgeRange");
-    binding.set(uniform::binding::Fragment, uniform::binding::Float2);
-    float* pFloats = binding.getFloats();
-    pFloats[ 0 ] = style.mEdgeMiddle;
-    pFloats[ 1 ] = style.mEdgeRange;
-  }
+    {
+      uniform::binding& binding = pUniform->bindingOp("u_edgeRange");
+      binding.set(uniform::binding::Fragment, uniform::binding::Float2);
+      float* pFloats = binding.getFloats();
+      pFloats[ 0 ] = style.mEdgeMiddle;
+      pFloats[ 1 ] = style.mEdgeRange;
+    }
 
+    {
+      uniform::binding& binding = pUniform->bindingOp("u_dashRange");
+      binding.set(uniform::binding::Fragment, uniform::binding::Float4);
+      float* pFloats = binding.getFloats();
+      pFloats[ 0 ] = style.mDashMiddle;
+      pFloats[ 1 ] = style.mDashRange;
+      pFloats[ 2 ] = style.mDashPeriod;
+      pFloats[ 3 ] = style.mDashPhase;
+    }
+    
+    {
+      uniform::binding& binding = pUniform->bindingOp("u_dashEnable");
+      binding.set(uniform::binding::Fragment, uniform::binding::Int1);
+      int* pInts = binding.getInts();
+      pInts[ 0 ] = style.mEnableFlags;
+    }
+
+  }
+  else
   {
-    uniform::binding& binding = pUniform->bindingOp("u_dashRange");
-    binding.set(uniform::binding::Fragment, uniform::binding::Float4);
-    float* pFloats = binding.getFloats();
-    pFloats[ 0 ] = style.mDashMiddle;
-    pFloats[ 1 ] = style.mDashRange;
-    pFloats[ 2 ] = style.mDashPeriod;
-    pFloats[ 3 ] = style.mDashPhase;
+    prog* pProg = static_cast< prog* > ( getState(state::Prog) );
+    
+      // Cheeeeezy heuristic to make sure we don't write these flags
+      // to the program text too often... should do a better job of this.
+    if ( pProg->getDirty() )
+    {
+      pProg->setFlag("DOTEXTURE00");
+      pProg->applyFlags();
+    }
+  
+    {
+      uniform::binding& binding = pUniform->bindingOp("u_texRange");
+      binding.set(uniform::binding::Vertex, uniform::binding::Float3);
+      float* pFloats = binding.getFloats();
+      pFloats[ 0 ] = style.mTexMiddle;
+      pFloats[ 1 ] = style.mTexRange;
+      pFloats[ 2 ] = style.mTexUMult;
+    }
   }
 
   {
@@ -367,13 +400,6 @@ void lines::rebuildUniform ()
     binding.set(uniform::binding::Fragment, uniform::binding::Float1);
     float* pFloats = binding.getFloats();
     pFloats[ 0 ] = style.mAlphaRef;
-  }
-  
-  {
-    uniform::binding& binding = pUniform->bindingOp("u_dashEnable");
-    binding.set(uniform::binding::Fragment, uniform::binding::Int1);
-    int* pInts = binding.getInts();
-    pInts[ 0 ] = style.mEnableFlags;
   }
   
   setState(pUniform, state::Uniform00);

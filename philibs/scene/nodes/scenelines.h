@@ -89,20 +89,30 @@ struct lineStyle
 {
   lineStyle () {}
   
-  float mEdgeMiddle = 0.2f;         // Middle of antialiasing range for edge
-  float mEdgeRange = 0.2f;          // Falloff of antialiasing range for edge
+    /// @group Used to sharpen/soften edges for non-textured lines.
+  float mEdgeMiddle = 0.2f;         /// Middle of antialiasing range for edge
+  float mEdgeRange = 0.2f;          /// Falloff of antialiasing range for edge
   
-  float mDashMiddle = 0.2f;         // Middle of antialiasing range for dash
-  float mDashRange = 0.025f;          // Falloff of antialiasing range for dash
-  float mDashPeriod = 0.1f;         // "Length" of dash, 1 is len = thickness
-  float mDashPhase = 0.0f;          // Offset of dashes in u direction
+    /// @group Used if mEnableFlags & Dash00 for non-textured lines.
+  float mDashMiddle = 0.2f;         /// Middle of antialiasing range for dash
+  float mDashRange = 0.025f;        /// Falloff of antialiasing range for dash
+  float mDashPeriod = 0.1f;         /// "Length" of dash, 1 is len = thickness
+  float mDashPhase = 0.0f;          /// Offset of dashes in u direction
+  
+    /// @group Used if mEnableFlags & Tex00, turns other parameters off
+  float mTexMiddle = 0.5f;          /// Middle of antialiasing range for edge
+  float mTexRange = 0.5f;           /// Falloff of antialiasing range for texture
+  float mTexUMult = 1.0f;           /// Multiply u coord by this amount
 
-  float mAlphaRef { 0.1f };         // Discard threshold
+    /// @group To drop pixels below an alpha threshold.
+  float mAlphaRef { 0.1f };         /// Discard threshold
   
   enum EnableFlags
   {
     None = 0x00,
-    Dash00 = 0x01                   // Enable dashed line strategy 00 (simple)
+    Dash00 = 0x01,                  /// Enable dashed line strategy 00 (simple)
+    Tex00 = 0x02                    /// Enable use of texture 0 as line fragment source.
+                                    /// Setting this will change attached prog object src text
   };
   
   uint32_t mEnableFlags { None }; // Turn shader on/off
@@ -133,6 +143,12 @@ struct linesBase
   uniform object that tracks graphic engine settings.  Each #lines instance
   can draw multiple continuous lines based on how the #lineData indices are
   specified.
+  @warning Using the lineStyle::Tex00 enable flag will cause the lines internals
+  to change the attached prog object source text.  If this prog object is aliased,
+  then other nodes will be affected too.
+  @warning The heuristic used to re-write the prog source text for Tex00 is not
+  that robust.  If you want to switch a line from textured back to non-textured,
+  it's possible that you might need to manually reset the program source text.
 */
 
 class lines :

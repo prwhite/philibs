@@ -22,11 +22,13 @@ attribute vec2 a_uv00;
 
 varying lowp vec4 v_color;
 varying lowp vec2 v_uv00;
+varying lowp vec2 v_texRange; // middle and range, not mult which is used below
 
 uniform mat4 u_mvpMat;
 uniform mat3 u_normMat;
 uniform vec2 u_vpSize;
 uniform vec2 u_vpSizeRatio;
+uniform vec3 u_texRange;
 
 void main()
 {
@@ -73,5 +75,13 @@ void main()
   gl_Position = cSrc;
   
   v_color = a_color;
+
+#ifdef DOTEXTURE00
+    // TODO: Expose 5.0 as uniform
+  v_uv00 = vec2 ( a_uv00[ 0 ] * u_texRange[ 2 ], a_uv00[ 1 ] * 0.5 + 0.5 );
+  v_texRange = u_texRange.xy;
+#else
   v_uv00 = a_uv00;
+#endif // DOTEXTURE00
+  
 }

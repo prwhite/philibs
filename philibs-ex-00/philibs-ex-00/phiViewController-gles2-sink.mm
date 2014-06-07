@@ -255,6 +255,8 @@ void buildLines ( scene::node* pRoot )
     *thk = Thick;
   }
   
+  lineData* pLineDataOrig = pLineData;
+  
     // Default style
   lines* pLines = new lines;
   pLines->lineDataProp() = pLineData;
@@ -267,7 +269,7 @@ void buildLines ( scene::node* pRoot )
   pLines->setName("aa");
   pRoot->addChild ( pLines );
   
-    // Thinner lines
+    // Thinner line
   pLines = pLines->dup();
   pLines->uniformProp() = pLines->uniformProp()->dup();
   pLines->matrixOp().setTrans(-1.5f, 0.0f, 0.0f);
@@ -276,7 +278,7 @@ void buildLines ( scene::node* pRoot )
   pLines->lineStyleProp().op().mEdgeRange = 0.25f;
   pRoot->addChild ( pLines );
 
-    // Very thin lines
+    // Very thin line
   pLines = pLines->dup();
   pLines->uniformProp() = pLines->uniformProp()->dup();
   pLines->matrixOp().setTrans(-1.0f, 0.0f, 0.0f);
@@ -285,8 +287,7 @@ void buildLines ( scene::node* pRoot )
   pLines->lineStyleProp().op().mEdgeRange = 0.2f;
   pRoot->addChild ( pLines );
 
-
-    // Default thickness dashed lines
+    // Default thickness dashed line
   pLines = pLines->dup();
   pLines->uniformProp() = pLines->uniformProp()->dup();
   pLines->matrixOp().setTrans(2.0f, 0.0f, 0.0f);
@@ -296,16 +297,7 @@ void buildLines ( scene::node* pRoot )
   pLines->lineStyleProp().op().mEnableFlags = lineStyle::Dash00;
   pRoot->addChild ( pLines );
   
-    // Thinner lines
-  pLines = pLines->dup();
-  pLines->uniformProp() = pLines->uniformProp()->dup();
-  pLines->matrixOp().setTrans(1.5f, 0.0f, 0.0f);
-  pLines->setName("ee");
-  pLines->lineStyleProp().op().mEdgeMiddle = 0.5f;
-  pLines->lineStyleProp().op().mEdgeRange = 0.25f;
-  pRoot->addChild ( pLines );
-
-    // Very thin lines
+    // Very thin line
   pLines = pLines->dup();
   pLines->uniformProp() = pLines->uniformProp()->dup();
   pLines->matrixOp().setTrans(1.0f, 0.0f, 0.0f);
@@ -313,8 +305,8 @@ void buildLines ( scene::node* pRoot )
   pLines->lineStyleProp().op().mEdgeMiddle = 0.8f;
   pLines->lineStyleProp().op().mEdgeRange = 0.2f;
   pRoot->addChild ( pLines );
-
-    // Thinner lines, shorter dashes
+  
+    // Thinner line, shorter dashes
   pLines = pLines->dup();
   pLines->uniformProp() = pLines->uniformProp()->dup();
   pLines->matrixOp().setTrans(0.5f, 0.0f, 0.0f);
@@ -326,7 +318,7 @@ void buildLines ( scene::node* pRoot )
   pLines->lineStyleProp().op().mDashPeriod = 0.025f;
   pRoot->addChild ( pLines );
 
-    // Very thin lines, round-ish soft dashes
+    // Very thin line, round-ish soft dashes
   pLines = pLines->dup();
   pLines->uniformProp() = pLines->uniformProp()->dup();
   pLines->matrixOp().setTrans(0.0f, 0.0f, 0.0f);
@@ -373,6 +365,37 @@ void buildLines ( scene::node* pRoot )
     *titer = thicknii[ num % numThicknii] * Thick;
   }
 
+    // Textured line
+  pLines = pLines->dup();
+  pLines->uniformProp() = pLines->uniformProp()->dup();
+  pLines->matrixOp().setTrans(1.5f, 0.0f, 0.0f);
+  pLines->setName("jj");
+  pLines->lineStyleProp().op() = {};
+  pLines->lineStyleProp().op().mEnableFlags = lineStyle::Tex00;
+  pLines->lineStyleProp().op().mTexUMult = 2.0f;
+  pLines->lineStyleProp().op().mTexMiddle = 0.8f;
+  pLines->lineStyleProp().op().mTexRange = 0.2f;
+  pLines->lineDataProp().set ( new lineData ( *pLineDataOrig ) );
+  
+    // Make the line thicker to show of the texture
+  auto tbeg = pLines->lineDataProp().get()->begin< float >(lineData::Thickness );
+  auto const tend = pLines->lineDataProp().get()->end< float >(lineData::Thickness );
+  while ( tbeg != tend )
+  {
+    *tbeg *= 3.0f;
+    ++tbeg;
+  }
+
+    // Uniquify the program object because doing texture changes the prog text
+  prog* pProg = static_cast< prog* > ( pLines->getState( state::Prog ) );
+  pLines->setState(pProg->dup(), state::Prog);
+
+  texture* pTex = new texture;
+  pTex->setImage(img::factory::getInstance().loadSync("line-tex-6a3-00a-gray.png"));
+  pTex->setMinFilter( texture::MinLinearMipNearest );
+  pLines->setState(pTex, state::Texture00);
+
+  pRoot->addChild ( pLines );
 }
 
 - (void) setupScene

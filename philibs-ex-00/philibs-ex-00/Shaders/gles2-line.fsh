@@ -6,6 +6,8 @@ precision lowp float;
 
 varying lowp vec4 v_color;
 varying lowp vec2 v_uv00;
+varying lowp vec2 v_texRange;
+
 uniform sampler2D u_tex00;
 uniform lowp vec2 u_edgeRange;
 uniform highp vec4 u_dashRange; // needs highp for [2] and [3]
@@ -16,6 +18,10 @@ void main()
 {
     // Calc alpha for edges based on v coord
   float alpha = v_uv00[ 1 ];
+  vec4 color = v_color;
+
+#ifndef DOTEXTURE00
+
 // #define QUADRATIC
 #ifdef QUADRATIC
   alpha *= alpha;   // from [-1,1] to [1,1] through zero
@@ -52,10 +58,17 @@ void main()
   }
 
 #endif // DODASHES
-  
-  alpha *= v_color.a;
-  
-  if ( alpha < u_alphaRef ) discard;
 
-  gl_FragColor = vec4 ( v_color.xyz, alpha );
+#else // DOTEXTURE00
+  
+  vec4 tex = texture2D ( u_tex00, v_uv00 );
+  alpha = smoothstep ( v_texRange[ 0 ] - v_texRange[ 1 ], v_texRange[ 0 ] + v_texRange[ 1 ], tex.r );
+
+#endif // DOTEXTURE00
+  
+  color.a *= alpha;
+  
+  if ( color.a < u_alphaRef ) discard;
+
+  gl_FragColor = color;
 }

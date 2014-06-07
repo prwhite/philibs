@@ -55,6 +55,7 @@
 		1CE0A460190319BA005F3FA4 /* Helvetica_Neue.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 1CE0A45E190319BA005F3FA4 /* Helvetica_Neue.fnt */; };
 		1CE0A461190319BA005F3FA4 /* Helvetica_Neue.png_g8.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CE0A45F190319BA005F3FA4 /* Helvetica_Neue.png_g8.png */; };
 		1CF4DBAB185EE4C4007331F8 /* libphilibs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF4DBA8185EE4B7007331F8 /* libphilibs.a */; };
+		1CFC22AC1942D359009FEFE4 /* line-tex-6a3-00a-gray.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CFC22AB1942D359009FEFE4 /* line-tex-6a3-00a-gray.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -145,6 +146,7 @@
 		1CE0A45E190319BA005F3FA4 /* Helvetica_Neue.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Helvetica_Neue.fnt; path = "philibs-ex-00/Resources/Helvetica_Neue.fnt"; sourceTree = "<group>"; };
 		1CE0A45F190319BA005F3FA4 /* Helvetica_Neue.png_g8.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Helvetica_Neue.png_g8.png; path = "philibs-ex-00/Resources/Helvetica_Neue.png_g8.png"; sourceTree = "<group>"; };
 		1CF4DBA2185EE4B7007331F8 /* philibs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = philibs.xcodeproj; path = ../philibs.xcodeproj; sourceTree = "<group>"; };
+		1CFC22AB1942D359009FEFE4 /* line-tex-6a3-00a-gray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "line-tex-6a3-00a-gray.png"; path = "philibs-ex-00/Resources/line-tex-6a3-00a-gray.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -216,6 +218,7 @@
 				1CE0A45F190319BA005F3FA4 /* Helvetica_Neue.png_g8.png */,
 				1CE0A43318FFC016005F3FA4 /* HelveticaNeue.dfont_sdf_g8.png */,
 				1CE0A43418FFC016005F3FA4 /* HelveticaNeue.dfont_sdf.txt */,
+				1CFC22AB1942D359009FEFE4 /* line-tex-6a3-00a-gray.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -459,6 +462,7 @@
 				1CB1DFB618988C79005D3709 /* readme.txt in Resources */,
 				1CE0A43618FFC016005F3FA4 /* HelveticaNeue.dfont_sdf.txt in Resources */,
 				1CAD97121861879B00C547E1 /* test-00.ase in Resources */,
+				1CFC22AC1942D359009FEFE4 /* line-tex-6a3-00a-gray.png in Resources */,
 				1CB1DFB018988C79005D3709 /* negx.jpg in Resources */,
 				1CB1DFB218988C79005D3709 /* negz.jpg in Resources */,
 				1CB1DFB518988C79005D3709 /* posz.jpg in Resources */,
