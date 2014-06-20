@@ -133,7 +133,7 @@ class box3 :
     bool getIsDirty () const { return mIsDirty; }
     
     operator bool () const { return mIsDirty; }
-    
+  private:
     bool mIsDirty = true;
 };
 

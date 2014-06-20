@@ -102,7 +102,6 @@ GeomDataRef pData00 = 0;
 
 }
 
-
 - (void)testGeomDataShareVerts
 {
   GeomDataRef pData01 = new geomData;
@@ -228,6 +227,59 @@ GeomDataRef pData00 = 0;
   XCTAssertEqual(pData00->getAttributes().getValueStride(), 6, @"Wrong value stride");
 }
 
+- (void)testGenNormalsXXX
+{
+  geomDataXXX* pDataxx = new geomDataXXX;
+
+  pDataxx->mBinding.push_back( { CommonAttributeNames[ geomDataXXX::Position], geomDataXXX::Position, geomDataXXX::DataType_FLOAT, sizeof(float), geomDataXXX::PositionComponents } );
+
+  pDataxx->resizeTrisWithCurrentBinding(6,2);
+  
+  pDataxx->getIndices() = { 0, 1, 2, 3, 4, 5 };
+
+  auto pcur = pDataxx->begin<pni::math::vec3>(geomDataXXX::Position);
+  pcur->set(0.0f, 0.0f, 0.0f); ++pcur;
+  pcur->set(1.0f, 0.0f, 0.0f); ++pcur;
+  pcur->set(1.0f, 0.0f, -1.0f); ++pcur;
+
+  pcur->set(0.0f, 0.0f, 0.0f); ++pcur;
+  pcur->set(1.0f, 0.0f, -1.0f); ++pcur;
+  pcur->set(0.0f, 1.0f, -1.0f);
+
+  XCTAssertEqual(pDataxx->mBinding.size(), 1, @"Wrong number of attributes");
+  XCTAssertEqual(pDataxx->sizeBytes(), 6 * pDataxx->mBinding.getValueStrideBytes(), @"Wrong byte size for values");
+  XCTAssertEqual(pDataxx->getIndices().size(), 6, @"Wrong number of indices");
+  XCTAssertEqual(pDataxx->mBinding.getValueStrideBytes(), 3 * sizeof ( float ), @"Wrong value stride bytes");
+
+    // Should share a few verts because normals were blended together
+  pDataxx->generateNormals(80.0f);
+  pDataxx->shareVerts();
+
+  XCTAssertEqual(pDataxx->mBinding.size(), 2, @"Wrong number of attributes");
+  XCTAssertEqual(pDataxx->sizeBytes(), 4 * pDataxx->mBinding.getValueStrideBytes(), @"Wrong number of values");
+  XCTAssertEqual(pDataxx->getIndices().size(), 6, @"Wrong number of indices");
+  XCTAssertEqual(pDataxx->mBinding.getValueStrideBytes(), 6 * 4, @"Wrong value stride");
+
+    // Should not share any verts because breaking angle is so small that no
+    // normals will be blended
+  pDataxx->unshareVerts();
+
+  XCTAssertEqual(pDataxx->mBinding.size(), 2, @"Wrong number of attributes");
+  XCTAssertEqual(pDataxx->sizeBytes(), 6 * pDataxx->mBinding.getValueStrideBytes(), @"Wrong byte size for values");
+  XCTAssertEqual(pDataxx->getIndices().size(), 6, @"Wrong number of indices");
+  XCTAssertEqual(pDataxx->mBinding.getValueStrideBytes(), 6 * sizeof ( float ), @"Wrong value stride bytes");
+
+  pDataxx->generateNormals(5.0f);
+  pDataxx->shareVerts();
+
+  XCTAssertEqual(pDataxx->mBinding.size(), 2, @"Wrong number of attributes");
+  XCTAssertEqual(pDataxx->sizeBytes(), 6 * pDataxx->mBinding.getValueStrideBytes(), @"Wrong number of values");
+  XCTAssertEqual(pDataxx->getIndices().size(), 6, @"Wrong number of indices");
+  XCTAssertEqual(pDataxx->mBinding.getValueStrideBytes(), 6 * sizeof(float), @"Wrong value stride");
+  
+  pDataxx->dbg(std::cout);
+}
+
 - (void)testSegIsectSeg
 {
   using namespace pni::math;
@@ -309,8 +361,8 @@ GeomDataRef pData00 = 0;
       "byte size of storage not correct after migrate" );
   
   dataIndexedString testInstantiation;
-  testInstantiation.mBinding.push_back( { "name0", "stype0", scene::type_float_32_t, 4, 1 } );
-  testInstantiation.mBinding.push_back( { "name1", "stype1", scene::type_float_32_t, 4, 1 } );
+  testInstantiation.mBinding.push_back( { "name0", "stype0", scene::type_float32_t, 4, 1 } );
+  testInstantiation.mBinding.push_back( { "name1", "stype1", scene::type_float32_t, 4, 1 } );
 
   size_t nameOffset = testInstantiation.mBinding.getValueOffsetBytesByName("name1");
   size_t stypeOffset = testInstantiation.mBinding.getValueOffsetBytes("stype1");
@@ -321,7 +373,7 @@ GeomDataRef pData00 = 0;
   lines* pLines = new lines;
   lineData* pLineData = new lineData;
   
-  pLines->setLineData( pLineData );
+  pLines->lineDataProp().set ( pLineData );
   
   pLineData->mBinding.push_back ( { {}, lineData::Position, lineData::Float, sizeof(float), 3 } );
   pLineData->mBinding.push_back ( { {}, lineData::Color, lineData::Float, sizeof(float), 4 } );
@@ -345,7 +397,7 @@ GeomDataRef pData00 = 0;
   
   pLineData->getIndices()[ 0 ] = 2;
   
-  pLines->mLineData().clearDirty();
+  pLines->lineDataProp().clearDirty();
   
   XCTAssertEqual(pLines->getGeomData()->getValues().size(), 48, "geom has wrong vert count after lines::test");
   XCTAssertEqual(pLines->getGeomData()->getIndices().size(), 6, "geom has wrong index count after lines::test");

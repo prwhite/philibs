@@ -47,7 +47,7 @@ class dirtyBase
   public:
     void setDirty ( bool val = true )
       {
-        if ( mSetDirtyFunc )
+        if ( ( ! mDirty ) && mSetDirtyFunc )
           ( ( ( ThisType* ) this )->*mSetDirtyFunc )();
         mDirty = val;
       }
@@ -161,7 +161,6 @@ class dirty :
     void set ( Type const& val ) { *this = val; }   // delegates to operator =
     Type const& get () const { return this->mVal; }
     Type& op () { this->setDirty (); return this->mVal; }
-//    operator bool () const { return static_cast< bool > ( this->mVal ); } // Doesn't make sense for non-specialized version
     Type const* operator -> () const { return &this->mVal; }
     bool operator == ( dirty const& rhs ) { return this->mVal == rhs.mVal; }
 };
@@ -184,6 +183,7 @@ class dirty< pni::pstd::autoRef< Type >, ThisType, uniquifier > :
     value_type* op () { this->setDirty (); return this->mVal.get(); }
     operator bool () const { return static_cast< bool > ( this->mVal ); }
     ref_type const& operator -> () const { return this->mVal; }
+//    value_type const& operator* () const { return *this->mVal.get(); }
     bool operator == ( dirty const& rhs ) { return this->mVal == rhs.mVal; }
 };
 

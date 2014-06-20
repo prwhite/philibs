@@ -189,13 +189,7 @@ class lines :
     void setViewportSizeRatio ( pni::math::vec2 const& val )
       { mVpSizeRatio = val; uniformProp()->setDirty(); }
     pni::math::vec2 const& getViewportSizeRatio () const { return mVpSizeRatio; }
-  
-    void test ()
-      {
-        lineStyleProp().setDirty();
-        lineStyleProp().clearDirty();
-      }
-  
+    
   protected:
     void rebuildLines ();
     void rebuildUniform ();

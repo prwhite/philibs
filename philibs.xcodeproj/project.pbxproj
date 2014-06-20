@@ -492,6 +492,7 @@
 		1C2BB57D18AAA19C00938C31 /* scenerendersinkdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenerendersinkdd.h; sourceTree = "<group>"; };
 		1C38744C1894CF0D0055DE2A /* sceneprogfactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneprogfactory.cpp; sourceTree = "<group>"; };
 		1C38744D1894CF0D0055DE2A /* sceneprogfactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneprogfactory.h; sourceTree = "<group>"; };
+		1C4061A819509DA50074AC1A /* sceneltcompare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = sceneltcompare.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		1C4BD2821885FCB7000781B0 /* scenecommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = scenecommon.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		1C5BA0631935CDE100D7A70E /* scenedirty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenedirty.h; sourceTree = "<group>"; };
 		1C6A02B71873526700672EF8 /* sceneuniform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneuniform.cpp; sourceTree = "<group>"; };
@@ -500,7 +501,7 @@
 		1C82A2A5192C7AE9009FFDA7 /* scenelines.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = scenelines.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		1C82A2A6192C7AE9009FFDA7 /* scenelines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenelines.h; sourceTree = "<group>"; };
 		1C82A2AD192D2FBC009FFDA7 /* scenedata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scenedata.cpp; path = philibs/scene/scenedata.cpp; sourceTree = SOURCE_ROOT; };
-		1C82A2AE192D2FBC009FFDA7 /* scenedata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scenedata.h; path = philibs/scene/scenedata.h; sourceTree = SOURCE_ROOT; };
+		1C82A2AE192D2FBC009FFDA7 /* scenedata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = scenedata.h; path = philibs/scene/scenedata.h; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		1C88803118923B89005EAF2E /* libassimp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libassimp.a; path = "3p/assimp/workspaces/xcode3/build/Debug-iphoneos/libassimp.a"; sourceTree = "<group>"; };
 		1C94014118A998CE0011AFF0 /* sceneframebufferogl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneframebufferogl.cpp; sourceTree = "<group>"; };
 		1C94014218A998CE0011AFF0 /* sceneframebufferogl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneframebufferogl.h; sourceTree = "<group>"; };
@@ -1093,6 +1094,7 @@
 				1CE0A43E1900A7EB005F3FA4 /* scenetextfactory.cpp */,
 				1CE0A43F1900A7EB005F3FA4 /* scenetextfactory.h */,
 				1C5BA0631935CDE100D7A70E /* scenedirty.h */,
+				1C4061A819509DA50074AC1A /* sceneltcompare.h */,
 			);
 			path = scene;
 			sourceTree = "<group>";

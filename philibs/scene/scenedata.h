@@ -15,13 +15,12 @@
 #include <unordered_map>
 #include <unordered_set>
 #include "pnipstd.h"
+#include "sceneltcompare.h"
 
 // ///////////////////////////////////////////////////////////////////
 
 namespace scene {
 
-// ///////////////////////////////////////////////////////////////////
-// ///////////////////////////////////////////////////////////////////
 // ///////////////////////////////////////////////////////////////////
 
 enum BasicSemanticTypes {
@@ -55,9 +54,9 @@ enum BasicDataTypes {
   type_int16_t,
   type_int32_t,
   
-  type_float_16_t,
-  type_float_32_t,
-  type_float_64_t,
+  type_float16_t,
+  type_float32_t,
+  type_float64_t,
 
   data_type_count
 };
@@ -75,6 +74,18 @@ size_t const BasicDataTypesSizes[] = {
   4,
   8
 };
+
+using BasicLtCompare = lt_variadic<
+  lt_pair<type_uint8_t, uint8_t>,
+  lt_pair<type_uint16_t, uint16_t>,
+  lt_pair<type_uint32_t, uint32_t>,
+  lt_pair<type_int8_t, int8_t>,
+  lt_pair<type_int16_t, int16_t>,
+  lt_pair<type_int32_t, int32_t>,
+//  lt_pair<type_float16_t, float16_t>,  // TODO: float16_t
+  lt_pair<type_float32_t, float>,
+  lt_pair<type_float64_t, double>
+>;
 
 static_assert ( sizeof ( BasicSemanticTypesCount ) / sizeof ( size_t ) == semantic_type_count,
     "BasicSemanticTypes and BasicSemanticTypesCount out of sync" );
@@ -276,14 +287,17 @@ using dataIndexedString = dataIndexed< basicBinding< basicBindingItem< std::stri
   @endcode
 */
 
-template< class Binding_ >
-class data 
+template< class Binding_, class LtCompare = lt_variadic<> >
+class data :
+  public LtCompare
 {
+  public:
     using ValueType = uint8_t;
 
-  public:
     using Binding = Binding_;
+    using BindingItem = typename Binding::BindingItem;
     using SemanticType = typename Binding::SemanticType;
+    using DataType = typename Binding::DataType;
 
       // Public data!!!
       /// The binding object.  Use mBinding.push_back to add binding objects
@@ -292,8 +306,8 @@ class data
 
       /// Get the pointer to value storage for the specified binding and index.
       /// Return type is determined by the explicit invocation template type.
-      /// @param count Which element to access.
-      /// @param which The semantic type of binding to access.
+      /// @param element Which element to access.
+      /// @param stype The semantic type of binding to access.
       /// @param index The index to access (if applicable, e.g., texture unit)
     template< typename Type >
     Type* getElementPtr ( size_t element, SemanticType const& stype, size_t index = 0 )
@@ -303,6 +317,7 @@ class data
               ptr ?
               ptr + mBinding.getValueStrideBytes () * element + mBinding.getValueOffsetBytes ( stype, index ) : nullptr ) );
       }
+  
     template< typename Type >
     Type const* getElementPtr ( size_t element, SemanticType const& stype, size_t index = 0 ) const
       {
@@ -360,9 +375,13 @@ class data
           mPtr ( ptr ), mStride( stride ) {}
       
       public:
+        using NonConstIter = iterator<Ret>;
       
         const_iterator ( const_iterator const& rhs ) = default;
+        const_iterator ( NonConstIter const& rhs ) : const_iterator { rhs.mPtr, rhs.mStride } {}
         const_iterator& operator = ( const_iterator const& rhs ) = default;
+        const_iterator& operator = ( NonConstIter const& rhs )
+          { mPtr = rhs.mPtr; mStride = rhs.mStride; }
 
         const_iterator operator + ( size_t count ) const { return const_iterator ( mPtr + count * mStride, mStride ); }
         const_iterator& operator += ( size_t count ) { mPtr += count * mStride; return *this; }
@@ -393,12 +412,28 @@ class data
         return iterator< Ret > ( ptr, stride );
       }
 
+      /// Convenience to get iterator to first binding in element
+    template< class Ret >
+    iterator< Ret > begin ()
+      {
+        auto binding = mBinding[ 0 ];
+        return begin ( binding->mSemanticType, binding->mIndex );
+      }
+
     template< class Ret >
     iterator< Ret > end ( SemanticType stype, size_t index = 0 )
       {
         iterator< Ret > tmp = begin< Ret > ( stype, index );
         tmp += size ();
         return tmp;
+      }
+
+      /// Convenience to get iterator to first binding in element
+    template< class Ret >
+    iterator< Ret > end ()
+      {
+        auto binding = mBinding[ 0 ];
+        return end ( binding->mSemanticType, binding->mIndex );
       }
 
     template< class Ret >
@@ -409,6 +444,14 @@ class data
         return const_iterator< Ret > ( ptr, stride );
       }
 
+      /// Convenience to get iterator to first binding in element
+    template< class Ret >
+    const_iterator< Ret > begin () const
+      {
+        auto binding = mBinding[ 0 ];
+        return begin ( binding->mSemanticType, binding->mIndex );
+      }
+
     template< class Ret >
     const_iterator< Ret > end ( SemanticType stype, size_t index = 0 ) const
       {
@@ -417,14 +460,21 @@ class data
         return tmp;
       }
 
-      // TODO: Need const begin and end, with corresponding const_iterator a la STL.
-
+      /// Convenience to get iterator to first binding in element
+    template< class Ret >
+    const_iterator< Ret > end () const
+      {
+        auto binding = mBinding[ 0 ];
+        return end ( binding->mSemanticType, binding->mIndex );
+      }
 
       /// Resize storage for elements, reflecting current binding settings.
       /// @param elements The new number of elements... NOT the byte size.
       /// @warning Invalidates any iterators.
     void resize ( size_t elements ) { mValues.resize ( mBinding.getValueStrideBytes () * elements ); }
-      /// Get count of elements in values.
+      /// Get number of elements (not values, characters or bytes) in values.  Elements
+      /// are the aggregate type stored in the values array.  E.g., all values for a
+      /// single vertex.
     size_t size () const { return mValues.size() / mBinding.getValueStrideBytes (); }
       /// Get size in bytes of values storage.
     size_t sizeBytes () const { return mValues.size (); }
@@ -447,6 +497,31 @@ class data
     template< typename Type >
     Type const* getPtr () const { return ( mValues.empty() ? nullptr : reinterpret_cast<Type const*>(mValues.data()) ); }
 
+      /// Less-than relational function for pointers into data value array.
+      /// Will iterate through heterogeneous data types of arbitrary lengths
+      /// as directed by bindings.
+    bool lt ( ValueType const* lhs, ValueType const* rhs ) const
+    {
+      LtCompare const& ltCompare = *this;
+      for ( auto cur : mBinding )
+      {
+        bool lhsltrhs = ltCompare( cur.mCount, cur.mDataType, lhs, rhs );
+          // lhs < rhs
+        if ( lhsltrhs ) return true;
+        
+        bool rhsltlhs = ltCompare( cur.mCount, cur.mDataType, rhs, lhs );
+          // lhs > rhs
+        if ( rhsltlhs ) return false;
+
+          // lhs == rhs, continue
+        size_t incr = cur.mSize * cur.mCount;
+        lhs += incr;
+        rhs += incr;
+      }
+    
+      return false;
+    }
+
   protected:
 
   
@@ -463,11 +538,11 @@ class data
   to facilitate things like indexing for GLES glDrawElements, for a
   line rendering primitive length list, etc.
 */
-template< class Binding, typename IndexType_ = uint16_t >
+template< class Binding, class LtCompare = lt_variadic<>, typename IndexType_ = uint16_t >
 class dataIndexed :
-  public data< Binding >
+  public data< Binding, LtCompare >
 {
-    using Base = data< Binding >;
+    using Base = data< Binding, LtCompare >;
   
   public:
     using IndexType = IndexType_;
@@ -496,11 +571,11 @@ class dataIndexed :
 
 // Example usage of data, etc:
 
-using dataBasic =        data<        basicBinding< basicBindingItem< BasicSemanticTypes, BasicDataTypes > > >;
-using dataIndexedBasic = dataIndexed< basicBinding< basicBindingItem< BasicSemanticTypes, BasicDataTypes > > >;
+using dataBasic =        data<        basicBinding< basicBindingItem< BasicSemanticTypes, BasicDataTypes > >, BasicLtCompare >;
+using dataIndexedBasic = dataIndexed< basicBinding< basicBindingItem< BasicSemanticTypes, BasicDataTypes > >, BasicLtCompare >;
 
   // see if we can use a std::string for the semantic type... yup... seems to work fine.
-using dataIndexedString = dataIndexed< basicBinding< basicBindingItem< std::string, BasicDataTypes > > >;
+using dataIndexedString = dataIndexed< basicBinding< basicBindingItem< std::string, BasicDataTypes > >, BasicLtCompare >;
 
 
 // ///////////////////////////////////////////////////////////////////
@@ -508,8 +583,13 @@ using dataIndexedString = dataIndexed< basicBinding< basicBindingItem< std::stri
 // ///////////////////////////////////////////////////////////////////
 // Out of line definitions to keep declarations tidy.
 
-template< class Binding >
-void  data< Binding >::migrate ( Binding const& rhs )
+// TODO: Add another template parameter for concrete lt_variadic so that
+// derived classes only have to implement a list of lt_pairs to generate
+// less than functions for interleaved data elements (e.g., verts) of any
+// heterogeneous types.
+
+template< class Binding, class LtCompare >
+void  data< Binding, LtCompare >::migrate ( Binding const& rhs )
 {
   assert ( ! mBinding.empty () );
   assert ( ! rhs.empty () );
