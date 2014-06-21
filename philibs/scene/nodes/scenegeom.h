@@ -32,7 +32,7 @@ namespace scene {
 // ///////////////////////////////////////////////////////////////////
 // ///////////////////////////////////////////////////////////////////
 
-class geomDataXXX;
+class geomData;
 
 class geomDataBase
 {
@@ -44,7 +44,7 @@ class geomDataBase
         attribute you are specifying.  See Attribute help for an example.
       */
   public:
-    using DirtyBounds = dirty< box3, geomDataXXX >;
+    using DirtyBounds = dirty< box3, geomData >;
   
     enum SemanticTypes
     {
@@ -131,7 +131,7 @@ struct lt_uint2101010_rev_t
 
   // Defines the dispatch table used when comparing vertex elements in the
   // values vector.
-using geomDataXXXLtCompare =
+using geomDataLtCompare =
     lt_variadic<
         lt_pair<geomDataBase::DataType_BYTE, int8_t>,
         lt_pair<geomDataBase::DataType_UNSIGNED_BYTE, uint8_t>,
@@ -148,17 +148,17 @@ using geomDataXXXLtCompare =
 
 // ///////////////////////////////////////////////////////////////////
 
-class geomDataXXX :
+class geomData :
   public geomDataBase,
   public pni::pstd::refCount,
   public geomDataBase::DirtyBounds,
   public dataIndexed< basicBinding< basicBindingItem< geomDataBase::SemanticTypes, geomDataBase::DataTypes > >,
-    geomDataXXXLtCompare
+    geomDataLtCompare
   >
 {
   public:
-    geomDataXXX () :
-        DirtyBounds { {}, &geomDataXXX::updateBounds }
+    geomData () :
+        DirtyBounds { {}, &geomData::updateBounds }
       { setEpsilon( pni::math::Trait::fuzzVal ); }
   
       /// @group Geometry algorithms
@@ -189,24 +189,24 @@ class geomDataXXX :
 
 // ///////////////////////////////////////////////////////////////////
 
-class geomXXX;
+class geom;
 
-class geomBaseXXX
+class geomBase
 {
   public:
-    using DirtyGeomData = dirty< pni::pstd::autoRef< geomDataXXX >, geomXXX >;
+    using DirtyGeomData = dirty< pni::pstd::autoRef< geomData >, geom >;
 
   protected:
-    geomBaseXXX () = default; // Can't instantiate directly
+    geomBase () = default; // Can't instantiate directly
 };
 
-class geomXXX :
+class geom :
   public node,
-  public geomBaseXXX,
-  public geomBaseXXX::DirtyGeomData
+  public geomBase,
+  public geomBase::DirtyGeomData
 {
   public:
-    using GeomDataRef = pni::pstd::autoRef<geomDataXXX>;
+    using GeomDataRef = pni::pstd::autoRef<geomData>;
   
     DirtyGeomData& geomDataProp() { return *this; }
     DirtyGeomData const& geomDataProp () const { return *this; }
@@ -216,7 +216,7 @@ class geomXXX :
 
     void uniquifyGeomData ()
       { if ( geomDataProp() && geomDataProp()->getNumRefs() > 1 )
-          geomDataProp().set ( new geomDataXXX ( *geomDataProp().get () ) ); }
+          geomDataProp().set ( new geomData ( *geomDataProp().get () ) ); }
 
       /// @group Set bounds policy.
     using BoundsType = uint32_t;
@@ -252,11 +252,11 @@ class geomXXX :
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
-class vertIterXXX
+class vertIter
 {
-    typedef geomDataXXX::ValueType ValueType;
+    typedef geomData::ValueType ValueType;
 
-    geomDataXXX* mGdata;
+    geomData* mGdata;
     size_t mStride;
     ValueType* mCur;
     ValueType* mEnd;
@@ -268,10 +268,10 @@ class vertIterXXX
         }
 
   public:
-    vertIterXXX ( geomXXX* pGeom ) :
-      vertIterXXX { pGeom->geomDataProp().get() } {}
+    vertIter ( geom* pGeom ) :
+      vertIter { pGeom->geomDataProp().get() } {}
         
-    vertIterXXX ( geomDataXXX* pGdata ) :
+    vertIter ( geomData* pGdata ) :
       mGdata ( pGdata ),
       mStride ( mGdata->mBinding.getValueStrideBytes () ),
       mCur ( mGdata->getPtr<ValueType>() )
@@ -288,14 +288,14 @@ class vertIterXXX
     Type const& get ( size_t offset ) const { return *reinterpret_cast< Type* >( mCur + offset ); }
 
       /// Increments to next full vertex (i.e., stride), not next float value.
-    vertIterXXX& operator++ ()
+    vertIter& operator++ ()
         {
           mCur += mStride;
           return *this;
         }
 
       /// Increments to next full vertex (i.e., stride), not next float value.
-    vertIterXXX& operator+= ( size_t val )
+    vertIter& operator+= ( size_t val )
         {
           mCur += mStride * val;
           return *this;
@@ -312,11 +312,11 @@ class vertIterXXX
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
-class triIterXXX
+class triIter
 {
-    typedef geomDataXXX::ValueType ValueType; // uint8_t
+    typedef geomData::ValueType ValueType; // uint8_t
     
-    geomDataXXX* mGdata;
+    geomData* mGdata;
     size_t mStrideBytes;
     size_t mCur;
     ValueType* mPtr;
@@ -328,7 +328,7 @@ class triIterXXX
         }
 
   public:
-    triIterXXX ( geomDataXXX* pGdata ) :
+    triIter ( geomData* pGdata ) :
       mGdata ( pGdata ),
       mStrideBytes ( mGdata->mBinding.getValueStrideBytes() ),
       mCur ( 0 )
@@ -336,8 +336,8 @@ class triIterXXX
           mPtr = getPtr ( 0 );
         }
 
-    triIterXXX ( geomXXX* pGeom ) :
-      triIterXXX ( pGeom->geomDataProp().get() ) {}
+    triIter ( geom* pGeom ) :
+      triIter ( pGeom->geomDataProp().get() ) {}
   
     template< class Type >
     Type& get ( size_t offset ) { return *reinterpret_cast< Type* >( mPtr + offset ); }
@@ -348,10 +348,10 @@ class triIterXXX
     ValueType const* operator& () const = delete;
 
       /// Get the current index into the indices array.
-    geomDataXXX::IndexType getCurIndex () const { return mCur; }
+    geomData::IndexType getCurIndex () const { return mCur; }
       /// Increments to next full vertex (i.e., stride), not next float value.
       /// Apps need to keep track of their own mod 3 arithmetic.
-    triIterXXX& operator++ ()
+    triIter& operator++ ()
         {
           mCur++;
           mPtr = getPtr ( mCur );
@@ -360,7 +360,7 @@ class triIterXXX
 
       /// Increments to next full vertex (i.e., stride), not next float value.
       /// Apps need to keep track of their own mod 3 arithmetic.
-    triIterXXX& operator+= ( size_t val )
+    triIter& operator+= ( size_t val )
         {
           mCur += val;
           mPtr = getPtr ( mCur );

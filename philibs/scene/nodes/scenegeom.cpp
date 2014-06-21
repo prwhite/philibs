@@ -22,12 +22,12 @@ namespace scene {
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
-void geomDataXXX::unshareVerts ()
+void geomData::unshareVerts ()
 {
   size_t numTris = getTriCount();
 
     // Alloc destination geomData
-  geomDataXXX* pDst = new geomDataXXX;
+  geomData* pDst = new geomData;
   pDst->mBinding = mBinding;    // This is a deep copy
   pDst->resizeTrisWithCurrentBinding(numTris * 3, numTris);
   
@@ -38,9 +38,9 @@ void geomDataXXX::unshareVerts ()
   assert(dstStrideBytes == srcStrideBytes);
 #endif // DEBUG
   
-  triIterXXX srcTris ( this );
-  vertIterXXX dstVerts ( pDst );
-  geomDataXXX::IndexType indNum = 0;
+  triIter srcTris ( this );
+  vertIter dstVerts ( pDst );
+  geomData::IndexType indNum = 0;
   
   while ( srcTris )
   {
@@ -65,15 +65,15 @@ void geomDataXXX::unshareVerts ()
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
-class shareVertsVertXXX
+class shareVertsVert
 {
   public:
-    using ValueType = geomDataXXX::ValueType;
+    using ValueType = geomData::ValueType;
   
-    shareVertsVertXXX ( geomDataXXX const* pData, ValueType const* val, geomDataXXX::IndexType ind ) :
+    shareVertsVert ( geomData const* pData, ValueType const* val, geomData::IndexType ind ) :
         mData ( pData ), mVal ( val ), mInd ( ind ) {}
   
-    bool operator < ( shareVertsVertXXX const& other ) const
+    bool operator < ( shareVertsVert const& other ) const
         {
           ValueType const* rhs = mVal;
           ValueType const* lhs = other.mVal;
@@ -82,36 +82,36 @@ class shareVertsVertXXX
         }
 
     // Public data
-  geomDataXXX const* mData = 0;
+  geomData const* mData = 0;
   ValueType const* mVal = 0;
   ValueType mInd = 0;
 };
 
-void geomDataXXX::shareVerts ()
+void geomData::shareVerts ()
 {
   size_t const numTris = getTriCount();
 
     // Build a multiset that collects identical verts in buckets
-  using VertSetXXX = std::multiset<shareVertsVertXXX>;
-  VertSetXXX verts;
-  triIterXXX srcVerts ( this );
+  using VertSet = std::multiset<shareVertsVert>;
+  VertSet verts;
+  triIter srcVerts ( this );
   size_t srcIndex = 0;
 
   while ( srcVerts )
   {
-    verts.insert(shareVertsVertXXX(this, &srcVerts.get< uint8_t >( 0 ), srcIndex));
+    verts.insert(shareVertsVert(this, &srcVerts.get< uint8_t >( 0 ), srcIndex));
     ++srcVerts;
     ++srcIndex;
   }
 
     // Alloc destination geomData
-  geomDataXXX* pDst = new geomDataXXX;
+  geomData* pDst = new geomData;
   pDst->mBinding = mBinding;    // This is a deep copy
   pDst->resizeTrisWithCurrentBinding(numTris * 3, numTris);
 
     // Now walk through the verts, filling in new vert data in dst and setting
     // updated index values in src index slots
-  vertIterXXX dstVerts ( pDst );
+  vertIter dstVerts ( pDst );
   size_t dstIndex = 0;
   size_t const dstStrideBytes = pDst->mBinding.getValueStrideBytes();
   
@@ -121,7 +121,7 @@ void geomDataXXX::shareVerts ()
   for ( auto vertCur = verts.begin(); vertCur != vertEnd; /* nada */ )
   {
       // Copy vertCur src attribute values into dst
-    geomDataXXX::ValueType* dstVal = &dstVerts.get<geomDataXXX::ValueType>(0);
+    geomData::ValueType* dstVal = &dstVerts.get<geomData::ValueType>(0);
 
     memcpy(dstVal, vertCur->mVal, dstStrideBytes);
 
@@ -156,11 +156,11 @@ void geomDataXXX::shareVerts ()
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
-void geomDataXXX::dbg ( std::ostream& ostr ) const
+void geomData::dbg ( std::ostream& ostr ) const
 {
   using namespace std;
 
-  ostr << "geomDataXXX : " << this << endl;
+  ostr << "geomData : " << this << endl;
 
   size_t stride = mBinding.getValueStrideBytes();
   size_t numVerts = getIndices().size();
@@ -192,7 +192,7 @@ void geomDataXXX::dbg ( std::ostream& ostr ) const
     ostr << "  " << num << " " << getIndices()[ num ] << endl;
 }
 
-void geomDataXXX::updateBounds ()
+void geomData::updateBounds ()
 {
   if ( boundsProp().getDirty() )
   {
@@ -215,7 +215,7 @@ void geomDataXXX::updateBounds ()
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
-void geomXXX::setGeomBoundsDirty ()
+void geom::setGeomBoundsDirty ()
 {
   node::setBoundsDirty ();
   if ( geomDataProp ().get () )
@@ -226,7 +226,7 @@ void geomXXX::setGeomBoundsDirty ()
 // First entry point when bounds are being cleaned up,
 // introduced by scene::node a la template method pattern.
 
-void geomXXX::updateBounds () const
+void geom::updateBounds () const
 {
   if ( mBoundsMode == ForceEmpty )
   {
@@ -252,7 +252,7 @@ void geomXXX::updateBounds () const
 
 /////////////////////////////////////////////////////////////////////
 
-void geomXXX::generateGeomBounds () const
+void geom::generateGeomBounds () const
 {
   if ( geomDataProp () )
   {
@@ -263,7 +263,7 @@ void geomXXX::generateGeomBounds () const
     mBounds.setIsDirty ( true );
 }
 
-void geomXXX::generateGeomPartition () const
+void geom::generateGeomPartition () const
 {
   // TODO
 }
@@ -272,13 +272,13 @@ void geomXXX::generateGeomPartition () const
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
-class genNormalsTriXXX
+class genNormalsTri
 {
   public:
   
-    using Index = geomDataXXX::IndexType;
-    using Indices = geomDataXXX::IndexType[ 3 ];
-    using Iter = geomDataXXX::const_iterator<vec3>;
+    using Index = geomData::IndexType;
+    using Indices = geomData::IndexType[ 3 ];
+    using Iter = geomData::const_iterator<vec3>;
       
     void set ( Index i0, Index i1, Index i2, Iter const& posBeg )
       {
@@ -312,11 +312,11 @@ class genNormalsTriXXX
     vec3 mNormal { vec3::NoInit };
 };
 
-class genNormalsVertXXX
+class genNormalsVert
 {
   public:
   
-    bool operator < ( genNormalsVertXXX const& rhs ) const
+    bool operator < ( genNormalsVert const& rhs ) const
       {
           // This gets us a cheap-ish epsilon lt compare... first test
           // for epsilon equality... if not true then return strict lt,
@@ -329,14 +329,14 @@ class genNormalsVertXXX
       }
   
     vec3 mPos;
-    geomDataXXX::IndexType mIndex;      // index into geomData values array
+    geomData::IndexType mIndex;      // index into geomData values array
     size_t mTri;                        // index into GenNormalsTris list below
     Trait::ValueType mFuzz;
 };
 
   // Can't do this on shared verts because we might have to break shading
   // on edges with an angle greater than the specified angle.
-void geomDataXXX::generateNormals ( float degrees )
+void geomData::generateNormals ( float degrees )
 {
   Trait::ValueType const angleRads = Trait::d2r(degrees);
   Trait::ValueType const cosAngle = Trait::cos(angleRads);
@@ -349,7 +349,7 @@ void geomDataXXX::generateNormals ( float degrees )
     
 //  pLineData->mBinding.push_back ( { {}, lineData::Position, lineData::Float, sizeof(float), 3 } );
     
-    newBindings.push_back( { CommonAttributeNames[ geomDataXXX::Normal ], Normal,
+    newBindings.push_back( { CommonAttributeNames[ geomData::Normal ], Normal,
         DataType_FLOAT, sizeof ( float ), NormalComponents } );
     
     migrate(newBindings);
@@ -359,32 +359,32 @@ void geomDataXXX::generateNormals ( float degrees )
   
     // Create array of tri structure that includes vert indices, tri normal, and tri area
     // Create array of sharing ids that multimaps vert pos to vert index and tri index
-  using GenNormalsTris = std::vector< genNormalsTriXXX >;
+  using GenNormalsTris = std::vector< genNormalsTri >;
   GenNormalsTris tris;
   tris.resize(getTriCount());
   
-  using GenNormalsVerts = std::multiset< genNormalsVertXXX >;
+  using GenNormalsVerts = std::multiset< genNormalsVert >;
   GenNormalsVerts verts;
 
   size_t numTri = 0;
-  triIterXXX titer ( this );
-  genNormalsTriXXX::Iter posBeg = begin<vec3>(Position);
+  triIter titer ( this );
+  genNormalsTri::Iter posBeg = begin<vec3>(Position);
   
   Trait::ValueType const eps = getEpsilon< Trait::ValueType >();
   
   while (titer)
   {
     IndexType i0 = titer.getCurIndex();
-    verts.insert( genNormalsVertXXX { titer.get< vec3 >(posOffset), i0, numTri, eps } );
-//    verts.insert( genNormalsVertXXX { vec3 { &titer + posOffset }, i0, numTri, mFuzz } );
+    verts.insert( genNormalsVert { titer.get< vec3 >(posOffset), i0, numTri, eps } );
+//    verts.insert( genNormalsVert { vec3 { &titer + posOffset }, i0, numTri, mFuzz } );
     ++titer;
 
     IndexType i1 = titer.getCurIndex();
-    verts.insert( genNormalsVertXXX { titer.get< vec3 >(posOffset), i1, numTri, eps } );
+    verts.insert( genNormalsVert { titer.get< vec3 >(posOffset), i1, numTri, eps } );
     ++titer;
 
     IndexType i2 = titer.getCurIndex();
-    verts.insert( genNormalsVertXXX { titer.get< vec3 >(posOffset), i2, numTri, eps } );
+    verts.insert( genNormalsVert { titer.get< vec3 >(posOffset), i2, numTri, eps } );
     ++titer;
 
     tris[ numTri++ ].set ( i0, i1, i2, posBeg );
