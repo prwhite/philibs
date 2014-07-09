@@ -38,13 +38,20 @@ class geomDataBase
 {
   protected:
     geomDataBase () = default;  // Can't instantiate this class directly.
+
+    struct GeomDataDirtyTag {};
   
       /** 
         Use these values for the mType member of AttributeVal to indicate which
         attribute you are specifying.  See Attribute help for an example.
       */
+  
   public:
-    using DirtyBounds = dirty< box3, geomData >;
+    using DirtyBounds = dirtyProp< box3, geomData >;
+    using DirtyGeomData = dirtyProp< GeomDataDirtyTag, geomData >;
+  
+    static_assert(DirtyBounds::Invoker::dbg == 0, "wrong invoker specialization for DirtyBounds");
+    static_assert(DirtyGeomData::Invoker::dbg == 0, "wrong invoker specialization for DirtyGeomData");
   
     enum SemanticTypes
     {
@@ -92,7 +99,7 @@ class geomDataBase
 
     /// @group Miscelaneaous constants
     // Maybe...
-  size_t const NumTexUnits = 16;
+  static size_t const NumTexUnits = 16;
   
   
 };
@@ -151,14 +158,17 @@ using geomDataLtCompare =
 class geomData :
   public geomDataBase,
   public pni::pstd::refCount,
-  public geomDataBase::DirtyBounds,
+  private geomDataBase::DirtyBounds,
+  private geomDataBase::DirtyGeomData,
+  public travDataContainer,
   public dataIndexed< basicBinding< basicBindingItem< geomDataBase::SemanticTypes, geomDataBase::DataTypes > >,
     geomDataLtCompare
   >
 {
   public:
     geomData () :
-        DirtyBounds { {}, &geomData::updateBounds }
+        DirtyBounds { {}, &geomData::updateBounds },
+        DirtyGeomData {}
       { setEpsilon( pni::math::Trait::fuzzVal ); }
   
       /// @group Geometry algorithms
@@ -171,12 +181,16 @@ class geomData :
       { resize(numVerts, numTris * 3); }
     size_t getTriCount () const { return getIndices().size() / 3; }
 
-      /// Bounds methods
+      /// @group Bounds "dirty" accessors.
     DirtyBounds& boundsProp () { return *this; }
     DirtyBounds const& boundsProp () const { return *this; }
 
-    void dbg ( std::ostream& ostr ) const;
+      /// @group Data "dirty" accessors.
+    DirtyGeomData& dataProp () { return *this; }
+    DirtyGeomData const& dataProp () const { return *this; }
 
+    void dbg ( std::ostream& ostr ) const;
+  
   protected:
     void updateBounds ();
   
@@ -194,7 +208,9 @@ class geom;
 class geomBase
 {
   public:
-    using DirtyGeomData = dirty< pni::pstd::autoRef< geomData >, geom >;
+    using DirtyGeomData = dirtyProp< pni::pstd::autoRef< geomData >, geom >;
+
+    static_assert(DirtyGeomData::Invoker::dbg == 3, "wrong invoker specialization for DirtyGeomData");
 
   protected:
     geomBase () = default; // Can't instantiate directly
@@ -233,6 +249,10 @@ class geom :
     void setBoundsMode ( int bmode )
         { setGeomBoundsDirty (); mBoundsMode = bmode; }
     int getBoundsMode () const { return mBoundsMode; }
+
+      // @group Node framework methods.
+    virtual void accept ( graphDd* pDd ) const override { pDd->dispatch ( this ); }
+    virtual geom* dup () const override { return new geom ( *this ); }
 
     /// @group Bounds query and update helpers.
   public:
@@ -287,6 +307,11 @@ class vertIter
     template< class Type >
     Type const& get ( size_t offset ) const { return *reinterpret_cast< Type* >( mCur + offset ); }
 
+    template< class Type >
+    Type& get ( size_t element, size_t offset ) { return *reinterpret_cast< Type* >( mCur + element * mStride + offset ); }
+    template< class Type >
+    Type const& get ( size_t element, size_t offset ) const { return *reinterpret_cast< Type* >( mCur + element * mStride + offset ); }
+
       /// Increments to next full vertex (i.e., stride), not next float value.
     vertIter& operator++ ()
         {
@@ -339,10 +364,20 @@ class triIter
     triIter ( geom* pGeom ) :
       triIter ( pGeom->geomDataProp().get() ) {}
   
+      /// @group Access current pointer plus some offset, typically based on
+      /// #geomData.mBinding.getValueOffsetBytes(<some semantic type id>).
     template< class Type >
     Type& get ( size_t offset ) { return *reinterpret_cast< Type* >( mPtr + offset ); }
     template< class Type >
     Type const& get ( size_t offset ) const { return *reinterpret_cast< Type* >( mPtr + offset ); }
+
+      /// @group Relative, random access similar to #get with a simple offset.
+      /// Will get nth element +- from current iteration point, plus semantic offset.
+    template< class Type >
+    Type& get ( size_t element, size_t offset ) { return *reinterpret_cast< Type* >( getPtr( element ) + offset ); }
+    template< class Type >
+    Type const& get ( size_t element, size_t offset ) const { return *reinterpret_cast< Type* >( getPtr( element ) + offset ); }
+
   
     ValueType* operator& () = delete;
     ValueType const* operator& () const = delete;
@@ -366,7 +401,14 @@ class triIter
           mPtr = getPtr ( mCur );
           return *this;
         }
-        
+
+    triIter& operator-= ( size_t val )
+        {
+          mCur -= val;
+          mPtr = getPtr ( mCur );
+          return *this;
+        }
+  
     operator bool ()
         {
           return mCur < mGdata->getIndices ().size ();

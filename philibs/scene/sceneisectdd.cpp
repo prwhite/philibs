@@ -14,6 +14,8 @@
 
 /////////////////////////////////////////////////////////////////////
 
+using namespace pni::math;
+
 namespace scene {
   
 /////////////////////////////////////////////////////////////////////
@@ -51,7 +53,7 @@ void isectSimplePartition::optimize ( size_t count )
   size_t newCount = count ? count : mRootPtrs.size ();            
   
   if ( count == 0 )
-    newCount = ( size_t ) pni::math::Trait::sqrt ( ( float ) newCount );
+    newCount = ( size_t ) Trait::sqrt ( ( float ) newCount );
   
     // Setup new root pointers and counter to figure out
     // when to allocate a new partition.
@@ -173,7 +175,7 @@ void isectDd::popSegs ()
 
 bool isectDd::cullSegs ( node const* pNode )
 {
-  pni::math::box3 const& box ( pNode->getBounds () );
+  box3 const& box ( pNode->getBounds () );
   
   bool active = false;
   
@@ -225,7 +227,7 @@ bool isectDd::dispatchPre ( node const* pNode )
     
     if ( ! ignoreFirstXform () )
     {
-      pni::math::matrix4 tmp ( pNode->getMatrix () );
+      matrix4 tmp ( pNode->getMatrix () );
       tmp.invert ();
       pushAndXformSegs ( tmp );
     }
@@ -499,22 +501,18 @@ void isectDd::isectTri (
 
 void isectDd::isectGeomData ( geom const* pGeom, seg const& aSeg, hit& aHit )
 {
-  geomData* pGdata = const_cast< geomData* > ( pGeom->getGeomData () );
-  triIter iter ( pGdata );
-  int startInd = 0;
+  geomData const* pGdata = pGeom->geomDataProp().get();
+  triIter iter ( const_cast< geomData* > ( pGdata ) );
+  size_t posOffset = pGdata->mBinding.getValueOffsetBytes( geomData::Position );
+  size_t startInd = 0;
   
   while ( iter )
   {
-    // TRICKY: This is really important... by definition, the vertex
-    // position is always the first thing in the element in our 
-    // interleaved arrays.  So, using iter () to get back the starting
-    // float* for the vert also gives us back the starting float*
-    // for the vert position.
-    pni::math::vec3 const vert0 ( iter () );
+    vec3 const& vert0 ( iter.get< vec3 >( posOffset ) );
     ++iter;
-    pni::math::vec3 const vert1 ( iter () );
+    vec3 const& vert1 ( iter.get< vec3 >( posOffset ) );
     ++iter;
-    pni::math::vec3 const vert2 ( iter () );
+    vec3 const& vert2 ( iter.get< vec3 >( posOffset ) );
     ++iter;
     
     isectTri ( vert0, vert1, vert2, aSeg, aHit, startInd );
@@ -542,11 +540,13 @@ void isectDd::isectTravData ( geom const* pGeom, seg const& aSeg, hit& aHit )
 
 void isectDd::isecTravDataFlat ( geom const* pGeom, seg const& aSeg, hit& aHit )
 {
-  isectSimplePartition* pData = 
+  isectSimplePartition* pData =
       reinterpret_cast< isectSimplePartition* > ( pGeom->getTravData ( Isect ) );
     
   typedef isectSimplePartition::Partitions::iterator PartIter;
   PartIter partEnd = pData->mPartitions.end ();
+  geomData const* pGdata = pGeom->geomDataProp().get ();
+  size_t posOffset = pGdata->mBinding.getValueOffsetBytes( geomData::Position );
   
   for ( PartIter partCur = pData->mPartitions.begin (); partCur != partEnd; ++partCur )
   {
@@ -563,11 +563,11 @@ void isectDd::isecTravDataFlat ( geom const* pGeom, seg const& aSeg, hit& aHit )
       {
         size_t startInd = *indCur;
         
-        pni::math::vec3 vert0 ( tIter ( *indCur ) );
+        vec3 const& vert0 ( tIter.get<vec3>(*indCur, posOffset) );
         ++indCur;
-        pni::math::vec3 vert1 ( tIter ( *indCur ) );
+        vec3 const& vert1 ( tIter.get<vec3>(*indCur, posOffset) );
         ++indCur;
-        pni::math::vec3 vert2 ( tIter ( *indCur ) );
+        vec3 const& vert2 ( tIter.get<vec3>(*indCur, posOffset) );
         ++indCur;
         
         isectTri ( vert0, vert1, vert2, aSeg, aHit, startInd );
@@ -616,6 +616,7 @@ void isectDd::isectTravDataTreePartition ( geom const* pGeom,
 #ifdef INLINEISECT
         // COPY/PASTE: Code inline'd from isectTravDataTreeLeaf.
       triIter tIter ( const_cast< geom* > ( pGeom ) );
+      size_t posOffset = pGeom->geomDataProp()->mBinding.getValueOffsetBytes(geomData::Position);
 
       typedef isectSimplePartition::Indices::const_iterator IndIter;
       IndIter indEnd = part.mIndices.end ();
@@ -623,11 +624,11 @@ void isectDd::isectTravDataTreePartition ( geom const* pGeom,
       {
         size_t startInd = *indCur;
         
-        pni::math::vec3 vert0 ( tIter ( *indCur ) );
+        vec3 const& vert0 ( tIter.get<vec3>(*indCur, posOffset) );
         ++indCur;
-        pni::math::vec3 vert1 ( tIter ( *indCur ) );
+        vec3 const& vert1 ( tIter.get<vec3>(*indCur, posOffset) );
         ++indCur;
-        pni::math::vec3 vert2 ( tIter ( *indCur ) );
+        vec3 const& vert2 ( tIter.get<vec3>(*indCur, posOffset) );
         ++indCur;
         
         isectTri ( vert0, vert1, vert2, aSeg, aHit, startInd );
@@ -664,6 +665,7 @@ void isectDd::isectTravDataTreeLeaf ( geom const* pGeom,
     isectSimplePartition::Partition const& part, seg const& aSeg, hit& aHit )
 {
   triIter tIter ( const_cast< geom* > ( pGeom ) );
+  size_t posOffset = pGeom->geomDataProp()->mBinding.getValueOffsetBytes(geomData::Position);
 
   typedef isectSimplePartition::Indices::const_iterator IndIter;
   IndIter indEnd = part.mIndices.end ();
@@ -671,11 +673,11 @@ void isectDd::isectTravDataTreeLeaf ( geom const* pGeom,
   {
     size_t startInd = *indCur;
     
-    pni::math::vec3 vert0 ( tIter ( *indCur ) );
+    vec3 const& vert0 ( tIter.get<vec3>(*indCur, posOffset) );
     ++indCur;
-    pni::math::vec3 vert1 ( tIter ( *indCur ) );
+    vec3 const& vert1 ( tIter.get<vec3>(*indCur, posOffset) );
     ++indCur;
-    pni::math::vec3 vert2 ( tIter ( *indCur ) );
+    vec3 const& vert2 ( tIter.get<vec3>(*indCur, posOffset) );
     ++indCur;
     
     isectTri ( vert0, vert1, vert2, aSeg, aHit, startInd );

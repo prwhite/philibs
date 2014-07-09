@@ -331,6 +331,9 @@ class data :
     template< class Ret >
     class iterator
     {
+        static_assert(std::is_standard_layout<Ret>::value,"return type for iterator is not standard layout");
+        static_assert(std::is_pointer<Ret>::value == false,"destination type should not be a pointer");
+    
         ValueType* mPtr;
         size_t mStride;
       
@@ -366,6 +369,9 @@ class data :
     template< class Ret >
     class const_iterator
     {
+        static_assert(std::is_standard_layout<Ret>::value,"return type for const_iterator is not standard layout");
+        static_assert(std::is_pointer<Ret>::value == false,"destination type should not be a pointer");
+
         ValueType const* mPtr;
         size_t mStride;
       
@@ -552,6 +558,8 @@ class dataIndexed :
     Indices const& getIndices () const { return mIndices; }
     IndexType* getIndicesPtr () { return mIndices.data (); }
     IndexType const* getIndicesPtr () const { return mIndices.data (); }
+
+    size_t sizeBytesIndices () const { return mIndices.size () * sizeof ( IndexType ); }
   
     void resize ( size_t elements ) = delete;
       /// Resize storage for both elements and indices, reflecting current

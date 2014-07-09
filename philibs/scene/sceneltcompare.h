@@ -10,6 +10,7 @@
 // ///////////////////////////////////////////////////////////////////
 
 #include <iostream>
+#include <type_traits>
 
 // ///////////////////////////////////////////////////////////////////
 
@@ -75,7 +76,7 @@ struct lt_variadic< PairType, Args... >
 {
     using ThisType = lt_variadic< PairType, Args... >;
 
-    static_assert(is_lt_pair<PairType>::value,"PairType does not appear to honor contract with lt_variadic");
+    static_assert(is_lt_pair<PairType>::value, "PairType does not appear to honor contract with lt_variadic");
 
       /// Implementation of lt compare for @p num items of contiguous memory of
       /// given @p DataType.
@@ -102,13 +103,13 @@ struct lt_variadic< PairType, Args... >
     template< class Type >
     void setEpsilon ( Type val )
         {
-          static_assert ( sizeof(Type) < sizeof(EpsilonType), "Type too wide for storage" );
+          static_assert ( sizeof(Type) <= sizeof(EpsilonType), "Type too wide for storage" );
           * ( Type* ) ( &mEpsilon ) = val ;
         }
     template< class Type >
     Type getEpsilon () const
         {
-          static_assert ( sizeof(Type) < sizeof(EpsilonType), "Type too wide for storage" );
+          static_assert ( sizeof(Type) <= sizeof(EpsilonType), "Type too wide for storage" );
           return * ( Type* ) ( &mEpsilon );
         }
   
@@ -127,7 +128,7 @@ struct lt_variadic< PairType, Args... >
   /// Compare @p num elements of a given data type, producing relational
   /// less than result.
 template< class LtVariadic, class Type >
-struct lt_n< LtVariadic, Type >
+struct lt_n< LtVariadic, Type, typename std::enable_if< ! std::is_floating_point<Type>::value >::type >
 {
   bool operator () ( LtVariadic const* pVariadic, Type const* lhs, Type const* rhs, size_t num ) const
   {
@@ -152,7 +153,7 @@ struct lt_n< LtVariadic, Type >
   /// @see http://en.cppreference.com/w/cpp/types/enable_if
   /// TODO: Need to add half float to is_floating_point or equivalent
 template< class LtVariadic, class Type >
-struct lt_n< LtVariadic, Type, typename std::enable_if<std::is_floating_point<Type>::value, Type>::type >
+struct lt_n< LtVariadic, Type, typename std::enable_if< std::is_floating_point<Type>::value >::type >
 {
   bool operator () ( LtVariadic const* pVariadic, Type const* lhs, Type const* rhs, size_t num ) const
   {

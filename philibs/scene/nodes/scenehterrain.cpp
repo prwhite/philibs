@@ -416,16 +416,17 @@ void hterrain::rebuildGeom ( Dim xStart, Dim yStart, Dim xEnd, Dim yEnd )
 
 PNIPSTDLOG
 
-  if ( ! mGeomData )
+  if ( ! geomDataProp().get() )
   {
-    setGeomData ( new geomData );
+    geomDataProp().set ( new geomData );
 
-    geomData::Attributes& attributes = mGeomData->attributesOp();
+    geomData* pGeomData = geomDataProp().get();
+    geomData::Binding& bindings = pGeomData->mBinding;
 
-    attributes.push_back ( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, geomData::PositionComponents } );
-    attributes.push_back ( { CommonAttributeNames[ geomData::Normal], geomData::Normal, geomData::DataType_FLOAT, geomData::NormalComponents } );
-    attributes.push_back ( { CommonAttributeNames[ geomData::TCoord00], geomData::TCoord00, geomData::DataType_FLOAT, geomData::TCoord00Components } );
-    attributes.push_back ( { CommonAttributeNames[ geomData::TCoord01], geomData::TCoord00, geomData::DataType_FLOAT, geomData::TCoord00Components } );
+    bindings.push_back ( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, sizeof(float), geomData::PositionComponents } );
+    bindings.push_back ( { CommonAttributeNames[ geomData::Normal], geomData::Normal, geomData::DataType_FLOAT, sizeof(float), geomData::NormalComponents } );
+    bindings.push_back ( { CommonAttributeNames[ geomData::TCoord], geomData::TCoord, geomData::DataType_FLOAT, sizeof(float), geomData::TCoordComponents, 0 } );
+    bindings.push_back ( { CommonAttributeNames[ geomData::TCoord], geomData::TCoord, geomData::DataType_FLOAT, sizeof(float), geomData::TCoordComponents, 1 } );
 
     Dim xEndInd = xEnd - xStart;
     Dim yEndInd = yEnd - yStart;
@@ -433,12 +434,11 @@ PNIPSTDLOG
     geomData::IndexType numVals = ( xEnd - xStart ) * ( yEnd - yStart );
     geomData::IndexType numInds = ( xEndInd - xStart ) * ( yEndInd - yStart ) * 6;
 
-    geomData::IndexType tmpValueStride = mGeomData->getAttributes ().getValueStride ();
-    mGeomData->resize ( numVals * tmpValueStride, numInds );
+    pGeomData->resize ( numVals, numInds );
     
       // Now fill in indices.  These only change when the image size
       // changes, and we're not going to allow that for now.
-    geomData::Indices& ind = mGeomData->getIndices ();
+    geomData::Indices& ind = pGeomData->getIndices ();
     geomData::IndexType* pInd = &ind[ 0 ];
 
     for ( Dim cury = xStart; cury < yEndInd; ++cury )
@@ -458,24 +458,28 @@ PNIPSTDLOG
     }
   }
 
-  geomData::IndexType valueStride = mGeomData->getAttributes ().getValueStride ();
-
 PNIPSTDLOG
 
+#ifndef NDEBUG
+  size_t valueStride = geomDataProp()->mBinding.getValueStrideBytes ();
+  static_assert ( std::is_standard_layout<tVert>::value,"tVert should have standard layout, but doesn't" );
   assert ( sizeof ( tVert ) == valueStride * 4 );
+#endif // NDEBUG
   
   cellArgs args;
   args.mUvDx = 1.0f / width;
   args.mUvDy = 1.0f / height;
   args.mDz = mDz;
+  
+  geomData* pGeomData = geomDataProp().op();
     
     // Fill in vert values.
   img::base::buffer* pBuf = mHeightImg->mBuffers[ 0 ].get ();
   for ( Dim cury = yStart; cury < yEnd; ++cury )
   {
     size_t vertStart = ( cury - yBase ) * valuePitch + ( xStart - xBase );
-    args.mVert = reinterpret_cast< tVert* > ( 
-        &mGeomData->getValues ()[ vertStart * valueStride ] );
+    vertIter iter ( pGeomData );
+    args.mVert = &iter.get<tVert>(vertStart,0);
 
     args.mXpos = xStart;
     args.mYpos = cury;
@@ -580,6 +584,7 @@ void hterrain::generateGeomPartition () const
   
   geomData::IndexType ind = 0;
   size_t count = 0;
+  size_t posOffset = geomDataProp()->mBinding.getValueOffsetBytes(geomData::Position);
   
   pParts->mPartitions.resize ( 1 );
   isectSimplePartition::Partition* pPart = &pParts->mPartitions.back ();
@@ -589,17 +594,17 @@ void hterrain::generateGeomPartition () const
   
   while ( iter )
   {
-    pni::math::vec3 pos ( &iter );
+    pni::math::vec3 pos ( iter.get<pni::math::vec3>( posOffset ) );
     pPart->mBounds.extendBy ( pos );
     pPart->mIndices.push_back ( ind++ );
     ++iter;
     
-    pos.set ( &iter );
+    pos = iter.get<pni::math::vec3>( posOffset );
     pPart->mBounds.extendBy ( pos );
     pPart->mIndices.push_back ( ind++ );
     ++iter;
     
-    pos.set ( &iter );
+    pos = iter.get<pni::math::vec3>( posOffset );
     pPart->mBounds.extendBy ( pos );
     pPart->mIndices.push_back ( ind++ );
     ++iter;

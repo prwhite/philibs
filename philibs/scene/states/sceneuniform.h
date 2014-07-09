@@ -128,7 +128,7 @@ class uniform :
           cache for uniforms, so this is just good practice */
     binding& bindingOp ( std::string const& which ) { setDirty (); return mBindings[ which ]; }
 
-    void setDirty ( bool val = true ) const { mDirty = val; }
+    void setDirty ( bool val = true ) { mDirty = val; }
     bool getDirty () const { return mDirty; }
     void clearDirty () const { mDirty = false; }
   

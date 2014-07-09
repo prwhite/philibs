@@ -151,7 +151,7 @@ void dupDd::dispatch ( geom const* pNode )
   if ( mOpts & UniquifyGeomData )
   {
     geom* pGeom = static_cast< geom* > ( mNodeStack.back () );
-    pGeom->uniquifyGeometry ();
+    pGeom->uniquifyGeomData ();
   }
       
   dispatchNodePost ( pNode );

@@ -118,6 +118,9 @@ class PNIMATHAPI vec3
 		
 };
 
+static_assert(sizeof(vec3)==3*sizeof(vec3::ValueType),"sizeof vec3 is not sizeof 3 ValueType elements");
+static_assert(std::is_standard_layout<vec3>::value,"vec3 should be standard layout");
+
 /////////////////////////////////////////////////////////////////////
 
 PNIMATHINLINE

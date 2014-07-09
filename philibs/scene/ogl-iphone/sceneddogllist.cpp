@@ -560,21 +560,7 @@ void ddOglList::dispatch ( camera const* pNode )
 
 void dbg ( geomData const* pGdata )
 {
-  for ( size_t num = 0; num < pGdata->getIndices ().size (); num++ )
-  {
-    cout << "    " << num << " = " << pGdata->getIndices ()[ num ] << endl;
-  }
-  
-  geomData::Values const& vals = pGdata->getValues ();
-  size_t stride = pGdata->getAttributes ().getValueStride ();
-
-cout << "    stride = " << stride << endl;
-
-  for ( size_t num = 0; num < vals.size (); num += stride )
-  {
-    cout << "  " << num / stride << "  " << vals[ num ] << ", " << vals[ num + 1 ] << ", " << vals[ num + 2 ] << endl;
-  }
-  
+    pGdata->dbg(std::cout);
 }
 
 void ddOglList::dispatch ( geom const* pNode )
@@ -583,7 +569,7 @@ PNIDBG
     // GOTCHA: There is no validity checking here... that should
     // all be performed by ddOgl which puts only valid things
     // into this render list.
-  geomData const* pData = pNode->getGeomData ();
+  geomData const* pData = pNode->geomDataProp().get();
 
   if ( progObj const* pProgObj = progObj::getOrCreate(mCurProg.get()) )
   {

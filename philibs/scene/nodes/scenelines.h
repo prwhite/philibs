@@ -127,10 +127,14 @@ struct lineStyle
 
 struct linesBase
 {
-    using DirtyLineData = dirty< pni::pstd::autoRef< lineData >, lines >;
-    using DirtyUniform = dirty< pni::pstd::autoRef< uniform >, lines >;
-    using DirtyLineStyle = dirty< lineStyle, lines >;
-    
+    using DirtyLineData = dirtyProp< pni::pstd::autoRef< lineData >, lines >;
+    using DirtyUniform = dirtyProp< pni::pstd::autoRef< uniform >, lines >;
+    using DirtyLineStyle = dirtyProp< lineStyle, lines >;
+  
+    static_assert(DirtyLineData::Invoker::dbg == 0,"wrong invoker type");
+    static_assert(DirtyUniform::Invoker::dbg == 3,"wrong invoker type");
+    static_assert(DirtyLineStyle::Invoker::dbg == 0,"wrong invoker type");
+  
     using style = lineStyle;
 
   protected:

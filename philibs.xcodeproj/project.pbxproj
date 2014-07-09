@@ -13,6 +13,7 @@
 		1C2BB57B18A9B75F00938C31 /* sceneprogfactory.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C38744D1894CF0D0055DE2A /* sceneprogfactory.h */; };
 		1C2BB57E18AAA19C00938C31 /* scenerendersinkdd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C2BB57C18AAA19C00938C31 /* scenerendersinkdd.cpp */; };
 		1C38744E1894CF0D0055DE2A /* sceneprogfactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C38744C1894CF0D0055DE2A /* sceneprogfactory.cpp */; };
+		1C4061AF195C71EA0074AC1A /* sceneltcompare.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C4061A819509DA50074AC1A /* sceneltcompare.h */; };
 		1C4BD27C18810EB6000781B0 /* sceneogl.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CAD972018662A2B00C547E1 /* sceneogl.h */; };
 		1C4BD27D18810EE6000781B0 /* sceneuniform.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C6A02B81873526700672EF8 /* sceneuniform.h */; };
 		1C4BD27E18810EE6000781B0 /* sceneprog.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CAD9722186D72D500C547E1 /* sceneprog.h */; };
@@ -47,6 +48,7 @@
 		1CCD1660189A3F23001F8DF1 /* scenerendersink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CCD165E189A3F23001F8DF1 /* scenerendersink.cpp */; };
 		1CCD1663189A400E001F8DF1 /* scenefbo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CCD1661189A400E001F8DF1 /* scenefbo.cpp */; };
 		1CCD1666189CF6F4001F8DF1 /* sceneframebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CCD1664189CF6F4001F8DF1 /* sceneframebuffer.cpp */; };
+		1CD5650A196B138E0061D46B /* pnitypetraits.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CD56503196B13550061D46B /* pnitypetraits.h */; };
 		1CDD3FFA185BC965009284F9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CDD3FF9185BC965009284F9 /* Foundation.framework */; };
 		1CDD3FFF185BC965009284F9 /* philibs.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD3FFE185BC965009284F9 /* philibs.h */; };
 		1CDD4001185BC965009284F9 /* philibs.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD4000185BC965009284F9 /* philibs.m */; };
@@ -334,6 +336,8 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				1CD5650A196B138E0061D46B /* pnitypetraits.h in CopyFiles */,
+				1C4061AF195C71EA0074AC1A /* sceneltcompare.h in CopyFiles */,
 				1C5BA06A1935CE8300D7A70E /* scenedirty.h in CopyFiles */,
 				1CCBCF1E19346B4000D0153A /* pnipstd.h in CopyFiles */,
 				1CB6BD8F18D8DBE700DC3B4B /* pniosxplatform.h in CopyFiles */,
@@ -531,6 +535,7 @@
 		1CCD1662189A400E001F8DF1 /* scenefbo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenefbo.h; sourceTree = "<group>"; };
 		1CCD1664189CF6F4001F8DF1 /* sceneframebuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneframebuffer.cpp; sourceTree = "<group>"; };
 		1CCD1665189CF6F4001F8DF1 /* sceneframebuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneframebuffer.h; sourceTree = "<group>"; };
+		1CD56503196B13550061D46B /* pnitypetraits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pnitypetraits.h; sourceTree = "<group>"; };
 		1CDD3FF6185BC965009284F9 /* libphilibs.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libphilibs.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CDD3FF9185BC965009284F9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1CDD3FFD185BC965009284F9 /* philibs-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "philibs-Prefix.pch"; sourceTree = "<group>"; };
@@ -1042,6 +1047,7 @@
 				1CC482DD1889E5ED0029408D /* pnithreadpool.h */,
 				1CCBCF1619319CB900D0153A /* pnipstd.cpp */,
 				1CCBCF1719319CB900D0153A /* pnipstd.h */,
+				1CD56503196B13550061D46B /* pnitypetraits.h */,
 			);
 			path = pstd;
 			sourceTree = "<group>";

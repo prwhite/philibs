@@ -55,13 +55,13 @@ void text::doLayout ()
 //  pImg->getSize(size[ 0 ], size[ 1 ], size[ 2 ]);
 
     // Make sure we have a geom data thingie.
-  geomData* pData = getGeomData();
+  geomData* pData = geomDataProp().op();
   if ( ! pData )
   {
     pData = new geomData;
-    pData->attributesOp().push_back( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, geomData::PositionComponents } );
-    pData->attributesOp().push_back ( { CommonAttributeNames[ geomData::TCoord00], geomData::TCoord00, geomData::DataType_FLOAT, geomData::TCoord00Components } );
-    setGeomData(pData);
+    pData->mBinding.push_back( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, sizeof ( float ), geomData::PositionComponents } );
+    pData->mBinding.push_back ( { CommonAttributeNames[ geomData::TCoord], geomData::TCoord, geomData::DataType_FLOAT, sizeof(float), geomData::TCoordComponents } );
+    geomDataProp().set(pData);
   }
 
   std::wstring_convert<std::codecvt_utf8<char16_t>,char16_t> cvt;
@@ -69,13 +69,15 @@ void text::doLayout ()
 
   size_t numGoodChars = uTxt.size();
 
-  pData->resizeTrisWithCurrentAttributes(numGoodChars * 4, numGoodChars * 2);
+  pData->resizeTrisWithCurrentBinding(numGoodChars * 4, numGoodChars * 2);
 
   float xPos = 0.0f;
   float yPos = 0.0f;
   size_t curVert = 0;
 
-  float* pAttr = pData->getAttributePtr(geomData::Position);
+  auto pIter = pData->begin< pni::math::vec3 >(geomData::Position);
+  auto tIter = pData->begin< pni::math::vec2 >(geomData::TCoord, 0);
+  
   geomData::IndexType* pInd = pData->getIndicesPtr();
 
   for ( auto iter : uTxt )
@@ -97,33 +99,21 @@ void text::doLayout ()
       yTop *= invLineHeight;
       yBot *= invLineHeight;
 
-      pAttr[ 0 ] = xLeft;
-      pAttr[ 1 ] = yBot;
-      pAttr[ 2 ] = 0.0f;
-      pAttr[ 3 ] = pGlyph->mUv00[ 0 ];
-      pAttr[ 4 ] = pGlyph->mUv00[ 1 ];
-      pAttr += 5;
-      
-      pAttr[ 0 ] = xRight;
-      pAttr[ 1 ] = yBot;
-      pAttr[ 2 ] = 0.0f;
-      pAttr[ 3 ] = pGlyph->mUv01[ 0 ];
-      pAttr[ 4 ] = pGlyph->mUv00[ 1 ];
-      pAttr += 5;
-      
-      pAttr[ 0 ] = xLeft;
-      pAttr[ 1 ] = yTop;
-      pAttr[ 2 ] = 0.0f;
-      pAttr[ 3 ] = pGlyph->mUv00[ 0 ];
-      pAttr[ 4 ] = pGlyph->mUv01[ 1 ];
-      pAttr += 5;
+      pIter->set ( xLeft, yBot, 0.0f );
+      tIter->set ( pGlyph->mUv00[ 0 ], pGlyph->mUv00[ 1 ] );
+      ++pIter; ++tIter;
 
-      pAttr[ 0 ] = xRight;
-      pAttr[ 1 ] = yTop;
-      pAttr[ 2 ] = 0.0f;
-      pAttr[ 3 ] = pGlyph->mUv01[ 0 ];
-      pAttr[ 4 ] = pGlyph->mUv01[ 1 ];
-      pAttr += 5;
+      pIter->set ( xRight, yBot, 0.0f );
+      tIter->set ( pGlyph->mUv01[ 0 ], pGlyph->mUv00[ 1 ] );
+      ++pIter; ++tIter;
+
+      pIter->set ( xLeft, yTop, 0.0f );
+      tIter->set ( pGlyph->mUv00[ 0 ], pGlyph->mUv01[ 1 ] );
+      ++pIter; ++tIter;
+
+      pIter->set ( xRight, yTop, 0.0f );
+      tIter->set ( pGlyph->mUv01[ 0 ], pGlyph->mUv01[ 1 ] );
+      ++pIter; ++tIter;
 
 #define CCW
 #ifndef CCW
@@ -155,7 +145,7 @@ void text::doLayout ()
   
     // Resize the attribute and index arrays if some of the characters did not
     // generate geometry because the glyphs were missing.
-  pData->resizeTrisWithCurrentAttributes(numGoodChars * 4, numGoodChars * 2);
+  pData->resizeTrisWithCurrentBinding(numGoodChars * 4, numGoodChars * 2);
 }
 
 /////////////////////////////////////////////////////////////////////

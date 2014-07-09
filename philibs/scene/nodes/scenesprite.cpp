@@ -126,6 +126,9 @@ inline void sprites::addSpriteToGeom ( geomData::IndexType dst, geomData::IndexT
     // sprite can be amortized.  We could initialize outside of this
     // func but we need to reset it to elem zero every time anyway.
   scene::vertIter viter ( this );
+
+  auto pIter = geomDataProp()->begin<vec3>(geomData::Position);
+  auto tIter = geomDataProp()->begin<vec2>(geomData::TCoord, 0);
   
     //
   float frameDiv = pSprite->mFlip[ 0 ] * mFrameDiv;
@@ -137,44 +140,41 @@ inline void sprites::addSpriteToGeom ( geomData::IndexType dst, geomData::IndexT
 
     // Offset to the beginning of the vert and set up the
     // four unique verts.
-    // Possibly NON-OPTIMAL due to using lots of temporaries.
-  geomData::IndexType valDst = dst * 4;
-  viter += valDst;
+  pIter += dst;
+  tIter += dst;
+
     // tr = 0
-  vec3* posPtr = reinterpret_cast< vec3* > ( &viter  );
-  *posPtr = pSprite->mPos;
-  *posPtr += xVec;
-  *posPtr += yVec;
-  vec2* truvPtr = reinterpret_cast< vec2* > ( &viter[ 3 ] );
-  truvPtr->set ( x1, pSprite->mFlip[ 1 ] );
-  ++viter;
+  *pIter = pSprite->mPos;
+  *pIter += xVec;
+  *pIter += yVec;
+  tIter->set ( x1, pSprite->mFlip[ 1 ] );
+  ++pIter; ++tIter;
+
     // br = 1
-  posPtr = reinterpret_cast< vec3* > ( &viter  );
-  *posPtr = pSprite->mPos;
-  *posPtr += xVec;
-  *posPtr -= yVec;
-  vec2* bruvPtr = reinterpret_cast< vec2* > ( &viter[ 3 ] );
-  bruvPtr->set ( x1, 0.0f );
-  ++viter;
+  *pIter = pSprite->mPos;
+  *pIter += xVec;
+  *pIter -= yVec;
+  tIter->set ( x1, 0.0f );
+  ++pIter; ++tIter;
+
     // tl = 2
-  posPtr = reinterpret_cast< vec3* > ( &viter  );
-  *posPtr = pSprite->mPos;
-  *posPtr -= xVec;
-  *posPtr += yVec;
-  vec2* tluvPtr = reinterpret_cast< vec2* > ( &viter[ 3 ] );
-  tluvPtr->set ( x2, pSprite->mFlip[ 1 ] );
-  ++viter;
+  *pIter = pSprite->mPos;
+  *pIter -= xVec;
+  *pIter += yVec;
+  tIter->set ( x2, pSprite->mFlip[ 1 ] );
+  ++pIter; ++tIter;
+
     // bl = 3
-  posPtr = reinterpret_cast< vec3* > ( &viter  );
-  *posPtr = pSprite->mPos;
-  *posPtr -= xVec;
-  *posPtr -= yVec;
-  vec2* bluvPtr = reinterpret_cast< vec2* > ( &viter[ 3 ] );
-  bluvPtr->set ( x2, 0.0f );
+  *pIter = pSprite->mPos;
+  *pIter -= xVec;
+  *pIter -= yVec;
+  tIter->set ( x2, 0.0f );
+  ++pIter; ++tIter;
 
     // Now index to the verts in non-stripped, tri-strip order.
-  geomData::Indices& inds = mGeomData->getIndices ();
+  geomData::Indices& inds = geomDataProp()->getIndices ();
   geomData::IndexType indDst = dst * 6;
+  geomData::IndexType valDst = dst * 4;
   inds[ indDst++ ] = valDst + 3;
   inds[ indDst++ ] = valDst + 1;
   inds[ indDst++ ] = valDst + 2;
@@ -200,15 +200,17 @@ void sprites::update ( graphDd::fxUpdate const& update )
     return;
 
     // Make sure we have a valid geomData;
-  if ( ! mGeomData )
-    setGeomData ( new geomData );
+  if ( ! geomDataProp().get() )
+    geomDataProp().set ( new geomData );
 
     // Bail out and clean up if we have no particles.
   if ( mData.getElemCount () == 0 )
   {
-    mGeomData->resize ( 0, 0 );
+    geomDataProp().op()->resize ( 0, 0 );
     return; // Early return!!!
   }
+  
+  geomData* pData = geomDataProp().op();
 
     // Calc rotation matrix in the node's frame.  Use converter
     // and values passed in 'update'.
@@ -226,8 +228,8 @@ void sprites::update ( graphDd::fxUpdate const& update )
     doDepthSort ( update, sorters );
   
     // Set geometry attribute.
-  mGeomData->attributesOp().push_back ( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, geomData::PositionComponents } );
-  mGeomData->attributesOp().push_back ( { CommonAttributeNames[ geomData::TCoord00], geomData::TCoord00, geomData::DataType_FLOAT, geomData::TCoord00Components } );
+  pData->mBinding.push_back ( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, sizeof(float), geomData::PositionComponents } );
+  pData->mBinding.push_back ( { CommonAttributeNames[ geomData::TCoord], geomData::TCoord, geomData::DataType_FLOAT, sizeof(float), geomData::TCoordComponents } );
 
     // Unused... why was it here? PRW
 //  SizeType stride = mGeomData->getValueStride ();
@@ -236,9 +238,8 @@ void sprites::update ( graphDd::fxUpdate const& update )
     // In the reserve call we are doing 4 unique vert values and
     // 2 tris per sprite (this is a strip-order quad done with tris).
   size_t elemCount = mData.getElemCount ();
-  if ( elemCount * 2 != mGeomData->getTriCount () )
-    mGeomData->resizeTrisWithCurrentAttributes (
-        elemCount * 4, elemCount * 2 );
+  if ( elemCount * 2 != pData->getTriCount () )
+    pData->resizeTrisWithCurrentBinding ( elemCount * 4, elemCount * 2 );
 
     // Iterate over items creating corresponding sprite tri pairs.    
   if ( mDoDepthSort )

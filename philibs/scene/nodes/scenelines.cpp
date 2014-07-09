@@ -123,10 +123,10 @@ void lines::rebuildLines ()
   auto curColor = pLineData->begin< vec4 >(lineData::Color);
   auto curThickness = pLineData->begin< float >(lineData::Thickness);
 
-  if ( ! getGeomData() )
-    setGeomData( new geomData );
+  if ( ! geomDataProp().get() )
+    geomDataProp().set( new geomData );
   
-  geomData* pGeomData = geometryOp();
+  geomData* pGeomData = geomDataProp().op();
   
     // Make sure the geomData matches the number of lines and bindings.
   size_t points = pLineData->size();
@@ -135,23 +135,21 @@ void lines::rebuildLines ()
   size_t verts = segs * 2 + prims * 2; // sharing verts, plus the end verts for each prim
   size_t tris = segs * 2;
 
-  geomData::Attributes attrs;
-  attrs.push_back( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, geomData::PositionComponents } );
-  attrs.push_back( { CommonAttributeNames[ geomData::Normal], geomData::Normal, geomData::DataType_FLOAT, geomData::NormalComponents } );
-  attrs.push_back( { CommonAttributeNames[ geomData::TCoord00], geomData::TCoord00, geomData::DataType_FLOAT, geomData::TCoord00Components } );
+  geomData::Binding& bindings = pGeomData->mBinding;
+  bindings.push_back( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, sizeof ( float ), geomData::PositionComponents } );
+  bindings.push_back( { CommonAttributeNames[ geomData::Normal], geomData::Normal, geomData::DataType_FLOAT, sizeof ( float ), geomData::NormalComponents } );
+  bindings.push_back( { CommonAttributeNames[ geomData::TCoord], geomData::TCoord, geomData::DataType_FLOAT, sizeof ( float ), geomData::TCoordComponents, 0 } );
 
   if ( curColor.good () )
-      attrs.push_back( { CommonAttributeNames[ geomData::Color], geomData::Color, geomData::DataType_FLOAT, geomData::ColorComponents } );
-  
-  pGeomData->setAttributes( attrs );
+      bindings.push_back( { CommonAttributeNames[ geomData::Color], geomData::Color, geomData::DataType_FLOAT, sizeof ( float ), geomData::ColorComponents } );
 
-  pGeomData->resizeTrisWithCurrentAttributes( verts, tris );
+  pGeomData->resizeTrisWithCurrentBinding ( verts, tris );
   
-  size_t stride = pGeomData->getAttributes().getValueStride();
-  float* pPos = pGeomData->getAttributePtr(geomData::Position);
-  float* pNorm = pGeomData->getAttributePtr(geomData::Normal);
-  float* pUv = pGeomData->getAttributePtr(geomData::TCoord00);
-  float* pColor = pGeomData->getAttributePtr(geomData::Color);
+  auto pIter = pGeomData->begin<vec3>(geomData::Position);
+  auto nIter = pGeomData->begin<vec3>(geomData::Normal);
+  auto tIter = pGeomData->begin<vec2>(geomData::TCoord, 0);
+  auto cIter = pGeomData->begin<vec4>(geomData::Color);
+
   geomData::IndexType* pInd = pGeomData->getIndicesPtr();
   size_t vNum = 0;
 
@@ -195,16 +193,16 @@ void lines::rebuildLines ()
         // Repeat cur pos as next if at end
       vec3 const& nextPosVec = last ? curPosVec : *curPos;
 
-      curPosVec.copyToArray( pPos ); pPos += stride;
-      curPosVec.copyToArray( pPos ); pPos += stride;
-      
+      *pIter = curPosVec; ++pIter;
+      *pIter = curPosVec; ++pIter;
+
         // Color
       if ( curColor.good () )
       {
-        vec4 const& curColorVec = *curColor;
+        *cIter = *curColor; ++cIter;
+        *cIter = *curColor; ++cIter;
+        
         ++curColor;
-        curColorVec.copyToArray( pColor ); pColor += stride;
-        curColorVec.copyToArray( pColor ); pColor += stride;
       }
       
         // Default thickness, and then fill in real thickness values if they
@@ -263,17 +261,14 @@ void lines::rebuildLines ()
       
         // Set cur point's normals, inverting in order to change which side
         // of the line it will describe in the vertex shader.
-      diff.copyToArray( pNorm ); pNorm += stride;
+      *nIter = diff; ++nIter;
       diff.negate();
-      diff.copyToArray( pNorm ); pNorm += stride;
+      *nIter = diff; ++nIter;
       
         // Fill in UVs... this is probably temporary.  We'll have more
         // sophisticated UVs when we switch to SDF and dash support.
-      vec2 uv;
-      uv.set ( lenTotal, -1.0f );
-      uv.copyToArray( pUv ); pUv += stride;
-      uv.set ( lenTotal, 1.0f );
-      uv.copyToArray( pUv ); pUv += stride;
+      tIter->set ( lenTotal, -1.0f ); ++tIter;
+      tIter->set ( lenTotal, 1.0f ); ++tIter;
       
         // Set indices and increment vert count
         // Verts are laid out like so:

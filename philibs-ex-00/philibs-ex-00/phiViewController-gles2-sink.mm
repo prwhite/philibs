@@ -159,28 +159,29 @@ scene::geom* buildQuad ()
   pMainGeom->setName("final scene quad");
 
   geomData* pGeomData = new geomData;
-  pGeomData->attributesOp().push_back( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, geomData::PositionComponents } );
-//  pGeomData->attributesOp().push_back ( { CommonAttributeNames[ geomData::Normal], geomData::Normal, geomData::DataType_FLOAT, geomData::NormalComponents } );
-  pGeomData->attributesOp().push_back ( { CommonAttributeNames[ geomData::TCoord00], geomData::TCoord00, geomData::DataType_FLOAT, geomData::TCoord00Components } );
-//  pGeomData->attributesOp().push_back ( { CommonAttributeNames[ geomData::TCoord01], geomData::TCoord00, geomData::DataType_FLOAT, geomData::TCoord00Components } );
+  pGeomData->mBinding.push_back( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, sizeof(float), geomData::PositionComponents } );
+//  pGeomData->mBinding.push_back ( { CommonAttributeNames[ geomData::Normal], geomData::Normal, geomData::DataType_FLOAT, float(size), geomData::NormalComponents } );
+  pGeomData->mBinding.push_back ( { CommonAttributeNames[ geomData::TCoord], geomData::TCoord, geomData::DataType_FLOAT, sizeof(float), geomData::TCoordComponents, 0 } );
+//  pGeomData->attributesOp().push_back ( { CommonAttributeNames[ geomData::TCoord], geomData::TCoord, geomData::DataType_FLOAT, sizeof(float), geomData::TCoordComponents, 1 } );
 
-  pGeomData->resizeTrisWithCurrentAttributes(4, 2);
+  pGeomData->resizeTrisWithCurrentBinding(4, 2);
   
   float QuadSize = 1.0f;
   
-    /// x,y,z,u,v
-  pGeomData->getValues() = {
-    -QuadSize, -QuadSize, 0.0f,   0.0f, 0.0f,
-     QuadSize, -QuadSize, 0.0f,   1.0f, 0.0f,
-    -QuadSize,  QuadSize, 0.0f,   0.0f, 1.0f,
-     QuadSize,  QuadSize, 0.0f,   1.0f, 1.0f
-  };
+  struct qVert { pni::math::vec3 pos; pni::math::vec2 uv; };
+  
+  vertIter viter { pGeomData };
+  
+  viter.get<qVert>(0) = { { -QuadSize, -QuadSize, 0.0f }, {   0.0f, 0.0f } }; ++viter;
+  viter.get<qVert>(0) = { {  QuadSize, -QuadSize, 0.0f }, {   1.0f, 0.0f } }; ++viter;
+  viter.get<qVert>(0) = { { -QuadSize,  QuadSize, 0.0f }, {   0.0f, 1.0f } }; ++viter;
+  viter.get<qVert>(0) = { {  QuadSize,  QuadSize, 0.0f }, {   1.0f, 1.0f } }; ++viter;
   
   pGeomData->getIndices() = {
     0, 1, 2, 1, 3, 2
   };
   
-  pMainGeom->setGeomData(pGeomData);
+  pMainGeom->geomDataProp().set(pGeomData);
   
   return pMainGeom;
 }

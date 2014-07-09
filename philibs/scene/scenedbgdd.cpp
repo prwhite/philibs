@@ -97,8 +97,7 @@ void dbgDd::doTotals ()
   {
     if ( scene::geomData const* pData = *cur )
     {
-      geomDataMemTotal += pData->getValues ().size () * 
-          sizeof ( float );
+      geomDataMemTotal += pData->sizeBytes();
       geomDataMemTotal += pData->getIndices ().size () * 
           sizeof( geomData::IndexType );
     }
@@ -261,13 +260,13 @@ void dbgDd::dispatchGeom ( geom const* pNode )
 {
   dispatchNode ( pNode );
 
-  if ( pNode->getGeomData () )
+  if ( pNode->geomDataProp() )
   {
-    mGeomDataSet.insert ( pNode->getGeomData () );
+    mGeomDataSet.insert ( pNode->geomDataProp().get() );
 
       // Holy shit this will be a lot of output...
     if ( mOpts & GeomDataValues )
-      pNode->getGeomData()->dbg( mStr );
+      pNode->geomDataProp()->dbg( mStr );
   }
 }
 

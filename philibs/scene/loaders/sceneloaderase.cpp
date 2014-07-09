@@ -508,27 +508,14 @@ PNIDBG
 					if ( mat.isIdentity () )
 						return;
 PNIDBG
-          geomData* pGdata = pGeom->geometryOp ();
-          size_t stride = pGdata->getAttributes ().getValueStride ();
-//          const unsigned int vertOffset = 0;    // Always zero.
-//           const unsigned int normOffset = pGdata->getValueOffset ( geomData::Normals );
-
-// cout << "pre invert = \n" << mat << endl;
 					mat.invert ();
-// cout << "post invert = \n" << mat << endl;
-				
-          float* verts = &pGdata->getValues ()[ 0 ];
+
+          geomData* pGdata = pGeom->geomDataProp ().get ();
+          auto pcur = pGdata->begin<pni::math::vec3>(geomData::Position);
+          auto pend = pGdata->end<pni::math::vec3>(geomData::Position);
           
-          size_t end = pGdata->getValueCount ();
-          
-          for ( size_t num = 0; num < end; num += stride, verts += stride )
-          {
-            pni::math::vec3 tmp ( verts );
-            tmp.xformPt ( tmp, mat );
-            verts[ 0 ] = tmp[ 0 ];
-            verts[ 1 ] = tmp[ 1 ];
-            verts[ 2 ] = tmp[ 2 ];
-          }
+          for ( ; pcur != pend; ++pcur )
+            pcur->xformPt ( *pcur, mat );
         }
     
     void fixupXform ( node* pNode )
@@ -565,16 +552,16 @@ PNIDBG
         {
 PNIDBG
             // geomData is guaranteed to be good before this is called (from processObject)
-          geomData::Attributes& attributes = pGeom->geometryOp ()->attributesOp ();
+          geomData::Binding& bindings = pGeom->geomDataProp().op()->mBinding;
 
-          attributes.push_back ( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, geomData::PositionComponents } );
+          bindings.push_back ( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, sizeof ( float ), geomData::PositionComponents } );
 
 					if ( pSrc->findNode ( "MESH_NORMALS", false ) )
-            attributes.push_back ( { CommonAttributeNames[ geomData::Normal], geomData::Normal, geomData::DataType_FLOAT, geomData::NormalComponents } );
+            bindings.push_back ( { CommonAttributeNames[ geomData::Normal], geomData::Normal, geomData::DataType_FLOAT, sizeof( float ), geomData::NormalComponents } );
 
 					// First set of UVs.
 					if ( pSrc->findNode ( "MESH_TVERTLIST", false ) )
-            attributes.push_back ( { CommonAttributeNames[ geomData::TCoord00], geomData::TCoord00, geomData::DataType_FLOAT, geomData::TCoord00Components } );
+            bindings.push_back ( { CommonAttributeNames[ geomData::TCoord + 0 ], geomData::TCoord, geomData::DataType_FLOAT, sizeof ( float ), geomData::TCoordComponents, 0 } );
 
           // Iterate over "MESH_MAPPINGCHANNEL" children for
           // other sets of UVs.
@@ -594,7 +581,7 @@ PNIDBG
               // TEMP Only supporting 2 texture units.
               const unsigned int MaxUnit = 1;
               if ( unit == MaxUnit )
-                attributes.push_back ( { CommonAttributeNames[ geomData::TCoord01], geomData::TCoord01, geomData::DataType_FLOAT, geomData::TCoord01Components } );
+                bindings.push_back ( { CommonAttributeNames[ geomData::TCoord + 1], geomData::TCoord, geomData::DataType_FLOAT, sizeof ( float ), geomData::TCoordComponents, 1 } );
               else
                 mObserver->onError ( 
                     pni::pstd::error ( InternalErrorTexture,
@@ -829,147 +816,65 @@ PNIDBG
           }
         }
         
-    void processVerts ( geom* pGeom, reIndexer& ind, ::ase::node const* pSrc )
+    void processPositions ( geom* pGeom, reIndexer& ind, ::ase::node const* pSrc )
         {
-          typedef std::vector< float > VertVals;
-          geomData* pGdata = pGeom->geometryOp ();
-          size_t stride = pGdata->getAttributes ().getValueStride ();
-          // Offset for positions is always 0.
-          const unsigned int TypeStride = 3;
-          
           if ( ::ase::node const* pVerts = pSrc->findNode ( "MESH_VERTEX_LIST" ) )
           {
-            unsigned int numVerts = pSrc->findLine ( "MESH_NUMVERTEX" )->getInt ();
-            
-            VertVals vertVals;
-            vertVals.resize ( numVerts * TypeStride );
-
-            // Copy all of the positions into vector of floats.
-            size_t count = 0;
+            // Copy all of the positions into vert pos iterator
+            geomData* pGdata = pGeom->geomDataProp().op();
+            auto pcur = pGdata->begin< float >( geomData::Position );
+            int vertInd = -1;
             ::ase::node::ConstLineIter end = pVerts->getLineEnd ();
             for ( ::ase::node::ConstLineIter cur = pVerts->getLineBegin ();
                 cur != end;
                 ++cur )
             {
-              int vertInd = -1;
-              ( *cur )->getIntFloat3 ( vertInd, &vertVals[ count * TypeStride ] );
-              ++count;
-            }
-            
-            // Copy out of the vector of floats into geomData.
-            geomData::Values& values = pGdata->getValues ();
-            for ( size_t num = 0; num < ind.mSize; ++num )
-            {
-              size_t dst = ind.mVerts[ num ].mInd  * stride;
-              size_t src = ind.mVerts[ num ].mVert * TypeStride;
-// cout << "dst, src " << dst << ", " << src << endl;
-              values[ dst++ ] = vertVals[ src++ ];
-              values[ dst++ ] = vertVals[ src++ ];
-              values[ dst   ] = vertVals[ src   ];
+              ( *cur )->getIntFloat3 ( vertInd, &*pcur );
+              ++pcur;
             }
           }
         }
 
     void processNormals ( geom* pGeom, reIndexer& ind, ::ase::node const* pSrc )
         {
-          typedef std::vector< float > VertVals;
-          geomData* pGdata = pGeom->geometryOp ();
-          size_t stride = pGdata->getAttributes ().getValueStride ();
-          size_t offset = pGdata->getAttributes ().getValueOffset ( geomData::Normal );
-          const unsigned int TypeStride = 3;
-          
           if ( ::ase::node const* pVerts = pSrc->findNode ( "MESH_NORMALS" ) )
           {
-            unsigned int numVerts = ind.mSize;
-
-            VertVals vertVals;
-            vertVals.resize ( numVerts * TypeStride );
-
-            // Copy all of the positions into vector of floats.
-            unsigned int count = 0;
+            // Copy all of the positions into vert pos iterator
+            geomData* pGdata = pGeom->geomDataProp().op();
+            auto ncur = pGdata->begin< float >( geomData::Normal );
+            int vertInd = -1;
             ::ase::node::ConstLineIter end = pVerts->getLineEnd ();
             for ( ::ase::node::ConstLineIter cur = pVerts->getLineBegin ();
                 cur != end;
                 ++cur )
             {
+                // Evidently there are some lines in the MESH_NORMALS node
+                // that are not MESH_VERTEXNORMAL. :/
               if ( ( *cur )->getName () == "MESH_VERTEXNORMAL" )
               {
-                int vertInd = -1;
-                ( *cur )->getIntFloat3 ( vertInd, &vertVals[ count * TypeStride ] );
-
-// unsigned int base = count * TypeStride;
-// cout << " norm 1 = " << base << " : " << vertVals[ base ] << ", " << vertVals[ base + 1 ]
-//     << ", " << vertVals[ base + 2 ] << endl;
-                ++count;
+                ( *cur )->getIntFloat3 ( vertInd, &*ncur );
+                ++ncur;
               }
-            }
-            
-            // Copy out of the vector of floats into geomData.
-            geomData::Values& values = pGdata->getValues ();
-            for ( size_t num = 0; num < ind.mSize; ++num )
-            {
-              size_t dst = ind.mVerts[ num ].mInd  * stride + offset;
-              size_t src = ind.mVerts[ num ].mNorm * TypeStride;
-// cout << "num,  mNorm = " << num << ", " << ind.mVerts[ num ].mNorm << endl;
-// cout << "dst, src " << dst << ", " << src << endl;
-// cout << " norm 2 = " << vertVals[ src ] << ", " << vertVals[ src + 1 ]
-//     << ", " << vertVals[ src + 2 ] << endl;
-              values[ dst++ ] = vertVals[ src++ ];
-              values[ dst++ ] = vertVals[ src++ ];
-              values[ dst   ] = vertVals[ src   ];
             }
           }
         }
 
     void processUvs ( geom* pGeom, reIndexer& ind, ::ase::node const* pSrc, unsigned int unit = 0 )
         {
-PNIDBG
-          typedef std::vector< float > VertVals;
-          geomData* pGdata = pGeom->geometryOp ();
-          size_t stride = pGdata->getAttributes ().getValueStride ();
-          geomData::AttributeType tcoord = ( unit ==  0 ) ? geomData::TCoord00 : geomData::TCoord01;
-          size_t offset = pGdata->getAttributes ().getValueOffset ( tcoord );
-         // Offset for positions is always 0.
-          const unsigned int TypeStride = 2;
-
-// cout << "uv val offset = " << offset << endl;
-          
           if ( ::ase::node const* pVerts = pSrc->findNode ( "MESH_TVERTLIST" ) )
           {
-            unsigned int numVerts = pSrc->findLine ( "MESH_NUMTVERTEX" )->getInt ();
-            
-            VertVals vertVals;
-            vertVals.resize ( numVerts * TypeStride );
-
-            // Copy all of the positions into vector of floats.
-            unsigned int count = 0;
+            // Copy all of the uvs for this unit into vert uv iterator
+            geomData* pGdata = pGeom->geomDataProp().op();
+            auto uvcur = pGdata->begin< float >( geomData::TCoord, unit );
+            int vertInd = -1;
             ::ase::node::ConstLineIter end = pVerts->getLineEnd ();
             for ( ::ase::node::ConstLineIter cur = pVerts->getLineBegin ();
                 cur != end;
                 ++cur )
             {
-              int vertInd = -1;
-              ( *cur )->getIntFloat2 ( vertInd, &vertVals[ count * TypeStride ] );
-
-// unsigned int base = count * TypeStride;
-// cout << " uv 1 = " << base << " : " << vertVals[ base ] << ", " << vertVals[ base + 1 ] << endl;
-              ++count;
-            }
-            
-            // Copy out of the vector of floats into geomData.
-            geomData::Values& values = pGdata->getValues ();
-            for ( size_t num = 0; num < ind.mSize; ++num )
-            {
-              size_t dst = ind.mVerts[ num ].mInd * stride + offset;
-              size_t src = unit == 0 ? 
-                  ind.mVerts[ num ].mUv00 * TypeStride
-                  : ind.mVerts[ num ].mUv01 * TypeStride;
-// cout << "num,  mUv00 = " << num << ", " << ind.mVerts[ num ].mUv00 << endl;
-// cout << "dst, src " << dst << ", " << src << endl;
-// cout << " uv 2 = " << vertVals[ src ] << ", " << vertVals[ src + 1 ] << endl;
-              values[ dst++ ] =        vertVals[ src++ ];
-              values[ dst   ] = 1.0f - vertVals[ src   ]; // HACK!!! To flip images.
-//               values[ dst   ] = vertVals[ src   ];
+              ( *cur )->getIntFloat2 ( vertInd, &*uvcur );
+              ( ( &*uvcur )[ 1 ] ) = 1.0f - ( ( &*uvcur )[ 1 ] );
+              ++uvcur;
             }
           }
         }
@@ -991,7 +896,7 @@ PNIDBG
               
               // TEMP Only supporting 2 texture units.
               const unsigned int MaxUnit = 1;
-              if ( unit == MaxUnit )
+              if ( unit == MaxUnit )    // TODO: This is a lame test... should at least be <=
                 processUvs ( pGeom, ind, pSrc, unit );
               else
                 mObserver->onError ( 
@@ -1003,7 +908,7 @@ PNIDBG
     
     void processIndices ( geom* pGeom, reIndexer& ind )
         {
-          geomData* pGdata = pGeom->geometryOp ();
+          geomData* pGdata = pGeom->geomDataProp().op();
           
           geomData::Indices& indices  = pGdata->getIndices ();
           for ( size_t num = 0; num < ind.mSize; ++num )
@@ -1032,16 +937,16 @@ PNIDBG
 
           // Figure out geom data attributes and total size.
           geomData* pGdata = new geomData;
-          pGeom->setGeomData ( pGdata );
+          pGeom->geomDataProp().set ( pGdata );
           initAttributes ( pGeom, pMesh );
 
           reIndexer ind ( elements );
           initIndices ( pMesh, ind );
           ind.collapse ();
-          pGdata->resizeTrisWithCurrentAttributes ( ind.mDataCount, numFaces );
+          pGdata->resizeTrisWithCurrentBinding ( ind.mDataCount, numFaces );
 
 // cout << "getValueStride  = " << pGdata->getValueStride () << endl;
-          processVerts ( pGeom, ind, pMesh );
+          processPositions ( pGeom, ind, pMesh );
           processNormals ( pGeom, ind, pMesh );
           processUvs ( pGeom, ind, pMesh, 0 );
           processSubUvs ( pGeom, ind, pMesh );

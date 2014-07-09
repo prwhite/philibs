@@ -113,12 +113,9 @@ void node::updateBounds () const
 {
   mBounds.setEmpty ();
 
-  Nodes::const_iterator end = mChildren.end ();
-  for ( Nodes::const_iterator cur = mChildren.begin ();
-      cur != end;
-      ++cur )
+  for ( auto cur : mChildren )
   {
-    node* pNode = cur->get ();
+    node* pNode = cur.get ();
     pNode->updateBounds ();
 
     pni::math::matrix4 mat = pNode->getMatrix ();

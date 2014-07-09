@@ -178,16 +178,16 @@ class helper
       void setupGeomDataAttributes ( aiMesh const* pSrc, geomData* pData )
         {
             // First get the attribute bindings right, so we can properly allocate.
-          geomData::attributes& attrs = pData->attributesOp();
+          geomData::Binding& bindings = pData->mBinding;
 
-          attrs.push_back ( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, geomData::PositionComponents } );
+          bindings.push_back ( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, sizeof(float), geomData::PositionComponents } );
 
           if ( pSrc->mNormals )
-            attrs.push_back ( { CommonAttributeNames[ geomData::Normal], geomData::Normal, geomData::DataType_FLOAT, geomData::NormalComponents } );
+            bindings.push_back ( { CommonAttributeNames[ geomData::Normal], geomData::Normal, geomData::DataType_FLOAT, sizeof ( float ), geomData::NormalComponents } );
 
             // TEMP: We only take the first color channel currently
           if ( pSrc->mColors[ 0 ] )
-            attrs.push_back ( { CommonAttributeNames[ geomData::Color ], geomData::Color, geomData::DataType_FLOAT, geomData::ColorComponents } );
+            bindings.push_back ( { CommonAttributeNames[ geomData::Color ], geomData::Color, geomData::DataType_FLOAT, sizeof ( float ), geomData::ColorComponents } );
 
           static_assert ( AI_MAX_NUMBER_OF_TEXTURECOORDS <= geomData::NumTexUnits, "Number of texcoords supported by ASSIMP changed!" );
 
@@ -196,7 +196,7 @@ class helper
               // There is some funny biz with offsetting from TCoord00 as we walk through the array... and
               // yet we use geomData::TCoord00Components throughout, because the number of UV components is always the same.
             if ( pSrc->mTextureCoords[ num ] )
-              attrs.push_back ( { CommonAttributeNames[ geomData::TCoord00 + num ], ( geomData::AttributeType ) ( geomData::TCoord00 + num ), geomData::DataType_FLOAT, geomData::TCoord00Components } );
+              bindings.push_back ( { CommonAttributeNames[ geomData::TCoord ], geomData::TCoord, geomData::DataType_FLOAT, sizeof ( float ), geomData::TCoordComponents, num } );
           }
         }
 
@@ -235,45 +235,45 @@ class helper
           }
 
           geomData* pData = new geomData;
-          pDst->setGeomData( pData );
+          pDst->geomDataProp().set( pData );
 
           setupGeomDataAttributes(pSrc, pData);
 
             // Allocate the actual vertex and index buffers
-          pData->resizeTrisWithCurrentAttributes(pSrc->mNumVertices, pSrc->mNumFaces);
+          pData->resizeTrisWithCurrentBinding(pSrc->mNumVertices, pSrc->mNumFaces);
 
             // Fill in vertex attribute array values
-          size_t dstStride = pData->getAttributes().getValueStride();
+          size_t dstStride = pData->mBinding.getValueStrideBytes();
 
             // In all cases, were casting AI vector types to float*... luckily they
             // are packed PODs with only floats, so this _should_ work.
             // Let's freak out statically if there is a problem.
-          static_assert ( sizeof ( aiVector3D ) == sizeof ( geomData::ValueType ) * geomData::PositionComponents,
+          static_assert ( sizeof ( aiVector3D ) == sizeof ( float ) * geomData::PositionComponents,
               "aiVector3D size is not compatible with 3 floats" );
-          static_assert ( sizeof ( aiColor4D ) == sizeof ( geomData::ValueType ) * geomData::ColorComponents,
+          static_assert ( sizeof ( aiColor4D ) == sizeof ( float ) * geomData::ColorComponents,
               "aiVector3D size is not compatible with 4 floats" );
 
           if ( pSrc->mVertices )
             copySrcDst(pSrc->mNumVertices, geomData::PositionComponents,
-                ( geomData::ValueType* ) pSrc->mVertices, geomData::PositionComponents,
-                pData->getAttributePtr(geomData::Position), dstStride);
+                ( float* ) pSrc->mVertices, geomData::PositionComponents,
+                pData->getElementPtr<float>(0, geomData::Position), dstStride);
 
           if ( pSrc->mNormals )
             copySrcDst(pSrc->mNumVertices, geomData::NormalComponents,
-                ( geomData::ValueType* ) pSrc->mNormals, geomData::NormalComponents,
-                pData->getAttributePtr(geomData::Normal), dstStride);
+                ( float* ) pSrc->mNormals, geomData::NormalComponents,
+                pData->getElementPtr<float>(0, geomData::Normal), dstStride);
 
           if ( pSrc->mColors[ 0 ] )
             copySrcDst(pSrc->mNumVertices, geomData::ColorComponents,
-                ( geomData::ValueType* ) pSrc->mColors[ 0 ], geomData::ColorComponents,
-                pData->getAttributePtr(geomData::Color), dstStride);
+                ( float* ) pSrc->mColors[ 0 ], geomData::ColorComponents,
+                pData->getElementPtr<float>(0,geomData::Color), dstStride);
 
           for ( size_t num = 0; num < AI_MAX_NUMBER_OF_TEXTURECOORDS; ++num )
           {
             if ( pSrc->mTextureCoords[ num ] )
-              copySrcDst(pSrc->mNumVertices, geomData::TCoord00Components,
-                  ( geomData::ValueType* ) pSrc->mTextureCoords[ num ], 3,
-                  pData->getAttributePtr( ( geomData::AttributeType ) ( geomData::TCoord00 + num ) ), dstStride);
+              copySrcDst(pSrc->mNumVertices, geomData::TCoordComponents,
+                  ( float* ) pSrc->mTextureCoords[ num ], 3,
+                  pData->getElementPtr<float>( 0, geomData::TCoord, num ), dstStride);
           }
 
             // Copy out indices
@@ -281,7 +281,7 @@ class helper
             // the various tests are pretty cheap and are only one-time during load.
           geomData::Indices& dstIndices = pData->getIndices();
           size_t numFaces = pSrc->mNumFaces;
-          size_t maxVert = pData->getValueCount() / pData->getAttributes().getValueStride();
+          size_t maxVert = pData->size();
           size_t const NumVertsPerTri = 3;
           size_t const NumIndices = numFaces * NumVertsPerTri;
           size_t const MaxIndexNum = UINT16_MAX;

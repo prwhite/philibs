@@ -137,41 +137,25 @@ void flattenDd::dispatch ( geom const* pNode )
   dispatchPre ( pNode );
 
   geom* pGeom = const_cast< geom* > ( pNode );
-  geomData* pData = pGeom->geometryOp ();
+  geomData* pData = pGeom->geomDataProp().op();
   
-  if ( pData->getIndexCount () != 0 )
+  if ( ! pData->getIndices().empty() )
   {
     pni::math::matrix4 invMat = *mMatStack;
     invMat.invert ();
     invMat.transpose ();
-    
-    vertIter iter ( pData );
-    
-    size_t posOff = pData->getAttributes ().getValueOffset ( geomData::Position );
-    size_t normOff = pData->getAttributes ().getValueOffset ( geomData::Normal );
 
-    for ( vertIter iter ( pData ); iter; ++iter )
+    auto pIter = pData->begin<pni::math::vec3>(geomData::Position);
+    auto nIter = pData->begin<pni::math::vec3>(geomData::Normal);
+    auto pIterEnd = pData->end<pni::math::vec3>(geomData::Position);
+    
+    for ( ; pIter != pIterEnd; ++pIter, ++nIter )
     {
-      pni::math::vec3 pos ( &iter[ posOff ] );
-      pni::math::vec3 norm ( &iter[ normOff ] );
-      
-      pos.xformPt4 ( pos, *mMatStack );
-      norm.xformVec4 ( norm, invMat );
+      pIter->xformPt4( *pIter, *mMatStack );
+      nIter->xformVec4( *nIter, invMat );
 
       if ( mOpts & Renormalize )
-        norm.normalize ();
-      
-      float* pPos = &iter[ posOff ];
-      
-      *pPos++ = pos[ 0 ];
-      *pPos++ = pos[ 1 ];
-      *pPos   = pos[ 2 ];
-      
-      float* pNorm = &iter[ normOff ];
-      
-      *pNorm++ = norm[ 0 ];
-      *pNorm++ = norm[ 1 ];
-      *pNorm   = norm[ 2 ];
+        nIter->normalize ();
     }
   }
 
