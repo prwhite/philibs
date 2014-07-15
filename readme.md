@@ -41,7 +41,7 @@ Radically refactored `scene::geom` and `scene::lines` to re-use a common set of 
     void func ( geomData* pData )
     {
     	auto posEnd = pData->end< vec3 > ( geomData::Position );
-    	for ( auto posCur = pData->begin< vec3 > ( geomData::Position );
+    	for ( auto posCur = pData->begin< vec3 > ( geomData::Position ); posCur < posEnd; ++posCur )
     		*posCur *= 2.0f;	// Scale position by 2.0
     }
 
