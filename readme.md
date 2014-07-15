@@ -34,7 +34,23 @@ Check out the source, then open, build, and run the project file `philibs-ex-00/
 
 A _version_ of this code has been used in an iOS title [(LD50)](http://labs.prehiti.com/ld50/).  But, this code has not been used in its current incarnation as a stand-alone library, _yet_.
 
-2014/06/05
+##### 2014/07/14
+
+Radically refactored `scene::geom` and `scene::lines` to re-use a common set of code for managing their raw data and the binding information that associates them with graphics library semantics (e.g., positions, normals, etc.).  Code for `scene::geomData` went to almost nothing, and now has a much better iteration interface.  E.g:
+
+    void func ( geomData* pData )
+    {
+    	auto posEnd = pData->end< vec3 > ( geomData::Position );
+    	for ( auto posCur = pData->begin< vec3 > ( geomData::Position );
+    		*posCur *= 2.0f;	// Scale position by 2.0
+    }
+
+The `geomData::Position` semantic could indicate storage anywhere in the interleaved vertex attributes, as opposed to the position data needing to be at a specific or pre-defined offset in the vertex layout.  This extends to all semantics, including user-defined vertex attributes.
+
+Just about every part of the system that uses these classes became much more self-documenting and much more concise (which is awesome).
+    
+
+##### 2014/06/05
 
 Recent feature additions include:
 
@@ -44,7 +60,7 @@ Recent feature additions include:
 * Text: Added UTF8->UCS2 conversion just before scene::text glyphs are generated.  All text rendering is now *much more* i18n-friendly
 * Math: Cleaned up some linear algebra pin::math routines, including getting ruler-related functions consistent with z-out and adding plane and matrix mirror routines.
 
-2014/04/22
+##### 2014/04/22
 
 Recent feature additions include:
 
@@ -54,27 +70,27 @@ Recent feature additions include:
 * Fully generalized FBO (framebuffer object) management.  FBO objects are managed in a graph of `scene::renderSink`s that implies their rendering order.  Thus, framebuffers that generate textures for later passes are properly evaluated in order.  The current example program sets up a simple framebuffer post-process to generate a subtle glow around lighting highlights.
 * Added texture cube map support.  Realtime cubemaps should work with the new FBO management system, but has not been tested.
 
-2014/01/27
+##### 2014/01/27
 
 Merged assimp branch to master.  This includes the [Assimp](http://assimp.sourceforge.net/) library for 3D file importing.  Currently this is set up to load DAE, STL, OBJ, and PLY files.  Imported material colors are currently ignored (which matches the default shader functionality).  I'm keeping a fork of Assimp with a more up-to-date Xcode project... I'll probably clean this part up and submit as a pull request.
 
-2014/01/18
+##### 2014/01/18
 
 GLES2 support, from the gles2 branch, has been merged to master.  There are still a few things not buttoned up, like interpreting the scene graph light nodes as uniforms, etc.  That will come soon, ideally with sufficient generalization to allow for a range of lighting models.  Additionally, the file loader and image loaders have added factories that also intermediate asynchronous loading.  These use some C++11 features, such as threads/futures, etc.
 
-2014/01/16
+##### 2014/01/16
 
 GLES2 support is working, albeit in its earliest stages.  The current default shader supports positions/normals/uv00 and a single texture.  It implements a basic per-pixel lighting model, but a number of the parameters for lighting are magic numbers in the shader, and need to be moved out to uniforms derived from scene graph state.  That's one of the next things.
 
-2014/01/02
+##### 2014/01/02
 
 New work for GLES2 support is going on in the gles2 branch.  Currently, I am pinning down scene graph representations of programs, uniforms, and attributes.  This will allow a basic programmable pipeline in the short term, and it lays the groundwork for user-defined attributes in a future release.
 
-2014/01/20
+##### 2014/01/20
 
 The library now builds as a relatively clean 32 and 64 bit binary for iOS 7.  A basic example app is also provided.  This work is available on the master branch.
 
-2013/12/01
+##### 2013/12/01
 
 This current goal of this project is to transform the code into a proper stand-alone library.  Following this transformation, the library will be upgraded from support of GLES 1.x to _only_ support GLES 2.x.
 
