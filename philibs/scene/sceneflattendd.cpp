@@ -137,7 +137,7 @@ void flattenDd::dispatch ( geom const* pNode )
   dispatchPre ( pNode );
 
   geom* pGeom = const_cast< geom* > ( pNode );
-  geomData* pData = pGeom->geomDataProp().op();
+  geomData* pData = &pGeom->getGeomData()->op();
   
   if ( ! pData->getIndices().empty() )
   {

@@ -260,13 +260,13 @@ void dbgDd::dispatchGeom ( geom const* pNode )
 {
   dispatchNode ( pNode );
 
-  if ( pNode->geomDataProp() )
+  if ( pNode->getGeomData() )
   {
-    mGeomDataSet.insert ( pNode->geomDataProp().get() );
+    mGeomDataSet.insert ( pNode->getGeomData() );
 
       // Holy shit this will be a lot of output...
     if ( mOpts & GeomDataValues )
-      pNode->geomDataProp()->dbg( mStr );
+      pNode->getGeomData()->dbg( mStr );
   }
 }
 

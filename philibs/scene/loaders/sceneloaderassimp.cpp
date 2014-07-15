@@ -235,7 +235,7 @@ class helper
           }
 
           geomData* pData = new geomData;
-          pDst->geomDataProp().set( pData );
+          pDst->setGeomData( pData );
 
           setupGeomDataAttributes(pSrc, pData);
 
@@ -243,7 +243,8 @@ class helper
           pData->resizeTrisWithCurrentBinding(pSrc->mNumVertices, pSrc->mNumFaces);
 
             // Fill in vertex attribute array values
-          size_t dstStride = pData->mBinding.getValueStrideBytes();
+          size_t const dstStrideBytes = pData->mBinding.getValueStrideBytes();
+          size_t const dstStride = dstStrideBytes / sizeof(float);
 
             // In all cases, were casting AI vector types to float*... luckily they
             // are packed PODs with only floats, so this _should_ work.

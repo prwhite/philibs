@@ -98,21 +98,38 @@ void lines::updateTest ( graphDd::fxUpdate const& update )
 #endif // TESTINGVS
 }
 
+// ///////////////////////////////////////////////////////////////////
+
 void lines::update ( graphDd::fxUpdate const& update )
 {
-  lineDataProp().clearDirty();
-  uniformProp().clearDirty();
+  if ( mLineData->getDirty() )
+  {
+    rebuildLines();
+    mLineData->clearDirty();
+      // GOTCHA: Should not do this during update, which is during scene
+      // traversal!
+    setGeomBoundsDirty();
+  }
+  if ( mUniform->getDirty() || mLineStyle.getDirty() )
+  {
+    rebuildUniform();
+//    mUniform->clearDirty(); // For renderer to consume this dirty
+    mLineStyle.clearDirty();
+  }
 
 #ifdef TESTINGVS
   updateTest(update);
 #endif // TESTINGVS
 }
 
+// //////////////////////////////////////////////////////////////////
+
 void lines::rebuildLines ()
 {
-  lineData const* pLineData = lineDataProp().get ();
+  assert(mLineData);
+
+  lineData const* pLineData = &mLineData->get();
   
-  assert(pLineData);
   assert(pLineData->mBinding.hasBinding(lineData::Position));
 //  assert(mLineData->size());
 
@@ -123,19 +140,23 @@ void lines::rebuildLines ()
   auto curColor = pLineData->begin< vec4 >(lineData::Color);
   auto curThickness = pLineData->begin< float >(lineData::Thickness);
 
-  if ( ! geomDataProp().get() )
-    geomDataProp().set( new geomData );
+  if ( ! getGeomData () )
+    setGeomData( new geomData );
   
-  geomData* pGeomData = geomDataProp().op();
+  geomData* pGeomData = &getGeomData()->op();
   
     // Make sure the geomData matches the number of lines and bindings.
-  size_t points = pLineData->size();
-  size_t prims = pLineData->getIndices().size();
-  size_t segs = points - prims;
-  size_t verts = segs * 2 + prims * 2; // sharing verts, plus the end verts for each prim
-  size_t tris = segs * 2;
+  size_t const points = pLineData->size();
+  size_t const prims = pLineData->getIndices().size();
+  size_t const segs = points - prims;
+  size_t const verts = segs * 2 + prims * 2; // sharing verts, plus the end verts for each prim
+  size_t const tris = segs * 2;
 
+    // Start with empty bindings rather than trying to figure out whether they
+    // were previously set correctly and doing a delta to current settings.
   geomData::Binding& bindings = pGeomData->mBinding;
+  bindings.clear();
+  
   bindings.push_back( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, sizeof ( float ), geomData::PositionComponents } );
   bindings.push_back( { CommonAttributeNames[ geomData::Normal], geomData::Normal, geomData::DataType_FLOAT, sizeof ( float ), geomData::NormalComponents } );
   bindings.push_back( { CommonAttributeNames[ geomData::TCoord], geomData::TCoord, geomData::DataType_FLOAT, sizeof ( float ), geomData::TCoordComponents, 0 } );
@@ -295,8 +316,8 @@ void lines::rebuildLines ()
 
 float lines::preCalcLength()
 {
-  auto cur = lineDataProp()->begin< pni::math::vec3 >( lineData::Position );
-  auto end = lineDataProp()->end< pni::math::vec3 >( lineData::Position );
+  auto cur = mLineData->begin< pni::math::vec3 >( lineData::Position );
+  auto end = mLineData->end< pni::math::vec3 >( lineData::Position );
   
   float ret = 0.0;
   
@@ -329,8 +350,8 @@ float lines::preCalcLength()
 
 void lines::rebuildUniform ()
 {
-  uniform* pUniform = uniformProp().op();
-  lineStyle const& style = lineStyleProp().get();
+  uniform* pUniform = &mUniform->op();
+  lineStyle const& style = mLineStyle.get();
 
   {
     uniform::binding& binding = pUniform->bindingOp("u_vpSizeRatio");
@@ -400,11 +421,7 @@ void lines::rebuildUniform ()
   setState(pUniform, state::Uniform00);
 }
 
-
-void lines::rebuildStyle ()
-{
-  uniformProp().setDirty();
-}
+// ///////////////////////////////////////////////////////////////////
 
 void lines:: generateGeomBounds () const
 {
@@ -414,14 +431,14 @@ void lines:: generateGeomBounds () const
     // thickness of the lines.  This means things hitting screen edge
     // could cull early, but in practice this will be rare and visually
     // minor.
-  assert(lineDataProp().get());
-  assert(lineDataProp()->mBinding.hasBinding(lineData::Position));
+  assert(mLineData);
+  assert(mLineData->mBinding.hasBinding(lineData::Position));
 //  assert(mLineData->size());
 
   mBounds.setEmpty();
 
-  auto cur = lineDataProp()->begin< vec3 >(lineData::Position);
-  auto end = lineDataProp()->end< vec3 >(lineData::Position);
+  auto cur = mLineData->begin< vec3 >(lineData::Position);
+  auto end = mLineData->end< vec3 >(lineData::Position);
   
   while ( cur != end )
   {

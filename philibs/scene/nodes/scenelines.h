@@ -69,6 +69,7 @@ struct lineDataBase {
 class lineData :
   public lineDataBase,
   public pni::pstd::refCount,
+  public dirtyProp< lineData, lineData >,
   public dataIndexed< basicBinding< basicBindingItem<lineDataBase::SemanticTypes, lineDataBase::DataTypes>>>
 {
   public:
@@ -85,9 +86,10 @@ class lineData :
 */
 
 
-struct lineStyle
+struct lineStyle :
+  public dirtyProp< lineStyle, lineStyle >
 {
-  lineStyle () {}
+  lineStyle () = default;
   
     /// @group Used to sharpen/soften edges for non-textured lines.
   float mEdgeMiddle = 0.2f;         /// Middle of antialiasing range for edge
@@ -121,27 +123,6 @@ struct lineStyle
 // ///////////////////////////////////////////////////////////////////
 
 /**
-  The linesBase class is for internal use of the #lines classe.
-  The types created in this "namespace" are available in both the #lines scope.
-*/
-
-struct linesBase
-{
-    using DirtyLineData = dirtyProp< pni::pstd::autoRef< lineData >, lines >;
-    using DirtyUniform = dirtyProp< pni::pstd::autoRef< uniform >, lines >;
-    using DirtyLineStyle = dirtyProp< lineStyle, lines >;
-  
-    static_assert(DirtyLineData::Invoker::dbg == 0,"wrong invoker type");
-    static_assert(DirtyUniform::Invoker::dbg == 3,"wrong invoker type");
-    static_assert(DirtyLineStyle::Invoker::dbg == 0,"wrong invoker type");
-  
-    using style = lineStyle;
-
-  protected:
-    linesBase () = default; // Can't instantiate directly
-};
-
-/**
   The lines class is specialized to draw a set of line primitives, based on
   the line points in the #lineData member, the #lineStyle and the internal
   uniform object that tracks graphic engine settings.  Each #lines instance
@@ -156,19 +137,13 @@ struct linesBase
 */
 
 class lines :
-  public scene::geomFx,
-  public linesBase,
-  public linesBase::DirtyLineData,
-  public linesBase::DirtyUniform,
-  public linesBase::DirtyLineStyle
+  public scene::geomFx
 {
   public:
+    using style = lineStyle;
   
-    lines () :
-        DirtyLineData { nullptr, &lines::setGeomBoundsDirty, &lines::rebuildLines },
-        DirtyUniform { new uniform, &lines::rebuildUniform },
-        DirtyLineStyle { {}, &lines::rebuildStyle, nullptr }
-      {}
+    using LineDataRef = pni::pstd::autoRef<lineData>;
+    using UniformRef = pni::pstd::autoRef<uniform>;
   
     virtual void update ( graphDd::fxUpdate const& update ) override;
     void updateTest ( graphDd::fxUpdate const& update );
@@ -178,38 +153,43 @@ class lines :
       /// @code
       ///   pLines->lineDataProp().op().resize (...)
       /// @endcode
-    DirtyLineData& lineDataProp() { return *this; }
-    DirtyLineData const& lineDataProp() const { return *this; }
+    void setLineData ( lineData* pData ) { mLineData = pData; setGeomBoundsDirty(); }
+    lineData* getLineData () { return mLineData.get (); }
+    lineData const* getLineData () const { return mLineData.get (); }
   
-    DirtyUniform& uniformProp() { return *this; }
-    DirtyUniform const& uniformProp() const { return *this; }
+    void setLineStyle ( lineStyle const& style ) { mLineStyle = style; }
+    lineStyle& getLineStyle () { return mLineStyle; }
+    lineStyle const& getLineStyle () const { return mLineStyle; }
   
-    DirtyLineStyle& lineStyleProp() { return *this; }
-    DirtyLineStyle const& lineStyleProp() const { return *this; }
-
+    void setLineUniform ( uniform* pUniform ) { mUniform = pUniform; }
+    uniform* getLineUniform () { return mUniform.get(); }
+    uniform const* getLineUniform () const { return mUniform.get(); }
+  
       /// Set this if your destination framebuffer has non square pixels...
       /// e.g., rendering in a framebuffer that will be stretched non-
       /// uniformly when finally composed.
     void setViewportSizeRatio ( pni::math::vec2 const& val )
-      { mVpSizeRatio = val; uniformProp()->setDirty(); }
+      { mVpSizeRatio = val; mUniform->setDirty(); }
     pni::math::vec2 const& getViewportSizeRatio () const { return mVpSizeRatio; }
     
   protected:
     void rebuildLines ();
     void rebuildUniform ();
-    void rebuildStyle ();
     float preCalcLength ();
   
   private:
   
+    LineDataRef mLineData;
+    UniformRef mUniform { new uniform };
+    lineStyle mLineStyle;
     pni::math::vec2 mVpSizeRatio { 1.0f, 1.0f };
 
     // From geomFx, geom
   public:
     virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const
       {
-        refs.push_back(lineDataProp().get());
-        refs.push_back(uniformProp().get());
+        refs.push_back(mLineData.get());
+        refs.push_back(mUniform.get());
       }
     virtual lines* dup () const override { return new lines ( *this ); }
 

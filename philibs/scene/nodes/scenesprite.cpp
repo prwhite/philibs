@@ -127,8 +127,8 @@ inline void sprites::addSpriteToGeom ( geomData::IndexType dst, geomData::IndexT
     // func but we need to reset it to elem zero every time anyway.
   scene::vertIter viter ( this );
 
-  auto pIter = geomDataProp()->begin<vec3>(geomData::Position);
-  auto tIter = geomDataProp()->begin<vec2>(geomData::TCoord, 0);
+  auto pIter = getGeomData()->begin<vec3>(geomData::Position);
+  auto tIter = getGeomData()->begin<vec2>(geomData::TCoord, 0);
   
     //
   float frameDiv = pSprite->mFlip[ 0 ] * mFrameDiv;
@@ -172,7 +172,7 @@ inline void sprites::addSpriteToGeom ( geomData::IndexType dst, geomData::IndexT
   ++pIter; ++tIter;
 
     // Now index to the verts in non-stripped, tri-strip order.
-  geomData::Indices& inds = geomDataProp()->getIndices ();
+  geomData::Indices& inds = getGeomData()->getIndices ();
   geomData::IndexType indDst = dst * 6;
   geomData::IndexType valDst = dst * 4;
   inds[ indDst++ ] = valDst + 3;
@@ -200,17 +200,17 @@ void sprites::update ( graphDd::fxUpdate const& update )
     return;
 
     // Make sure we have a valid geomData;
-  if ( ! geomDataProp().get() )
-    geomDataProp().set ( new geomData );
+  if ( ! getGeomData() )
+    setGeomData ( new geomData );
 
     // Bail out and clean up if we have no particles.
   if ( mData.getElemCount () == 0 )
   {
-    geomDataProp().op()->resize ( 0, 0 );
+    getGeomData ()->op().resize ( 0, 0 );
     return; // Early return!!!
   }
   
-  geomData* pData = geomDataProp().op();
+  geomData* pData = &getGeomData()->op();
 
     // Calc rotation matrix in the node's frame.  Use converter
     // and values passed in 'update'.
@@ -227,10 +227,11 @@ void sprites::update ( graphDd::fxUpdate const& update )
   if ( mDoDepthSort )
     doDepthSort ( update, sorters );
   
+  pData->mBinding.clear();
     // Set geometry attribute.
   pData->mBinding.push_back ( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, sizeof(float), geomData::PositionComponents } );
   pData->mBinding.push_back ( { CommonAttributeNames[ geomData::TCoord], geomData::TCoord, geomData::DataType_FLOAT, sizeof(float), geomData::TCoordComponents } );
-
+  
     // Unused... why was it here? PRW
 //  SizeType stride = mGeomData->getValueStride ();
   
@@ -250,6 +251,8 @@ void sprites::update ( graphDd::fxUpdate const& update )
       addSpriteToGeom ( num, num );
 
     // Set bounds dirty.
+    // GOTCHA: Should not do this during update, which is during scene
+    // traversal!
   setGeomBoundsDirty ();
   
     // Bump this up only if it's the first time through with frozen on.

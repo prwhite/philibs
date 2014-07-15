@@ -192,11 +192,13 @@ void geomData::dbg ( std::ostream& ostr ) const
     ostr << "  " << num << " " << getIndices()[ num ] << endl;
 }
 
-void geomData::updateBounds ()
+void geomData::updateBounds () const
 {
+  geomData* pncData = const_cast< geomData* >(this);
+
   if ( boundsProp().getDirty() )
   {
-    box3& bounds = DirtyBounds::mVal;
+    box3& bounds = pncData->boundsProp().op(); // DirtyBounds::mVal;
 
     bounds.setEmpty ();
     
@@ -207,7 +209,8 @@ void geomData::updateBounds ()
     for ( auto pcur = begin< vec3 > ( Position ); pcur < pend; ++pcur )
       bounds.extendBy ( *pcur );
     
-    boundsProp().clearDirty();
+    pncData->boundsProp().setDirty( false );
+    bounds.setIsDirty(false);
   }
 }
 
@@ -218,8 +221,8 @@ void geomData::updateBounds ()
 void geom::setGeomBoundsDirty ()
 {
   node::setBoundsDirty ();
-  if ( geomDataProp ().get () )
-    geomDataProp ().setDirty ();
+  if ( mGeomData )
+    mGeomData->boundsProp().setDirty();
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -242,6 +245,8 @@ void geom::updateBounds () const
     {
       generateGeomBounds ();
       
+//std::cout << "geom bounds for " << getName() << " " << mBounds << std::endl;
+      
       if ( mBoundsMode & Partition )
         generateGeomPartition ();
     }
@@ -254,11 +259,8 @@ void geom::updateBounds () const
 
 void geom::generateGeomBounds () const
 {
-  if ( geomDataProp () )
-  {
-    geomDataProp()->boundsProp().clearDirty();   // Will recalc if dirty.
-    mBounds = geomDataProp ()->boundsProp().get();
-  }
+  if ( mGeomData )
+    mBounds = mGeomData->boundsProp().getUpdated();
   else
     mBounds.setIsDirty ( true );
 }

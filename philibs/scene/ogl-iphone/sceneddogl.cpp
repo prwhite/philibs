@@ -406,7 +406,7 @@ PNIDBG
   if ( dispatchPre ( pNode ) )
   {
 PNIDBG
-    geomData const* pData = pNode->geomDataProp().get();
+    geomData const* pData = pNode->getGeomData();
     // Intel driver doesn't like empty indices with bad ptrs. :)
     geomData::Indices const& indices = pData->getIndices ();
     if ( pData && ( ! indices.empty () ) )

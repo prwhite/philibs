@@ -510,7 +510,7 @@ PNIDBG
 PNIDBG
 					mat.invert ();
 
-          geomData* pGdata = pGeom->geomDataProp ().get ();
+          geomData* pGdata = pGeom->getGeomData();
           auto pcur = pGdata->begin<pni::math::vec3>(geomData::Position);
           auto pend = pGdata->end<pni::math::vec3>(geomData::Position);
           
@@ -552,7 +552,7 @@ PNIDBG
         {
 PNIDBG
             // geomData is guaranteed to be good before this is called (from processObject)
-          geomData::Binding& bindings = pGeom->geomDataProp().op()->mBinding;
+          geomData::Binding& bindings = pGeom->getGeomData()->op().mBinding;
 
           bindings.push_back ( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, sizeof ( float ), geomData::PositionComponents } );
 
@@ -815,22 +815,46 @@ PNIDBG
               initUvIndices ( ind.mUVind01, ind, 1 );
           }
         }
-        
+  
+      // Really hoping for RVO on this method
+    std::vector< ::ase::node::line* >
+    getAttributeVec ( ::ase::node const* src, std::string const& match = {} )
+      {
+        using RetVec = std::vector< ::ase::node::line* >;
+        RetVec retVec;
+      
+        ::ase::node::ConstLineIter end = src->getLineEnd ();
+        for ( ::ase::node::ConstLineIter cur = src->getLineBegin ();
+            cur != end;
+            ++cur )
+        {
+          if ( match.empty() || ( *cur )->getName() == match )
+            retVec.push_back(*cur);
+        }
+      
+        return retVec;
+      }
+  
     void processPositions ( geom* pGeom, reIndexer& ind, ::ase::node const* pSrc )
         {
           if ( ::ase::node const* pVerts = pSrc->findNode ( "MESH_VERTEX_LIST" ) )
           {
-            // Copy all of the positions into vert pos iterator
-            geomData* pGdata = pGeom->geomDataProp().op();
-            auto pcur = pGdata->begin< float >( geomData::Position );
-            int vertInd = -1;
-            ::ase::node::ConstLineIter end = pVerts->getLineEnd ();
-            for ( ::ase::node::ConstLineIter cur = pVerts->getLineBegin ();
-                cur != end;
-                ++cur )
+            auto srcVec = getAttributeVec(pVerts);
+
+              // Copy all of the positions into vert pos iterator, using the
+              // re-indexer to de-ref as necessary
+            auto pGdata = pGeom->getGeomData();
+            auto const pStart = pGdata->begin< float >( geomData::Position );
+
+            for ( size_t num = 0; num < ind.mSize; ++num )
             {
-              ( *cur )->getIntFloat3 ( vertInd, &*pcur );
-              ++pcur;
+              size_t const src = ind.mVerts[ num ].mVert;
+              size_t const dst = ind.mVerts[ num ].mInd;
+              auto pcur = pStart;
+              pcur += dst;
+              
+              int dummy = -1;
+              srcVec[ src ]->getIntFloat3(dummy, &*pcur);
             }
           }
         }
@@ -839,22 +863,23 @@ PNIDBG
         {
           if ( ::ase::node const* pVerts = pSrc->findNode ( "MESH_NORMALS" ) )
           {
-            // Copy all of the positions into vert pos iterator
-            geomData* pGdata = pGeom->geomDataProp().op();
-            auto ncur = pGdata->begin< float >( geomData::Normal );
-            int vertInd = -1;
-            ::ase::node::ConstLineIter end = pVerts->getLineEnd ();
-            for ( ::ase::node::ConstLineIter cur = pVerts->getLineBegin ();
-                cur != end;
-                ++cur )
+          
+            auto srcVec = getAttributeVec(pVerts,"MESH_VERTEXNORMAL");
+
+              // Copy all of the positions into vert pos iterator, using the
+              // re-indexer to de-ref as necessary
+            auto pGdata = pGeom->getGeomData();
+            auto const pStart = pGdata->begin< float >( geomData::Normal );
+
+            for ( size_t num = 0; num < ind.mSize; ++num )
             {
-                // Evidently there are some lines in the MESH_NORMALS node
-                // that are not MESH_VERTEXNORMAL. :/
-              if ( ( *cur )->getName () == "MESH_VERTEXNORMAL" )
-              {
-                ( *cur )->getIntFloat3 ( vertInd, &*ncur );
-                ++ncur;
-              }
+              size_t const src = ind.mVerts[ num ].mNorm;
+              size_t const dst = ind.mVerts[ num ].mInd;
+              auto pcur = pStart;
+              pcur += dst;
+              
+              int dummy = -1;
+              srcVec[ src ]->getIntFloat3(dummy, &*pcur);
             }
           }
         }
@@ -863,18 +888,24 @@ PNIDBG
         {
           if ( ::ase::node const* pVerts = pSrc->findNode ( "MESH_TVERTLIST" ) )
           {
-            // Copy all of the uvs for this unit into vert uv iterator
-            geomData* pGdata = pGeom->geomDataProp().op();
-            auto uvcur = pGdata->begin< float >( geomData::TCoord, unit );
-            int vertInd = -1;
-            ::ase::node::ConstLineIter end = pVerts->getLineEnd ();
-            for ( ::ase::node::ConstLineIter cur = pVerts->getLineBegin ();
-                cur != end;
-                ++cur )
+            auto srcVec = getAttributeVec(pVerts);
+
+              // Copy all of the positions into vert pos iterator, using the
+              // re-indexer to de-ref as necessary
+            auto pGdata = pGeom->getGeomData();
+            auto const pStart = pGdata->begin< float >( geomData::TCoord, unit );
+
+            for ( size_t num = 0; num < ind.mSize; ++num )
             {
-              ( *cur )->getIntFloat2 ( vertInd, &*uvcur );
-              ( ( &*uvcur )[ 1 ] ) = 1.0f - ( ( &*uvcur )[ 1 ] );
-              ++uvcur;
+              size_t const src = unit == 0 ?
+                  ind.mVerts[ num ].mUv00 : ind.mVerts[ num ].mUv01;
+              size_t const dst = ind.mVerts[ num ].mInd;
+              auto pcur = pStart;
+              pcur += dst;
+              
+              int dummy = -1;
+              srcVec[ src ]->getIntFloat2(dummy, &*pcur);
+              ( &*pcur )[ 1 ] = 1.0f - ( &* pcur )[ 1 ];
             }
           }
         }
@@ -908,7 +939,7 @@ PNIDBG
     
     void processIndices ( geom* pGeom, reIndexer& ind )
         {
-          geomData* pGdata = pGeom->geomDataProp().op();
+          geomData* pGdata = pGeom->getGeomData();
           
           geomData::Indices& indices  = pGdata->getIndices ();
           for ( size_t num = 0; num < ind.mSize; ++num )
@@ -937,7 +968,7 @@ PNIDBG
 
           // Figure out geom data attributes and total size.
           geomData* pGdata = new geomData;
-          pGeom->geomDataProp().set ( pGdata );
+          pGeom->setGeomData( pGdata );
           initAttributes ( pGeom, pMesh );
 
           reIndexer ind ( elements );

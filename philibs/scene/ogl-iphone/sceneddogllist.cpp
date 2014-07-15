@@ -569,7 +569,7 @@ PNIDBG
     // GOTCHA: There is no validity checking here... that should
     // all be performed by ddOgl which puts only valid things
     // into this render list.
-  geomData const* pData = pNode->geomDataProp().get();
+  geomData const* pData = pNode->getGeomData();
 
   if ( progObj const* pProgObj = progObj::getOrCreate(mCurProg.get()) )
   {
@@ -1338,6 +1338,10 @@ CheckGLError
 CheckGLError
       }
     }
+    pState->clearDirty(); // Dirty state would normally be used to update
+                          // gl state objects, but we aren't doing that for
+                          // uniforms right now... but clear dirty state all
+                          // the same.
   }
   else
   {

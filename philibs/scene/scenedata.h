@@ -362,6 +362,8 @@ class data :
         Ret const* operator-> () const { return reinterpret_cast<Ret const*>(mPtr); }
         Ret& operator* () { return *reinterpret_cast<Ret*>(mPtr); }
         Ret const& operator* () const { return *reinterpret_cast<Ret const*>(mPtr); }
+        explicit operator Ret* () { return reinterpret_cast<Ret*>(mPtr); }
+        explicit operator Ret const* () const { return reinterpret_cast<Ret*>(mPtr); }
       
         bool good () const { return mPtr != nullptr; }
     };
@@ -402,6 +404,7 @@ class data :
       
         Ret const* operator-> () const { return reinterpret_cast<Ret const*>(mPtr); }
         Ret const& operator* () const { return *reinterpret_cast<Ret const*>(mPtr); }
+        explicit operator Ret const* () const { return reinterpret_cast<Ret*>(mPtr); }
       
           /// @return bool Indicates if iterator is 'good', which means its internal
           /// pointer is valid, but will also turn true for iterators after #end,

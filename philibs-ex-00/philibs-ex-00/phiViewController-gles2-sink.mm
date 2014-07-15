@@ -181,7 +181,7 @@ scene::geom* buildQuad ()
     0, 1, 2, 1, 3, 2
   };
   
-  pMainGeom->geomDataProp().set(pGeomData);
+  pMainGeom->setGeomData(pGeomData);
   
   return pMainGeom;
 }
@@ -260,92 +260,98 @@ void buildLines ( scene::node* pRoot )
   
     // Default style
   lines* pLines = new lines;
-  pLines->lineDataProp() = pLineData;
+  pLines->setLineData( pLineData );
   pLines->setViewportSizeRatio( { 1.0, 1024.0 / 1536.0 } );
   prog* pLineProg = progFactory::getInstance().loadSync( { "gles2-line.vsh", "gles2-line.fsh" } );
   pLines->setState(pLineProg, scene::state::Prog);
   pLines->setState(new scene::blend, state::Blend);
   pLines->matrixOp().setTrans(-2.0f, 0.0f, 0.0f);
-  pLines->lineStyleProp().op().mEdgeRange = 0.3f;
+  pLines->getLineStyle().op().mEdgeRange = 0.3f;
   pLines->setName("aa");
   pRoot->addChild ( pLines );
   
     // Thinner line
   pLines = pLines->dup();
-  pLines->uniformProp() = pLines->uniformProp()->dup();
+  pLines->setLineUniform( pLines->getLineUniform()->dup() );
+  pLines->setLineData( new lineData ( *pLines->getLineData() ) );
   pLines->matrixOp().setTrans(-1.5f, 0.0f, 0.0f);
   pLines->setName("bb");
-  pLines->lineStyleProp().op().mEdgeMiddle = 0.5f;
-  pLines->lineStyleProp().op().mEdgeRange = 0.25f;
+  pLines->getLineStyle().op().mEdgeMiddle = 0.5f;
+  pLines->getLineStyle().op().mEdgeRange = 0.25f;
   pRoot->addChild ( pLines );
 
     // Very thin line
   pLines = pLines->dup();
-  pLines->uniformProp() = pLines->uniformProp()->dup();
+  pLines->setLineUniform( pLines->getLineUniform()->dup() );
+  pLines->setLineData( new lineData ( *pLines->getLineData() ) );
   pLines->matrixOp().setTrans(-1.0f, 0.0f, 0.0f);
   pLines->setName("cc");
-  pLines->lineStyleProp().op().mEdgeMiddle = 0.8f;
-  pLines->lineStyleProp().op().mEdgeRange = 0.2f;
+  pLines->getLineStyle().op().mEdgeMiddle = 0.8f;
+  pLines->getLineStyle().op().mEdgeRange = 0.2f;
   pRoot->addChild ( pLines );
 
     // Default thickness dashed line
   pLines = pLines->dup();
-  pLines->uniformProp() = pLines->uniformProp()->dup();
+  pLines->setLineUniform( pLines->getLineUniform()->dup() );
+  pLines->setLineData( new lineData ( *pLines->getLineData() ) );
   pLines->matrixOp().setTrans(2.0f, 0.0f, 0.0f);
   pLines->setName("cc");
-  pLines->lineStyleProp().op().mEdgeMiddle = 0.2f;
-  pLines->lineStyleProp().op().mEdgeRange = 0.3f;
-  pLines->lineStyleProp().op().mEnableFlags = lineStyle::Dash00;
+  pLines->getLineStyle().op().mEdgeMiddle = 0.2f;
+  pLines->getLineStyle().op().mEdgeRange = 0.3f;
+  pLines->getLineStyle().op().mEnableFlags = lineStyle::Dash00;
   pRoot->addChild ( pLines );
   
     // Very thin line
   pLines = pLines->dup();
-  pLines->uniformProp() = pLines->uniformProp()->dup();
+  pLines->setLineUniform( pLines->getLineUniform()->dup() );
+  pLines->setLineData( new lineData ( *pLines->getLineData() ) );
   pLines->matrixOp().setTrans(1.0f, 0.0f, 0.0f);
   pLines->setName("ff");
-  pLines->lineStyleProp().op().mEdgeMiddle = 0.8f;
-  pLines->lineStyleProp().op().mEdgeRange = 0.2f;
+  pLines->getLineStyle().op().mEdgeMiddle = 0.8f;
+  pLines->getLineStyle().op().mEdgeRange = 0.2f;
   pRoot->addChild ( pLines );
   
     // Thinner line, shorter dashes
   pLines = pLines->dup();
-  pLines->uniformProp() = pLines->uniformProp()->dup();
+  pLines->setLineUniform( pLines->getLineUniform()->dup() );
+  pLines->setLineData( new lineData ( *pLines->getLineData() ) );
   pLines->matrixOp().setTrans(0.5f, 0.0f, 0.0f);
   pLines->setName("gg");
-  pLines->lineStyleProp().op().mEdgeMiddle = 0.25f;
-  pLines->lineStyleProp().op().mEdgeRange = 0.1f;
-  pLines->lineStyleProp().op().mDashMiddle = 0.5f;
-  pLines->lineStyleProp().op().mDashRange = 0.1f;
-  pLines->lineStyleProp().op().mDashPeriod = 0.025f;
+  pLines->getLineStyle().op().mEdgeMiddle = 0.25f;
+  pLines->getLineStyle().op().mEdgeRange = 0.1f;
+  pLines->getLineStyle().op().mDashMiddle = 0.5f;
+  pLines->getLineStyle().op().mDashRange = 0.1f;
+  pLines->getLineStyle().op().mDashPeriod = 0.025f;
   pRoot->addChild ( pLines );
 
     // Very thin line, round-ish soft dashes
   pLines = pLines->dup();
-  pLines->uniformProp() = pLines->uniformProp()->dup();
+  pLines->setLineUniform( pLines->getLineUniform()->dup() );
+  pLines->setLineData( new lineData ( *pLines->getLineData() ) );
   pLines->matrixOp().setTrans(0.0f, 0.0f, 0.0f);
   pLines->setName("hh");
-  pLines->lineStyleProp().op().mEdgeMiddle = 0.4f;
-  pLines->lineStyleProp().op().mEdgeRange = 0.4f;
-  pLines->lineStyleProp().op().mDashMiddle = 0.5f;
-  pLines->lineStyleProp().op().mDashRange = 0.4f;
-  pLines->lineStyleProp().op().mDashPeriod = 0.0125f;
+  pLines->getLineStyle().op().mEdgeMiddle = 0.4f;
+  pLines->getLineStyle().op().mEdgeRange = 0.4f;
+  pLines->getLineStyle().op().mDashMiddle = 0.5f;
+  pLines->getLineStyle().op().mDashRange = 0.4f;
+  pLines->getLineStyle().op().mDashPeriod = 0.0125f;
   pRoot->addChild ( pLines );
 
     // Wavy, multi-colored
   pLines = pLines->dup();
-  pLines->uniformProp() = pLines->uniformProp()->dup();
+  pLines->setLineUniform( pLines->getLineUniform()->dup() );
+  pLines->setLineData( new lineData ( *pLines->getLineData() ) );
   pLines->matrixOp().setTrans(-0.5f, 0.0f, 0.0f);
   pLines->setName("ii");
-  pLines->lineStyleProp().op() = {};
-  pLines->lineStyleProp().op().mEnableFlags = lineStyle::Dash00;
-  pLines->lineStyleProp().op().mDashMiddle = 0.5f;
-  pLines->lineStyleProp().op().mDashRange = 0.1f;
-  pLines->lineStyleProp().op().mDashPeriod = 0.025f;
-  pLines->lineDataProp().set ( new lineData ( *pLines->lineDataProp().get() ) );
+  pLines->getLineStyle().op() = {};
+  pLines->getLineStyle().op().mEnableFlags = lineStyle::Dash00;
+  pLines->getLineStyle().op().mDashMiddle = 0.5f;
+  pLines->getLineStyle().op().mDashRange = 0.1f;
+  pLines->getLineStyle().op().mDashPeriod = 0.025f;
   pRoot->addChild ( pLines );
 
     // Change the line metadata
-  pLineData = pLines->lineDataProp().op();
+  pLineData = &pLines->getLineData()->op();
 
   pni::math::vec4 const colors [] = { { 1, 0, 0, 1 }, { 1, 1, 0, 1 }, { 0, 1, 0, 1 }, { 0, 1, 1, 1 }, { 0, 0, 1, 1 }, { 1, 0, 1, 1 } };
   size_t const numColors = sizeof ( colors ) / sizeof ( decltype(colors[0]));
@@ -368,19 +374,19 @@ void buildLines ( scene::node* pRoot )
 
     // Textured line
   pLines = pLines->dup();
-  pLines->uniformProp() = pLines->uniformProp()->dup();
+  pLines->setLineUniform( pLines->getLineUniform()->dup() );
   pLines->matrixOp().setTrans(1.5f, 0.0f, 0.0f);
   pLines->setName("jj");
-  pLines->lineStyleProp().op() = {};
-  pLines->lineStyleProp().op().mEnableFlags = lineStyle::Tex00;
-  pLines->lineStyleProp().op().mTexUMult = 2.0f;
-  pLines->lineStyleProp().op().mTexMiddle = 0.8f;
-  pLines->lineStyleProp().op().mTexRange = 0.2f;
-  pLines->lineDataProp().set ( new lineData ( *pLineDataOrig ) );
+  pLines->getLineStyle().op() = {};
+  pLines->getLineStyle().op().mEnableFlags = lineStyle::Tex00;
+  pLines->getLineStyle().op().mTexUMult = 2.0f;
+  pLines->getLineStyle().op().mTexMiddle = 0.8f;
+  pLines->getLineStyle().op().mTexRange = 0.2f;
+  pLines->setLineData( new lineData ( *pLineDataOrig ) );
   
     // Make the line thicker to show of the texture
-  auto tbeg = pLines->lineDataProp().get()->begin< float >(lineData::Thickness );
-  auto const tend = pLines->lineDataProp().get()->end< float >(lineData::Thickness );
+  auto tbeg = pLines->getLineData()->begin< float >(lineData::Thickness );
+  auto const tend = pLines->getLineData()->end< float >(lineData::Thickness );
   while ( tbeg != tend )
   {
     *tbeg *= 3.0f;
@@ -486,9 +492,9 @@ void buildLines ( scene::node* pRoot )
   mProg->setFlag(scene::prog::Uv, 00);
   mProg->setFlag(scene::prog::Sampler2D, 00);
 
-  mProg->setFlag(scene::prog::Tex, 01);
-  mProg->setFlag(scene::prog::UvReflection, 01);
-  mProg->setFlag(scene::prog::SamplerCube, 01);
+//  mProg->setFlag(scene::prog::Tex, 01);
+//  mProg->setFlag(scene::prog::UvReflection, 01);
+//  mProg->setFlag(scene::prog::SamplerCube, 01);
 
   mProg->setFlag(scene::prog::Normal);
   
@@ -551,6 +557,7 @@ void buildLines ( scene::node* pRoot )
     0.5f, 0.5f, 1.0f, 0.25f );
   
   pText->setText("©PHI");
+  pText->setName(pText->getText());
   
   scene::depth* pNoDepth = new scene::depth;
   pNoDepth->setEnable(false);
@@ -616,10 +623,10 @@ void buildLines ( scene::node* pRoot )
   lines* pLines = new lines;
   mLines = pLines;
   
-  mLines->lineStyleProp().op().mEnableFlags = lines::style::Dash00;
+  mLines->getLineStyle().op().mEnableFlags = lines::style::Dash00;
   
   lineData* pLineData = new lineData;
-  pLines->lineDataProp().set ( pLineData );
+  pLines->setLineData( pLineData );
   
   pLineData->mBinding.push_back ( { {}, lineData::Position, lineData::Float, sizeof(float), 3 } );
   pLineData->mBinding.push_back ( { {}, lineData::Color, lineData::Float, sizeof(float), 4 } );
@@ -698,11 +705,15 @@ void buildLines ( scene::node* pRoot )
 
   float const Incr = 0.1f;
   if ( mLines )
-    mLines->lineStyleProp().op().mDashPhase =
-      mLines->lineStyleProp()->mDashPhase > pni::math::Trait::d2r( 2.0 ) ?
-        mLines->lineStyleProp()->mDashPhase - pni::math::Trait::d2r( 2.0 ) + Incr :
-        mLines->lineStyleProp()->mDashPhase + Incr;
-
+  {
+    scene::lineStyle& style = mLines->getLineStyle().op();
+    
+    style.mDashPhase =
+      style.mDashPhase > pni::math::Trait::d2r( 2.0 ) ?
+        style.mDashPhase - pni::math::Trait::d2r( 2.0 ) + Incr :
+        style.mDashPhase + Incr;
+  }
+  
   if ( mFile )
     mFile->matrixOp().setRot(rot, axis);
   
@@ -755,7 +766,7 @@ struct linePanData
 
   UIPanGestureRecognizer* pr = ( UIPanGestureRecognizer* ) sender;
 
-  lineData* pLineData = mLines->lineDataProp().get();
+  lineData* pLineData = mLines->getLineData();
 
   switch ( pr.state )
   {
@@ -785,7 +796,7 @@ struct linePanData
         {
           lpd.mLastPos = nextPos;
           
-          mLines->lineDataProp().setDirty();
+          mLines->getLineData()->setDirty();
           
           size_t last = pLineData->getIndices()[ 0 ];
           pLineData->getIndices()[ 0 ]++;
@@ -813,7 +824,7 @@ struct linePanData
       {
         lpd.mLastPos = lpd.cg2pt ( pr );
         
-        mLines->lineDataProp().setDirty();
+        mLines->getLineData()->setDirty();
 
         size_t last = pLineData->getIndices()[ 0 ];
         pLineData->getIndices()[ 0 ]++;

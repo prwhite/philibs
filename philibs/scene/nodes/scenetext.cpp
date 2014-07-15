@@ -55,14 +55,16 @@ void text::doLayout ()
 //  pImg->getSize(size[ 0 ], size[ 1 ], size[ 2 ]);
 
     // Make sure we have a geom data thingie.
-  geomData* pData = geomDataProp().op();
+  geomData* pData = getGeomData();
   if ( ! pData )
   {
     pData = new geomData;
     pData->mBinding.push_back( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, sizeof ( float ), geomData::PositionComponents } );
     pData->mBinding.push_back ( { CommonAttributeNames[ geomData::TCoord], geomData::TCoord, geomData::DataType_FLOAT, sizeof(float), geomData::TCoordComponents } );
-    geomDataProp().set(pData);
+    setGeomData(pData);
   }
+  
+  pData->setDirty();
 
   std::wstring_convert<std::codecvt_utf8<char16_t>,char16_t> cvt;
   std::u16string uTxt = cvt.from_bytes(mTxt);

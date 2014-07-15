@@ -416,11 +416,11 @@ void hterrain::rebuildGeom ( Dim xStart, Dim yStart, Dim xEnd, Dim yEnd )
 
 PNIPSTDLOG
 
-  if ( ! geomDataProp().get() )
+  if ( ! getGeomData() )
   {
-    geomDataProp().set ( new geomData );
+    setGeomData( new geomData );
 
-    geomData* pGeomData = geomDataProp().get();
+    geomData* pGeomData = &getGeomData()->op();
     geomData::Binding& bindings = pGeomData->mBinding;
 
     bindings.push_back ( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, sizeof(float), geomData::PositionComponents } );
@@ -461,7 +461,7 @@ PNIPSTDLOG
 PNIPSTDLOG
 
 #ifndef NDEBUG
-  size_t valueStride = geomDataProp()->mBinding.getValueStrideBytes ();
+  size_t valueStride = getGeomData()->mBinding.getValueStrideBytes ();
   static_assert ( std::is_standard_layout<tVert>::value,"tVert should have standard layout, but doesn't" );
   assert ( sizeof ( tVert ) == valueStride * 4 );
 #endif // NDEBUG
@@ -471,7 +471,7 @@ PNIPSTDLOG
   args.mUvDy = 1.0f / height;
   args.mDz = mDz;
   
-  geomData* pGeomData = geomDataProp().op();
+  geomData* pGeomData = &getGeomData()->op();
     
     // Fill in vert values.
   img::base::buffer* pBuf = mHeightImg->mBuffers[ 0 ].get ();
@@ -584,7 +584,7 @@ void hterrain::generateGeomPartition () const
   
   geomData::IndexType ind = 0;
   size_t count = 0;
-  size_t posOffset = geomDataProp()->mBinding.getValueOffsetBytes(geomData::Position);
+  size_t posOffset = getGeomData()->mBinding.getValueOffsetBytes(geomData::Position);
   
   pParts->mPartitions.resize ( 1 );
   isectSimplePartition::Partition* pPart = &pParts->mPartitions.back ();

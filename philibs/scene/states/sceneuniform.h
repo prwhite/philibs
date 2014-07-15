@@ -11,6 +11,7 @@
 
 #include "scenestate.h"
 #include "scenestatedd.h"
+#include "scenedirty.h"
 
 #include "pnidbg.h"
 
@@ -22,7 +23,8 @@ namespace scene {
 /////////////////////////////////////////////////////////////////////
 
 class uniform :
-  public state
+  public state,
+  public dirtyProp<uniform, uniform>
 {
   public:
 
@@ -128,10 +130,6 @@ class uniform :
           cache for uniforms, so this is just good practice */
     binding& bindingOp ( std::string const& which ) { setDirty (); return mBindings[ which ]; }
 
-    void setDirty ( bool val = true ) { mDirty = val; }
-    bool getDirty () const { return mDirty; }
-    void clearDirty () const { mDirty = false; }
-  
   protected:
   
   private:

@@ -118,7 +118,7 @@ void vbo::config ( geomData const* pData, progObj const* pProgObj )
 
   geomData::Binding const& bindings = pData->mBinding;
 
-  if(pData->dataProp().getDirty()) // NEWGEOM || attributes.getDirty())
+  if(pData->getDirty()) // NEWGEOM || attributes.getDirty())
   {
     bind ( pData, pProgObj );
     glBindBuffer( GL_ARRAY_BUFFER, mAttrId );
@@ -157,7 +157,7 @@ CheckGLError
       }
     }
 
-    pData->dataProp().clearDirty();
+    pData->clearDirty();
     // NEWGEOM pData->getAttributes().clearDirty();
 
     glBindVertexArrayOES(0);  // Clear so other state doesn't leak into this VAO

@@ -501,7 +501,7 @@ void isectDd::isectTri (
 
 void isectDd::isectGeomData ( geom const* pGeom, seg const& aSeg, hit& aHit )
 {
-  geomData const* pGdata = pGeom->geomDataProp().get();
+  geomData const* pGdata = pGeom->getGeomData();
   triIter iter ( const_cast< geomData* > ( pGdata ) );
   size_t posOffset = pGdata->mBinding.getValueOffsetBytes( geomData::Position );
   size_t startInd = 0;
@@ -545,7 +545,7 @@ void isectDd::isecTravDataFlat ( geom const* pGeom, seg const& aSeg, hit& aHit )
     
   typedef isectSimplePartition::Partitions::iterator PartIter;
   PartIter partEnd = pData->mPartitions.end ();
-  geomData const* pGdata = pGeom->geomDataProp().get ();
+  geomData const* pGdata = pGeom->getGeomData();
   size_t posOffset = pGdata->mBinding.getValueOffsetBytes( geomData::Position );
   
   for ( PartIter partCur = pData->mPartitions.begin (); partCur != partEnd; ++partCur )
@@ -616,7 +616,7 @@ void isectDd::isectTravDataTreePartition ( geom const* pGeom,
 #ifdef INLINEISECT
         // COPY/PASTE: Code inline'd from isectTravDataTreeLeaf.
       triIter tIter ( const_cast< geom* > ( pGeom ) );
-      size_t posOffset = pGeom->geomDataProp()->mBinding.getValueOffsetBytes(geomData::Position);
+      size_t posOffset = pGeom->getGeomData()->mBinding.getValueOffsetBytes(geomData::Position);
 
       typedef isectSimplePartition::Indices::const_iterator IndIter;
       IndIter indEnd = part.mIndices.end ();
@@ -665,7 +665,7 @@ void isectDd::isectTravDataTreeLeaf ( geom const* pGeom,
     isectSimplePartition::Partition const& part, seg const& aSeg, hit& aHit )
 {
   triIter tIter ( const_cast< geom* > ( pGeom ) );
-  size_t posOffset = pGeom->geomDataProp()->mBinding.getValueOffsetBytes(geomData::Position);
+  size_t posOffset = pGeom->getGeomData()->mBinding.getValueOffsetBytes(geomData::Position);
 
   typedef isectSimplePartition::Indices::const_iterator IndIter;
   IndIter indEnd = part.mIndices.end ();

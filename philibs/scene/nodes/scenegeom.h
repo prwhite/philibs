@@ -39,19 +39,14 @@ class geomDataBase
   protected:
     geomDataBase () = default;  // Can't instantiate this class directly.
 
-    struct GeomDataDirtyTag {};
-  
-      /** 
+      /**
         Use these values for the mType member of AttributeVal to indicate which
         attribute you are specifying.  See Attribute help for an example.
       */
   
   public:
     using DirtyBounds = dirtyProp< box3, geomData >;
-    using DirtyGeomData = dirtyProp< GeomDataDirtyTag, geomData >;
-  
-    static_assert(DirtyBounds::Invoker::dbg == 0, "wrong invoker specialization for DirtyBounds");
-    static_assert(DirtyGeomData::Invoker::dbg == 0, "wrong invoker specialization for DirtyGeomData");
+    using DirtyGeomData = dirtyProp< geomData, geomData >;
   
     enum SemanticTypes
     {
@@ -158,8 +153,8 @@ using geomDataLtCompare =
 class geomData :
   public geomDataBase,
   public pni::pstd::refCount,
-  private geomDataBase::DirtyBounds,
-  private geomDataBase::DirtyGeomData,
+  public geomDataBase::DirtyBounds,
+  public geomDataBase::DirtyGeomData,
   public travDataContainer,
   public dataIndexed< basicBinding< basicBindingItem< geomDataBase::SemanticTypes, geomDataBase::DataTypes > >,
     geomDataLtCompare
@@ -167,8 +162,8 @@ class geomData :
 {
   public:
     geomData () :
-        DirtyBounds { {}, &geomData::updateBounds },
-        DirtyGeomData {}
+        DirtyBounds { 0, 0, &geomData::updateBounds },
+        DirtyGeomData { 0, 0 }
       { setEpsilon( pni::math::Trait::fuzzVal ); }
   
       /// @group Geometry algorithms
@@ -185,14 +180,17 @@ class geomData :
     DirtyBounds& boundsProp () { return *this; }
     DirtyBounds const& boundsProp () const { return *this; }
 
-      /// @group Data "dirty" accessors.
-    DirtyGeomData& dataProp () { return *this; }
-    DirtyGeomData const& dataProp () const { return *this; }
+    using DirtyGeomData::op;
+    using DirtyGeomData::setDirty;
+    using DirtyGeomData::getDirty;
+    using DirtyGeomData::clearDirty;
+    using DirtyGeomData::get;
+    using DirtyGeomData::getUpdated;
 
     void dbg ( std::ostream& ostr ) const;
   
   protected:
-    void updateBounds ();
+    void updateBounds () const;
   
     // Inherited
   public:
@@ -203,36 +201,22 @@ class geomData :
 
 // ///////////////////////////////////////////////////////////////////
 
-class geom;
-
-class geomBase
-{
-  public:
-    using DirtyGeomData = dirtyProp< pni::pstd::autoRef< geomData >, geom >;
-
-    static_assert(DirtyGeomData::Invoker::dbg == 3, "wrong invoker specialization for DirtyGeomData");
-
-  protected:
-    geomBase () = default; // Can't instantiate directly
-};
-
 class geom :
-  public node,
-  public geomBase,
-  public geomBase::DirtyGeomData
+  public node
 {
   public:
     using GeomDataRef = pni::pstd::autoRef<geomData>;
   
-    DirtyGeomData& geomDataProp() { return *this; }
-    DirtyGeomData const& geomDataProp () const { return *this; }
+    void setGeomData ( geomData* pData ) { mGeomData = pData; setGeomBoundsDirty(); }
+    geomData* getGeomData() { return mGeomData.get(); }
+    geomData const* getGeomData () const { return mGeomData.get(); }
 
     virtual void collectRefs ( pni::pstd::refCount::Refs& refs ) const
-      { node::collectRefs(refs); refs.push_back(geomDataProp().get()); }
+      { node::collectRefs(refs); refs.push_back(mGeomData.get()); }
 
     void uniquifyGeomData ()
-      { if ( geomDataProp() && geomDataProp()->getNumRefs() > 1 )
-          geomDataProp().set ( new geomData ( *geomDataProp().get () ) ); }
+      { if ( mGeomData && mGeomData->getNumRefs() > 1 )
+          mGeomData = ( new geomData ( *mGeomData ) ); }
 
       /// @group Set bounds policy.
     using BoundsType = uint32_t;
@@ -266,6 +250,7 @@ class geom :
   private:
     static_assert(NumBoundsModes < INT_MAX, "bounds mode doesn't fit in storage type");
     BoundsType mBoundsMode = Default;
+    GeomDataRef mGeomData;
 };
 
 /////////////////////////////////////////////////////////////////////
@@ -289,7 +274,7 @@ class vertIter
 
   public:
     vertIter ( geom* pGeom ) :
-      vertIter { pGeom->geomDataProp().get() } {}
+      vertIter { pGeom->getGeomData() } {}
         
     vertIter ( geomData* pGdata ) :
       mGdata ( pGdata ),
@@ -362,7 +347,7 @@ class triIter
         }
 
     triIter ( geom* pGeom ) :
-      triIter ( pGeom->geomDataProp().get() ) {}
+      triIter ( pGeom->getGeomData() ) {}
   
       /// @group Access current pointer plus some offset, typically based on
       /// #geomData.mBinding.getValueOffsetBytes(<some semantic type id>).
