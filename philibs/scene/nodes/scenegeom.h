@@ -164,7 +164,7 @@ class geomData :
     geomData () :
         DirtyBounds { 0, 0, &geomData::updateBounds },
         DirtyGeomData { 0, 0 }
-      { setEpsilon( pni::math::Trait::fuzzVal ); }
+      { setEpsilon ( pni::math::Trait::fuzzVal ); }
   
       /// @group Geometry algorithms
     void generateNormals ( float degrees );

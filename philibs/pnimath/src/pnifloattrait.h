@@ -49,6 +49,10 @@ class PNIMATHAPI FloatTrait
 		static ValueType d2r ( ValueType valIn );
 		static ValueType r2d ( ValueType valIn );
 		static bool equal ( ValueType aVal, ValueType bVal, ValueType fuzzIn = fuzzVal );
+  
+    static bool isNaN ( ValueType aVal );
+    static bool isFinite ( ValueType aVal );
+    static bool isInfinite ( ValueType aVal );
 	
 	private:
 		FloatTrait () {};
@@ -175,6 +179,30 @@ equal ( ValueType aVal, ValueType bVal, ValueType fuzzIn )
 		return true;
 	else
 		return false;
+}
+
+PNIMATHINLINE
+bool
+FloatTrait::
+isNaN ( ValueType aVal )
+{
+  return std::isnan ( aVal );
+}
+
+PNIMATHINLINE
+bool
+FloatTrait::
+isFinite ( ValueType aVal )
+{
+  return std::isfinite ( aVal );
+}
+
+PNIMATHINLINE
+bool
+FloatTrait::
+isInfinite ( ValueType aVal )
+{
+  return std::isinf ( aVal );
 }
 
 /////////////////////////////////////////////////////////////////////
