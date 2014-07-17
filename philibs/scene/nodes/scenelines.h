@@ -41,6 +41,7 @@ struct lineDataBase {
       Float,
       Uint32
     };
+      /// @warning: Unimplemented
     enum MiterStyles {
       None,
       Extension,
