@@ -255,7 +255,7 @@ void buildLines ( scene::node* pRoot )
     col->set ( 0.0f, 0.0f, 0.0f, 1.0f );
     *thk = Thick;
   }
-  
+
   lineData* pLineDataOrig = pLineData;
   
     // Default style
@@ -369,7 +369,7 @@ void buildLines ( scene::node* pRoot )
     citer += num; titer += num;
     
     *citer = colors[ num % numColors ];
-    *titer = thicknii[ num % numThicknii] * Thick;
+    *titer = thicknii[ num % numThicknii ] * Thick;
   }
 
     // Textured line
@@ -384,7 +384,7 @@ void buildLines ( scene::node* pRoot )
   pLines->getLineStyle().op().mTexRange = 0.2f;
   pLines->setLineData( new lineData ( *pLineDataOrig ) );
   
-    // Make the line thicker to show of the texture
+    // Make the line thicker to show off the texture
   auto tbeg = pLines->getLineData()->begin< float >(lineData::Thickness );
   auto const tend = pLines->getLineData()->end< float >(lineData::Thickness );
   while ( tbeg != tend )

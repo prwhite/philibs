@@ -42,7 +42,6 @@ void lines::updateTest ( graphDd::fxUpdate const& update )
   // this created a situation where things were behind the near view plane
   // causing a singularity to be hit or some such.  Will continue to watch for
   // this.
-//#define TESTINGVS
 #ifdef TESTINGVS
   camera const* pCam = static_cast< camera const*>(update.mCamPath.getLeaf());
 
@@ -54,45 +53,74 @@ void lines::updateTest ( graphDd::fxUpdate const& update )
   
   pni::math::matrix4 projMat = pCam->getProjectionMatrix();
   
-  pni::math::matrix4 mvpMat;
+  pni::math::matrix4 u_mvpMat;
   
-  mvpMat.preMult(projMat);
-  mvpMat.preMult(viewMat);
-  mvpMat.preMult(modelMat);
+  u_mvpMat.preMult(projMat);
+  u_mvpMat.preMult(viewMat);
+  u_mvpMat.preMult(modelMat);
   
 //  PNIDBGSTR("mvpMat = \n" << mvpMat);
   
   vertIter viter ( getGeomData() );
-  size_t posOff = mGeomData->getAttributes().getValueOffset(geomData::Position);
-  size_t normOff = mGeomData->getAttributes().getValueOffset(geomData::Normal);
+  size_t const posOff = getGeomData()->mBinding.getValueOffsetBytes(geomData::Position);
+  size_t const normOff = getGeomData()->mBinding.getValueOffsetBytes(geomData::Normal);
   
   while ( viter )
   {
-    float const* pPos = viter ( posOff );
-    float const* pNorm = viter ( normOff );
+      // setup...
+    auto rPos = viter.get<vec3 const>(posOff);
+    auto rNorm = viter.get<vec3 const>(normOff);
 
-    vec4 pos ( pPos[ 0 ], pPos[ 1 ], pPos[ 2 ], 1.0f );
-    vec4 norm ( pNorm[ 0 ], pNorm[ 1 ], pNorm[ 2 ], 0.0f );
+    vec4 a_position ( rPos[ 0 ], rPos[ 1 ], rPos[ 2 ], 1.0f );
+    vec4 a_normal ( rNorm[ 0 ], rNorm[ 1 ], rNorm[ 2 ], 0.0f );
 
-      // norm is a position, not a vector now
-      // MEGA: problem in vs was that norm needed to be... uh... normalized
-    norm += pos;
+      // now we clone the vs
 
-      // now go in clip space
-    pos.xformPt(pos, mvpMat);
-    norm.xformPt(norm, mvpMat);
+      // get normal in clip... it's still parallel to line segment though
+    float lNormLen = a_normal.length();         // local len before matrix mult...
+                                                // but meant to be used in screen pixels
+
+    vec4 cSrc = u_mvpMat * a_position;
+    vec4 lDst = a_position;
+    vec4 lTangent = vec4 ( a_normal / lNormLen ); // same because a_normal[ 4 ] is 0.0
+    lDst += lTangent;
+    vec4 cDst = u_mvpMat * lDst;
     
-      // now go in ndc
-    float posw = pos[ 3 ];
-    float normw = norm[ 3 ];
+      // Save w for points so we can put things back in clip coords later
+    float cSrcW  = cSrc[ 3 ];
+    float cDstW  = cDst[ 3 ];
     
-    pos /= posw;
-    norm /= normw;
-    
-    if ( Trait::equal(normw, 0.0f, 0.1f ) )
-    {
-      PNIDBGSTR( "how is normw 0-ish?" );
-    }
+      // Do perspective divide to get into ndc
+    vec4 nSrc = cSrc;
+    vec4 nDst = cDst;
+    nSrc /= cSrcW;
+    nDst /= cDstW;
+
+      // Calc actual normal in ndc
+    vec3 nTangent = nDst.xyz () - nSrc.xyz ();
+//    vec3 nNorm = cross ( nTangent, vec3 ( 0.0, 0.0, 1.0 ) );  // cross w z-out to get perp vector in ndc
+    vec3 nNorm = nTangent;
+    nNorm.cross(nTangent, vec3 { 0.0, 0.0, 1.0 } );
+
+    nNorm.normalize();
+
+      // Make the ndc-based normal the right length in pixels by scaling by
+      // the original length divided by forward diff of the pixel size in ndc units.
+//    nNorm.xy *= u_vpSizeRatio / u_vpSize * lNormLen;
+    vec2 nNormXY = nNorm.xy();
+    vec2 const u_vpSize { 2048.0, 1024.0 };
+    nNormXY *= mVpSizeRatio / u_vpSize * lNormLen;
+    nNorm.set ( nNormXY[ 0 ], nNormXY[ 1 ], nNorm[ 2 ] );
+
+      // Now add the calculated norm to the point on the line
+//    nSrc.xyz += nNorm;
+    nSrc.set ( nSrc[ 0 ] + nNorm[ 0 ], nSrc[ 1 ] + nNorm[ 1 ], nSrc[ 2 ] + nNorm[ 2 ], nSrc[ 3 ] );
+
+      // Put output pos back in clip space
+    cSrc = nSrc * cSrcW;
+
+//    gl_Position = cSrc;
+
     ++viter;
   }
 #endif // TESTINGVS
@@ -105,6 +133,7 @@ void lines::update ( graphDd::fxUpdate const& update )
   if ( mLineData->getDirty() )
   {
     rebuildLines();
+
     mLineData->clearDirty();
       // GOTCHA: Should not do this during update, which is during scene
       // traversal!

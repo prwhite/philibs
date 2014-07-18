@@ -16,6 +16,7 @@
 
 #include "pnivec3.h"
 #include "pniquat.h"
+#include "pnivec4.h"
 
 /////////////////////////////////////////////////////////////////////
 
@@ -201,6 +202,9 @@ class PNIMATHAPI matrix4 {
 		ThisType operator / ( const ThisType& matIn ) const;
 		ThisType operator * ( ValueType val ) const;
 		ThisType operator / ( ValueType val ) const;
+  
+		// To match common glsl operation
+		vec4 operator * ( vec4 const& vec ) { vec4 tmp; tmp.xformPt ( vec, *this ); return tmp; }
 
 		ThisType& operator = ( const ThisType& matIn );
 		ThisType& operator += ( const ThisType& matIn );

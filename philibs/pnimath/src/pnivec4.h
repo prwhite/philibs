@@ -11,7 +11,9 @@
 /////////////////////////////////////////////////////////////////////
 
 #include "pnimath.h"
+#include "pnivec2.h"
 #include "pnivec3.h"
+#include "pnivec4.h"
 
 /////////////////////////////////////////////////////////////////////
 
@@ -91,7 +93,17 @@ class PNIMATHAPI vec4
 		void invert ();
 		void negate ();
 		void negate3 ();
-		
+
+      /// @group Emulate most common glsl swizzling methods
+      /// @warning Not meant to be fast path, just for diagnostic/debugging.
+    float x () const { return vec[ 0 ]; }
+    float y () const { return vec[ 1 ]; }
+    float z () const { return vec[ 2 ]; }
+    float w () const { return vec[ 3 ]; }
+    vec2 xy () const { return vec2 ( vec[ 0 ], vec[ 1 ] ); }
+    vec2 yz () const { return vec2 ( vec[ 1 ], vec[ 2 ] ); }
+    vec3 xyz () const { return vec3 ( vec[ 0 ], vec[ 1 ], vec[ 2 ] ); }
+  
 		ValueType dot ( const ThisType& vecIn ) const;
 		
 		void cross ( const ThisType& aa, const ThisType& bb );

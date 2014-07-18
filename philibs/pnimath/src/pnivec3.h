@@ -11,6 +11,7 @@
 /////////////////////////////////////////////////////////////////////
 
 #include "pnimath.h"
+#include "pnivec2.h"
 
 /////////////////////////////////////////////////////////////////////
 
@@ -83,6 +84,14 @@ class PNIMATHAPI vec3
 		ThisType& operator /= ( ValueType val );
 		ThisType& operator /= ( const ThisType& vecIn );
 	
+      /// @group Emulate most common glsl swizzling methods
+      /// @warning Not meant to be fast path, just for diagnostic/debugging.
+    float x () const { return vec[ 0 ]; }
+    float y () const { return vec[ 1 ]; }
+    float z () const { return vec[ 2 ]; }
+    vec2 xy () const { return vec2 ( vec[ 0 ], vec[ 1 ] ); }
+    vec2 yz () const { return vec2 ( vec[ 1 ], vec[ 2 ] ); }
+
 		void combine ( ValueType t1, const ThisType& v1, ValueType t2, const ThisType& v2 );
 		ValueType dist ( const ThisType& vecIn ) const;
 		ValueType distSqr ( const ThisType& vecIn ) const;
