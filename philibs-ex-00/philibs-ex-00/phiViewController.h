@@ -13,5 +13,6 @@
 
 
 - (IBAction)onPan:(id)sender;
+- (IBAction)onPan2:(UIPanGestureRecognizer *)sender;
 
 @end

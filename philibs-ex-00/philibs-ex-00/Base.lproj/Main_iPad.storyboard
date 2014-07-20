@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="BV1-FR-VrT">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="BV1-FR-VrT">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
@@ -19,13 +19,19 @@
                         <gestureRecognizers/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="AU6-L2-9IE" appends="YES" id="OOG-Jz-dce"/>
+                            <outletCollection property="gestureRecognizers" destination="f84-0B-P8y" appends="YES" id="mg7-7v-okx"/>
                         </connections>
                     </glkView>
                 </glkViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
-                <panGestureRecognizer minimumNumberOfTouches="1" maximumNumberOfTouches="1" id="AU6-L2-9IE">
+                <panGestureRecognizer minimumNumberOfTouches="1" maximumNumberOfTouches="1" id="AU6-L2-9IE" userLabel="Pan1">
                     <connections>
                         <action selector="onPan:" destination="BV1-FR-VrT" id="mbs-AZ-Sps"/>
+                    </connections>
+                </panGestureRecognizer>
+                <panGestureRecognizer minimumNumberOfTouches="2" maximumNumberOfTouches="2" id="f84-0B-P8y" userLabel="Pan2">
+                    <connections>
+                        <action selector="onPan2:" destination="BV1-FR-VrT" id="Pqw-4M-jXM"/>
                     </connections>
                 </panGestureRecognizer>
             </objects>

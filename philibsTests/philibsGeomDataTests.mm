@@ -21,6 +21,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 using namespace scene;
+using namespace pni::math;
 
 using GeomDataRef = pni::pstd::autoRef< geomData >;
 
@@ -44,19 +45,19 @@ GeomDataRef pData00 = 0;
   
   pData00 = new geomData;
 
-  pData00->attributesOp().push_back( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, geomData::PositionComponents } );
+  pData00->mBinding.push_back( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, sizeof(float), geomData::PositionComponents } );
 //  pData00->attributesOp().push_back ( { CommonAttributeNames[ geomData::Normal], geomData::Normal, geomData::DataType_FLOAT, geomData::NormalComponents } );
 //  pData00->attributesOp().push_back ( { CommonAttributeNames[ geomData::TCoord00], geomData::TCoord00, geomData::DataType_FLOAT, geomData::TCoord00Components } );
 //  pData00->attributesOp().push_back ( { CommonAttributeNames[ geomData::TCoord01], geomData::TCoord00, geomData::DataType_FLOAT, geomData::TCoord00Components } );
 
-  pData00->resizeTrisWithCurrentAttributes(6,3);
+  pData00->resizeTrisWithCurrentBinding(6,3);
   
   pData00->getIndices() = { 0, 1, 2, 3, 4, 5, 1, 2, 3 };
   
     // Fill values with prototypical data... just rotate through 0, 1, 2.
-  size_t counter = 0;
-  for ( auto& val : pData00->getValues() )
-    val = ( float ) ( counter++ % 3 );
+  auto pEnd = pData00->end<vec3>(geomData::Position);
+  for ( auto pCur = pData00->begin<vec3>(geomData::Position); pCur != pEnd; ++pCur )
+    pCur->set ( 0.0f, 1.0f, 2.0f );
 }
 
 - (void)tearDown
@@ -73,31 +74,32 @@ GeomDataRef pData00 = 0;
 
   geomData* pData01 = new geomData;
 
-  pData01->attributesOp().push_back( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, geomData::PositionComponents } );
-  pData01->attributesOp().push_back ( { CommonAttributeNames[ geomData::Normal], geomData::Normal, geomData::DataType_FLOAT, geomData::NormalComponents } );
+  pData01->mBinding.push_back( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, sizeof(float), geomData::PositionComponents } );
+  pData01->mBinding.push_back ( { CommonAttributeNames[ geomData::Normal], geomData::Normal, geomData::DataType_FLOAT, sizeof(float), geomData::NormalComponents } );
 
-  pData01->resizeTrisWithCurrentAttributes(4,2);
+  pData01->resizeTrisWithCurrentBinding(4,2);
   
   pData01->getIndices() = { 0, 1, 2, 1, 2, 3 };
   
-  pData00->swap(pData01);
+  pData00->swap(*pData01);
   
-  XCTAssertEqual(pData00->getAttributes().size(), 2, @"Wrong number of attributes in swapped geomData");
-  XCTAssertEqual(pData00->getValues().size(), 4 * pData00->getAttributes().getValueStride(), @"Wrong number of values in swapped geomData");
+  XCTAssertEqual(pData00->mBinding.size(), 2, @"Wrong number of attributes in swapped geomData");
+  XCTAssertEqual(pData00->sizeBytes(), 4 * pData00->mBinding.getValueStrideBytes(), @"Wrong number of bytes in swapped geomData");
   XCTAssertEqual(pData00->getIndices().size(), 6, @"Wrong number of indices in swapped geomData");
-  XCTAssertEqual(pData00->getDirty(), true, @"Swapped geomData should be dirty");
+    // No longer true... swapped data should explicitly be set to dirty by app
+//  XCTAssertEqual(pData00->getDirty(), true, @"Swapped geomData should be dirty");
 }
 
 - (void)testGeomDataUnshareVerts
 {
-  XCTAssertEqual(pData00->getAttributes().size(), 1, @"Wrong number of attributes");
-  XCTAssertEqual(pData00->getValues().size(), 6 * pData00->getAttributes().getValueStride(), @"Wrong number of values");
+  XCTAssertEqual(pData00->mBinding.size(), 1, @"Wrong number of attributes");
+  XCTAssertEqual(pData00->sizeBytes(), 6 * pData00->mBinding.getValueStrideBytes(), @"Wrong number of values");
   XCTAssertEqual(pData00->getIndices().size(), 9, @"Wrong number of indices");
 
   pData00->unshareVerts();
 
-  XCTAssertEqual(pData00->getAttributes().size(), 1, @"Wrong number of attributes");
-  XCTAssertEqual(pData00->getValues().size(), 3 * 3 * pData00->getAttributes().getValueStride(), @"Wrong number of values");
+  XCTAssertEqual(pData00->mBinding.size(), 1, @"Wrong number of attributes");
+  XCTAssertEqual(pData00->sizeBytes(), 3 * 3 * pData00->mBinding.getValueStrideBytes(), @"Wrong number of values");
   XCTAssertEqual(pData00->getIndices().size(), 9, @"Wrong number of indices");
 
 }
@@ -106,50 +108,55 @@ GeomDataRef pData00 = 0;
 {
   GeomDataRef pData01 = new geomData;
 
-  pData01->attributesOp().push_back( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, geomData::PositionComponents } );
+  pData01->mBinding.push_back( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, sizeof(float), geomData::PositionComponents } );
 //  pData01->attributesOp().push_back ( { CommonAttributeNames[ geomData::Normal], geomData::Normal, geomData::DataType_FLOAT, geomData::NormalComponents } );
 
-  pData01->resizeTrisWithCurrentAttributes(6,2);
+  pData01->resizeTrisWithCurrentBinding(6,2);
   
   pData01->getIndices() = { 0, 1, 2, 3, 4, 5 };
 
     // Fill values with prototypical data... just rotate through 0, 1, 0... 1, 0, 1....
   size_t counter = 0;
-  for ( auto& val : pData01->getValues() )
-    val = ( float ) ( counter++ % 2 );
+  auto pEnd = pData01->end<vec3>(geomData::Position);
+  for ( auto pCur = pData01->begin<vec3>(geomData::Position); pCur != pEnd; )
+  {
+    pCur->set ( 0.0f, 1.0f, 0.0f ); ++pCur;
+    pCur->set ( 1.0f, 0.0f, 1.0f ); ++pCur;
+  }
 
-  XCTAssertEqual(pData01->getAttributes().size(), 1, @"Wrong number of attributes");
-  XCTAssertEqual(pData01->getValues().size(), 6 * pData01->getAttributes().getValueStride(), @"Wrong number of values");
+  XCTAssertEqual(pData01->mBinding.size(), 1, @"Wrong number of attributes");
+  XCTAssertEqual(pData01->sizeBytes(), 6 * pData01->mBinding.getValueStrideBytes(), @"Wrong number of values");
   XCTAssertEqual(pData01->getIndices().size(), 6, @"Wrong number of indices");
 
   pData01->shareVerts();
 
-  XCTAssertEqual(pData01->getAttributes().size(), 1, @"Wrong number of attributes");
+  XCTAssertEqual(pData01->mBinding.size(), 1, @"Wrong number of attributes");
     // All verts are identical in the src, so they should share one vert in dst.
-  XCTAssertEqual(pData01->getValues().size(), 2 * pData01->getAttributes().getValueStride(), @"Wrong number of values");
+  XCTAssertEqual(pData01->sizeBytes(), 2 * pData01->mBinding.getValueStrideBytes(), @"Wrong number of values");
   XCTAssertEqual(pData01->getIndices().size(), 6, @"Wrong number of indices");
   
-  geomData::Values vals = { 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f };
-  XCTAssertEqual(pData01->getValues(), vals, @"Attribute values incorrect");
+    // TODO: Redo comparison of attribute data
+//  geomData::Values vals = { 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f };
+//  XCTAssertEqual(pData01->getValues(), vals, @"Attribute values incorrect");
 }
 
 
 - (void)testGeomRealloc
 {
-  XCTAssertEqual(pData00->getAttributes().size(), 1, @"Wrong number of attributes");
-  XCTAssertEqual(pData00->getValues().size(), 6 * pData00->getAttributes().getValueStride(), @"Wrong number of values");
+  XCTAssertEqual(pData00->mBinding.size(), 1, @"Wrong number of attributes");
+  XCTAssertEqual(pData00->sizeBytes(), 6 * pData00->mBinding.getValueStrideBytes(), @"Wrong number of values");
   XCTAssertEqual(pData00->getIndices().size(), 9, @"Wrong number of indices");
-  XCTAssertEqual(pData00->getAttributes().getValueStride(), 3, @"Wrong value stride");
+  XCTAssertEqual(pData00->mBinding.getValueStrideBytes(), 3 * sizeof(float), @"Wrong value stride");
 
-  geomData::Attributes attrs = pData00->getAttributes();
-  attrs.push_back ( { CommonAttributeNames[ geomData::Normal], geomData::Normal, geomData::DataType_FLOAT, geomData::NormalComponents } );
+  geomData::Binding attrs = pData00->mBinding;
+  attrs.push_back ( { CommonAttributeNames[ geomData::Normal], geomData::Normal, geomData::DataType_FLOAT, sizeof(float), geomData::NormalComponents } );
   
-  pData00->reallocWithAttributes(attrs);
+  pData00->migrate(attrs);
 
-  XCTAssertEqual(pData00->getAttributes().size(), 2, @"Wrong number of attributes");
-  XCTAssertEqual(pData00->getValues().size(), 6 * pData00->getAttributes().getValueStride(), @"Wrong number of values");
+  XCTAssertEqual(pData00->mBinding.size(), 2, @"Wrong number of attributes");
+  XCTAssertEqual(pData00->sizeBytes(), 6 * pData00->mBinding.getValueStrideBytes(), @"Wrong number of values");
   XCTAssertEqual(pData00->getIndices().size(), 9, @"Wrong number of indices");
-  XCTAssertEqual(pData00->getAttributes().getValueStride(), 6, @"Wrong value stride");
+  XCTAssertEqual(pData00->mBinding.getValueStrideBytes(), 6 * sizeof(float), @"Wrong value stride");
 }
 
 - (void)testUnnormalizedCrossMagnitude
@@ -186,34 +193,32 @@ GeomDataRef pData00 = 0;
 {
   pData00 = new geomData;
 
-  pData00->attributesOp().push_back( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, geomData::PositionComponents } );
+  pData00->mBinding.push_back( { CommonAttributeNames[ geomData::Position], geomData::Position, geomData::DataType_FLOAT, sizeof(float), geomData::PositionComponents } );
 
-  pData00->resizeTrisWithCurrentAttributes(6,2);
+  pData00->resizeTrisWithCurrentBinding(6,2);
   
   pData00->getIndices() = { 0, 1, 2, 3, 4, 5 };
-  pData00->getValues() = {
-      0.0f, 0.0f, 0.0f,
-      1.0f, 0.0f, 0.0f,
-      1.0f, 0.0f, -1.0f,
-    
-      0.0f, 0.0f, 0.0f,
-      1.0f, 0.0f, -1.0f,
-      0.0f, 1.0f, -1.0f
-  };
-
-  XCTAssertEqual(pData00->getAttributes().size(), 1, @"Wrong number of attributes");
-  XCTAssertEqual(pData00->getValues().size(), 6 * pData00->getAttributes().getValueStride(), @"Wrong number of values");
+  auto pIter = pData00->begin<vec3>(geomData::Position);
+  pIter->set( 0.0f, 0.0f,  0.0f ); ++pIter;
+  pIter->set( 1.0f, 0.0f,  0.0f ); ++pIter;
+  pIter->set( 1.0f, 0.0f, -1.0f ); ++pIter;
+  pIter->set( 0.0f, 0.0f,  0.0f ); ++pIter;
+  pIter->set( 1.0f, 0.0f,  -1.0f ); ++pIter;
+  pIter->set( 0.0f, 1.0f,  -1.0f ); ++pIter;
+  
+  XCTAssertEqual(pData00->mBinding.size(), 1, @"Wrong number of attributes");
+  XCTAssertEqual(pData00->sizeBytes(), 6 * pData00->mBinding.getValueStrideBytes(), @"Wrong number of values");
   XCTAssertEqual(pData00->getIndices().size(), 6, @"Wrong number of indices");
-  XCTAssertEqual(pData00->getAttributes().getValueStride(), 3, @"Wrong value stride");
+  XCTAssertEqual(pData00->mBinding.getValueStrideBytes(), 3 * sizeof(float), @"Wrong value stride");
 
     // Should share a few verts because normals were blended together
   pData00->generateNormals(80.0f);
   pData00->shareVerts();
 
-  XCTAssertEqual(pData00->getAttributes().size(), 2, @"Wrong number of attributes");
-  XCTAssertEqual(pData00->getValues().size(), 4 * pData00->getAttributes().getValueStride(), @"Wrong number of values");
+  XCTAssertEqual(pData00->mBinding.size(), 2, @"Wrong number of attributes");
+  XCTAssertEqual(pData00->sizeBytes(), 4 * pData00->mBinding.getValueStrideBytes(), @"Wrong number of values");
   XCTAssertEqual(pData00->getIndices().size(), 6, @"Wrong number of indices");
-  XCTAssertEqual(pData00->getAttributes().getValueStride(), 6, @"Wrong value stride");
+  XCTAssertEqual(pData00->mBinding.getValueStrideBytes(), 6 * sizeof(float), @"Wrong value stride");
   
     // Should not share any verts because breaking angle is so small that no
     // normals will be blended
@@ -221,12 +226,13 @@ GeomDataRef pData00 = 0;
   pData00->generateNormals(5.0f);
   pData00->shareVerts();
 
-  XCTAssertEqual(pData00->getAttributes().size(), 2, @"Wrong number of attributes");
-  XCTAssertEqual(pData00->getValues().size(), 6 * pData00->getAttributes().getValueStride(), @"Wrong number of values");
+  XCTAssertEqual(pData00->mBinding.size(), 2, @"Wrong number of attributes");
+  XCTAssertEqual(pData00->sizeBytes(), 6 * pData00->mBinding.getValueStrideBytes(), @"Wrong number of values");
   XCTAssertEqual(pData00->getIndices().size(), 6, @"Wrong number of indices");
-  XCTAssertEqual(pData00->getAttributes().getValueStride(), 6, @"Wrong value stride");
+  XCTAssertEqual(pData00->mBinding.getValueStrideBytes(), 6 * sizeof(float), @"Wrong value stride");
 }
 
+/*
 - (void)testGenNormalsXXX
 {
   geomDataXXX* pDataxx = new geomDataXXX;
@@ -279,6 +285,7 @@ GeomDataRef pData00 = 0;
   
   pDataxx->dbg(std::cout);
 }
+*/
 
 - (void)testSegIsectSeg
 {
@@ -373,7 +380,7 @@ GeomDataRef pData00 = 0;
   lines* pLines = new lines;
   lineData* pLineData = new lineData;
   
-  pLines->lineDataProp().set ( pLineData );
+  pLines->setLineData( pLineData );
   
   pLineData->mBinding.push_back ( { {}, lineData::Position, lineData::Float, sizeof(float), 3 } );
   pLineData->mBinding.push_back ( { {}, lineData::Color, lineData::Float, sizeof(float), 4 } );
@@ -397,15 +404,18 @@ GeomDataRef pData00 = 0;
   
   pLineData->getIndices()[ 0 ] = 2;
   
-  pLines->lineDataProp().clearDirty();
-  
-  XCTAssertEqual(pLines->getGeomData()->getValues().size(), 48, "geom has wrong vert count after lines::test");
+  pLines->getLineData()->clearDirty();
+
+  // No longer legit because clearDirty above no longer has the side effect of rebuilding the
+  // geomData in lines.
+/*
+  XCTAssertEqual(pLines->getGeomData()->size(), 48, "geom has wrong vert count after lines::test");
   XCTAssertEqual(pLines->getGeomData()->getIndices().size(), 6, "geom has wrong index count after lines::test");
 
   float* pFloats = pLineData->getPtr<float>();
   for ( size_t val = 0; val < 16; ++val )
     XCTAssertEqual(pFloats[ val ], ( float ) val, "line values not expected");
-
+*/
 
 }
 

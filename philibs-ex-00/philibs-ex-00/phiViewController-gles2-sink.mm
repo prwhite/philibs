@@ -732,7 +732,7 @@ struct linePanData
 {
   pni::math::vec2 mLastPos;
   
-  pni::math::vec2 cg2pt ( UIPanGestureRecognizer* gr )
+  static pni::math::vec2 cg2pt ( UIPanGestureRecognizer* gr )
     {
       pni::math::vec2 ret;
       
@@ -843,6 +843,39 @@ struct linePanData
       }
       break;
   }
+}
+
+- (IBAction)onPan2:(UIPanGestureRecognizer *)sender
+{
+  switch (sender.state) {
+  case UIGestureRecognizerStateBegan:
+    break;
+    
+  case UIGestureRecognizerStateChanged:
+    {
+      using namespace pni::math;
+      
+      vec2 pt = linePanData::cg2pt(sender);
+//      pt /= vec2 ( 2048, 768*2 ); // [0,1]
+//      pt -= vec2 ( 0.5, 0.5 );  // [-0.5,0.5]
+      pt *= vec2 ( 10, 10 );    // [-5,5]
+      
+      vec3 const from ( pt[ 0 ], pt[ 1 ], 4.0f );
+      vec3 const to;
+      vec3 const up ( 0.0f, 1.0f, 0.0f );
+      
+      matrix4 mat;
+      mat.setLookat(from, to, up);
+    
+      mCam->matrixOp() = mat;
+    }
+    break;
+    
+  default:
+    
+    break;
+}
+
 }
 
 @end
