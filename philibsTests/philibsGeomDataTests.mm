@@ -420,4 +420,98 @@ GeomDataRef pData00 = 0;
 }
 
 
+- (void)testLinAlg
+{
+  using namespace pni::math;
+
+  pni::math::matrix4 m0;
+  m0.setCoord( { 2.0f, 3.0f, 4.0f }, { 20.0f, 40.0f, 60.0f } );
+
+  pni::math::matrix4 m1;
+  m1.setCoord( {}, { 20.0f, 40.0f, 60.0f } );
+
+    // First, just checking some things that should be analytically and
+    // empirically true...
+
+    // Show that a point and a vector using xformPt with no translate in matrix
+    // give the same result (with w manually set to 0 for the point).
+  {
+    vec4 p0 { 1.0f, 2.0f, 3.0f, 1.0f };
+    vec4 v0 { 1.0f, 2.0f, 3.0f, 0.0f };
+    
+    p0.xformPt(p0, m1);
+    v0.xformPt(v0, m1);
+    
+    p0[ 3 ] = 0.0f;
+
+    XCTAssertTrue(p0==v0, "vec and pt should be equal 00");
+  }
+
+    // Show that a point using xformVec on a matrix with translate is
+    // the same as a vector using xformVec.
+  {
+    vec4 p0 { 1.0f, 2.0f, 3.0f, 1.0f };
+    vec4 v0 { 1.0f, 2.0f, 3.0f, 0.0f };
+    
+    p0.xformVec(p0, m1);
+    v0.xformPt(v0, m1);
+    
+    p0[ 3 ] = 0.0f;
+
+    XCTAssertTrue(p0==v0, "vec and pt should be equal 01");
+  }
+  
+}
+  // The line vertex shader is a bit tricky... will test some things here
+  // to get tangent projection back in usable range
+- (void)testLineVsh
+{
+  using namespace pni::math;
+
+  pni::math::matrix4 mat;
+  
+  mat.setPerspective(45.0f, 1.0f, 0.1f, 100.0f);
+  
+  {
+    vec4 v0 { 1.0f, 1.0f, -1.0f, 0.0f };
+    vec4 p0 { 1.0f, 1.0f, -1.0f, 1.0f };
+    
+    v0.xformPt(v0, mat);
+    p0.xformPt(p0, mat);
+    
+    v0[ 2 ] = p0[ 2 ];
+    
+    XCTAssertTrue(v0 == p0, "v0 and p0 did not match (except for z component) after projection");
+  }
+  
+    // This is currently a nonsense test because it doesn't accurately model the
+    // exact problem that's happening with the line vsh.
+    // TODO: fix this
+  {
+    vec4 v0 { 1.0f, 1.0f, -1.0f, 1.0f };
+    vec4 v1 { 1.0f, 1.0f, -1.0f, 1.0f };
+    vec4 v2 { 1.0f, 1.0f, -1.0f, 1.0f };
+    v1 *= 0.5f;
+    v2 *= -10.0f;
+    v1[ 3 ] = 1.0f;
+    v2[ 3 ] = 1.0f;
+    
+    v0.xformPt(v0, mat);
+    v1.xformPt(v1, mat);
+    v2.xformPt(v2, mat);
+
+    v0[ 3 ] = 0.0f;
+    v1[ 3 ] = 0.0f;
+    v2[ 3 ] = 0.0f;
+
+    v0.normalize();
+    v1.normalize();
+    v2.normalize();
+    
+//    XCTAssertTrue(v0 == v1, "v0 and p0 did not match (except for z component) after projection");
+  }
+
+}
+
 @end
+

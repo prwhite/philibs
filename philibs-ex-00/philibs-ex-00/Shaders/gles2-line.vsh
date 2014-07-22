@@ -70,6 +70,7 @@ void main()
   nSrc.xyz += nNorm;
 
     // Put output pos back in clip space
+    // This is redundant... fixed function will do this divide next anyway.
   cSrc = nSrc * cSrcW;
 
   gl_Position = cSrc;
