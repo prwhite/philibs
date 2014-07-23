@@ -7,6 +7,7 @@ precision lowp float;
 varying lowp vec4 v_color;
 varying lowp vec2 v_uv00;
 varying lowp vec2 v_texRange;
+varying lowp float v_thickness;
 
 uniform sampler2D u_tex00;
 uniform lowp vec2 u_edgeRange;
@@ -31,11 +32,22 @@ void main()
   
     // MAYBE: Add uniform that determines if/how we do this... i.e., a scalar for v direction
     // this will allow us to do double/triple stroke lines, etc.
-  alpha = 1.0 - alpha;
+  alpha = 1.0 - alpha;  // [0,0] through one now
   
     // to do line thickness/antialising fidelity, the top and bottom of the smoothstep
-  float bottom = u_edgeRange[ 0 ] - u_edgeRange[ 1 ];
-  float top = u_edgeRange[ 0 ] + u_edgeRange[ 1 ];
+#define AUTOEDGERANGE
+#ifdef AUTOEDGERANGE
+    // Auto edge range uses half of the size of one pixel (eventually +/- that
+    // amount), derived from the varying thickness.
+  float erange = 1.99 / v_thickness;
+  float ecenter = erange;     // to move away from exact tri edge
+#else
+  float ecenter = u_edgeRange[ 0 ];
+  float erange = u_edgeRange[ 1 ];
+#endif // AUTOEDGERANGE
+  
+  float bottom = ecenter - erange;
+  float top = ecenter + erange;
 
   alpha = smoothstep ( bottom, top, alpha );
   

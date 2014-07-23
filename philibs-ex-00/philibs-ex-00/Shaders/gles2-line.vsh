@@ -23,6 +23,7 @@ attribute vec2 a_uv00;
 varying lowp vec4 v_color;
 varying lowp vec2 v_uv00;
 varying lowp vec2 v_texRange; // middle and range, not mult which is used below
+varying lowp float v_thickness;
 
 uniform mat4 u_mvpMat;
 uniform mat3 u_normMat;
@@ -40,6 +41,8 @@ void main()
     // get "normal" in clip... it's still tangent to line segment though
   float lNormLen = length ( a_normal.xyz );   // local len before matrix mult...
                                               // but meant to be used in screen pixels
+
+  v_thickness = lNormLen;
 
   vec4 cSrc = u_mvpMat * a_position;
   vec4 lDst = a_position;
