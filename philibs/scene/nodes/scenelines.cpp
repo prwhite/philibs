@@ -83,7 +83,18 @@ void lines::updateTest ( graphDd::fxUpdate const& update )
     vec4 cSrc = u_mvpMat * a_position;
     vec4 lDst = a_position;
     vec4 lTangent = vec4 ( a_normal / lNormLen ); // same because a_normal[ 4 ] is 0.0
+
+      // HACK: Keep tangent vectors that point toward the eye from projecting
+      // through the COP, causing generated points to be on the wrong side of
+      // the centerline.  Could be a uniform that defaults to something reasonable.
+      // This should probably be proportional to the distance to the near clipping
+      // plane.
+    lTangent *= 0.01;
+
+      // Offset local position by tangent
     lDst += lTangent;
+
+      // Get tangent end in clip space
     vec4 cDst = u_mvpMat * lDst;
     
       // Save w for points so we can put things back in clip coords later
@@ -98,28 +109,30 @@ void lines::updateTest ( graphDd::fxUpdate const& update )
 
       // Calc actual normal in ndc
     vec3 nTangent = nDst.xyz () - nSrc.xyz ();
-//    vec3 nNorm = cross ( nTangent, vec3 ( 0.0, 0.0, 1.0 ) );  // cross w z-out to get perp vector in ndc
-    vec3 nNorm = nTangent;
+    vec3 nNorm;
     nNorm.cross(nTangent, vec3 { 0.0, 0.0, 1.0 } );
-
     nNorm.normalize();
 
       // Make the ndc-based normal the right length in pixels by scaling by
       // the original length divided by forward diff of the pixel size in ndc units.
-//    nNorm.xy *= u_vpSizeRatio / u_vpSize * lNormLen;
+      // nNorm.xy *= ( lNormLen * u_vpSizeRatio ) / u_vpSize;
     vec2 nNormXY = nNorm.xy();
-    vec2 const u_vpSize { 2048.0, 1024.0 };
-    nNormXY *= mVpSizeRatio / u_vpSize * lNormLen;
+    vec2 const u_vpSize { 2048.0, 1024.0 }; // Magic numbers!!! But only for diagnostic code.
+    nNormXY *= lNormLen;
+    nNormXY *= mVpSizeRatio;
+    nNormXY /= u_vpSize;
     nNorm.set ( nNormXY[ 0 ], nNormXY[ 1 ], nNorm[ 2 ] );
 
       // Now add the calculated norm to the point on the line
-//    nSrc.xyz += nNorm;
+      // nSrc.xyz += nNorm;
     nSrc.set ( nSrc[ 0 ] + nNorm[ 0 ], nSrc[ 1 ] + nNorm[ 1 ], nSrc[ 2 ] + nNorm[ 2 ], nSrc[ 3 ] );
 
-      // Put output pos back in clip space
-    cSrc = nSrc * cSrcW;
-
-//    gl_Position = cSrc;
+    // Z offset toward camera to make lines in crotches stand out... but we
+    // also do polygon offset in fixed function to make sure fragments move
+    // toward the camera.
+    // TODO: Scale this based on dz, rather than absolute value.
+  // float offset = -pow( 2.0, 8.0 ) / 65536.0;
+  // nSrc[ 2 ] += offset;
 
     ++viter;
   }

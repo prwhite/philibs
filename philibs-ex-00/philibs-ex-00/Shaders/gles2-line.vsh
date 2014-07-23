@@ -37,14 +37,24 @@ void main()
     // prefixes: c = clip, n = ndc, e = eye, l = scene local
   v_uv00 = a_uv00;
 
-    // get normal in clip... it's still parallel to line segment though
+    // get "normal" in clip... it's still tangent to line segment though
   float lNormLen = length ( a_normal.xyz );   // local len before matrix mult...
                                               // but meant to be used in screen pixels
 
   vec4 cSrc = u_mvpMat * a_position;
   vec4 lDst = a_position;
   vec4 lTangent = vec4 ( a_normal.xyz / lNormLen, 0.0 );
+     // HACK: Keep tangent vectors that point toward the eye from projecting
+     // through the COP, causing generated points to be on the wrong side of
+     // the centerline.  Could be a uniform that defaults to something reasonable.
+     // TODO: This should probably be proportional to the distance to the near clipping
+     // plane.
+  lTangent *= 0.01;
+  
+    // Offset local position by tangent
   lDst += lTangent;
+  
+    // Get tangent end in clip space
   vec4 cDst = u_mvpMat * lDst;
   
     // Save w for points so we can put things back in clip coords later
@@ -64,16 +74,19 @@ void main()
 
     // Make the ndc-based normal the right length in pixels by scaling by
     // the original length divided by forward diff of the pixel size in ndc units.
-  nNorm.xy *= u_vpSizeRatio / u_vpSize * lNormLen;
+  nNorm.xy *= ( lNormLen * u_vpSizeRatio ) / u_vpSize;
 
     // Now add the calculated norm to the point on the line
   nSrc.xyz += nNorm;
 
-    // Put output pos back in clip space
-    // This is redundant... fixed function will do this divide next anyway.
-  cSrc = nSrc * cSrcW;
+    // Z offset toward camera to make lines in crotches stand out... but we
+    // also do polygon offset in fixed function to make sure fragments move
+    // toward the camera.
+    // TODO: Scale this based on dz, rather than absolute value.
+  float offset = -pow( 2.0, 8.0 ) / 65536.0;
+  nSrc[ 2 ] += offset;
 
-  gl_Position = cSrc;
+  gl_Position = nSrc;
   
   v_color = a_color;
 
