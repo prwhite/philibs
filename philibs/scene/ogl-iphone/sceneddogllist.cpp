@@ -913,6 +913,21 @@ void ddOglList::dispatch ( depth const* pState )
 		glDepthMask ( pState->getDepthMask () );
 
 		glDepthFunc ( depthFuncToGl ( pState->getDepthFunc () ) );
+    
+    float factor = 0.0f;
+    float units = 0.0f;
+    
+    pState->getPolygonOffset ( factor, units );
+    
+    if ( factor != 0.0f || units != 0.0f )
+    {
+      glEnable( GL_POLYGON_OFFSET_FILL );
+      glPolygonOffset(factor, units);
+    }
+    else
+    {
+      glDisable( GL_POLYGON_OFFSET_FILL );
+    }
 	}
 	else	// disabled
 	{

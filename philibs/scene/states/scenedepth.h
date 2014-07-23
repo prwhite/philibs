@@ -24,8 +24,8 @@ class depth :
   public state
 {
   public:
-    depth();
-    virtual ~depth();
+//    depth();
+//    virtual ~depth();
 //     depth(depth const& rhs);
 //     depth& operator=(depth const& rhs);
 //     bool operator==(depth const& rhs) const;
@@ -47,13 +47,17 @@ class depth :
 		void setDepthMask ( bool depthMaskIn = true ) { mDepthMask = depthMaskIn; }
 		bool getDepthMask () const { return mDepthMask; }
 
-    
+    void setPolygonOffset ( float factor, float units ) { mOffsetFactor = factor; mOffsetUnits = units; }
+    void getPolygonOffset ( float& factor, float& units ) const { factor = mOffsetFactor; units = mOffsetUnits; }
+  
   protected:
     
   private:
 // 		pni::math::vec2 mDepthRange;
-		DepthFunc mDepthFunc;
-		bool mDepthMask;
+		DepthFunc mDepthFunc = Less;
+    float mOffsetFactor = 0.0f;
+    float mOffsetUnits = 0.0f;
+		bool mDepthMask = true;
     
 
   // interface from state

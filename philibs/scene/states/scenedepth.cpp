@@ -12,18 +12,18 @@ namespace scene {
   
 /////////////////////////////////////////////////////////////////////
 
-depth::depth() :
-//   mDepthRange ( pni::math::vec2 ( 0.0f, 1.0f ) ),
-  mDepthFunc ( Less ),
-  mDepthMask ( true )
-{
-  
-}
-
-depth::~depth()
-{
-  
-}
+//depth::depth() :
+////   mDepthRange ( pni::math::vec2 ( 0.0f, 1.0f ) ),
+//  mDepthFunc ( Less ),
+//  mDepthMask ( true )
+//{
+//  
+//}
+//
+//depth::~depth()
+//{
+//  
+//}
 
 // depth::depth(depth const& rhs)
 // {
