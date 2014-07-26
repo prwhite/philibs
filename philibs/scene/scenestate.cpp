@@ -14,17 +14,17 @@ namespace scene {
   
 /////////////////////////////////////////////////////////////////////
 
-state::state() :
-  mOverride ( false ),
-  mEnable ( true )
-{
-
-}
-
-state::~state()
-{
-  
-}
+//state::state() :
+//  mOverride ( false ),
+//  mEnable ( true )
+//{
+//
+//}
+//
+//state::~state()
+//{
+//  
+//}
 
 // state::state(state const& rhs) :
 //   mOverride ( rhs.mOverride )

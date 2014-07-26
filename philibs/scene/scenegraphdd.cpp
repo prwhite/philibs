@@ -12,19 +12,19 @@ namespace scene {
   
 /////////////////////////////////////////////////////////////////////
 
-graphDd::graphDd() :
-  mTravMask ( 0xffffffff ),
-  mTimeStamp ( 0.0f ),
-  mLastTimeStamp ( 0.0f ),
-  mDbgVals ( DbgNone )
-{
-  
-}
-
-graphDd::~graphDd()
-{
-    
-}
+//graphDd::graphDd() :
+//  mTravMask ( 0xffffffff ),
+//  mTimeStamp ( 0.0f ),
+//  mLastTimeStamp ( 0.0f ),
+//  mDbgVals ( DbgNone )
+//{
+//  
+//}
+//
+//graphDd::~graphDd()
+//{
+//    
+//}
 
 //graphDd::graphDd(graphDd const& rhs)
 //{

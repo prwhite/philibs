@@ -30,12 +30,13 @@ namespace scene {
 
 class node :
     public pni::pstd::refCount,
-    public travDataContainer
+    public travDataContainer,
+    public travDataMaskContainer<>
 {
   public:
-    node();
+    node() = default;
     virtual ~node();
-    node(node const& rhs);
+    node(node const& rhs) = default;
 //      node& operator=(node const& rhs);
 //      bool operator==(node const& rhs) const;
     
@@ -43,9 +44,7 @@ class node :
     typedef std::vector< NodeRef > Nodes;
     typedef std::vector< node* > Parents;
     typedef pni::pstd::autoRef< state > StateRef;
-    typedef std::unordered_map< state::Id, StateRef, std::hash< int > > States;
-    typedef uint32_t MaskType;
-    typedef std::vector< MaskType > TravMasks;
+    typedef std::unordered_multimap< state::Id, StateRef, std::hash< int > > States;
 
     // Node framework methods.
     virtual node* dup () const = 0;
@@ -59,9 +58,6 @@ class node :
         mMatrix.setIsIdent ( false ); setBoundsDirty (); return mMatrix; }
     matrix4 & getMatrix () { return mMatrix; }
     matrix4 const& getMatrix () const { return mMatrix; }
-
-    void setTravMask ( Trav which, unsigned int val ) { mTravMask[ which ] = val; }
-    MaskType getTravMask ( Trav which ) const { return mTravMask[ which ]; }
 
     virtual void setBoundsDirty ();
     box3 const& getBounds () const;
@@ -83,9 +79,12 @@ class node :
     Parents const& getParents () const { return mParents; }
     
     void setState ( state* pState, state::Id id );
+    void setState ( state* pState, state::Id id, TravMaskType mask );
     void remState ( state* pState );
     void remState ( state::Id id );
+    void remState ( state::Id id, MaskType mask );
     state* getState ( state::Id id ) const;
+    state* getState ( state::Id id, MaskType mask ) const;
     States& getStates () { return mStates; }
     States const& getStates () const { return mStates; }
     
@@ -106,7 +105,6 @@ class node :
     Nodes mChildren;
     Parents mParents;
     States mStates;
-    TravMasks mTravMask;
     std::string mName;
 
     // From refCount

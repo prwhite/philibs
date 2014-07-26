@@ -136,7 +136,7 @@ void renderSinkDd::dispatch ( renderSink const* pSink )
         // Can't increment enum types any more
       texture::ImageId cur = ( texture::ImageId ) uicur;
     
-        // TODO: Need to set the 6 different views
+        // Need to set the 6 different views
       setCubemapDdMat(pSink, cur);
     
       framebuffer::spec const& spec = pSink->mFramebuffer->getSpec();

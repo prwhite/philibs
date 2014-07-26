@@ -35,14 +35,17 @@ typedef float TimeType;
 
 /////////////////////////////////////////////////////////////////////
 
-enum Trav {
+using TravMaskType = uint32_t;
+
+enum Trav : TravMaskType {
   Draw,
   Sound,
   Isect,
   UI,
   User00,
   User01,
-  TravCount
+  TravCount,
+  AllOn = 0xffffffff
 };
 
 class travDataContainer
@@ -72,6 +75,23 @@ class travDataContainer
   protected:
     TravDatum mTravData;
     
+};
+
+// ///////////////////////////////////////////////////////////////////
+
+template< TravMaskType Init = Trav::AllOn >
+class travDataMaskContainer
+{
+  public:
+    static size_t const Size = Trav::TravCount;
+  
+    using MaskType = TravMaskType;
+    void setTravMask ( Trav which, MaskType val ) { mTravMask[ which ] = val; }
+    MaskType getTravMask ( Trav which ) const { return mTravMask[ which ]; }
+  
+  private:
+    using TravMasks = MaskType[ Size ];
+    TravMasks mTravMask = { Init, Init, Init, Init, Init, Init };
 };
 
 /////////////////////////////////////////////////////////////////////

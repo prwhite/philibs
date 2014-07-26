@@ -9,6 +9,8 @@
 
 #include "pnirefcountdbg.h"
 
+#include "pnipstd.h"
+
 #include <iostream>
 
 /////////////////////////////////////////////////////////////////////
@@ -17,10 +19,10 @@ namespace scene {
   
 /////////////////////////////////////////////////////////////////////
 
-node::node()
-{
-  mTravMask.resize ( TravCount, 0xffffffff );
-}
+//node::node()
+//{
+//
+//}
 
 node::~node()
 {
@@ -37,25 +39,24 @@ node::~node()
 //      unsigned int mTravMask[ TravCount ];
 //      std::string mName;
 
-node::node(node const& rhs) :
-  mMatrix ( rhs.mMatrix ),
-  mBounds ( rhs.mBounds ),
-  mTravMask ( rhs.mTravMask ),
-  mName ( rhs.mName ),
-  mStates ( rhs.mStates ) // Refernce source states.
-{
-  // Don't do this in the basic copy constructor... just
-  // alias all states for now... a smarter traversal can
-  // make the state unique.
-
-//   States::const_iterator end = rhs.mStates.end ();
-//   for ( States::const_iterator cur = rhs.mStates.begin ();
-//     cur != end;
-//     ++cur )
-//   {
-//     setState ( cur->second.get ()->dup (), cur->first );
-//   }
-}
+//node::node(node const& rhs) :
+//  mMatrix ( rhs.mMatrix ),
+//  mBounds ( rhs.mBounds ),
+//  mName ( rhs.mName ),
+//  mStates ( rhs.mStates ) // Refernce source states.
+//{
+//  // Don't do this in the basic copy constructor... just
+//  // alias all states for now... a smarter traversal can
+//  // make the state unique.
+//
+////   States::const_iterator end = rhs.mStates.end ();
+////   for ( States::const_iterator cur = rhs.mStates.begin ();
+////     cur != end;
+////     ++cur )
+////   {
+////     setState ( cur->second.get ()->dup (), cur->first );
+////   }
+//}
 
 //node& node::operator=(node const& rhs)
 //{
@@ -219,57 +220,109 @@ void node::remAllParents ()
 
 void node::setState ( state* pState, state::Id id )
 {
-//   assert ( pState );
-  
     // Must protect against set of zero... rather do it
-    // here rather than every frame we evaluate states.
+    // here than during every frame we evaluate states.
   if ( pState )
-    mStates[ id ] = pState;
+  {
+      // Replace if id and state trav mask matches
+    remState ( id, pState->getTravMask () );
+    
+    mStates.insert( States::value_type ( id, pState ) );
+  }
   else
     remState ( id );
 }
 
+void node::setState ( state* pState, state::Id id, TravMaskType mask )
+{
+  if ( pState )
+    pState->setTravMask( mask );
+  setState(pState, id);
+}
+
 void node::remState ( state* pState )
 {
-  States::iterator end = mStates.end ();
-  for ( States::iterator cur = mStates.begin ();
-      cur != end;
-      ++cur )
+  // from http://stackoverflow.com/questions/6953969/can-static-assert-check-if-a-type-is-a-vector
+  static_assert( ! std::is_same<States, std::vector<StateRef>>::value, "This code shouldn't cache 'end' for a vector because 'erase' invalidates it.");
+
+  auto end = mStates.end ();
+  for ( auto cur = mStates.begin (); cur != end; )
   {
     if ( cur->second == pState )
     {
-      mStates.erase ( cur );
-      return;
+        // make sure cur isn't invalidated by erase
+      auto del = cur;
+      ++cur;
+      mStates.erase ( del );
+        // The same state /could/ be added more than once, so we don't
+        // do a return here.  This is very unlikely though, but this
+        // is probably a better place to deal with this than in every
+        // setState call.
     }
+    else
+      ++cur;
   }
 }
 
 void node::remState ( state::Id id )
 {
-  States::iterator found =  mStates.find ( id );
-  if ( found != mStates.end () )
-    mStates.erase ( found );  
+  mStates.erase(id);
+}
+
+void node::remState ( state::Id id, MaskType mask )
+{
+  auto range = mStates.equal_range(id);
+  if ( range.first != mStates.end() )
+  {
+      // Find matches for mask first, building up delete list
+    std::vector< States::iterator > deletes;
+    
+    {
+        // Can't use range for because we need the iterator, not the value_type,
+        // for the call to erase to be efficient below.
+      for ( auto cur = range.first; cur != range.second; ++cur )
+      {
+        if ( cur->second->getTravMask () & mask )
+          deletes.push_back(cur);
+      }
+    }
+    
+      // Then do the deletes in the delete list /on the states map/
+    {
+      for ( auto cur : deletes )
+        mStates.erase(cur);
+    }
+  }
 }
 
 state* node::getState ( state::Id id ) const
 {
-  States::const_iterator found = mStates.find ( id );
+  auto found = mStates.find ( id );
   if ( found != mStates.end () )
     return found->second.get ();
   else
     return 0;
 }
 
+state* node::getState ( state::Id id, MaskType mask ) const
+{
+  auto range = mStates.equal_range(id);
+  for ( auto iter : range )
+  {
+    if ( iter.second->getTravMask() & mask )
+      return iter.second.get();
+  }
+
+  return 0;
+}
+
 void node::uniquifyStates ()
 {
-  States::iterator end = mStates.end ();
-  for ( States::iterator cur = mStates.begin ();
-      cur != end;
-      ++cur )
+  for ( auto cur : mStates )
   {
-    if ( cur->second && ( cur->second->getNumRefs () > 1 ) )
+    if ( cur.second && ( cur.second->getNumRefs () > 1 ) )
     {
-      setState ( cur->second->dup (), cur->first );
+      setState ( cur.second->dup (), cur.first );
     }
   }
 }

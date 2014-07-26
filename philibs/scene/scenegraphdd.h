@@ -41,8 +41,8 @@ class graphDd :
     friend class sndListener;
 
   public:
-    graphDd();
-    virtual ~graphDd();
+    graphDd() = default;
+    virtual ~graphDd() = default;
 //     graphDd(graphDd const& rhs);
 //     graphDd& operator=(graphDd const& rhs);
 //     bool operator==(graphDd const& rhs) const;
@@ -140,14 +140,14 @@ class graphDd :
     virtual void dispatch ( sndListener const* pNode ) = 0;
 
     nodePath mSinkPath;
-    MaskType mTravMask;
-    TimeType mTimeStamp;
-    TimeType mLastTimeStamp;
+    MaskType mTravMask = 0b1;
+    TimeType mTimeStamp = 0.0f;
+    TimeType mLastTimeStamp = 0.0f;
 
-    unsigned int mDbgVals;
+    unsigned int mDbgVals = DbgNone;
     
   private:
-    
+  
 
 };
 

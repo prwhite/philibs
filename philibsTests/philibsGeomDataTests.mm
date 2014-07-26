@@ -9,11 +9,13 @@
 #import <XCTest/XCTest.h>
 
 #include "scenegeom.h"
+#include "scenegroup.h"
 #include "scenecommon.h"
 #include "pnimathstream.h"
 #include "pniseg.h"
 #include "scenedata.h"
 #include "scenelines.h"
+#include "scenecull.h"
 
 #include <chrono>
 
@@ -512,6 +514,70 @@ GeomDataRef pData00 = 0;
   }
 
 }
+
+- (void)testStateTravMasks
+{
+  using namespace scene;
+
+  using Node = pni::pstd::autoRef< node >;
+  using State = pni::pstd::autoRef< state >;
+
+  Node n0 = new group;
+  Node n1 = new group;
+  
+  State s0 = new cull;
+  State s1 = new cull;
+  
+  s0->setTravMask(0b01);
+  s0->setTravMask(0b10);
+  
+  XCTAssertEqual(0, n0->getStates().size(), "wrong number of states");
+  
+  n0->setState(s0.get(), state::Cull);
+  n0->setState(s1.get(), state::Cull);
+
+  XCTAssertEqual(2, n0->getStates().size(), "wrong number of states");
+  
+  n0->remState(s1.get());
+
+  XCTAssertEqual(1, n0->getStates().size(), "wrong number of states");
+
+  n0->setState(s1.get(), state::Cull);
+
+  n0->remState(state::Cull);
+  
+  XCTAssertEqual(0, n0->getStates().size(), "wrong number of states");
+
+  n0->setState(s0.get(), state::Cull);
+  n0->setState(s1.get(), state::Cull);
+
+  n0->remState(state::Cull,0b10);
+  
+  XCTAssertEqual(1, n0->getStates().size(), "wrong number of states");
+
+  n0->remState(state::Cull,0b01);
+  
+  XCTAssertEqual(0, n0->getStates().size(), "wrong number of states");
+
+  n0->setState(s0.get(), state::Cull);
+  n0->setState(s1.get(), state::Cull);
+
+  n0->remState(state::Cull,0b11);
+  
+  XCTAssertEqual(0, n0->getStates().size(), "wrong number of states");
+
+  s0->setTravMask(0b10);
+  s1->setTravMask(0b10);
+
+  n0->setState(s0.get(), state::Cull);
+
+  XCTAssertEqual(1, n0->getStates().size(), "wrong number of states");
+
+  n0->setState(s1.get(), state::Cull);
+
+  XCTAssertEqual(1, n0->getStates().size(), "wrong number of states");
+}
+
 
 @end
 

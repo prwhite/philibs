@@ -105,8 +105,8 @@ class state :
   
     static_assert ( NumTexUnits == 16, "someone changed the number of texture units calculation" );
 
-    state();
-    virtual ~state();
+    state() = default;
+    virtual ~state() = default;
 //     state(state const& rhs);
 //      state& operator=(state const& rhs);
 //       bool operator==(state const& rhs) const;
@@ -116,7 +116,7 @@ class state :
     virtual state* dup () const = 0;
 
 //     virtual Id getId () const = 0;
-    
+
     // Concrete state methods.
     void setName ( std::string const& str ) { mName = str; }
     std::string const& getName () const { return mName; }
@@ -127,11 +127,19 @@ class state :
     void setOverride ( bool val ) { mOverride = val; }
     bool getOverride () const { return mOverride; }
 
+      /// Trav mask is initialized to 0x01, unlike node which is initialized to
+      /// 0xffffffff.
+      /// @note The state class' trav mask corresponds only to the draw
+      /// traversal (i.e., TravMask::Draw).
+    void setTravMask ( TravMaskType val ) { mTravMask = val; }
+    TravMaskType getTravMask () const { return mTravMask; }
+
   protected:
 
     std::string mName;
-    bool mEnable;
-    bool mOverride;
+    bool mEnable = true;
+    bool mOverride = false;
+    TravMaskType mTravMask = 0x01;
     
   private:
 

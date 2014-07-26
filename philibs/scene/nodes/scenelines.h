@@ -206,6 +206,8 @@ class lines :
 } // end of namespace scene 
 
   // Create a specialization for hashing lineData::SemanticTypes
+  // Necessitated by SCENEDATABINDINGSARECACHED optimization in scene::data's
+  // related basicBinding class.
 namespace std
 {
   template<>

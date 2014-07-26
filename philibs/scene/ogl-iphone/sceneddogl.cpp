@@ -228,7 +228,7 @@ bool ddOgl::dispatchPre ( node const* pNode )
 {  
 PNIDBG
   // Check draw mask.
-  if ( ! ( mTravMask & pNode->getTravMask ( Draw ) ) )
+  if ( ! ( getTravMask() & pNode->getTravMask ( Draw ) ) )
     return false;
   
 static pni::pstd::timerProf aa ( "mat stack", 120 * 5 );
@@ -323,7 +323,6 @@ void ddOgl::applyStates ( node const* pNode )
 PNIDBG
     // Source
   node::States const& src = pNode->getStates ();
-  typedef node::States::const_iterator StateConstIter;
   
     // Destination
   stateSet& dst = mStateStack.back ();
@@ -332,15 +331,18 @@ PNIDBG
   for ( auto cur : src )
   {
       // Vars for inner loop
-    state::Id id = cur.first;
-    state const* const pDstState = dst.mStates[ id ];
-    
-      // Adopt new state if current stack top for this slot
-      // is null or if it is valid and not overriding.
-    if ( ( ! pDstState ) || 
-        ( pDstState && ! pDstState->getOverride () ) )
+    if ( cur.second->getTravMask () & getTravMask() )
     {
-      dst.mStates[ id ] = cur.second.get ();
+      state::Id id = cur.first;
+      state const* const pDstState = dst.mStates[ id ];
+      
+        // Adopt new state if current stack top for this slot
+        // is null or if it is valid and not overriding.
+      if ( ( ! pDstState ) || 
+          ( pDstState && ! pDstState->getOverride () ) )
+      {
+        dst.mStates[ id ] = cur.second.get ();
+      }
     }
   }
 PNIDBG
