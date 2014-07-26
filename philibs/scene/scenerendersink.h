@@ -98,7 +98,7 @@ class renderSink :
       GraphDdRef mDd;                  // = nullptr
       scene::nodePath mSinkPath;       // = nullptr
       NodeRef mRootNode;               // = nullptr
-      MaskType mTravMask                  = 0b1;
+      MaskType mTravMask                  = TravMaskDefaultDraw;
     };
 
       /// Specify the drawing parameters for this sink

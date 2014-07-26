@@ -16,7 +16,7 @@ sndEffect::sndEffect () :
   mPitch ( 1.0f ),
   mLevel ( 1.0f )
 {
-  setTravMask ( Draw, 0x00 );
+  setTravMask ( Draw, TravMaskNone );
 }
 
 sndEffect::~sndEffect ()

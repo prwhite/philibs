@@ -44,8 +44,12 @@ enum Trav : TravMaskType {
   UI,
   User00,
   User01,
-  TravCount,
-  AllOn = 0xffffffff
+  
+  TravCount,  // number of trav masks for allocations/iterations
+  
+  TravMaskNone = 0x00,
+  TravMaskDefaultDraw = 0xffff,
+  TravMaskAll = 0xffffffff
 };
 
 class travDataContainer
@@ -79,7 +83,7 @@ class travDataContainer
 
 // ///////////////////////////////////////////////////////////////////
 
-template< TravMaskType Init = Trav::AllOn >
+template< TravMaskType Init = Trav::TravMaskDefaultDraw >
 class travDataMaskContainer
 {
   public:

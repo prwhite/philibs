@@ -123,7 +123,7 @@ class graphDd :
     enum DbgVals 
     {
       DbgNone = 0,
-      DbgSort = 1 <<  0
+      DbgSort = 1 << 0
     };
     
     void setDbgVals ( unsigned int vals ) { mDbgVals = vals; }
@@ -140,7 +140,7 @@ class graphDd :
     virtual void dispatch ( sndListener const* pNode ) = 0;
 
     nodePath mSinkPath;
-    MaskType mTravMask = 0b1;
+    MaskType mTravMask = TravMaskDefaultDraw;
     TimeType mTimeStamp = 0.0f;
     TimeType mLastTimeStamp = 0.0f;
 
