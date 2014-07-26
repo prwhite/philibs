@@ -224,6 +224,10 @@ void node::setState ( state* pState, state::Id id )
     // here than during every frame we evaluate states.
   if ( pState )
   {
+      // Keep unreffed pState from being deleted accidentally when it
+      // is being set to self in mStates.  I.e., a remove then add of
+      // the same state could cause refs to go to zero.
+    StateRef pStateRef = pState;
       // Replace if id and state trav mask matches
     remState ( id, pState->getTravMask () );
     
