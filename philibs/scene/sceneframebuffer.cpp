@@ -44,11 +44,7 @@ namespace scene {
 
 void framebuffer::collectRefs ( pni::pstd::refCount::Refs& refs ) const
 {
-  for(auto iter : mColorTex)
-    refs.push_back(iter.get());
-
-  refs.push_back(mDepthTex.get());
-  refs.push_back(mStencilTex.get());
+  mTextureTargets.collectRefs(refs);
 }
 
 /////////////////////////////////////////////////////////////////////

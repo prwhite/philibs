@@ -129,6 +129,10 @@ framebuffer::TextureImageId calcImageId(
   // Called by startGraph via double dispatch
 void renderSinkDd::dispatch ( renderSink const* pSink )
 {
+    // Copy renderSink's texture targets to framebuffer... necessary to allow
+    // framebuffer re-use by different renderSinks/textures.
+  pSink->mFramebuffer->setTextureTargets(pSink->mTextureTargets);
+
   if(pSink->mFramebuffer->getSpec().mTextureTarget == texture::CubeMapTarget)
   {
     for(uint32_t uicur = texture::CubePosXImg; uicur <= texture::CubeNegZImg; ++uicur)

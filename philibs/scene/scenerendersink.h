@@ -27,13 +27,12 @@ class renderSinkDd;
 /////////////////////////////////////////////////////////////////////
 
   /**
-    The renderSink will encapsulate all of the settings related to
+    The renderSink encapsulates all of the settings related to
     a rendering pass.  This includes things like the graphDd for drawing
     and [optionally] collision and sound, the destination fbo, the traversal
     masks for each graphDd, and a number of other associated settings.  
     Instances of this class also form a graph of their own, which implies the
     dependency graph for rendering order of all renderSinks.
-    @note This class is not implemented yet.
   */
 class renderSink :
   public pni::pstd::refCount,
@@ -107,6 +106,10 @@ class renderSink :
     graphDdSpec mSndSpec;
       /// Specify the instersection parameters for this sink
     graphDdSpec mIsectSpec;
+  
+      /// Different renderSink @a can use different textures on aliases to
+      /// the same framebuffer... although that will cause some state thrash.
+    framebuffer::textureTargets mTextureTargets;
 
   protected:
 

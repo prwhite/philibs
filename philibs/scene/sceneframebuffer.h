@@ -100,6 +100,7 @@ class framebuffer :
       Back
     };
 
+    using TexRef = pni::pstd::autoRef< texture >;
 #ifdef PHIUSEGLES30
     static uint32_t const NumColorAttachments = 4;  // Is this reasonable from the
                                                     // MRT extension spec?  Seems so in
@@ -125,26 +126,51 @@ class framebuffer :
       SizeType mWidth                         = 256;
       SizeType mHeight                        = 256;
     };
+  
+    struct textureTargets
+    {
+      friend class framebuffer;
+      
+      public:
+        void setColorTextureTarget ( size_t which, texture* pTex )
+          { mColorTex[ which ] = pTex; }
+        texture* getColorTextureTarget ( size_t which ) const
+          { return mColorTex[ which ].get (); }
+
+        void setDepthTextureTarget ( texture* pTex )
+          { mDepthTex = pTex; }
+        texture* getDepthTextureTarget () const
+          { return mDepthTex.get (); }
+      
+        void setStencilTextureTarget ( texture* pTex )
+          { mStencilTex = pTex; }
+        texture* getStencilTextureTarget () const
+          { return mStencilTex.get (); }
+
+        void collectRefs ( pni::pstd::refCount::Refs& refs ) const
+        {
+          for(auto iter : mColorTex)
+            refs.push_back(iter.get());
+          refs.push_back(mDepthTex.get());
+          refs.push_back(mStencilTex.get());
+        }
+
+      private:
+          TexRef mColorTex[ NumColorAttachments ];
+          TexRef mDepthTex;
+          TexRef mStencilTex;
+    };
 
     void setSpec ( spec const& fbspec )
       { setDirty (); mSpec = fbspec; }
     spec const& getSpec () const { return mSpec; }
     spec& specOp () { setDirty (); return mSpec; }
   
-    void setColorTextureTarget ( size_t which, texture* pTex )
-      { setDirty (); mColorTex[ which ] = pTex; }
-    texture* getColorTextureTarget ( size_t which ) const
-      { return mColorTex[ which ].get (); }
-
-    void setDepthTextureTarget ( texture* pTex )
-      { setDirty (); mDepthTex = pTex; }
-    texture* getDepthTextureTarget () const
-      { return mDepthTex.get (); }
-  
-    void setStencilTextureTarget ( texture* pTex )
-      { setDirty (); mStencilTex = pTex; }
-    texture* getStencilTextureTarget () const
-      { return mStencilTex.get (); }
+      /// For bulk setting of texture targets.  Generally used by renderSinks
+      /// so that framebuffers can be re-used with different texture targets.
+    void setTextureTargets ( textureTargets const& vals ) { /* setDirty (); */ mTextureTargets = vals; }
+    textureTargets& textureTargetOp () { setDirty(); return mTextureTargets; }
+    textureTargets const& getTextureTargets () const { return mTextureTargets; }
 
       // TODO: Retrieve color/depth/stencil render buffer contents
       // TODO: Query available frame buffer formats
@@ -152,13 +178,13 @@ class framebuffer :
 
     void setDirty ( bool val = true ) const { mDirty = val; }
     bool getDirty () const { return mDirty; }
-    void clearDirty () { /* clean up state here */; setDirty ( false ); }
+    void clearDirty () { /* clean up state here */; mDirty = false; }
   
     bool getTexturesDirty ( texture::Dirty dirty = texture::DirtyTrue ) const
       {
-        return ( mColorTex[ 0 ] && ( mColorTex[ 0 ]->getDirty () & dirty ) )
-            || ( mDepthTex && ( mDepthTex->getDirty () & dirty ) )
-            || ( mStencilTex && ( mStencilTex->getDirty () & dirty ) );
+        return ( mTextureTargets.mColorTex[ 0 ] && ( mTextureTargets.mColorTex[ 0 ]->getDirty () & dirty ) )
+            || ( mTextureTargets.mDepthTex && ( mTextureTargets.mDepthTex->getDirty () & dirty ) )
+            || ( mTextureTargets.mStencilTex && ( mTextureTargets.mStencilTex->getDirty () & dirty ) );
       }
 
 
@@ -192,12 +218,8 @@ class framebuffer :
   protected:
       
   private:
-      typedef pni::pstd::autoRef< texture > TexRef;
-  
       spec mSpec;
-      TexRef mColorTex[ NumColorAttachments ] = { nullptr };
-      TexRef mDepthTex                        = nullptr;
-      TexRef mStencilTex                      = nullptr;
+      textureTargets mTextureTargets;
   
       std::string mName;
   

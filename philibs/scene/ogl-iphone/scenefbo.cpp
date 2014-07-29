@@ -264,6 +264,7 @@ CheckGLError
   bind ( pFb );
 CheckGLError
   framebuffer::spec const& spec = pFb->getSpec();
+  framebuffer::textureTargets const& targets = pFb->getTextureTargets();
 
     // For color attachment texture... from
     // https://developer.apple.com/library/IOs/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/WorkingwithEAGLContexts/WorkingwithEAGLContexts.html#//apple_ref/doc/uid/TP40008793-CH103-SW1
@@ -274,9 +275,9 @@ CheckGLError
 
 
   dispatchFuncs(spec, configFuncs {
-    [pFb, colorDest] ( size_t num )
+    [pFb, colorDest, targets] ( size_t num )
       {
-        if ( texture* pTex = pFb->getColorTextureTarget(num) )
+        if ( texture* pTex = targets.getColorTextureTarget(num) )
         {
           texObj* pObj = texObj::getOrCreate(pTex);
           pObj->bind(pTex); // just to make sure... generally done by getOrCreate
@@ -286,9 +287,9 @@ CheckGLError
         }
       },
     [] ( size_t num ) {},
-    [pFb, depthDest] ()
+    [pFb, depthDest, targets] ()
       {
-        if ( texture* pTex = pFb->getDepthTextureTarget() )
+        if ( texture* pTex = targets.getDepthTextureTarget() )
         {
           texObj* pObj = texObj::getOrCreate(pTex);
           pObj->bind(pTex); // just to make sure... generally done by getOrCreate
@@ -298,9 +299,9 @@ CheckGLError
         }
       },
     [] () {},
-    [pFb, depthDest] ()
+    [pFb, depthDest, targets] ()
       {
-        if ( texture* pTex = pFb->getDepthTextureTarget() )
+        if ( texture* pTex = targets.getDepthTextureTarget() )
         {
           texObj* pObj = texObj::getOrCreate(pTex);
           pObj->bind(pTex); // just to make sure... generally done by getOrCreate
@@ -310,9 +311,9 @@ CheckGLError
         }
       },
     [] () {},
-    [pFb, stencilDest] ()
+    [pFb, stencilDest, targets] ()
       {
-        if ( texture* pTex = pFb->getStencilTextureTarget() )
+        if ( texture* pTex = targets.getStencilTextureTarget() )
         {
           texObj* pObj = texObj::getOrCreate(pTex);
           pObj->bind(pTex); // just to make sure... generally done by getOrCreate
@@ -342,31 +343,32 @@ void fbo::finish ( framebuffer const* pFb )
   glPushGroupMarkerEXT(0, "fbo::discard start");
 
   framebuffer::spec const& spec = pFb->getSpec();
+  framebuffer::textureTargets const& targets = pFb->getTextureTargets();
 
   dispatchFuncs(spec, configFuncs {
-    [pFb] ( size_t num ) {
-      if ( texture* pTex = pFb->getColorTextureTarget(num) )
+    [pFb, targets] ( size_t num ) {
+      if ( texture* pTex = targets.getColorTextureTarget(num) )
         texObj::getOrCreate(pTex);  // Force mipmap generation now
     },
     [pFb] ( size_t num ) {
         GLenum which = GL_COLOR_ATTACHMENT0;
         glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, &which); },
-    [pFb] () {
-      if ( texture* pTex = pFb->getDepthTextureTarget() )
+    [pFb, targets] () {
+      if ( texture* pTex = targets.getDepthTextureTarget() )
         texObj::getOrCreate(pTex);  // Force mipmap generation now
     },
     [pFb] () {
         GLenum which = GL_DEPTH_ATTACHMENT;
         glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, &which ); },
-    [pFb] () {
-      if ( texture* pTex = pFb->getDepthTextureTarget() )
+    [pFb, targets] () {
+      if ( texture* pTex = targets.getDepthTextureTarget() )
         texObj::getOrCreate(pTex);  // Force mipmap generation now
     },
     [pFb] () {
         GLenum which = GL_DEPTH_ATTACHMENT;
         glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, &which); },
-    [pFb] () {
-      if ( texture* pTex = pFb->getStencilTextureTarget() )
+    [pFb, targets] () {
+      if ( texture* pTex = targets.getStencilTextureTarget() )
         texObj::getOrCreate(pTex);  // Force mipmap generation now
     },
     [pFb] () {
