@@ -491,7 +491,7 @@ PNIDBG
           pTex->setImage ( pImg );
 
           if ( pImg->mBuffers.size () == 1 )
-            pTex->setMinFilter ( texture::MinLinear );
+            pTex->setMinFilter ( texture::MinLinearMipNearest );
 
           if ( pImg && pImg->hasAlpha () )
           {

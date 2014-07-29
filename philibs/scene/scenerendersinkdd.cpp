@@ -160,7 +160,6 @@ void renderSinkDd::dispatch ( renderSink const* pSink )
   }
 }
 
-  // Called by dispatch, maybe up to 6 times if the renderSink is a cube map
 void renderSinkDd::dispatch ( renderSink const* pSink,
     texture::ImageId colorId,
     texture::ImageId depthId,
@@ -177,6 +176,7 @@ void renderSinkDd::dispatch ( renderSink const* pSink,
     pSink->mFramebuffer->finish();
 }
 
+  // Called by dispatch, maybe up to 6 times if the renderSink is a cube map
 void renderSinkDd::execGraphDd ( renderSink::graphDdSpec const& spec )
 {
   spec.mDd->setSinkPath(spec.mSinkPath);

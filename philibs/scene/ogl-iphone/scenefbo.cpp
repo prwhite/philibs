@@ -85,7 +85,7 @@ void fbo::clear ()
 
 fbo* fbo::getOrCreate ( framebuffer const* pFb )
 {
-    // get or create textureObject for this texture
+    // get or create fbo object for this framebuffer
   if ( fbo* pObj = static_cast< fbo* > ( pFb->getTravData ( Draw ) ) )
   {
     pObj->config ( pFb );
