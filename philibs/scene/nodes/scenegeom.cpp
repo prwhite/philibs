@@ -174,7 +174,7 @@ void geomData::dbg ( std::ostream& ostr ) const
   for ( size_t num = 0; num < numVerts; ++num )
   {
     ostr << num << " ";
-    for ( auto binding : mBinding )
+    for ( auto& binding : mBinding )
     {
       ostr << binding.mName << " = ";
 

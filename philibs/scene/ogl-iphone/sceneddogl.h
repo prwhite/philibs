@@ -26,7 +26,7 @@ namespace scene {
 
 class ddOgl :
   public graphDd,
-  public stateDd
+  protected stateDd
 {
   public:
     ddOgl();

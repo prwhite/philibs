@@ -98,6 +98,9 @@ imageFormatToGlFormat ( img::base::Format formatIn )	// img::image* imgIn )
 		case img::base::Gray8: return GL_LUMINANCE;
 		case img::base::Alpha8: return GL_ALPHA;
 		case img::base::GrayAlpha88: return GL_LUMINANCE_ALPHA;
+    case img::base::DEPTH_COMPONENT16: return GL_DEPTH_COMPONENT;
+//    case img::base::DEPTH_COMPONENT24: return GL_DEPTH_COMPONENT24_OES;
+    case img::base::DEPTH_COMPONENT32: return GL_DEPTH_COMPONENT;
 	}
 }
 
@@ -123,6 +126,9 @@ imageFormatToGlType ( img::base::Format typeIn )	// img::image* imgIn )
     case img::base::RGB_PVRTC_4BPPV1: return GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
     case img::base::RGBA_PVRTC_2BPPV1: return GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG;
     case img::base::RGBA_PVRTC_4BPPV1: return GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
+    case img::base::DEPTH_COMPONENT16: return GL_UNSIGNED_SHORT;
+//    case img::base::DEPTH_COMPONENT24: return GL_UNSIGNED_INT_24_8_OES;
+    case img::base::DEPTH_COMPONENT32: return GL_UNSIGNED_INT;
 	}
 }
 

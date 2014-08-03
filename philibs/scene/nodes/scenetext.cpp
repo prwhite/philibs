@@ -82,7 +82,7 @@ void text::doLayout ()
   
   geomData::IndexType* pInd = pData->getIndicesPtr();
 
-  for ( auto iter : uTxt )
+  for ( auto& iter : uTxt )
   {
     if ( font::font::glyph* pGlyph = mFont->getGlyph(iter) )
     {

@@ -34,7 +34,8 @@
 
 #include "scenetexobj.h"
 #include "scenevbo.h"
-#include "sceneprogObj.h"
+#include "sceneprogobj.h"
+#include "sceneuniobj.h"
 
 #include "pnimathstream.h"
 
@@ -157,20 +158,21 @@ ddOglList::ddOglList() :
   mRenderList.reserve ( ReserveNum );
   
   mBuiltins = new scene::uniform;
+  mBuiltins->setName ( "builtins" );
   
-  uniform::binding& mvpMat = mBuiltins->bindingOp(CommonUniformNames[ UniformModelViewProjMatrix ]);
+  uniform::binding& mvpMat = mBuiltins->getBinding(CommonUniformNames[ UniformModelViewProjMatrix ]);
   mvpMat.set(uniform::binding::Vertex, uniform::binding::Matrix4, 1);
   
-  uniform::binding& normMat = mBuiltins->bindingOp(CommonUniformNames[ UniformNormalMatrix ]);
+  uniform::binding& normMat = mBuiltins->getBinding(CommonUniformNames[ UniformNormalMatrix ]);
   normMat.set(uniform::binding::Vertex, uniform::binding::Matrix3, 1);
 
-  uniform::binding& vpSize = mBuiltins->bindingOp(CommonUniformNames[ UniformViewportSize ]);
+  uniform::binding& vpSize = mBuiltins->getBinding(CommonUniformNames[ UniformViewportSize ]);
   vpSize.set(uniform::binding::Vertex, uniform::binding::Float2, 1);
 
-  uniform::binding& tex00 = mBuiltins->bindingOp(CommonUniformNames[ UniformTex00 ]);
+  uniform::binding& tex00 = mBuiltins->getBinding(CommonUniformNames[ UniformTex00 ]);
   tex00.set(uniform::binding::Fragment, uniform::binding::Int1, 1);
 
-  uniform::binding& tex01 = mBuiltins->bindingOp(CommonUniformNames[ UniformTex01 ]);
+  uniform::binding& tex01 = mBuiltins->getBinding(CommonUniformNames[ UniformTex01 ]);
   tex01.set(uniform::binding::Fragment, uniform::binding::Int1, 1);
 }
 
@@ -370,7 +372,7 @@ PNIDBG
   
   glPushGroupMarkerEXT(0, "Iterating over renderList");
   
-  for ( auto cur : mRenderList )
+  for ( auto& cur : mRenderList )
   {
     glPushGroupMarkerEXT(0, (std::string ( "node: " ) + cur.mNode->getName() ).c_str());
 
@@ -439,7 +441,7 @@ void ddOglList::execBuiltins ()
   mModelViewProjectionMat = mProjMat;
   mModelViewProjectionMat.preMult(mModelViewMat);
 
-  mModelViewProjectionMat.copyTo4x4(mBuiltins->bindingOp(CommonUniformNames[ UniformModelViewProjMatrix ]).getFloats());
+  mModelViewProjectionMat.copyTo4x4(mBuiltins->getBinding(CommonUniformNames[ UniformModelViewProjMatrix ]).getFloats());
 
     // Handle non-uniform scaling... with inverse transpose.
     // Use camera->getNormalizeMode.
@@ -450,14 +452,14 @@ void ddOglList::execBuiltins ()
     mModelViewMat.transpose();
   }
 
-  mModelViewMat.copyTo3x3(mBuiltins->bindingOp(CommonUniformNames[ UniformNormalMatrix ]).getFloats());
+  mModelViewMat.copyTo3x3(mBuiltins->getBinding(CommonUniformNames[ UniformNormalMatrix ]).getFloats());
 
   if ( pCam )
   {
     float vpl, vpb, vpw, vph;
     pCam->getViewport(vpl, vpb, vpw, vph);
 
-    float* dst = mBuiltins->bindingOp(CommonUniformNames[ UniformViewportSize ]).getFloats();
+    float* dst = mBuiltins->getBinding(CommonUniformNames[ UniformViewportSize ]).getFloats();
     dst[ 0 ] = vpw;
     dst[ 1 ] = vph;
   }
@@ -536,7 +538,8 @@ void doClear ( camera const* pNode )
     // TODO When needed.
   }
   
-  glClear ( glClearMask );
+  if ( glClearMask )  // Skip if no clearing is set
+    glClear ( glClearMask );
 }
 
 void ddOglList::dispatch ( camera const* pNode )
@@ -1253,7 +1256,7 @@ CheckGLError
     // Is this the right place to do this?  Can it just be done once, rather
     // than for every texture bind (probably not once we switch to GLES3
     // with sampler objects).
-  *( mBuiltins->bindingOp( CommonUniformNames[ UniformTex00 + texUnit ] ).getInts() ) = texUnit;
+  *( mBuiltins->getBinding( CommonUniformNames[ UniformTex00 + texUnit ] ).getInts() ) = texUnit;
 
 	if ( pState->getEnable () )
 	{
@@ -1305,6 +1308,8 @@ void ddOglList::dispatch ( uniform const* pState )
   {
     if ( progObj* pobj = progObj::getOrCreate ( mCurProg.get () ) )
     {
+//#define OLDWAY
+#ifdef OLDWAY
         // TODO: All of this should/could go in a uniforms object, and
         // that should use gl uniform buffer arrays... following
         // the same pattern as texture, vbo, prog, etc.  It will be
@@ -1352,8 +1357,13 @@ CheckGLError
         }
 CheckGLError
       }
+#else // OLDWAY
+      if ( uniobj* pObj = uniobj::getOrCreate(pState, pobj ) )
+        pObj->bind();
+#endif // OLDWAY
+      
     }
-    pState->clearDirty(); // Dirty state would normally be used to update
+//    pState->clearDirty(); // Dirty state would normally be used to update
                           // gl state objects, but we aren't doing that for
                           // uniforms right now... but clear dirty state all
                           // the same.

@@ -55,7 +55,7 @@ class framebuffer :
     framebuffer& operator=(framebuffer const& rhs) = delete;
 //    bool operator==(framebuffer const& rhs) const = default;
 
-    typedef int32_t SizeType;
+    typedef int32_t Dim;
 
     typedef texture::Target TextureTarget;    /// e.g., NoTarget, Tex2DTarget, CubeMapTarget
     typedef texture::ImageId TextureImageId;  /// e.g., NoImage, Tex2DImage, CubePosXImg...
@@ -109,6 +109,8 @@ class framebuffer :
 #else // PHIUSEGLES30
     static uint32_t const NumColorAttachments = 1;
 #endif // PHIUSEGLES30
+
+    static_assert(NumColorAttachments==1,"not tested with NumColorAttachments > 1");
   
     struct spec
     {
@@ -123,8 +125,8 @@ class framebuffer :
 
         // Not texture size... but framebuffer size... might need to be
         // multiple of OS framebuffer size.
-      SizeType mWidth                         = 256;
-      SizeType mHeight                        = 256;
+      Dim mWidth                         = 256;
+      Dim mHeight                        = 256;
     };
   
     struct textureTargets
@@ -149,7 +151,7 @@ class framebuffer :
 
         void collectRefs ( pni::pstd::refCount::Refs& refs ) const
         {
-          for(auto iter : mColorTex)
+          for(auto& iter : mColorTex)
             refs.push_back(iter.get());
           refs.push_back(mDepthTex.get());
           refs.push_back(mStencilTex.get());

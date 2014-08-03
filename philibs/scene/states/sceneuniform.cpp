@@ -12,33 +12,6 @@ namespace scene {
   
 /////////////////////////////////////////////////////////////////////
 
-uniform::uniform()
-{
-  
-}
-
-uniform::~uniform()
-{
-  
-}
-
-// uniform::uniform(uniform const& rhs)
-// {
-//   
-// }
-// 
-// uniform& uniform::operator=(uniform const& rhs)
-// {
-//   
-//   return *this;
-// }
-// 
-// bool uniform::operator==(uniform const& rhs) const
-// {
-//   
-//   return false;
-// }
-
 /////////////////////////////////////////////////////////////////////
 // overrides from state
 

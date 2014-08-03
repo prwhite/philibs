@@ -31,6 +31,7 @@
 		1CAD971F186628EE00C547E1 /* scenevbo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD971D186628EE00C547E1 /* scenevbo.cpp */; };
 		1CAD9723186D72D500C547E1 /* sceneprog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9721186D72D500C547E1 /* sceneprog.cpp */; };
 		1CAD9726186E110200C547E1 /* sceneprogobj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CAD9724186E110200C547E1 /* sceneprogobj.cpp */; };
+		1CB231F8198DE6DE007A64DE /* sceneuniobj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CB231F6198DE6DE007A64DE /* sceneuniobj.cpp */; };
 		1CB6BD8F18D8DBE700DC3B4B /* pniosxplatform.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CB6BD8918D8DBE500DC3B4B /* pniosxplatform.h */; };
 		1CBBFD6718AE9AD80042CD9D /* scenerendersink.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CCD165F189A3F23001F8DF1 /* scenerendersink.h */; };
 		1CC482D11888D0CD0029408D /* pnisearchpath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC482CF1888D0CD0029408D /* pnisearchpath.cpp */; };
@@ -262,6 +263,10 @@
 		1CDD434B185EDBD2009284F9 /* uiscene.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4177185BCAF0009284F9 /* uiscene.h */; };
 		1CDD434D185EDBD2009284F9 /* uiwheel.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD4179185BCAF0009284F9 /* uiwheel.h */; };
 		1CDD434F185EDBD2009284F9 /* uiwheelcore.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD417B185BCAF0009284F9 /* uiwheelcore.h */; };
+		1CDD87EB198880DC00512F6E /* scenefactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD87E9198880DC00512F6E /* scenefactory.cpp */; };
+		1CDD87EF1988828000512F6E /* scenefactoryogl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD87ED1988828000512F6E /* scenefactoryogl.cpp */; };
+		1CDD87F3198885A100512F6E /* scenefactoryogl.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD87EE1988828000512F6E /* scenefactoryogl.h */; };
+		1CDD87F4198885AA00512F6E /* scenefactory.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CDD87EA198880DC00512F6E /* scenefactory.h */; };
 		1CE0A42818FFAC47005F3FA4 /* fontfont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD4051185BCAEF009284F9 /* fontfont.cpp */; };
 		1CE0A43018FFB5D4005F3FA4 /* fontfontfactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CE0A42E18FFB5D4005F3FA4 /* fontfontfactory.cpp */; };
 		1CE0A43218FFBF52005F3FA4 /* fontfontfactory.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CE0A42F18FFB5D4005F3FA4 /* fontfontfactory.h */; };
@@ -336,7 +341,10 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				1CDD87F4198885AA00512F6E /* scenefactory.h in CopyFiles */,
+				1CDD4316185EDBD2009284F9 /* scenesnddd.h in CopyFiles */,
 				1CD5650A196B138E0061D46B /* pnitypetraits.h in CopyFiles */,
+				1CDD87F3198885A100512F6E /* scenefactoryogl.h in CopyFiles */,
 				1C4061AF195C71EA0074AC1A /* sceneltcompare.h in CopyFiles */,
 				1C5BA06A1935CE8300D7A70E /* scenedirty.h in CopyFiles */,
 				1CCBCF1E19346B4000D0153A /* pnipstd.h in CopyFiles */,
@@ -453,7 +461,6 @@
 				1CDD4311185EDBD2009284F9 /* sceneddogl.h in CopyFiles */,
 				1C4BD27C18810EB6000781B0 /* sceneogl.h in CopyFiles */,
 				1CDD4313185EDBD2009284F9 /* sceneddogllist.h in CopyFiles */,
-				1CDD4316185EDBD2009284F9 /* scenesnddd.h in CopyFiles */,
 				1CC482E9188A68BF0029408D /* sceneloaderfactory.h in CopyFiles */,
 				1CDD4318185EDBD2009284F9 /* scenetexobj.h in CopyFiles */,
 				1CDD431B185EDBD2009284F9 /* sceneconverter.h in CopyFiles */,
@@ -517,6 +524,8 @@
 		1CAD9722186D72D500C547E1 /* sceneprog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneprog.h; sourceTree = "<group>"; };
 		1CAD9724186E110200C547E1 /* sceneprogobj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneprogobj.cpp; sourceTree = "<group>"; };
 		1CAD9725186E110200C547E1 /* sceneprogobj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneprogobj.h; sourceTree = "<group>"; };
+		1CB231F6198DE6DE007A64DE /* sceneuniobj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneuniobj.cpp; sourceTree = "<group>"; };
+		1CB231F7198DE6DE007A64DE /* sceneuniobj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneuniobj.h; sourceTree = "<group>"; };
 		1CB6BD8918D8DBE500DC3B4B /* pniosxplatform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pniosxplatform.h; sourceTree = "<group>"; };
 		1CC482CF1888D0CD0029408D /* pnisearchpath.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pnisearchpath.cpp; sourceTree = "<group>"; };
 		1CC482D01888D0CD0029408D /* pnisearchpath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pnisearchpath.h; sourceTree = "<group>"; };
@@ -675,8 +684,8 @@
 		1CDD4124185BCAEF009284F9 /* sceneddogl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneddogl.h; sourceTree = "<group>"; };
 		1CDD4125185BCAEF009284F9 /* sceneddogllist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 2; path = sceneddogllist.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		1CDD4126185BCAEF009284F9 /* sceneddogllist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneddogllist.h; sourceTree = "<group>"; };
-		1CDD4128185BCAEF009284F9 /* scenesnddd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scenesnddd.cpp; sourceTree = "<group>"; };
-		1CDD4129185BCAEF009284F9 /* scenesnddd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenesnddd.h; sourceTree = "<group>"; };
+		1CDD4128185BCAEF009284F9 /* scenesnddd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scenesnddd.cpp; path = sndengine/scenesnddd.cpp; sourceTree = "<group>"; };
+		1CDD4129185BCAEF009284F9 /* scenesnddd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scenesnddd.h; path = sndengine/scenesnddd.h; sourceTree = "<group>"; };
 		1CDD412A185BCAEF009284F9 /* scenetexobj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scenetexobj.cpp; sourceTree = "<group>"; };
 		1CDD412B185BCAEF009284F9 /* scenetexobj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenetexobj.h; sourceTree = "<group>"; };
 		1CDD412C185BCAEF009284F9 /* sceneattr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneattr.h; sourceTree = "<group>"; };
@@ -756,6 +765,10 @@
 		1CDD4179185BCAF0009284F9 /* uiwheel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uiwheel.h; sourceTree = "<group>"; };
 		1CDD417A185BCAF0009284F9 /* uiwheelcore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = uiwheelcore.cpp; sourceTree = "<group>"; };
 		1CDD417B185BCAF0009284F9 /* uiwheelcore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uiwheelcore.h; sourceTree = "<group>"; };
+		1CDD87E9198880DC00512F6E /* scenefactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scenefactory.cpp; sourceTree = "<group>"; };
+		1CDD87EA198880DC00512F6E /* scenefactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenefactory.h; sourceTree = "<group>"; };
+		1CDD87ED1988828000512F6E /* scenefactoryogl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scenefactoryogl.cpp; sourceTree = "<group>"; };
+		1CDD87EE1988828000512F6E /* scenefactoryogl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenefactoryogl.h; sourceTree = "<group>"; };
 		1CE0A42E18FFB5D4005F3FA4 /* fontfontfactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fontfontfactory.cpp; sourceTree = "<group>"; };
 		1CE0A42F18FFB5D4005F3FA4 /* fontfontfactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fontfontfactory.h; sourceTree = "<group>"; };
 		1CE0A43E1900A7EB005F3FA4 /* scenetextfactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = scenetextfactory.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
@@ -1059,6 +1072,7 @@
 				1CDD410E185BCAEF009284F9 /* nodes */,
 				1CDD4147185BCAF0009284F9 /* states */,
 				1CDD4122185BCAEF009284F9 /* ogl-iphone */,
+				1CDD87EC1988823E00512F6E /* sndengine */,
 				1CDD412C185BCAEF009284F9 /* sceneattr.h */,
 				1C4BD2821885FCB7000781B0 /* scenecommon.h */,
 				1CDD412D185BCAEF009284F9 /* sceneconverter.cpp */,
@@ -1101,6 +1115,8 @@
 				1CE0A43F1900A7EB005F3FA4 /* scenetextfactory.h */,
 				1C5BA0631935CDE100D7A70E /* scenedirty.h */,
 				1C4061A819509DA50074AC1A /* sceneltcompare.h */,
+				1CDD87E9198880DC00512F6E /* scenefactory.cpp */,
+				1CDD87EA198880DC00512F6E /* scenefactory.h */,
 			);
 			path = scene;
 			sourceTree = "<group>";
@@ -1186,12 +1202,14 @@
 				1CDD4126185BCAEF009284F9 /* sceneddogllist.h */,
 				1CCD1661189A400E001F8DF1 /* scenefbo.cpp */,
 				1CCD1662189A400E001F8DF1 /* scenefbo.h */,
-				1CDD4128185BCAEF009284F9 /* scenesnddd.cpp */,
-				1CDD4129185BCAEF009284F9 /* scenesnddd.h */,
 				1CDD412A185BCAEF009284F9 /* scenetexobj.cpp */,
 				1CDD412B185BCAEF009284F9 /* scenetexobj.h */,
 				1CAD971D186628EE00C547E1 /* scenevbo.cpp */,
 				1CAD971E186628EE00C547E1 /* scenevbo.h */,
+				1CDD87ED1988828000512F6E /* scenefactoryogl.cpp */,
+				1CDD87EE1988828000512F6E /* scenefactoryogl.h */,
+				1CB231F6198DE6DE007A64DE /* sceneuniobj.cpp */,
+				1CB231F7198DE6DE007A64DE /* sceneuniobj.h */,
 			);
 			path = "ogl-iphone";
 			sourceTree = "<group>";
@@ -1269,6 +1287,15 @@
 				1CDD417B185BCAF0009284F9 /* uiwheelcore.h */,
 			);
 			path = ui;
+			sourceTree = "<group>";
+		};
+		1CDD87EC1988823E00512F6E /* sndengine */ = {
+			isa = PBXGroup;
+			children = (
+				1CDD4128185BCAEF009284F9 /* scenesnddd.cpp */,
+				1CDD4129185BCAEF009284F9 /* scenesnddd.h */,
+			);
+			name = sndengine;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1418,6 +1445,7 @@
 				1CC482E8188A3FB00029408D /* sceneloaderfactory.cpp in Sources */,
 				1CC482D11888D0CD0029408D /* pnisearchpath.cpp in Sources */,
 				1CDD41C6185BCAF0009284F9 /* pnivec3.cpp in Sources */,
+				1CDD87EB198880DC00512F6E /* scenefactory.cpp in Sources */,
 				1CDD4183185BCAF0009284F9 /* animscenenodescale.cpp in Sources */,
 				1CE0A4401900A7EB005F3FA4 /* scenetextfactory.cpp in Sources */,
 				1CE0A4511900A98E005F3FA4 /* imgfactory.cpp in Sources */,
@@ -1429,9 +1457,11 @@
 				1CDD4181185BCAF0009284F9 /* animscenematerial.cpp in Sources */,
 				1CDD41DF185BCAF0009284F9 /* scenesprite.cpp in Sources */,
 				1CDD41B5185BCAF0009284F9 /* pnibox3.cpp in Sources */,
+				1CDD87EF1988828000512F6E /* scenefactoryogl.cpp in Sources */,
 				1CDD41D7185BCAF0009284F9 /* sceneloaderbase.cpp in Sources */,
 				1CDD41FD185BCAF0009284F9 /* sndengine-iphone.cpp in Sources */,
 				1CDD41E1185BCAF0009284F9 /* sceneddogl.cpp in Sources */,
+				1CB231F8198DE6DE007A64DE /* sceneuniobj.cpp in Sources */,
 				1CDD41D8185BCAF0009284F9 /* scenecamera.cpp in Sources */,
 				1CDD41DE185BCAF0009284F9 /* sceneparticle.cpp in Sources */,
 				1CDD4209185BCAF0009284F9 /* uiwheelcore.cpp in Sources */,

@@ -217,7 +217,7 @@ void lines::rebuildLines ()
   size_t vNum = 0;
 
     // Iterate through all line sigments
-  for ( auto segPoints : pLineData->getIndices() )
+  for ( auto& segPoints : pLineData->getIndices() )
   {
     size_t end = segPoints;
     
@@ -393,10 +393,11 @@ float lines::preCalcLength()
 void lines::rebuildUniform ()
 {
   uniform* pUniform = &mUniform->op();
+  pUniform->setName("line uniform");
   lineStyle const& style = mLineStyle.get();
 
   {
-    uniform::binding& binding = pUniform->bindingOp("u_vpSizeRatio");
+    uniform::binding& binding = pUniform->getBinding("u_vpSizeRatio");
     binding.set(uniform::binding::Vertex, uniform::binding::Float2);
     float* pFloats = binding.getFloats();
     pFloats[ 0 ] = mVpSizeRatio[ 0 ];
@@ -406,7 +407,7 @@ void lines::rebuildUniform ()
   if ( ( style.mEnableFlags & lineStyle::Tex00 ) == 0 )
   {
     {
-      uniform::binding& binding = pUniform->bindingOp("u_edgeRange");
+      uniform::binding& binding = pUniform->getBinding("u_edgeRange");
       binding.set(uniform::binding::Fragment, uniform::binding::Float2);
       float* pFloats = binding.getFloats();
       pFloats[ 0 ] = style.mEdgeMiddle;
@@ -414,7 +415,7 @@ void lines::rebuildUniform ()
     }
 
     {
-      uniform::binding& binding = pUniform->bindingOp("u_dashRange");
+      uniform::binding& binding = pUniform->getBinding("u_dashRange");
       binding.set(uniform::binding::Fragment, uniform::binding::Float4);
       float* pFloats = binding.getFloats();
       pFloats[ 0 ] = style.mDashMiddle;
@@ -424,7 +425,7 @@ void lines::rebuildUniform ()
     }
     
     {
-      uniform::binding& binding = pUniform->bindingOp("u_dashEnable");
+      uniform::binding& binding = pUniform->getBinding("u_dashEnable");
       binding.set(uniform::binding::Fragment, uniform::binding::Int1);
       int* pInts = binding.getInts();
       pInts[ 0 ] = style.mEnableFlags;
@@ -444,7 +445,7 @@ void lines::rebuildUniform ()
     }
   
     {
-      uniform::binding& binding = pUniform->bindingOp("u_texRange");
+      uniform::binding& binding = pUniform->getBinding("u_texRange");
       binding.set(uniform::binding::Vertex, uniform::binding::Float3);
       float* pFloats = binding.getFloats();
       pFloats[ 0 ] = style.mTexMiddle;
@@ -454,7 +455,7 @@ void lines::rebuildUniform ()
   }
 
   {
-    uniform::binding& binding = pUniform->bindingOp("u_alphaRef");
+    uniform::binding& binding = pUniform->getBinding("u_alphaRef");
     binding.set(uniform::binding::Fragment, uniform::binding::Float1);
     float* pFloats = binding.getFloats();
     pFloats[ 0 ] = style.mAlphaRef;

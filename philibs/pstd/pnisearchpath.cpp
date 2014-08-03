@@ -80,7 +80,7 @@ bool searchPath::resolve ( std::string const& fname, std::string& ret )
 {
   std::string fnameTail = tail ( fname );
 
-  for ( auto path : mPaths )
+  for ( auto& path : mPaths )
   {
     std::string testLong = path + "/" + fname;
     std::string testShort = path + "/" + fnameTail;
@@ -103,7 +103,7 @@ bool searchPath::resolve ( std::string const& fname, std::string& ret )
 
 searchPath& searchPath::operator += ( searchPath const& rhs )
 {
-  for ( auto path : rhs.mPaths )
+  for ( auto& path : rhs.mPaths )
     mPaths.push_back(path);
   return *this;
 }

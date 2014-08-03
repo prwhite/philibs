@@ -139,7 +139,7 @@ class state :
     std::string mName;
     bool mEnable = true;
     bool mOverride = false;
-    TravMaskType mTravMask = TravMaskDefaultDraw;
+    TravMaskType mTravMask = TravMaskDefaultState;
     
   private:
 

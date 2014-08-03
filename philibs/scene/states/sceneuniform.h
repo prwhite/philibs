@@ -113,9 +113,6 @@ class uniform :
     };
 
       // Now on to uniform's public members
-
-    uniform();
-    virtual ~uniform();
 //     uniform(uniform const& rhs);
 //     uniform& operator=(uniform const& rhs);
 //     bool operator==(uniform const& rhs) const;
@@ -129,12 +126,13 @@ class uniform :
           and clearDirty should be called. Currently, there is no gl-side
           cache for uniforms, so this is just good practice */
     binding& bindingOp ( std::string const& which ) { setDirty (); return mBindings[ which ]; }
+  
+    binding& getBinding ( std::string const& which ) { return mBindings[ which ]; }
 
   protected:
   
   private:
     Bindings mBindings;
-    mutable bool mDirty = true;
   
 
   // interface from state

@@ -48,6 +48,7 @@ enum Trav : TravMaskType {
   TravCount,  // number of trav masks for allocations/iterations
   
   TravMaskNone = 0x00,
+  TravMaskDefaultState = 0xff,
   TravMaskDefaultDraw = 0xffff,
   TravMaskAll = 0xffffffff
 };
@@ -71,6 +72,9 @@ class travDataContainer
         else
           return 0;
       };
+  
+    template< typename Type >
+    Type* getTravData ( Trav which ) const { return static_cast<Type*>(getTravData(which)); }
   
       // Exposed for refCount debugging.  Not for human consumption.
     TravDatum& getTravDatum () { return mTravData; }

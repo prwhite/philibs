@@ -45,12 +45,22 @@ class renderSink :
     renderSink& operator=(renderSink const& rhs) = delete;
 //    bool operator==(renderSink const& rhs) const;
 
+      // //////////////////////////////////////////////////
+      /// @ group types
     using ChildRef = pni::pstd::autoRef<renderSink>;
     using Children = std::vector< ChildRef >;
+    using GraphDdRef = pni::pstd::autoRef<graphDd>;
+    using IsectDdRef = pni::pstd::autoRef<isectDd>;
+    using IsectTestRef = pni::pstd::autoRef<isectTest>;
+    using FramebufferRef = pni::pstd::autoRef<framebuffer>;
+    using NodeRef = pni::pstd::autoRef<node>;
+    using MaskType = node::MaskType;
+    using Dim = framebuffer::Dim;
+    using DimPair = Dim[ 2 ];
 
+      // //////////////////////////////////////////////////
       /// @group Manage child renderSinks
-  
-      /// There are no parent pointers.
+      /// @note There are no parent pointers.
     void addChild ( renderSink* pChild ) { mChildren.push_back ( pChild ); }
       ///
     void remChild ( renderSink* pChild )
@@ -75,20 +85,15 @@ class renderSink :
       // First part of double dispatch with renderSinkDd.
     virtual void accept ( renderSinkDd* pDd ) const;
   
+      // //////////////////////////////////////////////////
       /// @group Manage data members for this render sink.
   
-    typedef pni::pstd::autoRef<graphDd> GraphDdRef;
-    typedef pni::pstd::autoRef<isectDd> IsectDdRef;
-    typedef pni::pstd::autoRef<isectTest> IsectTestRef;
-    typedef pni::pstd::autoRef<framebuffer> FramebufferRef;
-    typedef pni::pstd::autoRef<node> NodeRef;
-    typedef node::MaskType MaskType;
-
       // Not a lot of side-effects anticipated for these members,
       // and they're already memory-managed.  So public!!!
   
       /// Specify the frame buffer parameters for this sink.
     FramebufferRef mFramebuffer;
+    void captureDefaultFb () { assert ( mFramebuffer.get () ); mFramebuffer->captureDefaultFb(); }
   
       /// It is ok for the mDd to be a nullptr.  This indicates to
       /// the system to skip a given rendering pass.
@@ -107,9 +112,26 @@ class renderSink :
       /// Specify the instersection parameters for this sink
     graphDdSpec mIsectSpec;
   
-      /// Different renderSink @a can use different textures on aliases to
-      /// the same framebuffer... although that will cause some state thrash.
+      /// Different @p renderSink @a can use different textures on aliases to
+      /// the same framebuffer... although that can cause some state thrash.
     framebuffer::textureTargets mTextureTargets;
+  
+      /// Used to connect textures from one renderSink's scene to the
+      /// framebuffer of another renderSink.
+    framebuffer::textureTargets mTextureSources;
+  
+      // //////////////////////////////////////////////////
+      /// @group Preconfigure renderSinks for different tasks
+      /// @note These are not exhaustive, just illustrative of
+      /// the kinds of configurations that can be created.
+      //  TODO: Maybe add trav mask to arguments for @a real scenes
+    void initScene ( DimPair const size, TravMaskType mask );
+    void initSceneDepth ( DimPair const size, renderSink* pVisual, TravMaskType mask );
+    void initPostProcScene ( DimPair const srcSize, DimPair const dstSize, img::base::Format format = img::base::RGB565 );
+  
+    void initFinalFb ( DimPair const size, std::string const& name = "finalfb" );
+    void initTextureFb ( DimPair const size, std::string const& name = "texturefb" );
+    void initTextureFbDepth ( DimPair const size, std::string const& name = "texturefbdepth" );
 
   protected:
 

@@ -140,7 +140,7 @@ class graphDd :
     virtual void dispatch ( sndListener const* pNode ) = 0;
 
     nodePath mSinkPath;
-    MaskType mTravMask = TravMaskDefaultDraw;
+    MaskType mTravMask = TravMaskDefaultState;
     TimeType mTimeStamp = 0.0f;
     TimeType mLastTimeStamp = 0.0f;
 

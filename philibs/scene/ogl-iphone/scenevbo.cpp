@@ -143,8 +143,8 @@ void vbo::config ( geomData const* pData, progObj const* pProgObj )
 CheckGLError
 
       // Now set up attribute pointers.
-//    for ( auto const& attributeIter : attributes )
-    for ( auto const& binding : bindings )
+//    for ( auto& attributeIter : attributes )
+    for ( auto& binding : bindings )
     {
       GLint attribId = glGetAttribLocation(pProgObj->getVertexProgHandle(), binding.mName.c_str());
 CheckGLError

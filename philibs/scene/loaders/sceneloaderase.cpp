@@ -470,7 +470,7 @@ PNIDBG
 
         void finishTextureFutures ()
         {
-          for ( auto tuple : mImgFutures )
+          for ( auto& tuple : mImgFutures )
           {
             img::base* pImg = tuple->imgFuture.get();    // Will wait indefinitely
             finishTexture(tuple->mTex, tuple->mNode, pImg);

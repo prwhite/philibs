@@ -241,7 +241,9 @@ void fbo::dispatchFuncs(framebuffer::spec const& spec, configFuncs const& funcs,
 
 void fbo::bind ( framebuffer const* pFb )
 {
+CheckGLError
   glBindFramebuffer ( GL_FRAMEBUFFER, mFramebufferId );
+CheckGLError
 }
 
 void fbo::captureDefaultFb ()
@@ -258,7 +260,8 @@ void fbo::bind ( framebuffer const* pFb,
     framebuffer::TextureImageId depthDest ,
     framebuffer::TextureImageId stencilDest )
 {
-  glPushGroupMarkerEXT(0, "fbo::bind (public)");
+  std::string marker = "fbo::bind " + pFb->getName();
+  glPushGroupMarkerEXT(0, marker.c_str());
 
 CheckGLError
   bind ( pFb );
@@ -338,6 +341,8 @@ CheckGLError
 CheckGLError
 }
 
+//#define INDIVIDUALDISCARDS
+
 void fbo::finish ( framebuffer const* pFb )
 {
   glPushGroupMarkerEXT(0, "fbo::discard start");
@@ -351,30 +356,54 @@ void fbo::finish ( framebuffer const* pFb )
         texObj::getOrCreate(pTex);  // Force mipmap generation now
     },
     [pFb] ( size_t num ) {
+#ifdef INDIVIDUALDISCARDS
         GLenum which = GL_COLOR_ATTACHMENT0;
-        glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, &which); },
+        glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, &which);
+#endif // INDIVIDUALDISCARDS
+    },
     [pFb, targets] () {
       if ( texture* pTex = targets.getDepthTextureTarget() )
         texObj::getOrCreate(pTex);  // Force mipmap generation now
     },
     [pFb] () {
+#ifdef INDIVIDUALDISCARDS
         GLenum which = GL_DEPTH_ATTACHMENT;
-        glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, &which ); },
+        glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, &which );
+#endif // INDIVIDUALDISCARDS
+
+    },
     [pFb, targets] () {
       if ( texture* pTex = targets.getDepthTextureTarget() )
         texObj::getOrCreate(pTex);  // Force mipmap generation now
     },
     [pFb] () {
+#ifdef INDIVIDUALDISCARDS
         GLenum which = GL_DEPTH_ATTACHMENT;
-        glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, &which); },
+        glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, &which);
+#endif // INDIVIDUALDISCARDS
+
+    },
     [pFb, targets] () {
       if ( texture* pTex = targets.getStencilTextureTarget() )
         texObj::getOrCreate(pTex);  // Force mipmap generation now
     },
     [pFb] () {
+#ifdef INDIVIDUALDISCARDS
         GLenum which = GL_STENCIL_ATTACHMENT;
-        glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, &which); }
+        glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, &which);
+#endif // INDIVIDUALDISCARDS
+
+    }
   } );
+  
+    // Testing to make sure this fixes a logical op warning...
+    // This does fix warning about logical buffer ops... and has no negative
+    // effect on rendering... will keep for now.
+#ifndef INDIVIDUALDISCARDS
+  GLenum which[ 3 ] = { GL_COLOR_ATTACHMENT0, GL_DEPTH_ATTACHMENT, GL_STENCIL_ATTACHMENT };
+  glDiscardFramebufferEXT(GL_FRAMEBUFFER, 3, which );
+#endif // INDIVIDUALDISCARDS
+  
   
   glPopGroupMarkerEXT();
 }
@@ -388,7 +417,9 @@ void fbo::initBuffers ( framebuffer::spec const& spec )
   if ( mFramebufferId != 0 )
     return;   // Early return!!! Precondition
   
+CheckGLError
   glGenFramebuffers(1, &mFramebufferId);
+CheckGLError
   
   dispatchFuncs(spec, configFuncs {
     [] ( size_t num ) {},
@@ -405,6 +436,8 @@ CheckGLError
 
 void fbo::configBuffers(framebuffer const* pFb, framebuffer::spec const& spec )
 {
+CheckGLError
+
   dispatchFuncs(spec, configFuncs {
     [] ( size_t num ) { },
     [&] ( size_t num )  // Color renderbuffer
@@ -412,6 +445,7 @@ void fbo::configBuffers(framebuffer const* pFb, framebuffer::spec const& spec )
         glBindRenderbuffer(GL_RENDERBUFFER, mRenderbufferColorId);
         glRenderbufferStorage(GL_RENDERBUFFER, colorAttachmentToGlInternalFormat(spec.mColorAttachment[ num ]), spec.mWidth, spec.mHeight);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, mRenderbufferColorId);
+        glLabelObjectEXT(GL_RENDERBUFFER, mRenderbufferColorId, 0, pFb->getName().c_str());
       },
     [] () {},
     [&] ()  // Combined Depth24Stencil8 renderbuffer
@@ -419,6 +453,7 @@ void fbo::configBuffers(framebuffer const* pFb, framebuffer::spec const& spec )
         glBindRenderbuffer(GL_RENDERBUFFER, mRenderbufferDepthId);
         glRenderbufferStorage(GL_RENDERBUFFER, depthAttachmentToGlInternalFormat(spec.mDepthAttachment), spec.mWidth, spec.mHeight);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_OES, GL_RENDERBUFFER, mRenderbufferDepthId);
+        glLabelObjectEXT(GL_RENDERBUFFER, mRenderbufferDepthId, 0, pFb->getName().c_str());
       },
     [] () {},
     [&] ()  // Depth renderbuffer
@@ -426,6 +461,7 @@ void fbo::configBuffers(framebuffer const* pFb, framebuffer::spec const& spec )
         glBindRenderbuffer(GL_RENDERBUFFER, mRenderbufferDepthId);
         glRenderbufferStorage(GL_RENDERBUFFER, depthAttachmentToGlInternalFormat(spec.mDepthAttachment), spec.mWidth, spec.mHeight);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mRenderbufferDepthId);
+        glLabelObjectEXT(GL_RENDERBUFFER, mRenderbufferDepthId, 0, pFb->getName().c_str());
       },
     [] () {},
     [&] ()  // Stencil renderbuffer
@@ -433,6 +469,7 @@ void fbo::configBuffers(framebuffer const* pFb, framebuffer::spec const& spec )
         glBindRenderbuffer(GL_RENDERBUFFER, mRenderbufferStencilId);
         glRenderbufferStorage(GL_RENDERBUFFER, stencilAttachmentToGlInternalFormat(spec.mStencilAttachment), spec.mWidth, spec.mHeight);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, mRenderbufferStencilId);
+        glLabelObjectEXT(GL_RENDERBUFFER, mRenderbufferStencilId, 0, pFb->getName().c_str());
       }
   } );
 CheckGLError
@@ -463,7 +500,10 @@ void fbo::config ( framebuffer const* pFb )
   clear();            // So we can be re-init'd.
   initBuffers(spec);
   
-  glLabelObjectEXT(GL_FRAMEBUFFER, mFramebufferId, 0, pFb->getName().c_str());
+CheckGLError
+    // This throws a gl invalid op for some reason... no good resources on the
+    // net or in the extension spec to say why this fails. :(
+//  glLabelObjectEXT(GL_FRAMEBUFFER, mFramebufferId, 0, pFb->getName().c_str());
   
     // ... so we can't bind until that's done
   bind ( pFb );

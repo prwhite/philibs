@@ -172,7 +172,7 @@ class basicBinding :
     size_t getValueStrideBytes () const
       {
         size_t ret = 0;
-        for ( auto binding : *this )
+        for ( auto& binding : *this )
           ret += binding.mSize * binding.mCount;
         return ret;
       }
@@ -182,7 +182,7 @@ class basicBinding :
     size_t getValueOffsetBytes ( SemanticType stype, size_t index = 0 ) const
       {
         size_t ret = 0;
-        for ( auto binding : *this )
+        for ( auto& binding : *this )
         {
           if ( binding.mSemanticType == stype && binding.mIndex == index )
             break;
@@ -196,7 +196,7 @@ class basicBinding :
     size_t getValueOffsetBytesByName ( std::string const& name, size_t index = 0 ) const
       {
         size_t ret = 0;
-        for ( auto binding : *this )
+        for ( auto& binding : *this )
         {
           if ( binding.mName == name && binding.mIndex == index )
             break;
@@ -207,7 +207,7 @@ class basicBinding :
 
     bool hasBinding ( SemanticType stype, size_t index = 0 ) const
       {
-        for ( auto binding : *this )
+        for ( auto& binding : *this )
           if ( binding.mSemanticType == stype && binding.mIndex == index )
             return true;
         return false;
@@ -215,7 +215,7 @@ class basicBinding :
   
     bool hasBindingByName ( std::string const& which, size_t index = 0 ) const
       {
-        for ( auto binding : *this )
+        for ( auto& binding : *this )
           if ( binding.mName == which && binding.mIndex == index )
             return true;
         return false;
@@ -248,7 +248,7 @@ class basicBinding :
       {
         mOffsets.clear();
         size_t ret = 0;
-        for ( auto binding : *this )
+        for ( auto& binding : *this )
         {
           mOffsets[ std::make_pair( binding.mSemanticType, binding.mIndex ) ] = ret;
           ret += binding.mSize * binding.mCount;
@@ -512,7 +512,7 @@ class data :
     bool lt ( ValueType const* lhs, ValueType const* rhs ) const
     {
       LtCompare const& ltCompare = *this;
-      for ( auto cur : mBinding )
+      for ( auto& cur : mBinding )
       {
         bool lhsltrhs = ltCompare( cur.mCount, cur.mDataType, lhs, rhs );
           // lhs < rhs

@@ -25,7 +25,7 @@ namespace scene {
 
   /** Creates and caches program strings that statically optimize for
       a given combination of lights/textures/etc.
-      @note This is just sketched in right now, and completely unimplemented.
+      @note This is just sketched in right now, and generally unimplemented.
       @note Read the previous note.
   */
 
@@ -128,7 +128,7 @@ class progFactory
     typedef pni::pstd::autoRef< prog > ProgRef;
     typedef std::map< progProps, ProgRef > ProgMap;
   
-    ProgMap mProgMap; // TODO: Needs mutex when we start using it!!!
+//    ProgMap mProgMap; // TODO: Needs mutex when we start using it!!!
   
     pni::pstd::threadPool mThreadPool { 1 };
 };

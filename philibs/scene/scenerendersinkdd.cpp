@@ -59,7 +59,7 @@ void renderSinkDd::startGraph ( renderSink const* pSink, TimeType timeStamp )
     Ref front = stack.back();
     stack.pop_back();
     
-    for(auto iter : front->getChildren())
+    for(auto& iter : front->getChildren())
       stack.push_back(iter.get());
     
     out.push_back(front.get());
@@ -172,7 +172,7 @@ void renderSinkDd::dispatch ( renderSink const* pSink,
   if(pSink->mFramebuffer)
     pSink->mFramebuffer->bind(colorId, depthId, stencilId);
 
-  for(auto iter : { pSink->mDrawSpec, pSink->mSndSpec, pSink->mIsectSpec })
+  for(auto& iter : { pSink->mDrawSpec, pSink->mSndSpec, pSink->mIsectSpec })
     if ( iter.mDd ) // null dd's are part of the design... they are skipped.
       execGraphDd(iter);
   

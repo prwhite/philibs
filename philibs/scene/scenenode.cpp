@@ -114,7 +114,7 @@ void node::updateBounds () const
 {
   mBounds.setEmpty ();
 
-  for ( auto cur : mChildren )
+  for ( auto& cur : mChildren )
   {
     node* pNode = cur.get ();
     pNode->updateBounds ();
@@ -293,7 +293,7 @@ void node::remState ( state::Id id, MaskType mask )
     
       // Then do the deletes in the delete list /on the states map/
     {
-      for ( auto cur : deletes )
+      for ( auto& cur : deletes )
         mStates.erase(cur);
     }
   }
@@ -311,7 +311,7 @@ state* node::getState ( state::Id id ) const
 state* node::getState ( state::Id id, MaskType mask ) const
 {
   auto range = mStates.equal_range(id);
-  for ( auto iter : range )
+  for ( auto& iter : range )
   {
     if ( iter.second->getTravMask() & mask )
       return iter.second.get();
@@ -322,7 +322,7 @@ state* node::getState ( state::Id id, MaskType mask ) const
 
 void node::uniquifyStates ()
 {
-  for ( auto cur : mStates )
+  for ( auto& cur : mStates )
   {
     if ( cur.second && ( cur.second->getNumRefs () > 1 ) )
     {

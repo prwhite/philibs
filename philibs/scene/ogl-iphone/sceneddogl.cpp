@@ -328,7 +328,7 @@ PNIDBG
   stateSet& dst = mStateStack.back ();
   
     // Loop over source
-  for ( auto cur : src )
+  for ( auto& cur : src )
   {
       // Vars for inner loop
     if ( cur.second->getTravMask () & getTravMask() )
@@ -352,7 +352,7 @@ PNIDBG
 
 void ddOgl::dispatchChildren ( node const* pNode )
 {
-  for ( auto cur : pNode->getChildren())
+  for ( auto& cur : pNode->getChildren())
   {
     mNodePath.push ( const_cast< node* > ( cur.get () ) );
     cur->accept ( this );

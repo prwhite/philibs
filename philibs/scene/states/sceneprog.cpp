@@ -98,7 +98,7 @@ void prog::setFlag ( std::string const& flag, uint32_t unit )
 void prog::applyFlags ()
 {
   std::string defines;
-  for ( auto pair : mFlagVec )
+  for ( auto& pair : mFlagVec )
     defines += pair.mFlag;      // Currently not using pair.mUnit... stamped into string already, but might come in handy in future.
 
   mProg[ Vertex ] = defines + mProg[ Vertex ];
