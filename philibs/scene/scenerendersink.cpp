@@ -62,7 +62,6 @@ void renderSink::collectRefs ( pni::pstd::refCount::Refs& refs ) const
     // TODO: This is way incomplete!
   pni::pstd::dbgRefCount::collectMapSecondRefs ( getTravDatum (), refs );
   mTextureTargets.collectRefs(refs);
-  mTextureSources.collectRefs(refs);
 }
 
 /////////////////////////////////////////////////////////////////////

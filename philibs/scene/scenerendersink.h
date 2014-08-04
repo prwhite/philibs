@@ -115,10 +115,6 @@ class renderSink :
       /// Different @p renderSink @a can use different textures on aliases to
       /// the same framebuffer... although that can cause some state thrash.
     framebuffer::textureTargets mTextureTargets;
-  
-      /// Used to connect textures from one renderSink's scene to the
-      /// framebuffer of another renderSink.
-    framebuffer::textureTargets mTextureSources;
 
   protected:
 
