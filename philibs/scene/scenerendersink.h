@@ -119,19 +119,6 @@ class renderSink :
       /// Used to connect textures from one renderSink's scene to the
       /// framebuffer of another renderSink.
     framebuffer::textureTargets mTextureSources;
-  
-      // //////////////////////////////////////////////////
-      /// @group Preconfigure renderSinks for different tasks
-      /// @note These are not exhaustive, just illustrative of
-      /// the kinds of configurations that can be created.
-      //  TODO: Maybe add trav mask to arguments for @a real scenes
-    void initScene ( DimPair const size, TravMaskType mask );
-    void initSceneDepth ( DimPair const size, renderSink* pVisual, TravMaskType mask );
-    void initPostProcScene ( DimPair const srcSize, DimPair const dstSize, img::base::Format format = img::base::RGB565 );
-  
-    void initFinalFb ( DimPair const size, std::string const& name = "finalfb" );
-    void initTextureFb ( DimPair const size, std::string const& name = "texturefb" );
-    void initTextureFbDepth ( DimPair const size, std::string const& name = "texturefbdepth" );
 
   protected:
 
