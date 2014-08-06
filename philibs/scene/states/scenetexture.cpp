@@ -16,7 +16,7 @@ namespace scene {
 texture::texture() :
   mDirty ( DirtyAll ),
   mPriority ( 0.5f ),
-//   mAnisotropy ( 0.0f ),
+  mAnisotropy ( 0.0f ),
   mTarget ( Tex2DTarget ),
   mMinFilter ( MinLinear ),
   mMagFilter ( MagLinear ),
@@ -50,6 +50,16 @@ texture::~texture()
 //   
 //   return false;
 // }
+
+bool texture::hasMipMaps () const
+{
+  return getNumImages() && ( getImage()->mBuffers.size() > 1 );
+}
+  
+bool texture::needsGenMipMaps () const
+{
+  return ( mMinFilter >= MinNearestMipNearest ) && ( ! hasMipMaps() );
+}
 
 /////////////////////////////////////////////////////////////////////
 

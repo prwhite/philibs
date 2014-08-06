@@ -52,7 +52,7 @@ class base :
         RGBA_PVRTC_2BPPV1, //GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG
         RGBA_PVRTC_4BPPV1, //GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG
         DEPTH_COMPONENT16,
-//        DEPTH_COMPONENT24,
+        DEPTH_COMPONENT24,
         DEPTH_COMPONENT32,
         FormatCount
       };
@@ -133,7 +133,7 @@ class base :
             case Alpha8: return 1;
             case GrayAlpha88: return 2;
             case DEPTH_COMPONENT16: return 2;
-//            case DEPTH_COMPONENT24: return 3;
+            case DEPTH_COMPONENT24: return 3;
             case DEPTH_COMPONENT32: return 4;
             case Uninit: 
             default:

@@ -37,6 +37,9 @@ class fbo :
   
     void captureDefaultFb ();
   
+      /// Simply bind the framebuffer to gl
+    void bind ( framebuffer const* pFb );
+
       /// Bind the framebuffer to gl, along with associating the correct
       /// target drawable (e.g., default fb, texture, or texture cubemap side).
     void bind ( framebuffer const* pFb,
@@ -56,9 +59,6 @@ class fbo :
 
     void init ();
     void clear ();
-
-      /// Simply bind the framebuffer to gl
-    void bind ( framebuffer const* pFb );
   
     void initBuffers ( framebuffer::spec const& spec );
     void configBuffers ( framebuffer const* pFb, framebuffer::spec const& spec );

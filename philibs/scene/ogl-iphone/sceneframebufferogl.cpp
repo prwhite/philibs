@@ -48,6 +48,13 @@ void framebufferOgl::captureDefaultFb ()
 
   pFbo->captureDefaultFb();
 }
+
+void framebufferOgl::bind ()
+{
+  fbo* pFbo = fbo::getOrCreate(this);
+  
+  pFbo->bind ( this );
+}
   
 void framebufferOgl::bind (
     framebuffer::TextureImageId colorDest,

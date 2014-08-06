@@ -103,6 +103,7 @@ class renderSink :
       scene::nodePath mSinkPath;       // = nullptr
       NodeRef mRootNode;               // = nullptr
       MaskType mTravMask                  = TravMaskDefaultDraw;
+      pni::math::vec4 mViewport           { 0.0f, 0.0f, 1920, 1080 };
     };
 
       /// Specify the drawing parameters for this sink

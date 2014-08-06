@@ -41,10 +41,12 @@ class framebufferOgl :
     // interface from scene::framebuffer
   public:
 
+    virtual void bind () override;
+
     virtual void bind ( 
         framebuffer::TextureImageId colorDest,
         framebuffer::TextureImageId depthDest,
-        framebuffer::TextureImageId stencilDest );
+        framebuffer::TextureImageId stencilDest ) override;
   
     virtual void finish ();
   

@@ -202,9 +202,9 @@ void fbo::dispatchFuncs(framebuffer::spec const& spec, configFuncs const& funcs,
 {
   for ( size_t num = 0; num < framebuffer::NumColorAttachments; ++num )
   {
-    if ( ( spec.mColorType[ num ] == framebuffer::Texture ) )
+    if ( ( spec.mColorType[ num ] == framebuffer::AttachTexture ) )
       funcs.mColorTexture(num);
-    else if ( spec.mColorType[ num ] == framebuffer::Renderbuffer )
+    else if ( spec.mColorType[ num ] == framebuffer::AttachRenderbuffer )
       funcs.mColorRenderbuffer(num);
     else if ( noisy )
       PNIDBGSTR("no color attachment type set");
@@ -214,25 +214,25 @@ void fbo::dispatchFuncs(framebuffer::spec const& spec, configFuncs const& funcs,
     // fly with texture, but it will with renderbuffer.
   if ( spec.mDepthAttachment == framebuffer::DepthAttachment24Stencil8 )
   {
-    if ( spec.mDepthType == framebuffer::Texture )
+    if ( spec.mDepthType == framebuffer::AttachTexture )
       funcs.mDepth248Texture();
-    else if ( spec.mDepthType == framebuffer::Renderbuffer )
+    else if ( spec.mDepthType == framebuffer::AttachRenderbuffer )
       funcs.mDepth248Renderbuffer();
     else if ( noisy )
       PNIDBGSTR("no depth attachment type set");
   }
   else
   {
-    if ( spec.mDepthType == framebuffer::Texture )
+    if ( spec.mDepthType == framebuffer::AttachTexture )
       funcs.mDepthTexture();
-    else if ( spec.mDepthType == framebuffer::Renderbuffer )
+    else if ( spec.mDepthType == framebuffer::AttachRenderbuffer )
       funcs.mDepthRenderbuffer();
     else if ( noisy )
       PNIDBGSTR("no depth attachment type set");
 
-    if ( spec.mStencilType == framebuffer::Texture )
+    if ( spec.mStencilType == framebuffer::AttachTexture )
       funcs.mStencilTexture();
-    else if ( spec.mStencilType == framebuffer::Renderbuffer )
+    else if ( spec.mStencilType == framebuffer::AttachRenderbuffer )
       funcs.mStencilRenderbuffer();
     else if ( noisy )
       PNIDBGSTR("no stencil attachment type set");
@@ -241,9 +241,12 @@ void fbo::dispatchFuncs(framebuffer::spec const& spec, configFuncs const& funcs,
 
 void fbo::bind ( framebuffer const* pFb )
 {
+  std::string marker = "fbo::bind " + pFb->getName();
+  glPushGroupMarkerEXT(0, marker.c_str());
 CheckGLError
   glBindFramebuffer ( GL_FRAMEBUFFER, mFramebufferId );
 CheckGLError
+  glPopGroupMarkerEXT();
 }
 
 void fbo::captureDefaultFb ()
@@ -253,7 +256,6 @@ void fbo::captureDefaultFb ()
   
   mFramebufferId = defaultFBO;
 }
-
 
 void fbo::bind ( framebuffer const* pFb,
     framebuffer::TextureImageId colorDest,
@@ -275,7 +277,7 @@ CheckGLError
     // It goes like this ex... but glTexImage2D will be called from the texobj::getOrCreate call.
     //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,  width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
     //glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
-
+  
 
   dispatchFuncs(spec, configFuncs {
     [pFb, colorDest, targets] ( size_t num )
@@ -341,7 +343,20 @@ CheckGLError
 CheckGLError
 }
 
-//#define INDIVIDUALDISCARDS
+#define INDIVIDUALDISCARDS
+
+namespace { // anonymous
+
+inline void tryGenMipMaps ( texture* pTex )
+{
+  if ( pTex->needsGenMipMaps() )
+  {
+    texObj* pObj = texObj::getOrCreate(pTex);  // Force mipmap generation now
+    pObj->unbind ();
+  }
+}
+
+}
 
 void fbo::finish ( framebuffer const* pFb )
 {
@@ -353,44 +368,44 @@ void fbo::finish ( framebuffer const* pFb )
   dispatchFuncs(spec, configFuncs {
     [pFb, targets] ( size_t num ) {
       if ( texture* pTex = targets.getColorTextureTarget(num) )
-        texObj::getOrCreate(pTex);  // Force mipmap generation now
+        tryGenMipMaps(pTex);
     },
     [pFb] ( size_t num ) {
 #ifdef INDIVIDUALDISCARDS
         GLenum which = GL_COLOR_ATTACHMENT0;
-        glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, &which);
+        glDiscardFramebufferEXT(GL_FRAMEBUFFER, 1, &which);
 #endif // INDIVIDUALDISCARDS
     },
     [pFb, targets] () {
       if ( texture* pTex = targets.getDepthTextureTarget() )
-        texObj::getOrCreate(pTex);  // Force mipmap generation now
+        tryGenMipMaps(pTex);
     },
     [pFb] () {
 #ifdef INDIVIDUALDISCARDS
         GLenum which = GL_DEPTH_ATTACHMENT;
-        glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, &which );
+        glDiscardFramebufferEXT(GL_FRAMEBUFFER, 1, &which );
 #endif // INDIVIDUALDISCARDS
 
     },
     [pFb, targets] () {
       if ( texture* pTex = targets.getDepthTextureTarget() )
-        texObj::getOrCreate(pTex);  // Force mipmap generation now
+        tryGenMipMaps(pTex);
     },
     [pFb] () {
 #ifdef INDIVIDUALDISCARDS
         GLenum which = GL_DEPTH_ATTACHMENT;
-        glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, &which);
+        glDiscardFramebufferEXT(GL_FRAMEBUFFER, 1, &which);
 #endif // INDIVIDUALDISCARDS
 
     },
     [pFb, targets] () {
       if ( texture* pTex = targets.getStencilTextureTarget() )
-        texObj::getOrCreate(pTex);  // Force mipmap generation now
+        tryGenMipMaps(pTex);
     },
     [pFb] () {
 #ifdef INDIVIDUALDISCARDS
         GLenum which = GL_STENCIL_ATTACHMENT;
-        glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE, 1, &which);
+        glDiscardFramebufferEXT(GL_FRAMEBUFFER, 1, &which);
 #endif // INDIVIDUALDISCARDS
 
     }
@@ -434,9 +449,42 @@ CheckGLError
 CheckGLError
 }
 
+namespace { // anonymous
+
+framebuffer::TextureImageId calcImageId(
+    framebuffer::TextureTarget texTarget,
+    framebuffer::TextureImageId texImageId,
+    framebuffer::Type type)
+{
+  if(texTarget == texture::NoTarget)
+    return texture::NoImage;
+  else
+  {
+    if(type == framebuffer::AttachTexture)
+      return texImageId;
+    else
+      return texture::NoImage;
+  }
+}
+
+}
+
 void fbo::configBuffers(framebuffer const* pFb, framebuffer::spec const& spec )
 {
 CheckGLError
+
+    // For color attachment texture... from
+    // https://developer.apple.com/library/IOs/documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/WorkingwithEAGLContexts/WorkingwithEAGLContexts.html#//apple_ref/doc/uid/TP40008793-CH103-SW1
+  
+    // It goes like this ex... but glTexImage2D will be called from the texobj::getOrCreate call.
+    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,  width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    //glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+  framebuffer::TextureImageId colorDest = calcImageId(spec.mTextureTarget, texture::Tex2DImg, spec.mColorType[ 0 ]);
+  framebuffer::TextureImageId depthDest = calcImageId(spec.mTextureTarget, texture::Tex2DImg, spec.mDepthType);
+  framebuffer::TextureImageId stencilDest = calcImageId(spec.mTextureTarget, texture::Tex2DImg, spec.mStencilType);
+
+  bind ( pFb, colorDest, depthDest, stencilDest );
 
   dispatchFuncs(spec, configFuncs {
     [] ( size_t num ) { },
@@ -485,7 +533,7 @@ void fbo::config ( framebuffer const* pFb )
     // we do want to make sure it's bound.
     // HACK: This is a special short-circuit right now to use the default
     // framebuffer if the first color attachment type is Default.
-  if ( spec.mColorType[ 0 ] == framebuffer::Default )
+  if ( spec.mColorType[ 0 ] == framebuffer::AttachDefault )
   {
       // Don't bind to zero... that might not be what we want
       // in the case of the OS-provided fb.  See captureDefaultFb.

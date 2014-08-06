@@ -48,7 +48,8 @@ class renderSinkDd
     virtual void dispatch ( renderSink const* pSink,
         texture::ImageId colorId,
         texture::ImageId depthId,
-        texture::ImageId stencilId );
+        texture::ImageId stencilId,
+        bool fastBind = true );
   
     virtual void execGraphDd ( renderSink::graphDdSpec const& spec );
   

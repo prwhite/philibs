@@ -6,6 +6,7 @@
 
 #include "scenerendersinkdd.h"
 #include "scenerendersink.h"
+#include "scenecamera.h"
 #include "pnitimer.h"
 
 /////////////////////////////////////////////////////////////////////
@@ -117,9 +118,9 @@ framebuffer::TextureImageId calcImageId(
     return texture::NoImage;
   else
   {
-    if(type == framebuffer::Default)
+    if(type == framebuffer::AttachDefault)
       return texture::NoImage;
-    else if(type == framebuffer::Renderbuffer)
+    else if(type == framebuffer::AttachRenderbuffer)
       return texture::NoImage;
     else
       return texImageId;
@@ -167,10 +168,16 @@ void renderSinkDd::dispatch ( renderSink const* pSink )
 void renderSinkDd::dispatch ( renderSink const* pSink,
     texture::ImageId colorId,
     texture::ImageId depthId,
-    texture::ImageId stencilId )
+    texture::ImageId stencilId,
+    bool fastBind )
 {
   if(pSink->mFramebuffer)
-    pSink->mFramebuffer->bind(colorId, depthId, stencilId);
+  {
+    if ( fastBind )
+      pSink->mFramebuffer->bind();
+    else
+      pSink->mFramebuffer->bind(colorId, depthId, stencilId); // re-attaches textures... used for cubemaps.
+  }
 
   for(auto& iter : { pSink->mDrawSpec, pSink->mSndSpec, pSink->mIsectSpec })
     if ( iter.mDd ) // null dd's are part of the design... they are skipped.
@@ -187,6 +194,9 @@ void renderSinkDd::execGraphDd ( renderSink::graphDdSpec const& spec )
   spec.mDd->setTravMask(spec.mTravMask);
   spec.mDd->setTimeStamp(mCurTimeStamp);
   spec.mDd->setLastTimeStamp(mLastTimeStamp);
+  
+  if ( camera* pCam = spec.mSinkPath.getLeaf< camera >() )
+    pCam->setViewport ( spec.mViewport[ 0 ], spec.mViewport[ 1 ], spec.mViewport[ 2 ], spec.mViewport[ 3 ] );
   
   spec.mDd->startGraph(spec.mRootNode.get());
 }

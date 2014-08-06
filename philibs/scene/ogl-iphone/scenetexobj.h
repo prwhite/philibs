@@ -31,6 +31,7 @@ class texObj :
       static texObj* getOrCreate ( texture const* textureIn );
         
       void bind ( texture const* pTex );
+      void unbind ();
       
       void config ( texture const* pTex );
   

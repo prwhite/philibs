@@ -99,7 +99,7 @@ imageFormatToGlFormat ( img::base::Format formatIn )	// img::image* imgIn )
 		case img::base::Alpha8: return GL_ALPHA;
 		case img::base::GrayAlpha88: return GL_LUMINANCE_ALPHA;
     case img::base::DEPTH_COMPONENT16: return GL_DEPTH_COMPONENT;
-//    case img::base::DEPTH_COMPONENT24: return GL_DEPTH_COMPONENT24_OES;
+    case img::base::DEPTH_COMPONENT24: return GL_DEPTH_COMPONENT;
     case img::base::DEPTH_COMPONENT32: return GL_DEPTH_COMPONENT;
 	}
 }
@@ -330,6 +330,11 @@ void texObj::bind ( texture const* pTex )
   glBindTexture ( mGlTextureTarget, mId );
 }
 
+void texObj::unbind ()
+{
+  glBindTexture ( mGlTextureTarget, 0 );
+}
+
 void texObj::configOneTextureImg ( texture const* pTex, texture::ImageId imgId, img::base const* pImg )
 {
 PNIPSTDLOG
@@ -401,14 +406,14 @@ void texObj::genMipMaps ( texture const* pTex )
 {
   if ( pTex->getDirty () & texture::DirtyMipMaps )
   {
-    bool hasMipMaps = pTex->getNumImages() && pTex->getImage()->mBuffers.size () > 1;
-    
     // Generate mipmaps if texture is set to mipmap but only one image buffer is present.
     // Note, the current file loader doesn't do this, so it will take action by the app to
     // get this to be invoked.
-    glHint ( GL_GENERATE_MIPMAP_HINT, GL_FASTEST ); // Don't need to call this this much. :(
-    if ( pTex->getMinFilter () >= texture::MinNearestMipNearest && ! hasMipMaps )
+    if ( pTex->needsGenMipMaps() )
+    {
+      glHint ( GL_GENERATE_MIPMAP_HINT, GL_FASTEST ); // Don't need to call this this much. :(
       glGenerateMipmap ( mGlTextureTarget );
+    }
 CheckGLError
   }
 }

@@ -117,6 +117,10 @@ class texture :
     size_t getNumImages () const { return mImgs.size (); }
     void resetImages () { setDirty ( DirtyAll ); mImgs.resize ( 0 ); }
 
+      /// @group Helpful mip-mapping predecates
+    bool hasMipMaps () const;
+    bool needsGenMipMaps () const;
+
       // use this when texture parameters/data changes
       // TRICKY: setDirty is const... clearing dirty occurs for const
       // objects... blah blah blah.

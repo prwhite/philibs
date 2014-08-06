@@ -61,9 +61,10 @@ class framebuffer :
     typedef texture::ImageId TextureImageId;  /// e.g., NoImage, Tex2DImage, CubePosXImg...
 
     enum Type {
-      Default,
-      Renderbuffer,
-      Texture
+      AttachNone,           /// No attachment
+      AttachDefault,        /// System provided default, already config'd
+      AttachRenderbuffer,   /// Render buffer attachment
+      AttachTexture         /// Texture (2D or cube map) attachment
     };
 
     enum ColorAttachment {
@@ -115,11 +116,11 @@ class framebuffer :
     struct spec
     {
       TextureTarget mTextureTarget            = texture::NoTarget;
-      Type mColorType[ NumColorAttachments ]  = { Default };
+      Type mColorType[ NumColorAttachments ]  = { AttachDefault };
       ColorAttachment mColorAttachment[ NumColorAttachments ] = { ColorAttachmentNone };
-      Type mDepthType                         = Default;
+      Type mDepthType                         = AttachDefault;
       DepthAttachment mDepthAttachment        = DepthAttachmentNone;
-      Type mStencilType                       = Default;
+      Type mStencilType                       = AttachNone;
       StencilAttachment mStencilAttachment    = StencilAttachmentNone;
       DestinationBuffer mDestinationBuffer    = Back;
 
@@ -189,11 +190,17 @@ class framebuffer :
             || ( mTextureTargets.mStencilTex && ( mTextureTargets.mStencilTex->getDirty () & dirty ) );
       }
 
+      /// Simple rebind of framebuffer.
+    virtual void bind () = 0;
 
       /// Bind this framebuffer, with all of its associated texture or
       /// renderbuffers, according to the #TextureImageId passed in for each
       /// attachement.
-      /// @node: TODO: This doesn't do a good job of representing n color attachments.
+      /// This does a more significant rebind of attached textures than the other
+      /// bind.
+      /// @note: TODO: This doesn't do a good job of representing n color attachments.
+      /// @note: This is generally used only for RT cube maps as they need re-
+      /// attachment of textures on a re-used framebuffer.
     virtual void bind (
         framebuffer::TextureImageId colorDest,
         framebuffer::TextureImageId depthDest,
