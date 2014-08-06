@@ -66,18 +66,26 @@ progObj::~progObj()
 
 progObj* progObj::getOrCreate ( prog const* pProg )
 {
-    // get or create textureObject for this texture
-  if ( progObj* pObj = static_cast< progObj* > ( pProg->getTravData ( Draw ) ) )
+  if ( pProg )
   {
-    pObj->config ( pProg );
-    return pObj;
+      // get or create textureObject for this texture
+    if ( progObj* pObj = static_cast< progObj* > ( pProg->getTravData ( Draw ) ) )
+    {
+      pObj->config ( pProg );
+      return pObj;
+    }
+    else
+    {
+      pObj = new progObj;
+      pObj->config ( pProg );
+      const_cast< prog* > ( pProg )->setTravData ( Draw, pObj );
+      return pObj;
+    }
   }
   else
   {
-    pObj = new progObj;
-    pObj->config ( pProg );
-    const_cast< prog* > ( pProg )->setTravData ( Draw, pObj );
-    return pObj;
+    PNIDBGSTR("null pProg... does the scene have a prog set?");
+    return nullptr;
   }
 }
 
