@@ -106,6 +106,21 @@ void camera::getFrustum ( pni::math::frustum& frust ) const
 	}
 }
 
+namespace // anonymous
+{
+
+float calcMissingFov ( float angle, float hvp, float vvp )
+{
+  using namespace pni::math;
+
+  float d = hvp / Trait::tan ( Trait::d2r ( angle * 0.5f ) );
+  float ret = Trait::r2d ( Trait::atan2 ( vvp, d ) );
+  return ret * 2.0f;
+}
+
+}
+
+
 /////////////////////////////////////////////////////////////////
 // helper methods
 pni::math::matrix4 const& camera::calcProjectionMatrix ()
@@ -120,10 +135,8 @@ pni::math::matrix4 const& camera::calcProjectionMatrix ()
 	{
 		if ( mPerspType == Symmetric )
 		{
-			float vpAspect = mVpWidth / mVpHeight ;
-
-			if ( mHfov < 0.0f ) mHfov = vpAspect * mVfov;
-			if ( mVfov < 0.0f ) mVfov = mHfov / vpAspect;
+			if ( mHfov < 0.0f ) mHfov = calcMissingFov(mVfov, mVpHeight, mVpWidth);
+			if ( mVfov < 0.0f ) mVfov = calcMissingFov(mHfov, mVpWidth, mVpHeight);
 
 			mProjMat.setPerspective ( mVfov, mHfov / mVfov, mNear, mFar );
 		}
