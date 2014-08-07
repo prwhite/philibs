@@ -127,7 +127,7 @@ imageFormatToGlType ( img::base::Format typeIn )	// img::image* imgIn )
     case img::base::RGBA_PVRTC_2BPPV1: return GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG;
     case img::base::RGBA_PVRTC_4BPPV1: return GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG;
     case img::base::DEPTH_COMPONENT16: return GL_UNSIGNED_SHORT;
-//    case img::base::DEPTH_COMPONENT24: return GL_UNSIGNED_INT_24_8_OES;
+    case img::base::DEPTH_COMPONENT24: return GL_UNSIGNED_SHORT; // TEMP not supported GL_UNSIGNED_INT_24_8_OES;
     case img::base::DEPTH_COMPONENT32: return GL_UNSIGNED_INT;
 	}
 }
