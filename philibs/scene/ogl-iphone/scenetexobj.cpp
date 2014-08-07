@@ -95,6 +95,8 @@ imageFormatToGlFormat ( img::base::Format formatIn )	// img::image* imgIn )
     case img::base::RGBA5551: return GL_RGBA;
 // 		case img::base::BGR: return GL_BGR_EXT;
 // 		case img::base::BGRA: return GL_BGRA_EXT;
+    case img::base::R8: return GL_RED_EXT;
+    case img::base::RG88: return GL_RG_EXT;
 		case img::base::Gray8: return GL_LUMINANCE;
 		case img::base::Alpha8: return GL_ALPHA;
 		case img::base::GrayAlpha88: return GL_LUMINANCE_ALPHA;
@@ -119,6 +121,8 @@ imageFormatToGlType ( img::base::Format typeIn )	// img::image* imgIn )
     case img::base::RGB565: return GL_UNSIGNED_SHORT_5_6_5;
     case img::base::RGBA4444: return GL_UNSIGNED_SHORT_4_4_4_4;
     case img::base::RGBA5551: return GL_UNSIGNED_SHORT_5_5_5_1;
+    case img::base::R8: return GL_UNSIGNED_BYTE;
+    case img::base::RG88: return GL_UNSIGNED_BYTE;
 		case img::base::Gray8: return GL_UNSIGNED_BYTE;
 		case img::base::Alpha8: return GL_UNSIGNED_BYTE;
 		case img::base::GrayAlpha88: return GL_UNSIGNED_BYTE;

@@ -75,6 +75,8 @@ class framebuffer :
       ColorAttachmentRGB8,
       ColorAttachmentRGBA8,
       ColorAttachmentBGRA8,
+      ColorAttachmentR8,
+      ColorAttachmentRG88
         // More from GL_EXT_texture_storage(?)
     };
   

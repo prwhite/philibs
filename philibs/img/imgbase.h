@@ -44,6 +44,8 @@ class base :
         RGB565,
         RGBA4444,
         RGBA5551,
+        R8,
+        RG88,
         Gray8,
         Alpha8,
         GrayAlpha88,
@@ -129,6 +131,8 @@ class base :
             case RGB565: return  2;
             case RGBA4444: return 2;
             case RGBA5551: return 2;
+            case R8: return 1;
+            case RG88: return 2;
             case Gray8: return 1;
             case Alpha8: return 1;
             case GrayAlpha88: return 2;

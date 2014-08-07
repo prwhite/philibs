@@ -119,6 +119,8 @@ GLenum colorAttachmentToGlInternalFormat ( framebuffer::ColorAttachment val )
     case framebuffer::ColorAttachmentRGB8:          return GL_RGB8_OES;
     case framebuffer::ColorAttachmentRGBA8:         return GL_RGBA8_OES;
     case framebuffer::ColorAttachmentBGRA8:         return GL_BGRA8_EXT;
+    case framebuffer::ColorAttachmentR8:            return GL_R8_EXT;
+    case framebuffer::ColorAttachmentRG88:          return GL_RG8_EXT;
   }
 }
 
