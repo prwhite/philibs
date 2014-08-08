@@ -357,6 +357,26 @@ CheckGLError
   }
   else // This is a real-time texture with a placeholder image
     setGlImage ( pTex, imgId, pImg, 0 );
+CheckGLError
+}
+
+namespace // anonymous
+{
+
+  // This cute little class makes sure the texture is un-bound, but only if
+  // bind has been called.  Does cleanup in destructor like a guard class.
+struct binder
+{
+  texObj* mObj = 0;
+  texture const* mTex = 0;
+  bool mBound = false;
+  
+  binder ( texObj* pObj, texture const* pTex ) : mObj { pObj }, mTex { pTex } {}
+  ~binder () { if ( mBound ) { mObj->unbind (); } }
+  
+  void bind () { if ( ! mBound ) { mObj->bind(mTex); mBound = true; } }
+};
+
 }
 
 
@@ -364,9 +384,7 @@ void texObj::config ( texture const* pTex )
 {
   mGlTextureTarget = textureTargetToGlTarget ( pTex->getTarget () );
   
-CheckGLError
-  bind ( pTex );
-CheckGLError
+  binder aBinder ( this, pTex );
 
   bool newImageData = false;
 
@@ -379,6 +397,7 @@ CheckGLError
       if ( pImg->getDirty () )
       {
 PNIPSTDLOG
+        aBinder.bind();
         configOneTextureImg ( pTex, imgId, pImg );
         pImg->setDirty ( img::base::DirtyFalse );
         newImageData = true;
@@ -391,17 +410,26 @@ CheckGLError
     // and once to actually generate.  Maybe it's bad info... but we're doing
     // it nonetheless, only for static images, not fbo-textures.
   if ( newImageData )
+  {
+    aBinder.bind();
     genMipMaps ( pTex );
+  }
 
   if ( pTex->getDirty () & texture::DirtyTrue )
   {
     glLabelObjectEXT(GL_TEXTURE, mId, 0, pTex->getName().c_str());
 
+    aBinder.bind();
     setGlTexParams ( pTex, mGlTextureTarget );
   }
 
     // Called again... see above comment.
-  genMipMaps ( pTex );
+    // TEMP Redundant predicate checks to keep binds to a minimum
+  if ( ( pTex->getDirty() & texture::DirtyMipMaps ) && pTex->needsGenMipMaps() )
+  {
+    aBinder.bind();
+    genMipMaps ( pTex );
+  }
 
   pTex->clearDirty();
 }

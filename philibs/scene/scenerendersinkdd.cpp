@@ -173,9 +173,13 @@ void renderSinkDd::dispatch ( renderSink const* pSink,
 {
   if(pSink->mFramebuffer)
   {
+  // see fbo::needsGenMipMaps for other code affected by similar flag
+#define REBINDFBOTEXEVERYFRAME
+#ifndef REBINDFBOTEXEVERYFRAME
     if ( fastBind )
       pSink->mFramebuffer->bind();
     else
+#endif // REBINDFBOTEXEVERYFRAME
       pSink->mFramebuffer->bind(colorId, depthId, stencilId); // re-attaches textures... used for cubemaps.
   }
 
@@ -184,7 +188,7 @@ void renderSinkDd::dispatch ( renderSink const* pSink,
       execGraphDd(iter);
   
   if(pSink->mFramebuffer)
-    pSink->mFramebuffer->finish();
+    pSink->mFramebuffer->finish(colorId, depthId, stencilId);
 }
 
   // Called by dispatch, maybe up to 6 times if the renderSink is a cube map

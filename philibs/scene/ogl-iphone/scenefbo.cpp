@@ -287,7 +287,6 @@ CheckGLError
         if ( texture* pTex = targets.getColorTextureTarget(num) )
         {
           texObj* pObj = texObj::getOrCreate(pTex);
-          pObj->bind(pTex); // just to make sure... generally done by getOrCreate
           GLenum textarget = imageIdToGlTargetParam(pTex->getTarget(), colorDest);
           glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, textarget, pObj->getId(), 0);
           pTex->setDirty(texture::DirtyMipMaps); // So it will regen mipmaps after rendering
@@ -299,7 +298,6 @@ CheckGLError
         if ( texture* pTex = targets.getDepthTextureTarget() )
         {
           texObj* pObj = texObj::getOrCreate(pTex);
-          pObj->bind(pTex); // just to make sure... generally done by getOrCreate
           GLenum textarget = imageIdToGlTargetParam(pTex->getTarget(), depthDest);
           glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_OES, textarget, pObj->getId(), 0);
           pTex->setDirty(texture::DirtyMipMaps); // So it will regen mipmaps after rendering
@@ -311,7 +309,6 @@ CheckGLError
         if ( texture* pTex = targets.getDepthTextureTarget() )
         {
           texObj* pObj = texObj::getOrCreate(pTex);
-          pObj->bind(pTex); // just to make sure... generally done by getOrCreate
           GLenum textarget = imageIdToGlTargetParam(pTex->getTarget(), depthDest);
           glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textarget, pObj->getId(), 0);
           pTex->setDirty(texture::DirtyMipMaps); // So it will regen mipmaps after rendering
@@ -323,7 +320,6 @@ CheckGLError
         if ( texture* pTex = targets.getStencilTextureTarget() )
         {
           texObj* pObj = texObj::getOrCreate(pTex);
-          pObj->bind(pTex); // just to make sure... generally done by getOrCreate
           GLenum textarget = imageIdToGlTargetParam(pTex->getTarget(), stencilDest);
           glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, textarget, pObj->getId(), 0);
           pTex->setDirty(texture::DirtyMipMaps); // So it will regen mipmaps after rendering
@@ -352,25 +348,37 @@ namespace { // anonymous
 inline void tryGenMipMaps ( texture* pTex )
 {
   if ( pTex->needsGenMipMaps() )
-  {
-    texObj* pObj = texObj::getOrCreate(pTex);  // Force mipmap generation now
-    pObj->unbind ();
-  }
+    texObj::getOrCreate(pTex);  // Force mipmap generation now as side effect
 }
 
-}
-
-void fbo::finish ( framebuffer const* pFb )
+inline void unbindTexture ( texture* pTex, texture::ImageId id )
 {
-  glPushGroupMarkerEXT(0, "fbo::discard start");
+  // see renderSinkDd::dispatch for other code affected by similar flag
+//#define REBINDFBOTEXEVERYFRAME
+  GLenum textarget = imageIdToGlTargetParam(pTex->getTarget(), id);
+#ifdef REBINDFBOTEXEVERYFRAME
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, textarget, 0, 0);
+#endif // REBINDFBOTEXEVERYFRAME
+  pTex->setDirty(texture::DirtyMipMaps); // So it will regen mipmaps after rendering
+  tryGenMipMaps(pTex);
+}
+
+}
+
+void fbo::finish ( framebuffer const* pFb,
+            framebuffer::TextureImageId colorDest,
+            framebuffer::TextureImageId depthDest,
+            framebuffer::TextureImageId stencilDest )
+{
+  glPushGroupMarkerEXT(0, "fbo::discard");
 
   framebuffer::spec const& spec = pFb->getSpec();
   framebuffer::textureTargets const& targets = pFb->getTextureTargets();
 
   dispatchFuncs(spec, configFuncs {
-    [pFb, targets] ( size_t num ) {
+    [pFb, targets, colorDest] ( size_t num ) {
       if ( texture* pTex = targets.getColorTextureTarget(num) )
-        tryGenMipMaps(pTex);
+        unbindTexture(pTex, colorDest);
     },
     [pFb] ( size_t num ) {
 #ifdef INDIVIDUALDISCARDS
@@ -378,9 +386,9 @@ void fbo::finish ( framebuffer const* pFb )
         glDiscardFramebufferEXT(GL_FRAMEBUFFER, 1, &which);
 #endif // INDIVIDUALDISCARDS
     },
-    [pFb, targets] () {
+    [pFb, targets, depthDest] () {
       if ( texture* pTex = targets.getDepthTextureTarget() )
-        tryGenMipMaps(pTex);
+        unbindTexture(pTex, depthDest);
     },
     [pFb] () {
 #ifdef INDIVIDUALDISCARDS
@@ -389,9 +397,9 @@ void fbo::finish ( framebuffer const* pFb )
 #endif // INDIVIDUALDISCARDS
 
     },
-    [pFb, targets] () {
+    [pFb, targets,depthDest] () {
       if ( texture* pTex = targets.getDepthTextureTarget() )
-        tryGenMipMaps(pTex);
+        unbindTexture(pTex, depthDest);
     },
     [pFb] () {
 #ifdef INDIVIDUALDISCARDS
@@ -400,9 +408,9 @@ void fbo::finish ( framebuffer const* pFb )
 #endif // INDIVIDUALDISCARDS
 
     },
-    [pFb, targets] () {
+    [pFb, targets, stencilDest] () {
       if ( texture* pTex = targets.getStencilTextureTarget() )
-        tryGenMipMaps(pTex);
+        unbindTexture(pTex, stencilDest);
     },
     [pFb] () {
 #ifdef INDIVIDUALDISCARDS

@@ -48,7 +48,10 @@ class framebufferOgl :
         framebuffer::TextureImageId depthDest,
         framebuffer::TextureImageId stencilDest ) override;
   
-    virtual void finish ();
+    virtual void finish (
+        framebuffer::TextureImageId colorDest,
+        framebuffer::TextureImageId depthDest,
+        framebuffer::TextureImageId stencilDest);
   
   protected:
     

@@ -47,7 +47,10 @@ class fbo :
             framebuffer::TextureImageId depthDest,
             framebuffer::TextureImageId stencilDest );
   
-    void finish ( framebuffer const* pFb );
+    void finish ( framebuffer const* pFb,
+            framebuffer::TextureImageId colorDest,
+            framebuffer::TextureImageId depthDest,
+            framebuffer::TextureImageId stencilDest );
 
     typedef uint32_t Handle;
 

@@ -1260,7 +1260,8 @@ CheckGLError
 
 	if ( pState->getEnable () )
 	{
-		texObj::getOrCreate ( pState );
+	  texObj* pObj = texObj::getOrCreate ( pState );
+    pObj->bind( pState );
 	}
 	else	// disabled
 	{

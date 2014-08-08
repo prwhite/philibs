@@ -66,11 +66,14 @@ void framebufferOgl::bind (
   pFbo->bind ( this, colorDest, depthDest, stencilDest );
 }
 
-void framebufferOgl::finish ()
+void framebufferOgl::finish (
+        framebuffer::TextureImageId colorDest,
+        framebuffer::TextureImageId depthDest,
+        framebuffer::TextureImageId stencilDest)
 {
   fbo* pFbo = fbo::getOrCreate(this);
   
-  pFbo->finish(this);
+  pFbo->finish(this, colorDest, depthDest, stencilDest);
 }
 
 bool framebufferOgl::verify ()

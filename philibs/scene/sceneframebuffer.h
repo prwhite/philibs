@@ -215,7 +215,10 @@ class framebuffer :
       /// mip maps generated).  Allowing textures to do the usual lazy eval
       /// was causing big performance hit because mipmap generation causes
       /// save/restore of framebuffer contents.
-    virtual void finish () = 0;
+    virtual void finish (
+        framebuffer::TextureImageId colorDest,
+        framebuffer::TextureImageId depthDest,
+        framebuffer::TextureImageId stencilDest) = 0;
 
       /// Call this to capture the OS-specific framebuffer ID into the
       /// framebuffer's underlying implementation.  Make sure when this
