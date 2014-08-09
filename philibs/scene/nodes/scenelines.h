@@ -92,6 +92,11 @@ struct lineStyle :
 {
   lineStyle () = default;
   
+    /// @group Line geometry modifiers.
+  float mThicknessMult = 1.0f;      /// Change the thickness of the line globally
+                                    /// by multiplying each point's thickness by
+                                    /// this amount.
+  
     /// @group Used to sharpen/soften edges for non-textured lines.
   float mEdgeMiddle = 0.2f;         /// Middle of antialiasing range for edge
   float mEdgeRange = 0.2f;          /// Falloff of antialiasing range for edge

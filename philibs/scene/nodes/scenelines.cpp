@@ -397,6 +397,13 @@ void lines::rebuildUniform ()
   lineStyle const& style = mLineStyle.get();
 
   {
+    uniform::binding& binding = pUniform->getBinding("u_thicknessMult");
+    binding.set(uniform::binding::Vertex, uniform::binding::Float1);
+    float* pFloats = binding.getFloats();
+    pFloats[ 0 ] = style.mThicknessMult;
+  }
+
+  {
     uniform::binding& binding = pUniform->getBinding("u_vpSizeRatio");
     binding.set(uniform::binding::Vertex, uniform::binding::Float2);
     float* pFloats = binding.getFloats();

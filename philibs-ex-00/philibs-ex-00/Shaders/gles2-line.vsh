@@ -13,7 +13,7 @@
     // Global color
     // Global thickness
 
-precision highp float;
+precision lowp float;
 
 attribute vec4 a_position;
 attribute vec4 a_normal;
@@ -27,6 +27,7 @@ varying lowp float v_thickness;
 
 uniform mat4 u_mvpMat;
 uniform mat3 u_normMat;
+uniform float u_thicknessMult;
 uniform vec2 u_vpSize;
 uniform vec2 u_vpSizeRatio;
 uniform vec3 u_texRange;
@@ -77,6 +78,8 @@ void main()
 
     // Make the ndc-based normal the right length in pixels by scaling by
     // the original length divided by forward diff of the pixel size in ndc units.
+    // Also mult in the global thickness multiplier.
+  lNormLen *= u_thicknessMult;
   nNorm.xy *= ( lNormLen * u_vpSizeRatio ) / u_vpSize;
 
     // Now add the calculated norm to the point on the line

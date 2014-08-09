@@ -39,6 +39,8 @@ void main()
 #ifdef AUTOEDGERANGE
     // Auto edge range uses half of the size of one pixel (eventually +/- that
     // amount), derived from the varying thickness.
+    // So... 1.99 is crazy-ish... don't want to round up to two which would make
+    // 3 pixel blurry in some orientations.
   float erange = 1.99 / v_thickness;
   float ecenter = erange;     // to move away from exact tri edge
 #else
