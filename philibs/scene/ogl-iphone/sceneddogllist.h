@@ -106,6 +106,7 @@ class ddOglList :
     typedef pni::pstd::autoRef< prog const > ProgConstRef;
     typedef pni::pstd::autoRef< uniform > UniformRef;
 
+    stateSet mDefStates;
     stateSet mCurStates;
     RenderList mRenderList;
     nodePath mSinkPath;

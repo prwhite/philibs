@@ -510,10 +510,15 @@ void ddOgl::setDefaultState ( state const* pState, state::Id id )
 {
   // FIXME Nees better error handling.
   if ( mStateStack.size () != 1 )
+  {
+    PNIDBGSTR1T("tried to set default state when stack has " << mStateStack.size() << " entries");
     return;
+  }
 
   StdStateStack::value_type& top = mStateStack.back ();
   top.mStates[ id ] = pState;
+  
+  mDdList.setDefaultState ( pState, id );
 }
 
 void ddOgl::startStates ( node const* pNode )

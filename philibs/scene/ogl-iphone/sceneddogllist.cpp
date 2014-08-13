@@ -412,6 +412,10 @@ PNIDBG
     glPopGroupMarkerEXT();
   }
   glPopGroupMarkerEXT();
+
+  glPushGroupMarkerEXT(0, "execStates reset to defaults");
+  execStates ( mDefStates );
+  glPopGroupMarkerEXT();
   
     // Clear stuff out...
     // Clear this out so we don't unnecesarily hold onto a ref to a h/w resource.
@@ -714,7 +718,7 @@ void ddOglList::execStates ( stateSet const& sSet )
   if ( auto pProg = sSet.mStates[ state::Prog ] )
     mCurProg = static_cast< prog const* > ( pProg );
   else
-    PNIDBGSTR("no prog set for execStates... things might get ugly");
+    PNIDBGSTR1T("no prog set for execStates... things might get ugly");
 
   for ( int num = 0; num < state::StateCount; ++num )
   {
@@ -739,9 +743,10 @@ void ddOglList::execStates ( stateSet const& sSet )
 
 void ddOglList::setDefaultState ( state const* pState, state::Id id )
 {
-  // No-op... ddOgl allows app to setup default state and
-  // this class will get default state as a by-product of
-  // graph traversal and setup of stateSets.
+    // We mirror the ddogl states here... and we re-apply them as we finish
+    // a traversal... so we don't have fb texture attachments bound while
+    // we try to set up the next fb and use the texture.
+  mDefStates[ id ] = pState;
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -1251,12 +1256,14 @@ void ddOglList::dispatch ( texture const* pState )
 {
 CheckGLError
   uint32_t texUnit = mCurStateId - state::Texture00;
-	glActiveTexture ( GL_TEXTURE0 + texUnit );
+CheckGLError
+  glActiveTexture ( GL_TEXTURE0 + texUnit );
 CheckGLError
     // Is this the right place to do this?  Can it just be done once, rather
     // than for every texture bind (probably not once we switch to GLES3
     // with sampler objects).
   *( mBuiltins->getBinding( CommonUniformNames[ UniformTex00 + texUnit ] ).getInts() ) = texUnit;
+
 
 	if ( pState->getEnable () )
 	{
@@ -1265,13 +1272,13 @@ CheckGLError
 	}
 	else	// disabled
 	{
-    // GOTCHA: Only support 2D texture now in OES.
-    // TODO: Support cube map extension.
-#ifdef PNIGLES1REMOVED
-      // Handled through uniforms now.
-		glDisable ( GL_TEXTURE_2D );
-#endif // PNIGLES1REMOVED
-	}  
+      // This is overkill, but we don't have a guaranteed way of knowing the
+      // last texture on a given texture unit right now, especially when
+      // setting initial state.
+      // TODO: Optimize
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	}
 }
 
 /////////////////////////////////////////////////////////////////////

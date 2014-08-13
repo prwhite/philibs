@@ -84,7 +84,7 @@ progObj* progObj::getOrCreate ( prog const* pProg )
   }
   else
   {
-    PNIDBGSTR("null pProg... does the scene have a prog set?");
+    PNIDBGSTR1T("null pProg... does the scene have a prog set? ");
     return nullptr;
   }
 }
@@ -110,12 +110,11 @@ void progObj::bind ( prog const* pData )
   // to find a way to combine them in a program pipeline on the gl side
   // of things.
 
-bool checkProgramLink ( GLuint prog, char const* which )
+bool checkProgramLink ( GLuint prog, std::string const& which )
 {
   if ( prog == 0 )
   {
-    PNIDBGSTR(which);
-    PNIDBGSTR("invalid program name generated ");
+    PNIDBGSTR1T(which << "\n\tinvalid program name generated ");
     return false;   // Early return
   }
   else
@@ -133,8 +132,7 @@ bool checkProgramLink ( GLuint prog, char const* which )
 
       glGetProgramInfoLog(prog, size, &sizeOut, str);
 
-      PNIDBGSTR(which);
-      PNIDBGSTR(str);
+      PNIDBGSTR1T(which << "\n" << str);
 
       delete[] str;
       return false;   // Early return
@@ -142,6 +140,19 @@ bool checkProgramLink ( GLuint prog, char const* which )
   }
 
   return true;
+}
+
+std::string recoverPipelineName ( GLuint pipe )
+{
+  std::string buf;
+  buf.resize(256, 0);
+  GLsizei size = 0;
+
+  glGetObjectLabelEXT(GL_PROGRAM_PIPELINE_OBJECT_EXT, pipe, (GLsizei)buf.size(), &size, &buf[ 0 ]);
+
+  buf.resize(size, 0);
+
+  return buf;
 }
 
 bool checkPipelineLink ( GLuint pipe )
@@ -157,14 +168,16 @@ bool checkPipelineLink ( GLuint pipe )
 
   if ( size != 0 )
   {
-    PNIDBGSTR( "failed to validate program pipeline" );
+    std::string buf = recoverPipelineName(pipe);
+  
+    PNIDBGSTR1T( "failed to validate program pipeline " << buf );
 
     GLchar *str = new GLchar[ size ];
     GLsizei sizeOut = 0;
 
     glGetProgramPipelineInfoLogEXT(pipe, size, &sizeOut, str);
 
-    PNIDBGSTR(str);
+    PNIDBGSTR1T(str << " " << buf );
 
     delete[] str;
     return false;
@@ -185,6 +198,7 @@ void progObj::config ( prog const* pData )
 
   if ( pData->getDirty() )
   {
+    glLabelObjectEXT(GL_PROGRAM_PIPELINE_OBJECT_EXT, mPipeline, (GLsizei) pData->getName().size(), pData->getName().c_str());
 
       // TODO: Parameterize this, so we don't have dup'd code for vert and frag.
     if ( ! pData->getProgStr ( prog::Vertex ).empty () )
@@ -195,8 +209,13 @@ void progObj::config ( prog const* pData )
 
       char const* str = pData->getProgStr ( prog::Vertex ).c_str();
       mVertProg = glCreateShaderProgramvEXT(GL_VERTEX_SHADER, 1, &str );
-      if ( checkProgramLink(mVertProg,"Vertex Program:"))
+      if ( checkProgramLink(mVertProg,"Vertex Program: " + pData->getName()))
+      {
+        std::string name = pData->getName();
+        name += " vertex shader";
+        glLabelObjectEXT(GL_PROGRAM_OBJECT_EXT, mVertProg, (GLsizei) name.size(), name.c_str());
         glUseProgramStagesEXT( mPipeline, GL_VERTEX_SHADER_BIT_EXT, mVertProg );
+      }
 CheckGLError
     }
     else
@@ -214,8 +233,13 @@ CheckGLError
 
       char const* str = pData->getProgStr ( prog::Fragment ).c_str();
       mFragProg = glCreateShaderProgramvEXT(GL_FRAGMENT_SHADER, 1, &str );
-      if ( checkProgramLink(mFragProg,"Fragment Program:"))
+      if ( checkProgramLink(mFragProg,"Fragment Program: " + pData->getName()))
+      {
+        std::string name = pData->getName();
+        name += " fragment shader";
+        glLabelObjectEXT(GL_PROGRAM_OBJECT_EXT, mFragProg, (GLsizei) name.size(), name.c_str());
         glUseProgramStagesEXT( mPipeline, GL_FRAGMENT_SHADER_BIT_EXT, mFragProg );
+      }
 CheckGLError
     }
     else

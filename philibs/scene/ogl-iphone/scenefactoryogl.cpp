@@ -16,7 +16,15 @@ namespace scene {
 // ///////////////////////////////////////////////////////////////////
 
 framebuffer* factoryOgl::newFramebuffer () { return new framebufferOgl; }
-graphDd* factoryOgl::newGraphDd () { return new ddOgl; }
+graphDd* factoryOgl::newGraphDd ()
+{
+  ddOgl* pDd = new ddOgl;
+  texture* pTex = new texture;
+  pTex->setEnable(false);
+  pDd->setDefaultState(pTex, state::Texture00);
+  pDd->setDefaultState(pTex, state::Texture01);
+  return pDd;
+}
 
 // ///////////////////////////////////////////////////////////////////
 

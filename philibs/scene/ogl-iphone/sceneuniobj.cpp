@@ -80,7 +80,10 @@ void uniobj::config ( uniform const* pUni, progObj* pProgObj )
     
       GLint loc = glGetUniformLocation ( progId, uBinding.first.c_str() );
       uniform::binding const* pBinding = &uBinding.second;
-      mBindings.push_back ( { loc, progId, pBinding } );
+      if ( loc != -1 )
+        mBindings.push_back ( { loc, progId, pBinding } );
+      else
+        PNIDBGSTR1T("couldn't find location for uniform: " << uBinding.first);
     }
     
     pUni->clearDirty ();

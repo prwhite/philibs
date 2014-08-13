@@ -78,7 +78,12 @@ base* factory::loadSync ( std::string const& cfname )
 
     auto found = mLoadFunctions.find ( extension );
     if ( found != mLoadFunctions.end () )
-      return found->second ( fname );
+    {
+      base* pImg = found->second ( fname );
+      if ( pImg )
+        pImg->setName(fname);
+      return pImg;
+    }
     else
       PNIDBGSTR("could not find loader for " << cfname);
   }
