@@ -127,6 +127,25 @@ class uniform :
           cache for uniforms, so this is just good practice */
     binding& bindingOp ( std::string const& which ) { setDirty (); return mBindings[ which ]; }
   
+      /// Convenience method allows more concise setting of simple uniforms, e.g.,
+      /// float, vec2, vec3, vec4, matrix4, int.  Other types probably won't do
+      /// well with this method, including any types with a count > 1.
+    template< class Type >
+    void bindingOp ( std::string const& which, Type const& val )
+      {
+        auto found = mBindings.find ( which );
+        if ( found != mBindings.end () )
+        {
+          float* flts = found->second.getFloats ();
+          Type* dst = ( Type* ) flts;
+          *dst = val;
+        }
+        else
+        {
+          PNIDBGSTR1T("failed to find uniform binding for " << which );
+        }
+      }
+  
     binding& getBinding ( std::string const& which ) { return mBindings[ which ]; }
 
   protected:
