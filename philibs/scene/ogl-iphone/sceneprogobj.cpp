@@ -198,7 +198,9 @@ void progObj::config ( prog const* pData )
 
   if ( pData->getDirty() )
   {
-    glLabelObjectEXT(GL_PROGRAM_PIPELINE_OBJECT_EXT, mPipeline, (GLsizei) pData->getName().size(), pData->getName().c_str());
+
+      // doesn't work on iOS 7
+//    glLabelObjectEXT(GL_PROGRAM_PIPELINE_OBJECT_EXT, mPipeline, (GLsizei) pData->getName().size(), pData->getName().c_str());
 
       // TODO: Parameterize this, so we don't have dup'd code for vert and frag.
     if ( ! pData->getProgStr ( prog::Vertex ).empty () )
