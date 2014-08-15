@@ -399,16 +399,13 @@ void lines::rebuildUniform ()
   {
     uniform::binding& binding = pUniform->getBinding("u_thicknessMult");
     binding.set(uniform::binding::Vertex, uniform::binding::Float1);
-    float* pFloats = binding.getFloats();
-    pFloats[ 0 ] = style.mThicknessMult;
+    binding.setValue(style.mThicknessMult);
   }
 
   {
     uniform::binding& binding = pUniform->getBinding("u_vpSizeRatio");
     binding.set(uniform::binding::Vertex, uniform::binding::Float2);
-    float* pFloats = binding.getFloats();
-    pFloats[ 0 ] = mVpSizeRatio[ 0 ];
-    pFloats[ 1 ] = mVpSizeRatio[ 1 ];
+    binding.setValue(mVpSizeRatio);
   }
 
   if ( ( style.mEnableFlags & lineStyle::Tex00 ) == 0 )
@@ -434,8 +431,7 @@ void lines::rebuildUniform ()
     {
       uniform::binding& binding = pUniform->getBinding("u_dashEnable");
       binding.set(uniform::binding::Fragment, uniform::binding::Int1);
-      int* pInts = binding.getInts();
-      pInts[ 0 ] = style.mEnableFlags;
+      binding.setValue(style.mEnableFlags);
     }
 
   }

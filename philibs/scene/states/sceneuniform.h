@@ -49,6 +49,15 @@ class uniform :
         FloatType* getFloats () { return ( FloatType * ) ( mVals.data() ); }
         FloatType const* getFloats () const { return ( FloatType * ) ( mVals.data () ); }
 
+        template< class ValType >
+        void setValue ( ValType const& val )
+          {
+            static_assert ( std::is_standard_layout<ValType>::value, "this type cannot be used with the trivial generic setValue method");
+
+            ValType* ptr = ( ValType* ) getFloats();
+            *ptr = val;
+          }
+
           /// Data type constants for bindings.
           /// @note Not currently doing unsigned types.
         enum Type { Float1, Float2, Float3, Float4, Int1, Int2, Int3, Int4, Matrix2, Matrix3, Matrix4, NumTypes };
@@ -68,7 +77,7 @@ class uniform :
           // TODO: This has too many params, switch to individual setters or pub data?
         void set ( Stage stage, Type type, size_t count = 1 ) { mStage = stage; mType = type; mCount = count; resize (); }
         void set ( Stage stage, Type type, Xform xform, size_t count = 1 ) { mStage = stage; mType = type; mXform = xform; mCount = count; resize (); }
-
+      
         Stage getStage () const { return mStage; }
         Type getType () const { return mType; }
         size_t getCount () const { return mCount; }
@@ -133,12 +142,12 @@ class uniform :
     template< class Type >
     void bindingOp ( std::string const& which, Type const& val )
       {
+        static_assert ( std::is_standard_layout<Type>::value, "this type cannot be used with the trivial generic bindingOp method");
+      
         auto found = mBindings.find ( which );
         if ( found != mBindings.end () )
         {
-          float* flts = found->second.getFloats ();
-          Type* dst = ( Type* ) flts;
-          *dst = val;
+          found->second.setValue(val);
         }
         else
         {
