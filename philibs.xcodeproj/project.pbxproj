@@ -20,6 +20,7 @@
 		1C4BD27F18810EE6000781B0 /* sceneprogobj.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CAD9725186E110200C547E1 /* sceneprogobj.h */; };
 		1C4BD28018810EE6000781B0 /* scenevbo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1CAD971E186628EE00C547E1 /* scenevbo.h */; };
 		1C4BD2831885FD8F000781B0 /* scenecommon.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C4BD2821885FCB7000781B0 /* scenecommon.h */; };
+		1C5998731998A14500082EF4 /* pnidbg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C5998721998A14500082EF4 /* pnidbg.cpp */; };
 		1C5BA06A1935CE8300D7A70E /* scenedirty.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C5BA0631935CDE100D7A70E /* scenedirty.h */; };
 		1C6A02B91873526700672EF8 /* sceneuniform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C6A02B71873526700672EF8 /* sceneuniform.cpp */; };
 		1C6B1FEF18B69BEC0053277E /* pnidbg.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1C6B1FEE18B69BE10053277E /* pnidbg.h */; };
@@ -505,6 +506,7 @@
 		1C38744D1894CF0D0055DE2A /* sceneprogfactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sceneprogfactory.h; sourceTree = "<group>"; };
 		1C4061A819509DA50074AC1A /* sceneltcompare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = sceneltcompare.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		1C4BD2821885FCB7000781B0 /* scenecommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = scenecommon.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		1C5998721998A14500082EF4 /* pnidbg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pnidbg.cpp; sourceTree = "<group>"; };
 		1C5BA0631935CDE100D7A70E /* scenedirty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scenedirty.h; sourceTree = "<group>"; };
 		1C6A02B71873526700672EF8 /* sceneuniform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sceneuniform.cpp; sourceTree = "<group>"; };
 		1C6A02B81873526700672EF8 /* sceneuniform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 2; path = sceneuniform.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -1038,6 +1040,7 @@
 			children = (
 				1CB6BD8918D8DBE500DC3B4B /* pniosxplatform.h */,
 				1C6B1FEE18B69BE10053277E /* pnidbg.h */,
+				1C5998721998A14500082EF4 /* pnidbg.cpp */,
 				1CC482DB1889E57A0029408D /* ThreadPool.h */,
 				1CDD40E8185BCAEF009284F9 /* pniautoref.h */,
 				1CDD40E9185BCAEF009284F9 /* pniavg.h */,
@@ -1476,6 +1479,7 @@
 				1CDD4184185BCAF0009284F9 /* animscenenodetrans.cpp in Sources */,
 				1CDD4201185BCAF0009284F9 /* uibase.cpp in Sources */,
 				1CDD41E3185BCAF0009284F9 /* scenesnddd.cpp in Sources */,
+				1C5998731998A14500082EF4 /* pnidbg.cpp in Sources */,
 				1CDD41C4185BCAF0009284F9 /* pnisphere.cpp in Sources */,
 				1CDD4203185BCAF0009284F9 /* uievents.cpp in Sources */,
 				1CDD41E8185BCAF0009284F9 /* sceneflattendd.cpp in Sources */,

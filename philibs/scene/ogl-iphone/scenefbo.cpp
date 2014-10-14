@@ -351,10 +351,10 @@ inline void tryGenMipMaps ( texture* pTex )
     texObj::getOrCreate(pTex);  // Force mipmap generation now as side effect
 }
 
-inline void unbindTexture ( texture* pTex, texture::ImageId id )
+inline void unbindFramebufferTexture ( texture* pTex, texture::ImageId id )
 {
   // see renderSinkDd::dispatch for other code affected by similar flag
-//#define REBINDFBOTEXEVERYFRAME
+#define REBINDFBOTEXEVERYFRAME
   GLenum textarget = imageIdToGlTargetParam(pTex->getTarget(), id);
 #ifdef REBINDFBOTEXEVERYFRAME
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, textarget, 0, 0);
@@ -376,20 +376,14 @@ void fbo::finish ( framebuffer const* pFb,
   framebuffer::textureTargets const& targets = pFb->getTextureTargets();
 
   dispatchFuncs(spec, configFuncs {
-    [pFb, targets, colorDest] ( size_t num ) {
-      if ( texture* pTex = targets.getColorTextureTarget(num) )
-        unbindTexture(pTex, colorDest);
-    },
+    [pFb, targets, colorDest] ( size_t num ) {},
     [pFb] ( size_t num ) {
 #ifdef INDIVIDUALDISCARDS
         GLenum which = GL_COLOR_ATTACHMENT0;
         glDiscardFramebufferEXT(GL_FRAMEBUFFER, 1, &which);
 #endif // INDIVIDUALDISCARDS
     },
-    [pFb, targets, depthDest] () {
-      if ( texture* pTex = targets.getDepthTextureTarget() )
-        unbindTexture(pTex, depthDest);
-    },
+    [pFb, targets, depthDest] () {},
     [pFb] () {
 #ifdef INDIVIDUALDISCARDS
         GLenum which = GL_DEPTH_ATTACHMENT;
@@ -397,10 +391,7 @@ void fbo::finish ( framebuffer const* pFb,
 #endif // INDIVIDUALDISCARDS
 
     },
-    [pFb, targets,depthDest] () {
-      if ( texture* pTex = targets.getDepthTextureTarget() )
-        unbindTexture(pTex, depthDest);
-    },
+    [pFb, targets,depthDest] () {},
     [pFb] () {
 #ifdef INDIVIDUALDISCARDS
         GLenum which = GL_DEPTH_ATTACHMENT;
@@ -408,10 +399,7 @@ void fbo::finish ( framebuffer const* pFb,
 #endif // INDIVIDUALDISCARDS
 
     },
-    [pFb, targets, stencilDest] () {
-      if ( texture* pTex = targets.getStencilTextureTarget() )
-        unbindTexture(pTex, stencilDest);
-    },
+    [pFb, targets, stencilDest] () {},
     [pFb] () {
 #ifdef INDIVIDUALDISCARDS
         GLenum which = GL_STENCIL_ATTACHMENT;
@@ -428,7 +416,33 @@ void fbo::finish ( framebuffer const* pFb,
   GLenum which[ 3 ] = { GL_COLOR_ATTACHMENT0, GL_DEPTH_ATTACHMENT, GL_STENCIL_ATTACHMENT };
   glDiscardFramebufferEXT(GL_FRAMEBUFFER, 3, which );
 #endif // INDIVIDUALDISCARDS
-  
+
+  dispatchFuncs(spec, configFuncs {
+    [pFb, targets, colorDest] ( size_t num ) {
+      if ( texture* pTex = targets.getColorTextureTarget(num) )
+        unbindFramebufferTexture(pTex, colorDest);
+    },
+    [pFb] ( size_t num ) {},
+    [pFb, targets, depthDest] () {
+      if ( texture* pTex = targets.getDepthTextureTarget() )
+        unbindFramebufferTexture(pTex, depthDest);
+    },
+    [pFb] () {},
+    [pFb, targets,depthDest] () {
+      if ( texture* pTex = targets.getDepthTextureTarget() )
+        unbindFramebufferTexture(pTex, depthDest);
+    },
+    [pFb] () {},
+    [pFb, targets, stencilDest] () {
+      if ( texture* pTex = targets.getStencilTextureTarget() )
+        unbindFramebufferTexture(pTex, stencilDest);
+    },
+    [pFb] () {}
+  } );
+
+    // HACK: TEMP: Using first fb because that's reliable on iOS for now as default
+  if ( spec.mColorType[0] != framebuffer::AttachDefault )
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
   
   glPopGroupMarkerEXT();
 }

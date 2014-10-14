@@ -78,6 +78,9 @@ prog* progFactory::loadSync ( Filenames const& fnames )
   cleanupOrNot<prog> pProg { new prog };   // Let's be careful not to leak this if we have errors!!!
   prog::Stage stage = prog::Vertex;
 
+  if ( ! fnames.empty())
+    pProg->setName(fnames[ 0 ]);
+
   for ( auto fname : fnames )
   {
     std::string out;

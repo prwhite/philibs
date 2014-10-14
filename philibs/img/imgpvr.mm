@@ -16,6 +16,7 @@
 #import <UIKit/UIKit.h>
 
 #include "scenetypes.h"
+#include <OpenGLES/ES2/glext.h>
 
 /////////////////////////////////////////////////////////////////////
 

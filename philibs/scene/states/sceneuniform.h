@@ -53,7 +53,7 @@ class uniform :
           /// @note Not currently doing unsigned types.
         enum Type { Float1, Float2, Float3, Float4, Int1, Int2, Int3, Int4, Matrix2, Matrix3, Matrix4, NumTypes };
 
-          /// Indicates which staget the uniform belongs to.
+          /// Indicates which stage the uniform belongs to.
           /// @note Only doing vert and frag right now.
         enum Stage { Vertex, Fragment };
 

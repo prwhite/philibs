@@ -417,7 +417,10 @@ CheckGLError
 
   if ( pTex->getDirty () & texture::DirtyTrue )
   {
-    glLabelObjectEXT(GL_TEXTURE, mId, 0, pTex->getName().c_str());
+    if ( ! pTex->getName().empty() )
+      glLabelObjectEXT(GL_TEXTURE, mId, 0, pTex->getName().c_str());
+    else if ( pTex->getImage() && ! pTex->getImage()->getName().empty() )
+      glLabelObjectEXT(GL_TEXTURE, mId, 0, pTex->getImage()->getName().c_str());
 
     aBinder.bind();
     setGlTexParams ( pTex, mGlTextureTarget );
