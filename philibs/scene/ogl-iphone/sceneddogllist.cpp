@@ -1267,13 +1267,20 @@ CheckGLError
 
 	if ( pState->getEnable () )
 	{
-	  texObj* pObj = texObj::getOrCreate ( pState );
-    pObj->bind( pState );
+  	if ( texObj* pObj = texObj::getOrCreate ( pState ) )
+    {
+      pObj->bind( pState );
+    }
+    else
+    {
+      // This is not great, but it's handled in getOrCreate... we just need
+      // to make sure not to crash here.
+    }
 	}
 	else	// disabled
 	{
       // This is overkill, but we don't have a guaranteed way of knowing the
-      // last texture on a given texture unit right now, especially when
+      // previous texture on a given texture unit right now, especially when
       // setting initial state.
       // TODO: Optimize
     glBindTexture(GL_TEXTURE_2D, 0);

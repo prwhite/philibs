@@ -4,7 +4,6 @@
 //
 /////////////////////////////////////////////////////////////////////
 
-#define PNIDBGDISABLE
 #define PNIPSTDLOGDISABLE
 
 #include <OpenGLES/ES2/glext.h>
@@ -70,6 +69,15 @@ texObj* texObj::getOrCreate ( texture const* textureIn )
 	else	// not an image texture... can't create it... so disable texture target
         // TODO: maybe this will be ok with framebuffer textures?
 	{
+    if ( textureIn )
+    {
+      PNIDBGSTR1T("no texture object generated for " << textureIn->getResolvedName() );
+    }
+    else
+    {
+      PNIDBGSTR1T("null texture object passed in");
+    }
+  
     return 0;
 	}
 }

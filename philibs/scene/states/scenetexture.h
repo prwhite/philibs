@@ -116,7 +116,17 @@ class texture :
     img::base* getImage ( ImageId which = Tex2DImg ) const { return mImgs[ which ].get (); }
     size_t getNumImages () const { return mImgs.size (); }
     void resetImages () { setDirty ( DirtyAll ); mImgs.resize ( 0 ); }
-
+  
+    std::string getResolvedName () const
+      {
+        if ( ! getName().empty() )
+          return getName();
+        else if ( getImage() )
+          return getImage()->getName ();
+        else
+          return "";
+      }
+  
       /// @group Helpful mip-mapping predecates
     bool hasMipMaps () const;
     bool needsGenMipMaps () const;
