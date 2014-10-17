@@ -18,8 +18,10 @@
 #ifndef PNIDBGDISABLE
   // Nada.
 #else
+#ifdef NDEBUG     // We are always quiet in release
 #define PNIQUIET
-#endif
+#endif // NDEBUG
+#endif // PNIDBGDISABLE
 
 #ifdef PNIQUIET
   #define PNIDBG

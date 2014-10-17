@@ -230,7 +230,7 @@ class helper
         {
           if ( ! pSrc->mVertices )
           {
-            PNIDBGSTR("received mesh with no vert positions!!! " + pSrc->mName );
+            PNIDBGSTR("received mesh with no vert positions!!! " << pSrc->mName.C_Str() );
             return;  // Early return / short curcuit
           }
 
