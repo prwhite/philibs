@@ -15,12 +15,12 @@
 
 /////////////////////////////////////////////////////////////////////
 
-#ifndef PNIDBGDISABLE
-  // Nada.
-#else
-#ifdef NDEBUG     // We are always quiet in release
-#define PNIQUIET
-#endif // NDEBUG
+#ifndef PNIDBGDISABLE // not disabling dbg
+  #ifdef NDEBUG     // We are always quiet in release
+    #define PNIQUIET
+  #endif // NDEBUG
+#else                 // disabling dbg
+  #define PNIQUIET
 #endif // PNIDBGDISABLE
 
 #ifdef PNIQUIET
