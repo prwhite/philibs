@@ -58,7 +58,7 @@ Recent feature additions include:
 * Scene infrastructure: Added [`scene::data`](https://github.com/prwhite/philibs/blob/master/philibs/scene/scenedata.h) class to encapsulate the common pattern that is used by `geomData`, `lineData`, `uniforms`, `particles` and `sprites` for storing packed verts/points/attributes which are driven by a set of bindings (i.e. variant-record) and striding through the data with convenient iterators, a la STL.  Also added [`scene::dirty`](https://github.com/prwhite/philibs/blob/master/philibs/scene/scenedirty.h), which encapsulates the recurring property-like pattern of member access with callbacks to the owning class.  Unique about this class is the inherent lazy-cleanup logic, which means that a value will be invalidated on any mutation, but won't be re-created as valid until accessed for use.  This pattern is used on things like `geomData` to update bounding boxes only when necessary, and is now implemented using the `scene::dirty` class in `scene::lines`.  Next up is to refactor other classes that use this pattern in an ad hoc fashion to the common implementation. 
 * Geometry: Added vert sharing and soft-shading normal generation to scene::geom.
 * Text: Added UTF8->UCS2 conversion just before scene::text glyphs are generated.  All text rendering is now *much more* i18n-friendly
-* Math: Cleaned up some linear algebra pin::math routines, including getting ruler-related functions consistent with z-out and adding plane and matrix mirror routines.
+* Math: Cleaned up some linear algebra pni::math routines, including getting Euler-related functions consistent with z-out and adding plane and matrix mirror routines.
 
 ##### 2014/04/22
 
